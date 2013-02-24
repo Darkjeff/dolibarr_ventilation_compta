@@ -30,6 +30,7 @@ if (! $res) $res=@include("../../../main.inc.php");			// For "custom" directory
 require_once(DOL_DOCUMENT_ROOT."/fourn/class/fournisseur.facture.class.php");
 
 $langs->load("bills");
+$langs->load("products");
 $langs->load("ventilation@ventilation");
 
 $mesg = '';
@@ -85,8 +86,10 @@ $facturefournisseur_static=new FactureFournisseur($db);
 
 if($_GET["id"])
 {
-  $sql = "SELECT f.facnumber, f.rowid as facid, l.fk_product, l.description, l.total_ttc, l.qty, l.rowid, l.tva_tx, l.fk_code_ventilation ";
+  $sql = "SELECT f.facnumber, f.rowid as facid, l.fk_product, l.description, l.rowid, l.fk_code_ventilation, ";
+  $sql.= " p.rowid as product_id, p.ref as product_ref, p.label as product_label";
   $sql .= " FROM ".MAIN_DB_PREFIX."facture_fourn_det as l";
+  $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = l.fk_product";
   $sql .= " , ".MAIN_DB_PREFIX."facture_fourn as f";
   $sql .= " WHERE f.rowid = l.fk_facture_fourn AND f.fk_statut > 0 AND l.rowid = ".$_GET["id"];
    
@@ -116,7 +119,7 @@ if($_GET["id"])
 	  
 	  // ref invoice
 	  
-	  print '<tr><td>'.$langs->trans("Invoice").'</td>';
+	  print '<tr><td>'.$langs->trans("BillsSuppliers").'</td>';
 	  $facturefournisseur_static->ref=$objp->facnumber;
 		$facturefournisseur_static->id=$objp->facid;
 		print '<td>'.$facturefournisseur_static->getNomUrl(1).'</td>';
@@ -126,23 +129,15 @@ if($_GET["id"])
 
 	  print '<tr><td width="20%">Ligne</td>';
 	  print '<td>'.stripslashes(nl2br($objp->description)).'</td></tr>';
-	  print '<tr><td width="20%">Ventiler dans le compte :</td><td>';
-
-	  if($objp->fk_code_ventilation == 0)
-	    {
-	      print $form->selectarray("codeventil",$cgs, $objp->fk_code_ventilation);
-	    }
-	  else
-	    {
-	      print $cgs[$objp->fk_code_ventilation];
-	    }
-
+	  print '<tr><td width="20%">'.$langs->trans("ProductLabel").'</td>';
+	  print '<td>'.dol_trunc($objp->product_label,24).'</td>';
+	  print '<tr><td width="20%">'.$langs->trans("Account").'</td><td>';
+    print $cgs[$objp->fk_code_ventilation];
+    print '<tr><td width="20%">'.$langs->trans("NewAccount").'</td><td>';
+	  print $form->selectarray("codeventil",$cgs, $objp->fk_code_ventilation);
 	  print '</td></tr>';
-	  
-	  if($objp->fk_code_ventilation == 0)
-	    {
-	      print '<tr><td>&nbsp;</td><td><input type="submit" value="'.$langs->trans("Ventiler").'"></td></tr>';
-	    }
+	  print '<tr><td>&nbsp;</td><td><input type="submit" value="'.$langs->trans("update").'"></td></tr>';
+	    
 	  print '</table>';
 	  print '</form>';
 	}
