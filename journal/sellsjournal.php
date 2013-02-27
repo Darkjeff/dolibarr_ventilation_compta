@@ -59,9 +59,7 @@ if (! empty($conf->accounting->enabled)) $result=restrictedArea($user,'accountin
  * View
  */
 
-$form=new Form($db);
 
-llxHeader('',$langs->trans("SellsJournal"),'');
 
 $year_current = strftime("%Y",dol_now());
 $pastmonth = strftime("%m",dol_now()) - 1;
@@ -81,16 +79,7 @@ if (empty($date_start) || empty($date_end)) // We define date_start and date_end
 	$date_start=dol_get_first_day($pastmonthyear,$pastmonth,false); $date_end=dol_get_last_day($pastmonthyear,$pastmonth,false);
 }
 
-$nom=$langs->trans("SellsJournal");
-$nomlink='';
-$periodlink='';
-$exportlink='';
-$builddate=time();
-$description=$langs->trans("DescSellsJournal").'<br>';
-if (! empty($conf->global->FACTURE_DEPOSITS_ARE_JUST_PAYMENTS)) $description.= $langs->trans("DepositsAreNotIncluded");
-else  $description.= $langs->trans("DepositsAreIncluded");
-$period=$form->select_date($date_start,'date_start',0,0,0,'',1,0,1).' - '.$form->select_date($date_end,'date_end',0,0,0,'',1,0,1);
-report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportlink);
+
 
 $p = explode(":", $conf->global->MAIN_INFO_SOCIETE_PAYS);
 $idpays = $p[0];
@@ -205,17 +194,23 @@ if (GETPOST('action') == 'export_csv')
 }
 else
 {
-//	llxHeader('','','');
 
-//	$form=new Form($db);
+$form=new Form($db);
 
-//	$nom=$langs->trans("SellsJournal");
-//	$nomlink=;
-//  $builddate=time();
-//	$description=$langs->trans("DescSellsJournal");
-//	$period=$form->select_date($date_start,'date_start',0,0,0,'',1,0,1).' - '.$form->select_date($date_end,'date_end',0,0,0,'',1,0,1);
+llxHeader('',$langs->trans("SellsJournal"),'');
 
-//  report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportlink, array('action'=>''));
+$nom=$langs->trans("SellsJournal");
+$nomlink='';
+$periodlink='';
+$exportlink='';
+$builddate=time();
+$description=$langs->trans("DescSellsJournal").'<br>';
+if (! empty($conf->global->FACTURE_DEPOSITS_ARE_JUST_PAYMENTS)) $description.= $langs->trans("DepositsAreNotIncluded");
+else  $description.= $langs->trans("DepositsAreIncluded");
+$period=$form->select_date($date_start,'date_start',0,0,0,'',1,0,1).' - '.$form->select_date($date_end,'date_end',0,0,0,'',1,0,1);
+report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportlink, array('action'=>'') );
+
+
 	
 	print '<input type="button" class="button" style="float: right;" value="Export CSV" onclick="launch_export();" />';
 	

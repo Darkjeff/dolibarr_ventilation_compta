@@ -30,6 +30,7 @@ $res=@include("../../main.inc.php");						// For root directory
 if (! $res) $res=@include("../../../main.inc.php");			// For "custom" directory
 
 $langs->load("bills");
+$langs->load("ventilation@ventilation");
 
 if (!$user->rights->facture->lire) accessforbidden();
 if (!$user->rights->compta->ventilation->creer) accessforbidden();
