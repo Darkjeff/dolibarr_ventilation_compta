@@ -153,7 +153,11 @@ if ($result)
 else {
     dol_print_error($db);
 }
+//write accounting libell
 
+
+
+// export csv
 if (GETPOST('action') == 'export_csv')
 {
     header( 'Content-Type: text/csv' );
@@ -213,6 +217,8 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
 
 	
 	print '<input type="button" class="button" style="float: right;" value="Export CSV" onclick="launch_export();" />';
+	
+	print '<input type="submit" class="button" value="'.$langs->trans("write accounting libell").'">';
 	
 	print '
 	<script type="text/javascript">
