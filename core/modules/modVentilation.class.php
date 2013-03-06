@@ -179,9 +179,9 @@ class modVentilation extends DolibarrModules
 		
 		$this->menu[$r]=array(	'fk_menu'=>'r=0',
 								'type'=>'left',
-								'titre'=>'TradeMargin',
+								'titre'=>'GeneralLedger',
 								'mainmenu'=>'ventilation',
-								'url'=>'/ventilation/marge/index.php',
+								'url'=>'/ventilation/bookkeeping/liste.php',
 								'langs'=>'ventilation@ventilation',
 								'position'=>120,
 								'enabled'=>1,
