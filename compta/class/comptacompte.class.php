@@ -32,6 +32,7 @@ class ComptaCompte
   var $db ;
 
   var $id ;
+  var $rowid ;
   var $numero;
   var $intitule;
   
@@ -49,11 +50,13 @@ class ComptaCompte
 		$this->db = $db;
 		if ($rowid != '') return $this->fetch($rowid);
 	}
-	function fetch($rowid='')
+	function fetch($rowid=null,$num_compte=null)
 	{
-		if ($rowid != '')
+		if ($rowid || $num_compte)
 		{
-			$sql = "SELECT * FROM ".MAIN_DB_PREFIX."compta_compte_generaux WHERE rowid = '".$rowid."'";
+			$sql = "SELECT * FROM ".MAIN_DB_PREFIX."compta_compte_generaux WHERE ";
+			if ($rowid) $sql.= " rowid = '".$rowid."'";
+			elseif ($num_compte) $sql.= " numero = '".$num_compte."'";
 			$result = $this->db->query($sql);
 			if ($result)
 			{
@@ -61,12 +64,13 @@ class ComptaCompte
 			}
 			else return null;
 		}
+		$this->id = $obj->rowid;
 		$this->rowid = $obj->rowid;
 		$this->intitule = stripslashes($obj->intitule);
 		$this->numero = $obj->numero;
 		$this->sellsjournal = $obj->sellsjournal;
 
-		return 0;
+		return $obj->rowid;
 	}
 
   /**

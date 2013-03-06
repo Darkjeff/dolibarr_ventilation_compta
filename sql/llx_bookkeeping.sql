@@ -28,11 +28,18 @@ SET time_zone = "+00:00";
 
 CREATE TABLE IF NOT EXISTS `llx_bookkeeping` (
   `rowid` int(11) NOT NULL AUTO_INCREMENT,
-  `date` date NOT NULL,
+  `doc_date` date NOT NULL,
+  `doc_type` varchar(30) NOT NULL,			-- facture_client/reglement_client/facture_fournisseur/reglement_fournisseur
+  `doc_ref` varchar(30) NOT NULL,			-- facture_client/reglement_client/... reference number
+  `fk_doc` int(11) NOT NULL,                -- facture_client/reglement_client/... rowid
+  `fk_docdet` int(11) NOT NULL,             -- facture_client/reglement_client/... line rowid
   `fk_compte` int(11) NOT NULL,
-  `accounting_libel` varchar(128) CHARACTER SET utf8 NOT NULL,
+  `numero_compte` varchar(50) DEFAULT NULL,
+  `label_compte` varchar(128) CHARACTER SET utf8 NOT NULL,
   `debit` double NOT NULL,
   `credit` double NOT NULL,
+  `montant` double NOT NULL,
+  `sens` varchar(1) DEFAULT NULL,
   `fk_user_author` int(11) NOT NULL,
   PRIMARY KEY (`rowid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
