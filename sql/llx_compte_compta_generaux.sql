@@ -35,3 +35,6 @@ CREATE TABLE IF NOT EXISTS `llx_compta_compte_generaux` (
   PRIMARY KEY (`rowid`),
   UNIQUE KEY `numero` (`numero`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=41 ;
+
+--- add sellsjournal column
+ALTER TABLE `llx_compta_compte_generaux` ADD COLUMN sellsjournal VARCHAR(1) DEFAULT 'N' AFTER intitule;
