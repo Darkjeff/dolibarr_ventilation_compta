@@ -29,6 +29,9 @@ require_once(DOL_DOCUMENT_ROOT."/core/lib/date.lib.php");
 require_once(DOL_DOCUMENT_ROOT."/fourn/class/fournisseur.facture.class.php");
 require_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.class.php';
 
+require_once DOL_DOCUMENT_ROOT_ALT.'/ventilation/compta/class/comptacompte.class.php';
+require_once DOL_DOCUMENT_ROOT_ALT.'/ventilation/compta/class/bookkeeping.class.php';
+
 $langs->load("companies");
 $langs->load("other");
 $langs->load("compta");
@@ -83,8 +86,8 @@ $p = explode(":", $conf->global->MAIN_INFO_SOCIETE_PAYS);
 $idpays = $p[0];
 
 $sql = "SELECT f.rowid, f.facnumber, f.type, f.datef, f.libelle,";
-$sql.= " fd.total_ttc, fd.tva_tx, fd.total_ht, fd.tva as total_tva, fd.product_type,";
-$sql.= " s.rowid as socid, s.nom as name, s.code_compta_fournisseur,";
+$sql.= " fd.rowid as fdid , fd.total_ttc, fd.tva_tx, fd.total_ht, fd.tva as total_tva, fd.product_type,";
+$sql.= " s.rowid as socid, s.nom as name, s.code_compta_fournisseur, s.fournisseur,";
 $sql.= " s.code_compta_fournisseur, p.accountancy_code_buy , ct.accountancy_code_buy as account_tva";
 $sql.= " FROM ".MAIN_DB_PREFIX."facture_fourn_det fd";
 $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."c_tva ct ON fd.tva_tx = ct.taux AND ct.fk_pays = '".$idpays."'";
@@ -128,11 +131,11 @@ if ($result)
 		$tabfac[$obj->rowid]["date"] = dol_print_date($db->jdate($obj->datef),'day');
 		$tabfac[$obj->rowid]["ref"] = $obj->facnumber;
 		$tabfac[$obj->rowid]["type"] = $obj->type;
-		$tabfac[$obj->rowid]["lib"] = $obj->libelle;
+		$tabfac[$obj->rowid]["fk_facturefourndet"] = $obj->fdid;
 		$tabttc[$obj->rowid][$compta_soc] += $obj->total_ttc;
 		$tabht[$obj->rowid][$compta_prod] += $obj->total_ht;
 		$tabtva[$obj->rowid][$compta_tva] += $obj->total_tva;
-		$tabcompany[$obj->rowid]=array('id'=>$obj->socid,'name'=>$obj->name);
+		$tabcompany[$obj->rowid]=array('id'=>$obj->socid,'name'=>$obj->name, 'fournisseur'=>$obj->fournisseur);
 
 		$i++;
 	}
@@ -140,7 +143,92 @@ if ($result)
 else {
 	dol_print_error($db);
 }
+//write bookkeeping
+if (GETPOST('action') == 'writeBookKeeping')
+{
+	foreach ($tabfac as $key => $val)
+	{
+		foreach ($tabttc[$key] as $k => $mt)
+		{
+		    // get compte id and label
+		    $compte = new ComptaCompte($db);
+		    if ($compte->fetch(null, $k))
+		    {
+			    $bookkeeping = new BookKeeping($db);
+			    $bookkeeping->doc_date = $val["date"];
+			    $bookkeeping->doc_ref = $val["ref"];
+			    $bookkeeping->doc_type = 'facture_fournisseur';
+			    $bookkeeping->fk_doc = $key;
+			    $bookkeeping->fk_docdet = $val["fk_facturefourndet"];
+			    $bookkeeping->fk_compte = $compte->id;
+			    $bookkeeping->label_compte = $compte->intitule;
+			    $bookkeeping->numero_compte = $k;
+			    $bookkeeping->montant = $mt;
+			    $bookkeeping->sens = ($mt >= 0)?'D':'C';
+			    $bookkeeping->debit = ($mt >= 0)?$mt:0;
+			    $bookkeeping->credit = ($mt < 0)?$mt:0;
 
+			    $bookkeeping->create();
+			}
+		}
+		// product
+		foreach ($tabht[$key] as $k => $mt)
+		{
+			if ($mt)
+			{
+			    // get compte id and label
+			    $compte = new ComptaCompte($db);
+			    if ($compte->fetch(null, $k))
+			    {
+				    $bookkeeping = new BookKeeping($db);
+				    $bookkeeping->doc_date = $val["date"];
+				    $bookkeeping->doc_ref = $val["ref"];
+				    $bookkeeping->doc_type = 'facture_fournisseur';
+				    $bookkeeping->fk_doc = $key;
+				    $bookkeeping->fk_docdet = $val["fk_facturefourndet"];
+				    $bookkeeping->fk_compte = $compte->id;
+				    $bookkeeping->label_compte = $compte->intitule;
+				    $bookkeeping->numero_compte = $k;
+				    $bookkeeping->montant = $mt;
+				    $bookkeeping->sens = ($mt < 0)?'D':'C';
+				    $bookkeeping->debit = ($mt < 0)?$mt:0;
+				    $bookkeeping->credit = ($mt >= 0)?$mt:0;
+
+				    $bookkeeping->create();
+			    }
+			}
+		}
+		// vat
+		//var_dump($tabtva);
+		foreach ($tabtva[$key] as $k => $mt)
+		{
+		    if ($mt)
+		    {
+			    // get compte id and label
+			    $compte = new ComptaCompte($db);
+			    if ($compte->fetch(null, $k))
+			    {
+				    $bookkeeping = new BookKeeping($db);
+				    $bookkeeping->doc_date = $val["date"];
+				    $bookkeeping->doc_ref = $val["ref"];
+				    $bookkeeping->doc_type = 'facture_fournisseur';
+				    $bookkeeping->fk_doc = $key;
+				    $bookkeeping->fk_docdet = $val["fk_facturefourndet"];
+				    $bookkeeping->fk_compte = $compte->id;
+				    $bookkeeping->label_compte = $compte->intitule;
+				    $bookkeeping->numero_compte = $k;
+				    $bookkeeping->montant = $mt;
+				    $bookkeeping->sens = ($mt < 0)?'D':'C';
+				    $bookkeeping->debit = ($mt < 0)?$mt:0;
+				    $bookkeeping->credit = ($mt >= 0)?$mt:0;
+
+				    $bookkeeping->create();
+				}
+			}
+		}
+	}
+}
+// export csv
 
 if (GETPOST('action') == 'export_csv')
 {
@@ -202,6 +290,8 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
 
 	print '<input type="button" class="button" style="float: right;" value="Export CSV" onclick="launch_export();" />';
 
+  print '<input type="button" class="button" value="'.$langs->trans("writeBookKeeping").'" onclick="writeBookKeeping();" />';
+	
 	print '
 	<script type="text/javascript">
 		function launch_export() {
@@ -277,7 +367,9 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
 		{
 		    $companystatic->id=$tabcompany[$key]['id'];
     	  $companystatic->name=$tabcompany[$key]['name'];
-		    print "<td>".$k."</td><td>".$langs->trans("ThirdParty")."</td>";
+    	  
+		    print "<td>".$k;
+		    print "</td><td>".$langs->trans("ThirdParty")."</td>";
 		    print ' ('.$companystatic->getNomUrl(0,'supplier',16).')';
 	      print "</td>";
 		    print '<td align="right">'.($mt<0?-price(-$mt):'')."</td>";
