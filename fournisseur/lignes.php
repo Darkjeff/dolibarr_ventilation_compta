@@ -133,7 +133,7 @@ if ($result)
       //Ref Invoice
       $facturefournisseur_static->ref=$objp->facnumber;
       $facturefournisseur_static->id=$objp->facid;
-      print '<td>'.$facturefournisseur_static->getNomUrl(1).'</td';
+      print '<td>'.$facturefournisseur_static->getNomUrl(1).'</td>';
       
       
       // Ref Product
