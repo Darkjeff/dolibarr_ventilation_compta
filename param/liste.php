@@ -45,7 +45,7 @@ $offset = $conf->liste_limit * $page ;
  *
  */
 
-$sql = "SELECT cg.rowid, cg.numero, cg.intitule, cg.date_creation as dc";
+$sql = "SELECT cg.rowid, cg.numero, cg.intitule, cg.sellsjournal, cg.date_creation as dc";
 
 $sql .= " FROM ".MAIN_DB_PREFIX."compta_compte_generaux as cg";
 
@@ -83,6 +83,7 @@ if ($resql)
   print '<tr class="liste_titre">';
   print_liste_field_titre($langs->trans("AccountNumberShort"),"liste.php","cg.numero");
   print_liste_field_titre($langs->trans("Label"),"liste.php","cg.intitule");
+  print_liste_field_titre($langs->trans("SellsJournal"),"liste.php","cg.sellsjournal");
   print_liste_field_titre($langs->trans("DateCreation"),"liste.php","cg.date_creation");
   print "</tr>\n";
 
@@ -90,6 +91,7 @@ if ($resql)
   print '<form action="liste.php" method="GET">';
   print '<td><input type="text" name="search_numero" value="'.$_GET["search_numero"].'"></td>';
   print '<td><input type="text" name="search_intitule" value="'.$_GET["search_intitule"].'"></td>';
+  print '<td>&nbsp;</td>';
   print '<td align="right">';
   print '<input type="image" class="liste_titre" name="button_search" src="'.DOL_URL_ROOT.'/theme/'.$conf->theme.'/img/search.png" value="'.dol_escape_htmltag($langs->trans("Search")).'" title="'.dol_escape_htmltag($langs->trans("Search")).'">';
   print '</td>';
@@ -109,6 +111,7 @@ if ($resql)
 	  print img_edit();
 	  print '</a>&nbsp;'.$obj->numero.'</td>'."\n";
       print '<td>'.$obj->intitule.'</td>';
+      print '<td align="center">'.$obj->sellsjournal.'</td>';
       print '<td align="right" width="100">';
       print dol_print_date($db->jdate($obj->dc));
 
