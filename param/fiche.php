@@ -42,6 +42,9 @@ if (GETPOST("action") == 'add' && $user->rights->compta->ventilation->parametrer
   $compte->numero   = GETPOST("numero");
   $compte->intitule = GETPOST("intitule");
 
+  // exemple traitement case à cocher journal de vente
+  $compte->sellsjournal = (GETPOST("sellsjournal") == 'on')?'O':'N';
+
   $e_compte = $compte;
 
   $res = $compte->create($user);
@@ -70,6 +73,9 @@ elseif (GETPOST("action") == 'maj' && $user->rights->compta->ventilation->parame
 
   $compte->numero   = GETPOST("numero");
   $compte->intitule = GETPOST("intitule");
+  
+  // exemple traitement case à cocher journal de vente
+  $compte->sellsjournal = (GETPOST("sellsjournal") == 'on')?'O':'N';
 
   $e_compte = $compte;
 
@@ -117,6 +123,10 @@ if ($action == 'create' && $user->rights->compta->ventilation->parametrer)
     print '</td></tr>';
     print '<tr><td>'.$langs->trans("Label").'</td><td><input name="intitule" size="40" value="'.$compte->intitule.'"></td></tr>';
 
+  	// exemple case à cocher journal de vente
+    $checked = ($compte->sellsjournal == 'O')?' checked=checked':'';
+    print '<tr><td>'.$langs->trans("SellsJournal").'</td><td><input type="checkbox" name="sellsjournal"'.$checked .'/></td></tr>';
+
     print '<tr><td>&nbsp;</td><td><input type="submit" class="button" value="'.$langs->trans("Create").'"></td></tr>';
     print '</table>';
     print '</form>';
@@ -142,6 +152,10 @@ elseif ($action == 'update' && $user->rights->compta->ventilation->parametrer)
     print '<tr>';
     print '<td>'.$langs->trans("AccountNumber").'</td><td><input name="numero" size="20" value="'.$compte->numero.'"></td></tr>';
     print '<tr><td>'.$langs->trans("Label").'</td><td><input name="intitule" size="40" value="'.$compte->intitule.'"></td></tr>';
+
+  	// exemple case à cocher journal de vente
+    $checked = ($compte->sellsjournal == 'O')?' checked=checked':'';
+    print '<tr><td>'.$langs->trans("SellsJournal").'</td><td><input type="checkbox" name="sellsjournal"'.$checked .'/></td></tr>';
 
     print '<tr><td>&nbsp;</td><td><input type="submit" class="button" value="'.$langs->trans("Update").'"></td></tr>';
     print '</table>';
