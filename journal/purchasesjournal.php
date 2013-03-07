@@ -85,8 +85,8 @@ if (empty($date_start) || empty($date_end)) // We define date_start and date_end
 $p = explode(":", $conf->global->MAIN_INFO_SOCIETE_PAYS);
 $idpays = $p[0];
 
-$sql = "SELECT f.rowid, f.facnumber, f.type, f.datef, f.libelle,";
-$sql.= " fd.rowid as fdid , fd.total_ttc, fd.tva_tx, fd.total_ht, fd.tva as total_tva, fd.product_type,";
+$sql = "SELECT f.rowid, f.facnumber, f.type, f.datef as df, f.libelle,";
+$sql.= " fd.rowid as fdid, fd.total_ttc, fd.tva_tx, fd.total_ht, fd.tva as total_tva, fd.product_type,";
 $sql.= " s.rowid as socid, s.nom as name, s.code_compta_fournisseur, s.fournisseur,";
 $sql.= " s.code_compta_fournisseur, p.accountancy_code_buy , ct.accountancy_code_buy as account_tva";
 $sql.= " FROM ".MAIN_DB_PREFIX."facture_fourn_det fd";
@@ -128,7 +128,7 @@ if ($result)
 		}
 		$compta_tva = (! empty($obj->account_tva)?$obj->account_tva:$cpttva);
 
-		$tabfac[$obj->rowid]["date"] = dol_print_date($db->jdate($obj->datef),'day');
+		$tabfac[$obj->rowid]["date"] = $obj->df;
 		$tabfac[$obj->rowid]["ref"] = $obj->facnumber;
 		$tabfac[$obj->rowid]["type"] = $obj->type;
 		$tabfac[$obj->rowid]["fk_facturefourndet"] = $obj->fdid;
@@ -236,12 +236,13 @@ if (GETPOST('action') == 'export_csv')
     header( 'Content-Disposition: attachment;filename=journal_achats.csv');
 	foreach ($tabfac as $key => $val)
 	{
+	$date = dol_print_date($db->jdate($val["date"]),'day');
 		// product
 		foreach ($tabht[$key] as $k => $mt)
 		{
 			if ($mt)
 			{
-				print '"'.$val["date"].'",';
+				print '"'.$date.'",';
 				print '"'.$val["ref"].'",';
 				print '"'.html_entity_decode($k).'","'.$langs->trans("Products").'","'.($mt>=0?price($mt):'').'","'.($mt<0?price(-$mt):'').'"';
 				print "\n";
@@ -253,13 +254,13 @@ if (GETPOST('action') == 'export_csv')
 		{
 		    if ($mt)
 		    {
-				print '"'.$val["date"].'",';
+				print '"'.$date.'",';
 				print '"'.$val["ref"].'",';
 				print '"'.html_entity_decode($k).'","'.$langs->trans("VAT").'","'.($mt>=0?price($mt):'').'","'.($mt<0?price(-$mt):'').'"';
 				print "\n";
 			}
 		}
-		print '"'.$val["date"].'",';
+		print '"'.$date.'",';
 		print '"'.$val["ref"].'",';
 		foreach ($tabttc[$key] as $k => $mt)
 		{
@@ -268,6 +269,8 @@ if (GETPOST('action') == 'export_csv')
 		print "\n";
 	}
 }
+
+
 else
 {
 
@@ -299,6 +302,11 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
 			$("div.fiche div.tabBar form input[type=\"submit\"]").click();
 		    $("div.fiche div.tabBar form input[name=\"action\"]").val("");
 		}
+		function writeBookKeeping() {
+		    $("div.fiche div.tabBar form input[name=\"action\"]").val("writeBookKeeping");
+			$("div.fiche div.tabBar form input[type=\"submit\"]").click();
+		    $("div.fiche div.tabBar form input[name=\"action\"]").val("");
+		}
 	</script>';
 
 	/*
@@ -320,11 +328,15 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
 	$invoicestatic=new FactureFournisseur($db);
 	$companystatic=new Fournisseur($db);
 
+
+
 	foreach ($tabfac as $key => $val)
 	{
 		$invoicestatic->id=$key;
 		$invoicestatic->ref=$val["ref"];
 		$invoicestatic->type=$val["type"];
+$date = dol_print_date($db->jdate($val["date"]),'day');		
+		
 
 		// product
 		foreach ($tabht[$key] as $k => $mt)
@@ -333,7 +345,7 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
 			{
 				print "<tr ".$bc[$var]." >";
 				//print "<td>".$conf->global->COMPTA_JOURNAL_BUY."</td>";
-				print "<td>".$val["date"]."</td>";
+				print "<td>".$date."</td>";
 				print "<td>".$invoicestatic->getNomUrl(1)."</td>";
 				print "<td>".$k."</td><td>".$langs->trans("Products")."</td>";
 				print '<td align="right">'.($mt>=0?price($mt):'')."</td>";
@@ -349,7 +361,7 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
 			{
 				print "<tr ".$bc[$var]." >";
 				//print "<td>".$conf->global->COMPTA_JOURNAL_BUY."</td>";
-				print "<td>".$val["date"]."</td>";
+				print "<td>".$date."</td>";
 				print "<td>".$invoicestatic->getNomUrl(1)."</td>";
 				print "<td>".$k."</td><td>".$langs->trans("VAT")." ".$key."</td>";
 				print '<td align="right">'.($mt>=0?price($mt):'')."</td>";
@@ -360,7 +372,7 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
 		print "<tr ".$bc[$var].">";
 		// third party
 		//print "<td>".$conf->global->COMPTA_JOURNAL_BUY."</td>";
-		print "<td>".$val["date"]."</td>";
+		print "<td>".$date."</td>";
 		print "<td>".$invoicestatic->getNomUrl(1)."</td>";
 
 		foreach ($tabttc[$key] as $k => $mt)
@@ -369,7 +381,7 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
     	  $companystatic->name=$tabcompany[$key]['name'];
     	  
 		    print "<td>".$k;
-		    print "</td><td>".$langs->trans("ThirdParty")."</td>";
+		    print "</td><td>".$langs->trans("ThirdParty");
 		    print ' ('.$companystatic->getNomUrl(0,'supplier',16).')';
 	      print "</td>";
 		    print '<td align="right">'.($mt<0?-price(-$mt):'')."</td>";
