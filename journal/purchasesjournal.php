@@ -155,17 +155,15 @@ if (GETPOST('action') == 'writeBookKeeping')
 		foreach ($tabttc[$key] as $k => $mt)
 		{
 		    // get compte id and label
-		    $compte = new ComptaCompte($db);
-		    if ($compte->fetch(null, $k))
-		    {
+		   
 			    $bookkeeping = new BookKeeping($db);
 			    $bookkeeping->doc_date = $val["date"];
 			    $bookkeeping->doc_ref = $val["ref"];
 			    $bookkeeping->doc_type = 'facture_fournisseur';
 			    $bookkeeping->fk_doc = $key;
 			    $bookkeeping->fk_docdet = $val["fk_facturefourndet"];
-			    $bookkeeping->fk_compte = $compte->id;
-			    $bookkeeping->label_compte = $compte->intitule;
+			    $bookkeeping->code_tiers = $tabcompany[$key]['code_client'];
+			    $bookkeeping->label_compte = $tabcompany[$key]['name'];
 			    $bookkeeping->numero_compte = $k;
 			    $bookkeeping->montant = $mt;
 			    $bookkeeping->sens = ($mt >= 0)?'D':'C';
@@ -174,7 +172,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 
 			    $bookkeeping->create();
 			}
-		}
+		
 		// product
 		foreach ($tabht[$key] as $k => $mt)
 		{
@@ -190,7 +188,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 				    $bookkeeping->doc_type = 'facture_fournisseur';
 				    $bookkeeping->fk_doc = $key;
 				    $bookkeeping->fk_docdet = $val["fk_facturefourndet"];
-				    $bookkeeping->fk_compte = $compte->id;
+				    $bookkeeping->code_tiers = '';
 				    $bookkeeping->label_compte = $compte->intitule;
 				    $bookkeeping->numero_compte = $k;
 				    $bookkeeping->montant = $mt;
@@ -209,17 +207,16 @@ if (GETPOST('action') == 'writeBookKeeping')
 		    if ($mt)
 		    {
 			    // get compte id and label
-			    $compte = new ComptaCompte($db);
-			    if ($compte->fetch(null, $k))
-			    {
+			  
+			    
 				    $bookkeeping = new BookKeeping($db);
 				    $bookkeeping->doc_date = $val["date"];
 				    $bookkeeping->doc_ref = $val["ref"];
 				    $bookkeeping->doc_type = 'facture_fournisseur';
 				    $bookkeeping->fk_doc = $key;
 				    $bookkeeping->fk_docdet = $val["fk_facturefourndet"];
-				    $bookkeeping->fk_compte = $compte->id;
-				    $bookkeeping->label_compte = $compte->intitule;
+				    $bookkeeping->code_tiers = '';
+				    $bookkeeping->label_compte = 'TVA';
 				    $bookkeeping->numero_compte = $k;
 				    $bookkeeping->montant = $mt;
 				    $bookkeeping->sens = ($mt < 0)?'D':'C';
@@ -231,7 +228,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 			}
 		}
 	}
-}
+
 // export csv
 
 if (GETPOST('action') == 'export_csv')
