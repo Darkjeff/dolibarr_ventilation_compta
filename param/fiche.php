@@ -2,6 +2,7 @@
 /* Copyright (C) 2001-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2004-2005 Laurent Destailleur  <eldy@users.sourceforge.net>
  * Copyright (C) 2013 Olivier Geffroy  <jeff@jeffinfo.com>
+ * Copyright (C) 2013 Florian Henry	  <florian.henry@open-concept.pro>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,8 +28,12 @@
         \version    $Revision: 1.14 $
 */
 
-require("../../../main.inc.php");
-require_once(DOL_DOCUMENT_ROOT_ALT."/ventilation/compta/class/comptacompte.class.php");
+// Dolibarr environment
+$res = @include("../../main.inc.php"); // From htdocs directory
+if ( ! $res)
+		$res = @include("../../../main.inc.php"); // From "custom" directory
+
+dol_include_once("/ventilation/compta/class/comptacompte.class.php");
 
 $langs->load("ventilation@ventilation");
 

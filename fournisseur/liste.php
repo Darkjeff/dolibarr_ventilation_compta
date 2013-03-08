@@ -26,8 +26,10 @@
  *	\brief      Page de ventilation des lignes de facture
  */
 
-$res=@include("../../main.inc.php");						// For root directory
-if (! $res) $res=@include("../../../main.inc.php");			// For "custom" directory
+// Dolibarr environment
+$res = @include("../../main.inc.php"); // From htdocs directory
+if ( ! $res)
+		$res = @include("../../../main.inc.php"); // From "custom" directory
 
 $langs->load("bills");
 $langs->load("ventilation@ventilation");
@@ -78,7 +80,7 @@ if($_POST["action"] == 'ventil')
     }
     else
     {
-      print '<div><font color="red">Aucune ligne à ventiler</font></div>';
+      print '<div><font color="red">Aucune ligne ï¿½ ventiler</font></div>';
     }
     print '<div><font color="red">Traitement termine </font></div>';
   }

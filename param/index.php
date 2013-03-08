@@ -1,6 +1,7 @@
 <?php
 /* Copyright (C) 2001-2004 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2004-2005 Laurent Destailleur  <eldy@users.sourceforge.net>
+ * Copyright (C) 2013      Florian Henry	  <florian.henry@open-concept.pro>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +26,10 @@
 		\version    $Revision: 1.12 $
 */
 
-require("../../../main.inc.php");
+// Dolibarr environment
+$res = @include("../../main.inc.php"); // From htdocs directory
+if ( ! $res)
+		$res = @include("../../../main.inc.php"); // From "custom" directory
 
 $langs->load("compta");
 $langs->load("bills");
@@ -76,5 +80,5 @@ print '</table>';
 
 $db->close();
 
-llxFooter('$Date: 2011/08/08 15:28:01 $ - $Revision: 1.12 $');
+llxFooter();
 ?>

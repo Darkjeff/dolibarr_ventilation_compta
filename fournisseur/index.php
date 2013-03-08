@@ -25,8 +25,10 @@
  *      \brief      Page accueil ventilation
  */
 
-$res=@include("../../main.inc.php");						// For root directory
-if (! $res) $res=@include("../../../main.inc.php");			// For "custom" directory
+// Dolibarr environment
+$res = @include("../../main.inc.php"); // From htdocs directory
+if ( ! $res)
+		$res = @include("../../../main.inc.php"); // From "custom" directory
 
 require_once(DOL_DOCUMENT_ROOT."/core/lib/date.lib.php");
 

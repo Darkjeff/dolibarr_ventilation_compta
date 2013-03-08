@@ -16,7 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require("../../../main.inc.php");
+// Dolibarr environment
+$res = @include("../../main.inc.php"); // From htdocs directory
+if ( ! $res)
+		$res = @include("../../../main.inc.php"); // From "custom" directory
 
 
 $langs->load("companies");
