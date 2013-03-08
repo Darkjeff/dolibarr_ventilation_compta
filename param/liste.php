@@ -25,7 +25,10 @@
         \version    $Revision: 1.12 $
 */
 
-require("../../../main.inc.php");
+// Dolibarr environment
+$res = @include("../../main.inc.php"); // From htdocs directory
+if ( ! $res)
+		$res = @include("../../../main.inc.php"); // From "custom" directory
 
 
 llxHeader('','Compta - Liste des comptes');

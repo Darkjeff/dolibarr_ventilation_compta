@@ -5,6 +5,7 @@
  * Copyright (C) 2012		Regis Houssin		<regis@dolibarr.fr>
  * Copyright (C) 2013		Christophe Battarel	<christophe.battarel@altairis.fr>
  * Copyright (C) 2011-2012 Alexandre Spangaro	  <alexandre.spangaro@gmail.com>
+ * Copyright (C) 2013       Florian Henry	  <florian.henry@open-concept.pro>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,14 +26,17 @@
  *		\ingroup    societe, facture
  *		\brief      Page with sells journal
  */
-require("../../../main.inc.php");
+// Dolibarr environment
+$res = @include("../../main.inc.php"); // From htdocs directory
+if ( ! $res)
+		$res = @include("../../../main.inc.php"); // From "custom" directory
 require_once(DOL_DOCUMENT_ROOT."/core/lib/report.lib.php");
 require_once(DOL_DOCUMENT_ROOT."/core/lib/date.lib.php");
 require_once(DOL_DOCUMENT_ROOT."/compta/facture/class/facture.class.php");
 require_once DOL_DOCUMENT_ROOT.'/societe/class/client.class.php';
 
-require_once DOL_DOCUMENT_ROOT_ALT.'/ventilation/compta/class/comptacompte.class.php';
-require_once DOL_DOCUMENT_ROOT_ALT.'/ventilation/compta/class/bookkeeping.class.php';
+dol_include_once('/ventilation/compta/class/comptacompte.class.php');
+dol_include_once('/ventilation/compta/class/bookkeeping.class.php');
 
 $langs->load("companies");
 $langs->load("other");
