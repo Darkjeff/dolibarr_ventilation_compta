@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `llx_bookkeeping` (
   `doc_ref` varchar(30) NOT NULL,			-- facture_client/reglement_client/... reference number
   `fk_doc` int(11) NOT NULL,                -- facture_client/reglement_client/... rowid
   `fk_docdet` int(11) NOT NULL,             -- facture_client/reglement_client/... line rowid
-  `fk_compte` int(11) NOT NULL,
+  `code_tiers` varchar(24),                 -- code tiers
   `numero_compte` varchar(50) DEFAULT NULL,
   `label_compte` varchar(128) CHARACTER SET utf8 NOT NULL,
   `debit` double NOT NULL,
@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS `llx_bookkeeping` (
   `montant` double NOT NULL,
   `sens` varchar(1) DEFAULT NULL,
   `fk_user_author` int(11) NOT NULL,
+  import_key			varchar(14),
   PRIMARY KEY (`rowid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 

@@ -49,7 +49,7 @@ $offset = $conf->liste_limit * $page ;
  *
  */
 
-$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.fk_compte , bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens ";
+$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens ";
 
 $sql .= " FROM ".MAIN_DB_PREFIX."bookkeeping as bk";
 

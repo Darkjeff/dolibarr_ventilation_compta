@@ -93,7 +93,7 @@ $idpays = $p[0];
 
 $sql = "SELECT f.rowid, f.facnumber, f.type, f.datef as df, f.ref_client,";
 $sql.= " fd.rowid as fdid, fd.product_type, fd.total_ht, fd.total_tva, fd.tva_tx, fd.total_ttc,";
-$sql.= " s.rowid as socid, s.nom as name, s.code_compta, s.client,";
+$sql.= " s.rowid as socid, s.nom as name, s.code_compta, s.code_client,";
 $sql.= " p.rowid as pid, p.ref as pref, p.accountancy_code_sell, ccg.rowid as fk_compte, ccg.numero as compte, ccg.intitule as label_compte, ";
 $sql.= " ct.accountancy_code_sell as account_tva";
 $sql.= " FROM ".MAIN_DB_PREFIX."facturedet fd";
@@ -151,7 +151,7 @@ if ($result)
    		$tabttc[$obj->rowid][$compta_soc] += $obj->total_ttc;
    		$tabht[$obj->rowid][$compta_prod] += $obj->total_ht;
    		$tabtva[$obj->rowid][$compta_tva] += $obj->total_tva;
-   		$tabcompany[$obj->rowid]=array('id'=>$obj->socid, 'name'=>$obj->name, 'client'=>$obj->client);
+   		$tabcompany[$obj->rowid]=array('id'=>$obj->socid, 'name'=>$obj->name, 'code_client'=>$obj->code_client);
 
    		$i++;
    	}
@@ -166,26 +166,21 @@ if (GETPOST('action') == 'writeBookKeeping')
 	{
 		foreach ($tabttc[$key] as $k => $mt)
 		{
-		    // get compte id and label
-		    $compte = new ComptaCompte($db);
-		    if ($compte->fetch(null, $k))
-		    {
-			    $bookkeeping = new BookKeeping($db);
-			    $bookkeeping->doc_date = $val["date"];
-			    $bookkeeping->doc_ref = $val["ref"];
-			    $bookkeeping->doc_type = 'facture_client';
-			    $bookkeeping->fk_doc = $key;
-			    $bookkeeping->fk_docdet = $val["fk_facturedet"];
-			    $bookkeeping->fk_compte = $compte->id;
-			    $bookkeeping->label_compte = $compte->intitule;
-			    $bookkeeping->numero_compte = $k;
-			    $bookkeeping->montant = $mt;
-			    $bookkeeping->sens = ($mt >= 0)?'D':'C';
-			    $bookkeeping->debit = ($mt >= 0)?$mt:0;
-			    $bookkeeping->credit = ($mt < 0)?$mt:0;
+		    $bookkeeping = new BookKeeping($db);
+		    $bookkeeping->doc_date = $val["date"];
+		    $bookkeeping->doc_ref = $val["ref"];
+		    $bookkeeping->doc_type = 'facture_client';
+		    $bookkeeping->fk_doc = $key;
+		    $bookkeeping->fk_docdet = $val["fk_facturedet"];
+		    $bookkeeping->code_tiers = $tabcompany[$key]['code_client'];
+		    $bookkeeping->numero_compte = $k;
+		    $bookkeeping->label_compte = $tabcompany[$key]['name'];
+		    $bookkeeping->montant = $mt;
+		    $bookkeeping->sens = ($mt >= 0)?'D':'C';
+		    $bookkeeping->debit = ($mt >= 0)?$mt:0;
+		    $bookkeeping->credit = ($mt < 0)?$mt:0;
 
-			    $bookkeeping->create();
-			}
+		    $bookkeeping->create();
 		}
 		// product
 		foreach ($tabht[$key] as $k => $mt)
@@ -202,9 +197,9 @@ if (GETPOST('action') == 'writeBookKeeping')
 				    $bookkeeping->doc_type = 'facture_client';
 				    $bookkeeping->fk_doc = $key;
 				    $bookkeeping->fk_docdet = $val["fk_facturedet"];
-				    $bookkeeping->fk_compte = $compte->id;
-				    $bookkeeping->label_compte = $compte->intitule;
+		    		$bookkeeping->code_tiers = '';
 				    $bookkeeping->numero_compte = $k;
+				    $bookkeeping->label_compte = $compte->intitule;
 				    $bookkeeping->montant = $mt;
 				    $bookkeeping->sens = ($mt < 0)?'D':'C';
 				    $bookkeeping->debit = ($mt < 0)?$mt:0;
@@ -220,26 +215,22 @@ if (GETPOST('action') == 'writeBookKeeping')
 		{
 		    if ($mt)
 		    {
-			    // get compte id and label
-			    $compte = new ComptaCompte($db);
-			    if ($compte->fetch(null, $k))
-			    {
-				    $bookkeeping = new BookKeeping($db);
-				    $bookkeeping->doc_date = $val["date"];
-				    $bookkeeping->doc_ref = $val["ref"];
-				    $bookkeeping->doc_type = 'facture_client';
-				    $bookkeeping->fk_doc = $key;
-				    $bookkeeping->fk_docdet = $val["fk_facturedet"];
-				    $bookkeeping->fk_compte = $compte->id;
-				    $bookkeeping->label_compte = $compte->intitule;
-				    $bookkeeping->numero_compte = $k;
-				    $bookkeeping->montant = $mt;
-				    $bookkeeping->sens = ($mt < 0)?'D':'C';
-				    $bookkeeping->debit = ($mt < 0)?$mt:0;
-				    $bookkeeping->credit = ($mt >= 0)?$mt:0;
+			    $bookkeeping = new BookKeeping($db);
+			    $bookkeeping->doc_date = $val["date"];
+			    $bookkeeping->doc_ref = $val["ref"];
+			    $bookkeeping->doc_type = 'facture_client';
+			    $bookkeeping->fk_doc = $key;
+			    $bookkeeping->fk_docdet = $val["fk_facturedet"];
+			    $bookkeeping->fk_compte = $compte->id;
+	    		$bookkeeping->code_tiers = '';
+			    $bookkeeping->numero_compte = $k;
+			    $bookkeeping->label_compte = 'TVA';
+			    $bookkeeping->montant = $mt;
+			    $bookkeeping->sens = ($mt < 0)?'D':'C';
+			    $bookkeeping->debit = ($mt < 0)?$mt:0;
+			    $bookkeeping->credit = ($mt >= 0)?$mt:0;
 
-				    $bookkeeping->create();
-				}
+			    $bookkeeping->create();
 			}
 		}
 	}
@@ -358,7 +349,7 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
 		{
 			$companystatic->id=$tabcompany[$key]['id'];
 	    	$companystatic->name=$tabcompany[$key]['name'];
-	    	$companystatic->client=$tabcompany[$key]['client'];
+	    	$companystatic->client=$tabcompany[$key]['code_client'];
 	    print "<td>".$k;
 		print "</td><td>".$langs->trans("ThirdParty");
 		print ' ('.$companystatic->getNomUrl(0,'customer',16).')';

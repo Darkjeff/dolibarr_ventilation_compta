@@ -36,7 +36,7 @@ class BookKeeping
   var $doc_type;
   var $fk_doc;
   var $fk_docdet;
-  var $fk_compte;
+  var $code_tiers;
   var $numero_compte;
   var $label_compte;
   var $debit;
@@ -79,8 +79,9 @@ class BookKeeping
 			$row = $this->db->fetch_array($resql);
 			if ($row[0] == 0)
 			{
-			  $sql = "INSERT INTO ".MAIN_DB_PREFIX."bookkeeping (doc_date, doc_type, doc_ref,fk_doc,fk_docdet,fk_compte,numero_compte,label_compte,debit,credit,montant,sens,fk_user_author)";
-			  $sql .= " VALUES ('".$this->doc_date."','".$this->doc_type."','".$this->doc_ref."',".$this->fk_doc.",".$this->fk_docdet.",".$this->fk_compte.",'".$this->numero_compte."','".$this->label_compte."',".$this->debit.",".$this->credit.",".$this->montant.",'".$this->sens."',".$user->id.")";
+			  $now=dol_now();
+			  $sql = "INSERT INTO ".MAIN_DB_PREFIX."bookkeeping (doc_date, doc_type, doc_ref,fk_doc,fk_docdet,code_tiers,numero_compte,label_compte,debit,credit,montant,sens,fk_user_author,import_key)";
+			  $sql .= " VALUES ('".$this->doc_date."','".$this->doc_type."','".$this->doc_ref."',".$this->fk_doc.",".$this->fk_docdet.",'".$this->code_tiers."','".$this->numero_compte."','".$this->label_compte."',".$this->debit.",".$this->credit.",".$this->montant.",'".$this->sens."',".$user->id.", '".$now."')";
 
 			  $resql = $this->db->query($sql);
 			  if ( $resql )
