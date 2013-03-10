@@ -300,6 +300,18 @@ class modVentilation extends DolibarrModules
 		                        'target'=>'',
 		                        'user'=>0);
       		$r++;
+      		$this->menu[$r]=array(  'fk_menu'=>'r=14',
+		                        'type'=>'left',
+		                        'titre'=>'Journal banque',
+		                        'mainmenu'=>'ventilation',
+		                        'url'=>'/ventilation/journal/bankjournal.php',
+		                        'langs'=>'ventilation@ventilation',
+		                        'position'=>143,
+		                        'enabled'=>1,
+		                        'perms'=>1,
+		                        'target'=>'',
+		                        'user'=>0);
+      		$r++;
 	}
 
 

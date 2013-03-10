@@ -15,3 +15,5 @@ update=Mettre a jour
 list=liste
 create=creer
 UpdateAccount=Modification d'un compte
+writeBookKeeping=Ecrire les écritures comptables
+GeneralLedger=Grand Livre
