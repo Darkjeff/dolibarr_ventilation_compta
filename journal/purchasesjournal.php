@@ -139,7 +139,7 @@ if ($result)
 		$tabttc[$obj->rowid][$compta_soc] += $obj->total_ttc;
 		$tabht[$obj->rowid][$compta_prod] += $obj->total_ht;
 		$tabtva[$obj->rowid][$compta_tva] += $obj->total_tva;
-		$tabcompany[$obj->rowid]=array('id'=>$obj->socid,'name'=>$obj->name, 'fournisseur'=>$obj->fournisseur);
+		$tabcompany[$obj->rowid]=array('id'=>$obj->socid,'name'=>$obj->name, 'code_fournisseur'=>$obj->code_compta_fournisseur);
 
 		$i++;
 	}
@@ -162,9 +162,9 @@ if (GETPOST('action') == 'writeBookKeeping')
 			    $bookkeeping->doc_type = 'facture_fournisseur';
 			    $bookkeeping->fk_doc = $key;
 			    $bookkeeping->fk_docdet = $val["fk_facturefourndet"];
-			    $bookkeeping->code_tiers = $tabcompany[$key]['code_client'];
+			    $bookkeeping->code_tiers = $tabcompany[$key]['code_fournisseur'];
 			    $bookkeeping->label_compte = $tabcompany[$key]['name'];
-			    $bookkeeping->numero_compte = $k;
+			    $bookkeeping->numero_compte = $conf->global->COMPTA_ACCOUNT_SUPPLIER;
 			    $bookkeeping->montant = $mt;
 			    $bookkeeping->sens = ($mt >= 0)?'D':'C';
 			    $bookkeeping->debit = ($mt >= 0)?$mt:0;

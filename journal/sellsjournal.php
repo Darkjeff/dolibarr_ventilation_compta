@@ -151,7 +151,7 @@ if ($result)
    		$tabttc[$obj->rowid][$compta_soc] += $obj->total_ttc;
    		$tabht[$obj->rowid][$compta_prod] += $obj->total_ht;
    		$tabtva[$obj->rowid][$compta_tva] += $obj->total_tva;
-   		$tabcompany[$obj->rowid]=array('id'=>$obj->socid, 'name'=>$obj->name, 'code_client'=>$obj->code_client);
+   		$tabcompany[$obj->rowid]=array('id'=>$obj->socid, 'name'=>$obj->name, 'code_client'=>$obj->code_compta);
 
    		$i++;
    	}
@@ -173,7 +173,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 		    $bookkeeping->fk_doc = $key;
 		    $bookkeeping->fk_docdet = $val["fk_facturedet"];
 		    $bookkeeping->code_tiers = $tabcompany[$key]['code_client'];
-		    $bookkeeping->numero_compte = $k;
+		    $bookkeeping->numero_compte = $conf->global->COMPTA_ACCOUNT_CUSTOMER;
 		    $bookkeeping->label_compte = $tabcompany[$key]['name'];
 		    $bookkeeping->montant = $mt;
 		    $bookkeeping->sens = ($mt >= 0)?'D':'C';

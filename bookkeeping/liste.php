@@ -49,7 +49,7 @@ $offset = $conf->liste_limit * $page ;
  *
  */
 
-$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens ";
+$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens ";
 
 $sql .= " FROM ".MAIN_DB_PREFIX."bookkeeping as bk";
 
@@ -89,6 +89,7 @@ if ($resql)
   print_liste_field_titre($langs->trans("docdate"),"liste.php","bk.doc_date");
   print_liste_field_titre($langs->trans("docref"),"liste.php","bk.doc_ref");
   print_liste_field_titre($langs->trans("numerocompte"),"liste.php","bk.numero_compte");
+  print_liste_field_titre($langs->trans("code_tiers"),"liste.php","bk.code_tiers");
   print_liste_field_titre($langs->trans("labelcompte"),"liste.php","bk_label_compte");
   print_liste_field_titre($langs->trans("debit"),"liste.php","bk.debit");
   print_liste_field_titre($langs->trans("credit"),"liste.php","bk.credit");
@@ -101,6 +102,7 @@ if ($resql)
   print '<td><input type="text" name="search_doc_type" value="'.$_GET["search_doc_type"].'"></td>';
   print '<td>&nbsp;</td>';
   print '<td><input type="text" name="search_doc_refe" value="'.$_GET["search_doc_ref"].'"></td>';
+  print '<td>&nbsp;</td>';
   print '<td>&nbsp;</td>';
   print '<td>&nbsp;</td>';
   print '<td>&nbsp;</td>';
@@ -126,12 +128,13 @@ if ($resql)
 	    print '</a>&nbsp;'.$obj->doc_type.'</td>'."\n";
 	    print '<td>'.dol_print_date($db->jdate($obj->doc_date)).'</td>';
       print '<td>'.$obj->doc_ref.'</td>';
-      print '<td align="center">'.$obj->numero_compte.'</td>';
-      print '<td align="center">'.$obj->label_compte.'</td>';
-      print '<td align="center">'.$obj->debit.'</td>';
-      print '<td align="center">'.$obj->credit.'</td>';
-      print '<td align="center">'.$obj->montant.'</td>';
-      print '<td align="center">'.$obj->sens.'</td>';
+      print '<td>'.$obj->numero_compte.'</td>';
+      print '<td>'.$obj->code_tiers.'</td>';
+      print '<td>'.$obj->label_compte.'</td>';
+      print '<td>'.$obj->debit.'</td>';
+      print '<td>'.$obj->credit.'</td>';
+      print '<td>'.$obj->montant.'</td>';
+      print '<td>'.$obj->sens.'</td>';
       print '<td align="right" width="100">';
       
 
