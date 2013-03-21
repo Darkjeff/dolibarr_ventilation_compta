@@ -25,9 +25,11 @@
  */
 
 // Dolibarr environment
-$res = @include("../../main.inc.php"); // From htdocs directory
-if ( ! $res)
-		$res = @include("../../../main.inc.php"); // From "custom" directory
+$res=@include("../main.inc.php");
+if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
+if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.php");
+if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
+if (! $res) die("Include of main fails");
 
 require_once(DOL_DOCUMENT_ROOT."/fourn/class/fournisseur.facture.class.php");
 

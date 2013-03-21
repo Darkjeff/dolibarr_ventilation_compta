@@ -27,9 +27,13 @@
  *		\brief      Page with sells journal
  */
 // Dolibarr environment
-$res = @include("../../main.inc.php"); // From htdocs directory
-if ( ! $res)
-		$res = @include("../../../main.inc.php"); // From "custom" directory
+$res=@include("../main.inc.php");
+if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
+if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.php");
+if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
+if (! $res) die("Include of main fails");
+		
+		
 require_once(DOL_DOCUMENT_ROOT."/core/lib/report.lib.php");
 require_once(DOL_DOCUMENT_ROOT."/core/lib/date.lib.php");
 require_once(DOL_DOCUMENT_ROOT."/compta/facture/class/facture.class.php");

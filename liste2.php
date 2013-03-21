@@ -25,9 +25,11 @@
  * 		\ingroup    compta
  * 		\brief      Page de ventilation des lignes de facture
  */
-
-$res=@include("../main.inc.php");						// For root directory
-if (! $res) $res=@include("../../main.inc.php");		// For "custom" directory
+$res=@include("../main.inc.php");
+if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
+if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.php");
+if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
+if (! $res) die("Include of main fails");
 
 require_once(DOL_DOCUMENT_ROOT."/compta/facture/class/facture.class.php");
 require_once(DOL_DOCUMENT_ROOT."/product/class/product.class.php");
