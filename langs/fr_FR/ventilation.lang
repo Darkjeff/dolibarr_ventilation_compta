@@ -4,6 +4,8 @@ CHARSET=UTF-8
 Module61000Name= Ventilation
 Module61000Desc= Gestion des ventilations et des marges
 
+Ventilation=Ventilation
+
 CustomersVentilation=Ventilation clients
 SuppliersVentilation=Ventilation fournisseurs
 TradeMargin=Marge commerciale
@@ -17,3 +19,15 @@ create=creer
 UpdateAccount=Modification d'un compte
 writeBookKeeping=Ecrire les écritures comptables
 GeneralLedger=Grand Livre
+
+VentilationComptable=Ventilation Comptable
+VentilationComptableSupplier=Ventilation Comptable Fournisseur
+Intitule=Intitule
+
+CAHT=Total Chiffre Affaire HT
+CAHTF=Total Achat Fournisseur HT
+InvoiceLines=Lignes de facture à ventiler
+InvoiceLinesDone=Lignes de facture ventilées
+DansCompte=Dans le compte
+
+Ventilate=Ventiler
