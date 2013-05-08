@@ -34,6 +34,7 @@ require_once(DOL_DOCUMENT_ROOT."/product/class/product.class.php");
 
 $langs->load("bills");
 $langs->load("compta");
+$langs->load("main");
 $langs->load("ventilation@ventilation");
 
 if (!$user->rights->facture->lire) accessforbidden();
@@ -97,7 +98,7 @@ if ($result)
 	$num_lignes = $db->num_rows($result);
 	$i = 0;
 
-	print_barre_liste("Lignes de facture ventilées",$page,"lignes.php","",$sortfield,$sortorder,'',$num_lignes);
+	print_barre_liste($langs->trans("InvoiceLinesDone"),$page,"lignes.php","",$sortfield,$sortorder,'',$num_lignes);
 
 	print '<form method="GET" action="lignes.php">';
 	print '<table class="noborder" width="100%">';
@@ -105,8 +106,8 @@ if ($result)
 	print '<td>'.$langs->trans("Ref").'</td>';
 	print '<td>'.$langs->trans("Label").'</td>';
 	print '<td>'.$langs->trans("Description").'</td>';
-	print '<td align="left">'.$langs->trans("Montant").'</td>';
-	print '<td colspan="2" align="left">'.$langs->trans("Compte").'</td>';
+	print '<td align="left">'.$langs->trans("Amount").'</td>';
+	print '<td colspan="2" align="left">'.$langs->trans("Account").'</td>';
 	print '<td align="center">&nbsp;</td>';
 	print "</tr>\n";
 

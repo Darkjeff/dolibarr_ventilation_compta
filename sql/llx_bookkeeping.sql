@@ -1,50 +1,36 @@
--- phpMyAdmin SQL Dump
--- version 3.5.1
--- http://www.phpmyadmin.net
+-- ============================================================================
+-- Copyright (C) 2013 Olivier Geffroy  <jeff@jeffinfo.com>
 --
--- Host: localhost
--- Generation Time: Feb 27, 2013 at 08:30 PM
--- Server version: 5.5.24-log
--- PHP Version: 5.3.13
-
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
+-- This program is free software; you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation; either version 3 of the License, or
+-- (at your option) any later version.
 --
--- Database: `jeffinfoerp2`
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
 --
-
--- --------------------------------------------------------
-
+-- You should have received a copy of the GNU General Public License
+-- along with this program. If not, see <http://www.gnu.org/licenses/>.
 --
--- Table structure for table `llx_bookkeeping`
---
+-- ============================================================================
 
-CREATE TABLE IF NOT EXISTS `llx_bookkeeping` (
-  `rowid` int(11) NOT NULL AUTO_INCREMENT,
-  `doc_date` date NOT NULL,
-  `doc_type` varchar(30) NOT NULL,			-- facture_client/reglement_client/facture_fournisseur/reglement_fournisseur
-  `doc_ref` varchar(30) NOT NULL,			-- facture_client/reglement_client/... reference number
-  `fk_doc` int(11) NOT NULL,                -- facture_client/reglement_client/... rowid
-  `fk_docdet` int(11) NOT NULL,             -- facture_client/reglement_client/... line rowid
-  `code_tiers` varchar(24),                 -- code tiers
-  `numero_compte` varchar(50) DEFAULT NULL,
-  `label_compte` varchar(128) CHARACTER SET utf8 NOT NULL,
-  `debit` double NOT NULL,
-  `credit` double NOT NULL,
-  `montant` double NOT NULL,
-  `sens` varchar(1) DEFAULT NULL,
-  `fk_user_author` int(11) NOT NULL,
-  import_key			varchar(14),
-  PRIMARY KEY (`rowid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+CREATE TABLE llx_bookkeeping 
+(
+  rowid				int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  doc_date			date NOT NULL,
+  doc_type			varchar(30) NOT NULL,	-- facture_client/reglement_client/facture_fournisseur/reglement_fournisseur
+  doc_ref			varchar(30) NOT NULL,	-- facture_client/reglement_client/... reference number
+  fk_doc			int(11) NOT NULL,		-- facture_client/reglement_client/... rowid
+  fk_docdet			int(11) NOT NULL,		-- facture_client/reglement_client/... line rowid
+  code_tiers		varchar(24),			-- code tiers
+  numero_compte		varchar(50) DEFAULT NULL,
+  label_compte		varchar(128) NOT NULL,
+  debit				double NOT NULL,
+  credit			double NOT NULL,
+  montant			double NOT NULL,
+  sens				varchar(1) DEFAULT NULL,
+  fk_user_author	int(11) NOT NULL,
+  import_key		varchar(14)
+) ENGINE=innodb;
