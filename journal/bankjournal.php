@@ -107,6 +107,8 @@ $sql.= " ".MAIN_DB_PREFIX."bank as b";
 $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."bank_url as bu ON bu.fk_bank = b.rowid AND type = 'company'";
 $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."societe as s ON bu.url_id = s.rowid";
 $sql.= " WHERE b.fk_account = ba.rowid";
+if ($date_start && $date_end) $sql .= " AND b.datev >= '".$db->idate($date_start)."' AND b.datev <= '".$db->idate($date_end)."'";
+$sql.= " ORDER BY b.datev";
 
 $result = $db->query($sql);
 if ($result)
@@ -138,7 +140,7 @@ if ($result)
 		$compta_tva = (! empty($obj->account_tva)?$obj->account_tva:$cpttva);
 
     	//la ligne facture
-   		$tabfac[$obj->rowid]["date"] = $obj->df;
+   		$tabfac[$obj->rowid]["date"] = $obj->dv;
    		$tabfac[$obj->rowid]["ref"] = $obj->facnumber;
    		$tabfac[$obj->rowid]["type"] = $obj->type;
    		$tabfac[$obj->rowid]["fk_facturedet"] = $obj->fdid;
@@ -326,8 +328,8 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
 	$var=true;
 	$r='';
 
-	$invoicestatic=new Facture($db);
-	$companystatic=new Client($db);
+	$invoicestatic=new Account($db);
+	$companystatic=new Societe($db);
 
 	foreach ($tabfac as $key => $val)
 	{

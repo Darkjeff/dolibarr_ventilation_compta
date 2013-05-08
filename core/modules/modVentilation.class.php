@@ -192,9 +192,9 @@ class modVentilation extends DolibarrModules
       
 		$this->menu[$r]=array(  'fk_menu'=>'r=7',
 								'type'=>'left',
-								'titre'=>'ByCustomerInvoice',
+								'titre'=>'ByYear',
 								'mainmenu'=>'ventilation',
-		                        'url'=>'/ventilation/marge/factcli.php',
+		                        'url'=>'/ventilation/bookkeeping/listebyyear.php',
 		                        'langs'=>'ventilation@ventilation',
 		                        'position'=>121,
 		                        'enabled'=>1,
@@ -203,26 +203,15 @@ class modVentilation extends DolibarrModules
 		                        'user'=>0);
 		$r++;
       
-      		$this->menu[$r]=array(  'fk_menu'=>'r=7',
-		                        'type'=>'left',
-		                        'titre'=>'ByMonth',
-		                        'mainmenu'=>'ventilation',
-		                        'url'=>'/ventilation/marge/lignes.php',
-		                        'langs'=>'ventilation@ventilation',
-		                        'position'=>122,
-		                        'enabled'=>1,
-		                        'perms'=>1,
-		                        'target'=>'',
-		                        'user'=>0);
-      		$r++;
+    
       	
      	 	$this->menu[$r]=array(  'fk_menu'=>'r=7',
 		                        'type'=>'left',
-		                        'titre'=>'ToDispatch',
+		                        'titre'=>'Balance mensuelle',
 		                        'mainmenu'=>'ventilation',
-		                        'url'=>'/ventilation/marge/liste.php',
+		                        'url'=>'/ventilation/bookkeeping/balancebymonth.php',
 		                        'langs'=>'ventilation@ventilation',
-		                        'position'=>123,
+		                        'position'=>122,
 		                        'enabled'=>1,
 		                        'perms'=>1,
 		                        'target'=>'',
@@ -240,7 +229,7 @@ class modVentilation extends DolibarrModules
 								'target'=>'',
 								'user'=>0);
 		$r++;
-		$this->menu[$r]=array(  'fk_menu'=>'r=11',
+		$this->menu[$r]=array(  'fk_menu'=>'r=10',
 		                        'type'=>'left',
 		                        'titre'=>'List',
 		                        'mainmenu'=>'ventilation',
@@ -252,7 +241,7 @@ class modVentilation extends DolibarrModules
 		                        'target'=>'',
 		                        'user'=>0);
       		$r++;
-		$this->menu[$r]=array(  'fk_menu'=>'r=11',
+		$this->menu[$r]=array(  'fk_menu'=>'r=10',
 		                        'type'=>'left',
 		                        'titre'=>'Create',
 		                        'mainmenu'=>'ventilation',
@@ -276,7 +265,7 @@ class modVentilation extends DolibarrModules
 								'target'=>'',
 								'user'=>0);
 		$r++;
-		$this->menu[$r]=array(  'fk_menu'=>'r=14',
+		$this->menu[$r]=array(  'fk_menu'=>'r=13',
 		                        'type'=>'left',
 		                        'titre'=>'Journal des ventes',
 		                        'mainmenu'=>'ventilation',
@@ -288,7 +277,7 @@ class modVentilation extends DolibarrModules
 		                        'target'=>'',
 		                        'user'=>0);
       		$r++;
-		$this->menu[$r]=array(  'fk_menu'=>'r=14',
+		$this->menu[$r]=array(  'fk_menu'=>'r=13',
 		                        'type'=>'left',
 		                        'titre'=>'Journal des achats',
 		                        'mainmenu'=>'ventilation',
@@ -300,7 +289,7 @@ class modVentilation extends DolibarrModules
 		                        'target'=>'',
 		                        'user'=>0);
       		$r++;
-      		$this->menu[$r]=array(  'fk_menu'=>'r=14',
+      		$this->menu[$r]=array(  'fk_menu'=>'r=13',
 		                        'type'=>'left',
 		                        'titre'=>'Journal banque',
 		                        'mainmenu'=>'ventilation',

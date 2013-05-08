@@ -53,8 +53,8 @@ if ($year == 0 )
  */
 llxHeader('',$langs->trans("CustomersVentilation"));
 
-$textprevyear="<a href=\"index.php?year=" . ($year_current-1) . "\">".img_previous()."</a>";
-$textnextyear=" <a href=\"index.php?year=" . ($year_current+1) . "\">".img_next()."</a>";
+$textprevyear="<a href=\"balancebymonth.php?year=" . ($year_current-1) . "\">".img_previous()."</a>";
+$textnextyear=" <a href=\"balancebymonth.php?year=" . ($year_current+1) . "\">".img_next()."</a>";
 
 
 print_fiche_titre("Balance $textprevyear ".$langs->trans("Year")." $year_start $textnextyear");
@@ -94,26 +94,24 @@ print '</tr><tr><td colspan=2>';
 print '<table class="noborder" width="100%">';
 print '<tr class="liste_titre"><td width=150>Intitule</td><td align="center">Janvier</td><td align="center">Fevrier</td><td align="center">Mars</td><td align="center">Avril</td><td align="center">Mai</td><td align="center">Juin</td><td align="center">Juillet</td><td align="center">Aout</td><td align="center">Septembre</td><td align="center">Octobre</td><td align="center">Novembre</td><td align="center">Decembre</td><td align="center"><b>Total</b></td></tr>';
 
-$sql = "SELECT IF(ccg.intitule IS NULL, 'Non pointe', ccg.intitule) AS 'Intitul�',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=1,fd.total_ht,0)),2) AS 'Janvier',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=2,fd.total_ht,0)),2) AS 'Fevrier',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=3,fd.total_ht,0)),2) AS 'Mars',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=4,fd.total_ht,0)),2) AS 'Avril',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=5,fd.total_ht,0)),2) AS 'Mai',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=6,fd.total_ht,0)),2) AS 'Juin',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=7,fd.total_ht,0)),2) AS 'Juillet',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=8,fd.total_ht,0)),2) AS 'Aout',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=9,fd.total_ht,0)),2) AS 'Septembre',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=10,fd.total_ht,0)),2) AS 'Octobre',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=11,fd.total_ht,0)),2) AS 'Novembre',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=12,fd.total_ht,0)),2) AS 'Decembre',";
-$sql .= "  ROUND(SUM(fd.total_ht),2) as 'Total'";
-$sql .= " FROM llx_facturedet as fd";
-$sql .= "  LEFT JOIN llx_facture as f ON f.rowid = fd.fk_facture";
-$sql .= "  LEFT JOIN llx_compta_compte_generaux as ccg ON ccg.rowid = fd.fk_code_ventilation";
-$sql .= " WHERE f.datef >= '".$db->idate(dol_get_first_day($y,1,false))."'";
-$sql .= "  AND f.datef <= '".$db->idate(dol_get_last_day($y,12,false))."'";
-$sql .= " GROUP BY fd.fk_code_ventilation";
+$sql = "SELECT bk.numero_compte AS 'compte',";
+$sql .= "  ROUND(SUM(IF(MONTH(bk.doc_date)=1,bk.montant,0)),2) AS 'Janvier',";
+$sql .= "  ROUND(SUM(IF(MONTH(bk.doc_date)=2,bk.montant,0)),2) AS 'Fevrier',";
+$sql .= "  ROUND(SUM(IF(MONTH(bk.doc_date)=3,bk.montant,0)),2) AS 'Mars',";
+$sql .= "  ROUND(SUM(IF(MONTH(bk.doc_date)=4,bk.montant,0)),2) AS 'Avril',";
+$sql .= "  ROUND(SUM(IF(MONTH(bk.doc_date)=5,bk.montant,0)),2) AS 'Mai',";
+$sql .= "  ROUND(SUM(IF(MONTH(bk.doc_date)=6,bk.montant,0)),2) AS 'Juin',";
+$sql .= "  ROUND(SUM(IF(MONTH(bk.doc_date)=7,bk.montant,0)),2) AS 'Juillet',";
+$sql .= "  ROUND(SUM(IF(MONTH(bk.doc_date)=8,bk.montant,0)),2) AS 'Aout',";
+$sql .= "  ROUND(SUM(IF(MONTH(bk.doc_date)=9,bk.montant,0)),2) AS 'Septembre',";
+$sql .= "  ROUND(SUM(IF(MONTH(bk.doc_date)=10,bk.montant,0)),2) AS 'Octobre',";
+$sql .= "  ROUND(SUM(IF(MONTH(bk.doc_date)=11,bk.montant,0)),2) AS 'Novembre',";
+$sql .= "  ROUND(SUM(IF(MONTH(bk.doc_date)=12,bk.montant,0)),2) AS 'Decembre',";
+$sql .= "  ROUND(SUM(bk.montant),2) as 'Total'";
+$sql .= " FROM ".MAIN_DB_PREFIX."bookkeeping as bk";
+$sql .= " WHERE bk.doc_date >= '".$db->idate(dol_get_first_day($y,1,false))."'";
+$sql .= "  AND bk.doc_date <= '".$db->idate(dol_get_last_day($y,12,false))."'";
+$sql .= " GROUP BY bk.numero_compte";
 
 $resql = $db->query($sql);
 if ($resql)
