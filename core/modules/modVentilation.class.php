@@ -67,11 +67,16 @@ class modVentilation extends DolibarrModules
 		$this->depends = array();		// List of modules id that must be enabled if this module is enabled
 		$this->requiredby = array();	// List of modules id to disable if this one is disabled
 		$this->phpmin = array(5,2);					// Minimum version of PHP required by module
-		$this->need_dolibarr_version = array(2,8);	// Minimum version of Dolibarr required by module
+		$this->need_dolibarr_version = array(3,3);	// Minimum version of Dolibarr required by module
 		$this->langfiles = array("ventilation@ventilation");
 
 		// Constantes
 		$this->const = array();
+		$this->const[2] = array("VENTILATION_ACCOUNT_SUSPENSE","chaine","47100000");
+		$this->const[3] = array("VENTILATION_SELL_JOURNAL","chaine","VTE");
+		$this->const[4] = array("VENTILATION_PURCHASE_JOURNAL","chaine","ACH");
+		$this->const[5] = array("VENTILATION_BANK_JOURNAL","chaine","BNK");
+		$this->const[6] = array("VENTILATION_SOCIAL_JOURNAL","chaine","SOC");
 
 		// Boxes
 		$this->boxes = array();
