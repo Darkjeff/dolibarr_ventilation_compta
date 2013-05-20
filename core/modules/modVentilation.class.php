@@ -61,7 +61,7 @@ class modVentilation extends DolibarrModules
 		$this->dirs = array();
 
 		// Config pages
-		$this->config_page_url = array();
+		$this->config_page_url = array('index.php@ventilation');
 		
 		// Dependencies
 		$this->depends = array();		// List of modules id that must be enabled if this module is enabled

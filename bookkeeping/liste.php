@@ -83,7 +83,7 @@ if ($resql)
   $num = $db->num_rows($resql);
   $i = 0;
 
-  print_barre_liste("Comptes g&eacute;n&eacute;raux", $page, "liste.php", "", $sortfield, $sortorder, '', $num);
+  print_barre_liste("Grand Livre", $page, "liste.php", "", $sortfield, $sortorder, '', $num);
 
   print '<table class="liste">';
   print '<tr class="liste_titre">';

@@ -16,4 +16,4 @@
 --
 -- ============================================================================
 
-ALTER TABLE 'llx_compta_compte_generaux' add column sellsjournal varcha(1) DEFAULT 'N'
+ALTER TABLE 'llx_compta_compte_generaux' add column sellsjournal varchar(1) DEFAULT 'N'
