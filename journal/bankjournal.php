@@ -37,8 +37,13 @@ require_once(DOL_DOCUMENT_ROOT."/core/lib/report.lib.php");
 require_once(DOL_DOCUMENT_ROOT."/core/lib/date.lib.php");
 require_once DOL_DOCUMENT_ROOT.'/core/lib/bank.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
-require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
-require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/bankcateg.class.php';
+require_once DOL_DOCUMENT_ROOT.'/adherents/class/adherent.class.php';
+require_once DOL_DOCUMENT_ROOT.'/compta/sociales/class/chargesociales.class.php';
+require_once DOL_DOCUMENT_ROOT.'/compta/paiement/class/paiement.class.php';
+require_once DOL_DOCUMENT_ROOT.'/compta/tva/class/tva.class.php';
+require_once DOL_DOCUMENT_ROOT.'/fourn/class/paiementfourn.class.php';
+require_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.facture.class.php';
+require_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.class.php';
 
 dol_include_once('/ventilation/compta/class/comptacompte.class.php');
 dol_include_once('/ventilation/compta/class/bookkeeping.class.php');
@@ -96,61 +101,81 @@ if (empty($date_start) || empty($date_end)) // We define date_start and date_end
 $p = explode(":", $conf->global->MAIN_INFO_SOCIETE_PAYS);
 $idpays = $p[0];
 
-$sql = "SELECT b.rowid, b.dateo as do, b.datev as dv, b.amount, b.label, b.rappro, b.num_releve, b.num_chq,";
-$sql.= " b.fk_account, b.fk_type,";
-$sql.= " ba.rowid as bankid, ba.ref as bankref,";
-$sql.= " bu.label as labelurl, bu.url_id";
-$sql.= " FROM ";
-if (! empty($_REQUEST["bid"])) $sql.= MAIN_DB_PREFIX."bank_class as l,";
-$sql.= " ".MAIN_DB_PREFIX."bank_account as ba,";
-$sql.= " ".MAIN_DB_PREFIX."bank as b";
-$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."bank_url as bu ON bu.fk_bank = b.rowid AND type = 'company'";
-$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."societe as s ON bu.url_id = s.rowid";
-$sql.= " WHERE b.fk_account = ba.rowid";
-if ($date_start && $date_end) $sql .= " AND b.datev >= '".$db->idate($date_start)."' AND b.datev <= '".$db->idate($date_end)."'";
+$sql = "SELECT b.rowid , b.dateo as do, b.datev as dv, b.amount, b.label, b.rappro, b.num_releve, b.num_chq, b.fk_type,soc.code_compta,";
+$sql.= " soc.code_compta_fournisseur,soc.rowid as socid,soc.nom as name,ba.account_number";
+$sql.= " FROM ".MAIN_DB_PREFIX."bank b";
+$sql.= " JOIN ".MAIN_DB_PREFIX."bank_account ba on b.fk_account=ba.rowid";
+$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."bank_url bu1 ON bu1.fk_bank = b.rowid AND bu1.type='company'";
+$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."societe soc on bu1.url_id=soc.rowid";
+$sql.= " WHERE ba.entity = ".$conf->entity;
+if ($date_start && $date_end) $sql .= " AND b.dateo >= '".$db->idate($date_start)."' AND b.dateo <= '".$db->idate($date_end)."'";
 $sql.= " ORDER BY b.datev";
+
+$object = new Account($db);
+$paymentstatic=new Paiement($db);
+$paymentsupplierstatic=new PaiementFourn($db);
+$societestatic=new Societe($db);
+
+
 
 $result = $db->query($sql);
 if ($result)
 {
-	$tabfac = array();
-	$tabht = array();
-	$tabtva = array();
-	$tabttc = array();
-	$tabcompany = array();
 
-	$num = $db->num_rows($result);
+$num = $db->num_rows($result);
+  // les variables
+  $cptfour = (! empty($conf->global->COMPTA_ACCOUNT_SUPPLIER)?$conf->global->COMPTA_ACCOUNT_SUPPLIER:$langs->trans("CodeNotDef"));
+  $cptcli = (! empty($conf->global->COMPTA_ACCOUNT_CUSTOMER)?$conf->global->COMPTA_ACCOUNT_CUSTOMER:$langs->trans("CodeNotDef"));
+  
+  $tabpay = array();
+  $tabbq = array();
+  $tabtp = array();
+  $tabcompany = array();
+	
+
+	
    	$i=0;
-   	$resligne=array();
    	while ($i < $num)
    	{
    	    $obj = $db->fetch_object($result);
-   	    // les variables
-   	    $cptcli = (! empty($conf->global->COMPTA_ACCOUNT_CUSTOMER))?$conf->global->COMPTA_ACCOUNT_CUSTOMER:$langs->trans("CodeNotDef");
-   	    $compta_soc = (! empty($obj->code_compta))?$obj->code_compta:$cptcli;
-		
-		
-		$compta_prod = $obj->compte;
-		if (empty($compta_prod))
-		{
-			if($obj->product_type == 0) $compta_prod = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT))?$conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT:$langs->trans("CodeNotDef");
-			else $compta_prod = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT))?$conf->global->COMPTA_SERVICE_SOLD_ACCOUNT:$langs->trans("CodeNotDef");
-		}
-		$cpttva = (! empty($conf->global->COMPTA_VAT_ACCOUNT))?$conf->global->COMPTA_VAT_ACCOUNT:$langs->trans("CodeNotDef");
-		$compta_tva = (! empty($obj->account_tva)?$obj->account_tva:$cpttva);
+  // contrôles
+    
+    $compta_bank =  $obj->account_number;
+    if($obj->label == '(SupplierInvoicePayment)') $compta_soc = (! empty($obj->code_compta_fournisseur)?$obj->code_compta_fournisseur:$cptfour);
+    if($obj->label == '(CustomerInvoicePayment)') $compta_soc = (! empty($obj->code_compta)?$obj->code_compta:$cptcli);
+    //$compta_tva = (! empty($obj->account_tva)?$obj->account_tva:$cpttva);
 
-    	//la ligne facture
-   		$tabfac[$obj->rowid]["date"] = $obj->dv;
-   		$tabfac[$obj->rowid]["ref"] = $obj->facnumber;
-   		$tabfac[$obj->rowid]["type"] = $obj->type;
-   		$tabfac[$obj->rowid]["fk_facturedet"] = $obj->fdid;
-   		if (! isset($tabttc[$obj->rowid][$compta_soc])) $tabttc[$obj->rowid][$compta_soc]=0;
-   		if (! isset($tabht[$obj->rowid][$compta_prod])) $tabht[$obj->rowid][$compta_prod]=0;
-   		if (! isset($tabtva[$obj->rowid][$compta_tva])) $tabtva[$obj->rowid][$compta_tva]=0;
-   		$tabttc[$obj->rowid][$compta_soc] += $obj->total_ttc;
-   		$tabht[$obj->rowid][$compta_prod] += $obj->total_ht;
-   		$tabtva[$obj->rowid][$compta_tva] += $obj->total_tva;
-   		$tabcompany[$obj->rowid]=array('id'=>$obj->socid, 'name'=>$obj->name, 'code_client'=>$obj->code_client);
+    $tabpay[$obj->rowid]["date"]=$obj->do;
+    if (preg_match('/^\((.*)\)$/i',$obj->label,$reg))
+    {
+          $tabpay[$obj->rowid]["lib"]=$langs->trans($reg[1]);
+    }else{
+          $tabpay[$obj->rowid]["lib"]=dol_trunc($obj->label,60);
+    }
+    $links = $object->get_url($obj->rowid);
+
+    foreach($links as $key=>$val)
+        {
+        if ($links[$key]['type']=='payment')
+          {
+            $paymentstatic->id=$links[$key]['url_id'];
+            $tabpay[$obj->rowid]["lib"] .=' '.$paymentstatic->getNomUrl(2);
+          }else if ($links[$key]['type']=='payment_supplier')
+          {
+            $paymentsupplierstatic->id=$links[$key]['url_id'];
+            $paymentsupplierstatic->ref=$links[$key]['url_id'];
+            $tabpay[$obj->rowid]["lib"] .=' '.$paymentsupplierstatic->getNomUrl(2);
+          }else if ($links[$key]['type']=='company')
+          {
+            
+            $societestatic->id=$links[$key]['url_id'];
+            $societestatic->nom=$links[$key]['label'];
+            $tabpay[$obj->rowid]["soclib"]=$societestatic->getNomUrl(1,'',16);
+          
+          }
+        }
+    $tabbq[$obj->rowid][$compta_bank] += $obj->amount;
+    if($obj->socid)$tabtp[$obj->rowid][$compta_soc] += $obj->amount;
 
    		$i++;
    	}
@@ -161,9 +186,10 @@ else {
 //write bookkeeping
 if (GETPOST('action') == 'writeBookKeeping')
 {
-	foreach ($tabfac as $key => $val)
+	foreach ($tabpay as $key => $val)
 	{
-		foreach ($tabttc[$key] as $k => $mt)
+	//bank
+		foreach ($tabbq[$key] as $k => $mt)
 		{
 		    $bookkeeping = new BookKeeping($db);
 		    $bookkeeping->doc_date = $val["date"];
@@ -181,8 +207,8 @@ if (GETPOST('action') == 'writeBookKeeping')
 
 		    $bookkeeping->create();
 		}
-		// product
-		foreach ($tabht[$key] as $k => $mt)
+		// third party
+		foreach ($tabtp[$key] as $k => $mt)
 		{
 			if ($mt)
 			{
@@ -208,30 +234,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 			    }
 			}
 		}
-		// vat
-		//var_dump($tabtva);
-		foreach ($tabtva[$key] as $k => $mt)
-		{
-		    if ($mt)
-		    {
-			    $bookkeeping = new BookKeeping($db);
-			    $bookkeeping->doc_date = $val["date"];
-			    $bookkeeping->doc_ref = $val["ref"];
-			    $bookkeeping->doc_type = 'facture_client';
-			    $bookkeeping->fk_doc = $key;
-			    $bookkeeping->fk_docdet = $val["fk_facturedet"];
-			    $bookkeeping->fk_compte = $compte->id;
-	    		$bookkeeping->code_tiers = '';
-			    $bookkeeping->numero_compte = $k;
-			    $bookkeeping->label_compte = 'TVA';
-			    $bookkeeping->montant = $mt;
-			    $bookkeeping->sens = ($mt < 0)?'D':'C';
-			    $bookkeeping->debit = ($mt < 0)?$mt:0;
-			    $bookkeeping->credit = ($mt >= 0)?$mt:0;
 
-			    $bookkeeping->create();
-			}
-		}
 	}
 }
 // export csv
@@ -239,18 +242,20 @@ if (GETPOST('action') == 'export_csv')
 {
     header( 'Content-Type: text/csv' );
     header( 'Content-Disposition: attachment;filename=journal_ventes.csv');
-	foreach ($tabfac as $key => $val)
+	foreach ($tabpay as $key => $val)
 	{
 	    $date = dol_print_date($db->jdate($val["date"]),'day');
 		print '"'.$date.'",';
 		print '"'.$val["ref"].'",';
-		foreach ($tabttc[$key] as $k => $mt)
+		
+		//banq
+		foreach ($tabbq[$key] as $k => $mt)
 		{
 			print '"'.html_entity_decode($k).'","'.$langs->trans("ThirdParty").'","'.($mt>=0?price($mt):'').'","'.($mt<0?price(-$mt):'').'"';
 		}
 		print "\n";
-		// product
-		foreach ($tabht[$key] as $k => $mt)
+		// third party
+		foreach ($tabtp[$key] as $k => $mt)
 		{
 			if ($mt)
 			{
@@ -260,18 +265,7 @@ if (GETPOST('action') == 'export_csv')
 				print "\n";
 			}
 		}
-		// vat
-		//var_dump($tabtva);
-		foreach ($tabtva[$key] as $k => $mt)
-		{
-		    if ($mt)
-		    {
-				print '"'.$date.'",';
-				print '"'.$val["ref"].'",';
-				print '"'.html_entity_decode($k).'","'.$langs->trans("VAT").'","'.($mt<0?price(-$mt):'').'","'.($mt>=0?price($mt):'').'"';
-				print "\n";
-			}
-		}
+
 	}
 }
 else
@@ -286,9 +280,7 @@ $nomlink='';
 $periodlink='';
 $exportlink='';
 $builddate=time();
-$description=$langs->trans("DescSellsJournal").'<br>';
-if (! empty($conf->global->FACTURE_DEPOSITS_ARE_JUST_PAYMENTS)) $description.= $langs->trans("DepositsAreNotIncluded");
-else  $description.= $langs->trans("DepositsAreIncluded");
+$description=$langs->trans("DescBankJournal").'<br>';
 $period=$form->select_date($date_start,'date_start',0,0,0,'',1,0,1).' - '.$form->select_date($date_end,'date_end',0,0,0,'',1,0,1);
 report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportlink, array('action'=>'') );
 
@@ -322,67 +314,52 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
 	print "<td>".$langs->trans("Date")."</td>";
 	print "<td>".$langs->trans("Piece").' ('.$langs->trans("InvoiceRef").")</td>";
 	print "<td>".$langs->trans("Account")."</td>";
-	print "<td>".$langs->trans("Type")."</td><th align='right'>".$langs->trans("Debit")."</td><th align='right'>".$langs->trans("Credit")."</td>";
+	print "<td align='right'>".$langs->trans("Debit")."</td><td align='right'>".$langs->trans("Credit")."</td>";
 	print "</tr>\n";
 
 	$var=true;
 	$r='';
 
-	$invoicestatic=new Account($db);
-	$companystatic=new Societe($db);
 
-	foreach ($tabfac as $key => $val)
-	{
-		$invoicestatic->id=$key;
-		$invoicestatic->ref=$val["ref"];
-		$invoicestatic->type=$val["type"];
+foreach ($tabpay as $key => $val)
+{
 
-	    $date = dol_print_date($db->jdate($val["date"]),'day');
+  // Bank
+  foreach ($tabbq[$key] as $k => $mt)
+  {
+    if (1)
+    {
+      print "<tr ".$bc[$var]." >";
+      //print "<td>".$conf->global->COMPTA_JOURNAL_BUY."</td>";
+      print "<td>".$val["date"]."</td>";
+      print "<td>".$val["lib"]."</td>";
+      print "<td>".$k."</td>";
+      print '<td align="right">'.($mt>=0?price($mt):'')."</td>";
+      print '<td align="right">'.($mt<0?price(-$mt):'')."</td>";
+      print "</tr>";
+    }
+  }
 
-		print "<tr ".$bc[$var].">";
-		// third party
-		//print "<td>".$conf->global->COMPTA_JOURNAL_SELL."</td>";
-		print "<td>".$date."</td>";
-		print "<td>".$invoicestatic->getNomUrl(1)."</td>";
-		foreach ($tabttc[$key] as $k => $mt)
-		{
-			$companystatic->id=$tabcompany[$key]['id'];
-	    	$companystatic->name=$tabcompany[$key]['name'];
-	    	$companystatic->client=$tabcompany[$key]['code_client'];
-	    print "<td>".$k;
-		print "</td><td>".$langs->trans("ThirdParty");
-		print ' ('.$companystatic->getNomUrl(0,'customer',16).')';
-		print "</td><td align='right'>".($mt>=0?price($mt):'')."</td><td align='right'>".($mt<0?price(-$mt):'')."</td>";
-		}
-		print "</tr>";
-		// product
-		foreach ($tabht[$key] as $k => $mt)
-		{
-			if ($mt)
-			{
-				print "<tr ".$bc[$var].">";
-				//print "<td>".$conf->global->COMPTA_JOURNAL_SELL."</td>";
-				print "<td>".$date."</td>";
-				print "<td>".$invoicestatic->getNomUrl(1)."</td>";
-				print "<td>".$k."</td><td>".$val["compte"]."</td><td align='right'>".($mt<0?price(-$mt):'')."</td><td align='right'>".($mt>=0?price($mt):'')."</td></tr>";
-			}
-		}
-		// vat
-		//var_dump($tabtva);
-		foreach ($tabtva[$key] as $k => $mt)
-		{
-		    if ($mt)
-		    {
-	    		print "<tr ".$bc[$var].">";
-	    		//print "<td>".$conf->global->COMPTA_JOURNAL_SELL."</td>";
-				print "<td>".$date."</td>";
-	    		print "<td>".$invoicestatic->getNomUrl(1)."</td>";
-	    		print "<td>".$k."</td><td>".$langs->trans("VAT")."</td><td align='right'>".($mt<0?price(-$mt):'')."</td><td align='right'>".($mt>=0?price($mt):'')."</td></tr>";
-		    }
-		}
+  
+  
+  // third party
+  foreach ($tabtp[$key] as $k => $mt)
+  {
+    print "<tr ".$bc[$var].">";
 
-		$var = !$var;
-	}
+  print "<td>".$val["date"]."</td>";
+  print "<td>".$val["soclib"]."</td>";
+
+      print "<td>".$k;
+      print "</td>";
+      print '<td align="right">'.($mt<0?price(-$mt):'')."</td>";
+      print '<td align="right">'.($mt>=0?price($mt):'')."</td>";
+  
+  }
+  
+
+  $var = !$var;
+}
 
 	print "</table>";
 
