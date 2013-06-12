@@ -102,11 +102,13 @@ $p = explode(":", $conf->global->MAIN_INFO_SOCIETE_PAYS);
 $idpays = $p[0];
 
 $sql = "SELECT b.rowid , b.dateo as do, b.datev as dv, b.amount, b.label, b.rappro, b.num_releve, b.num_chq, b.fk_type,soc.code_compta,";
-$sql.= " soc.code_compta_fournisseur,soc.rowid as socid,soc.nom as name,ba.account_number";
+$sql.= " soc.code_compta_fournisseur,soc.rowid as socid,soc.nom as name,ba.account_number, ccs.accountancy_code";
 $sql.= " FROM ".MAIN_DB_PREFIX."bank b";
 $sql.= " JOIN ".MAIN_DB_PREFIX."bank_account ba on b.fk_account=ba.rowid";
 $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."bank_url bu1 ON bu1.fk_bank = b.rowid AND bu1.type='company'";
 $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."societe soc on bu1.url_id=soc.rowid";
+$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."chargesociales cs on bu1.url_id=cs.rowid";
+$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."c_chargesociales ccs on ccs.id=cs.fk_type";
 $sql.= " WHERE ba.entity = ".$conf->entity;
 if ($date_start && $date_end) $sql .= " AND b.dateo >= '".$db->idate($date_start)."' AND b.dateo <= '".$db->idate($date_end)."'";
 $sql.= " ORDER BY b.datev";
@@ -115,7 +117,8 @@ $object = new Account($db);
 $paymentstatic=new Paiement($db);
 $paymentsupplierstatic=new PaiementFourn($db);
 $societestatic=new Societe($db);
-
+$chargestatic=new ChargeSociales($db);
+$paymentvatstatic=new TVA($db);
 
 
 $result = $db->query($sql);
@@ -126,6 +129,8 @@ $num = $db->num_rows($result);
   // les variables
   $cptfour = (! empty($conf->global->COMPTA_ACCOUNT_SUPPLIER)?$conf->global->COMPTA_ACCOUNT_SUPPLIER:$langs->trans("CodeNotDef"));
   $cptcli = (! empty($conf->global->COMPTA_ACCOUNT_CUSTOMER)?$conf->global->COMPTA_ACCOUNT_CUSTOMER:$langs->trans("CodeNotDef"));
+  $cpttva = (! empty($conf->global->COMPTA_VAT_ACCOUNT))?$conf->global->COMPTA_VAT_ACCOUNT:$langs->trans("CodeNotDef");
+  $cptsocial = (! empty($conf->global->COMPTA_VAT_ACCOUNT))?$conf->global->COMPTA_VAT_ACCOUNT:$langs->trans("CodeNotDef");
   
   $tabpay = array();
   $tabbq = array();
@@ -143,7 +148,13 @@ $num = $db->num_rows($result);
     $compta_bank =  $obj->account_number;
     if($obj->label == '(SupplierInvoicePayment)') $compta_soc = (! empty($obj->code_compta_fournisseur)?$obj->code_compta_fournisseur:$cptfour);
     if($obj->label == '(CustomerInvoicePayment)') $compta_soc = (! empty($obj->code_compta)?$obj->code_compta:$cptcli);
+  //  if($obj->label == '(%"TVA"%)') $compta_soc = (! empty($obj->code_compta)?$obj->code_compta:$cpttva);
+    if($obj->label == '(%"TVA"%)') $compta_soc = $cpttva;
+    if($obj->label == '(SocialContributionPayment)') $compta_soc = (! empty($obj->accountancy_code)?$obj->accountancy_code:$cptsocial);
     //$compta_tva = (! empty($obj->account_tva)?$obj->account_tva:$cpttva);
+
+//variable bookkeeping
+
 
     $tabpay[$obj->rowid]["date"]=$obj->do;
     if (preg_match('/^\((.*)\)$/i',$obj->label,$reg))
@@ -171,11 +182,29 @@ $num = $db->num_rows($result);
             $societestatic->id=$links[$key]['url_id'];
             $societestatic->nom=$links[$key]['label'];
             $tabpay[$obj->rowid]["soclib"]=$societestatic->getNomUrl(1,'',16);
+            $tabtp[$obj->rowid][$compta_soc] += $obj->amount;
           
+          }else if ($links[$key]['type']=='sc')
+          {
+            
+            $chargestatic->id=$links[$key]['url_id'];
+            $chargestatic->ref=$links[$key]['url_id'];
+            $tabpay[$obj->rowid]["lib"] .=' '.$chargestatic->getNomUrl(2);
+            $tabtp[$obj->rowid][$compta_soc] += $obj->amount;
+          
+          }else if ($links[$key]['type']=='payment_vat')
+          {
+            
+            $paymentvatstatic->id=$links[$key]['url_id'];
+            $paymentvatstatic->ref=$links[$key]['url_id'];
+            $tabpay[$obj->rowid]["lib"] .=' '.$paymentvatstatic->getNomUrl(2);
+            $tabtp[$obj->rowid][$compta_soc] += $obj->amount;
           }
         }
     $tabbq[$obj->rowid][$compta_bank] += $obj->amount;
-    if($obj->socid)$tabtp[$obj->rowid][$compta_soc] += $obj->amount;
+    
+    
+ //   if($obj->socid)$tabtp[$obj->rowid][$compta_soc] += $obj->amount;
 
    		$i++;
    	}
@@ -199,7 +228,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 		    $bookkeeping->fk_docdet = $val["fk_facturedet"];
 		    $bookkeeping->code_tiers = $tabcompany[$key]['code_client'];
 		    $bookkeeping->numero_compte = $k;
-		    $bookkeeping->label_compte = $tabcompany[$key]['name'];
+		    $bookkeeping->label_compte = $compte->intitule;
 		    $bookkeeping->montant = $mt;
 		    $bookkeeping->sens = ($mt >= 0)?'D':'C';
 		    $bookkeeping->debit = ($mt >= 0)?$mt:0;
@@ -222,9 +251,9 @@ if (GETPOST('action') == 'writeBookKeeping')
 				    $bookkeeping->doc_type = 'facture_client';
 				    $bookkeeping->fk_doc = $key;
 				    $bookkeeping->fk_docdet = $val["fk_facturedet"];
-		    		$bookkeeping->code_tiers = '';
-				    $bookkeeping->numero_compte = $k;
-				    $bookkeeping->label_compte = $compte->intitule;
+		    		$bookkeeping->code_tiers = $k;
+				    $bookkeeping->numero_compte = $conf->global->COMPTA_ACCOUNT_CUSTOMER;
+				    $bookkeeping->label_compte = $tabcompany[$key]['name'];
 				    $bookkeeping->montant = $mt;
 				    $bookkeeping->sens = ($mt < 0)?'D':'C';
 				    $bookkeeping->debit = ($mt < 0)?$mt:0;
@@ -241,7 +270,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 if (GETPOST('action') == 'export_csv')
 {
     header( 'Content-Type: text/csv' );
-    header( 'Content-Disposition: attachment;filename=journal_ventes.csv');
+    header( 'Content-Disposition: attachment;filename=journal_banque.csv');
 	foreach ($tabpay as $key => $val)
 	{
 	    $date = dol_print_date($db->jdate($val["date"]),'day');
@@ -251,7 +280,7 @@ if (GETPOST('action') == 'export_csv')
 		//banq
 		foreach ($tabbq[$key] as $k => $mt)
 		{
-			print '"'.html_entity_decode($k).'","'.$langs->trans("ThirdParty").'","'.($mt>=0?price($mt):'').'","'.($mt<0?price(-$mt):'').'"';
+			print '"'.html_entity_decode($k).'","'.$langs->trans("Bank").'","'.($mt>=0?price($mt):'').'","'.($mt<0?price(-$mt):'').'"';
 		}
 		print "\n";
 		// third party
@@ -261,7 +290,7 @@ if (GETPOST('action') == 'export_csv')
 			{
 				print '"'.$date.'",';
 				print '"'.$val["ref"].'",';
-				print '"'.html_entity_decode($k).'","'.$langs->trans("Products").'","'.($mt<0?price(-$mt):'').'","'.($mt>=0?price($mt):'').'"';
+				print '"'.html_entity_decode($k).'","'.$langs->trans("ThirdParty").'","'.($mt<0?price(-$mt):'').'","'.($mt>=0?price($mt):'').'"';
 				print "\n";
 			}
 		}
@@ -330,7 +359,6 @@ foreach ($tabpay as $key => $val)
     if (1)
     {
       print "<tr ".$bc[$var]." >";
-      //print "<td>".$conf->global->COMPTA_JOURNAL_BUY."</td>";
       print "<td>".$val["date"]."</td>";
       print "<td>".$val["lib"]."</td>";
       print "<td>".$k."</td>";
