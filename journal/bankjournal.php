@@ -102,13 +102,11 @@ $p = explode(":", $conf->global->MAIN_INFO_SOCIETE_PAYS);
 $idpays = $p[0];
 
 $sql = "SELECT b.rowid , b.dateo as do, b.datev as dv, b.amount, b.label, b.rappro, b.num_releve, b.num_chq, b.fk_type,soc.code_compta,";
-$sql.= " soc.code_compta_fournisseur,soc.rowid as socid,soc.nom as name,ba.account_number, ccs.accountancy_code";
+$sql.= " soc.code_compta_fournisseur,soc.rowid as socid,soc.nom as name,ba.account_number";
 $sql.= " FROM ".MAIN_DB_PREFIX."bank b";
 $sql.= " JOIN ".MAIN_DB_PREFIX."bank_account ba on b.fk_account=ba.rowid";
 $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."bank_url bu1 ON bu1.fk_bank = b.rowid AND bu1.type='company'";
 $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."societe soc on bu1.url_id=soc.rowid";
-$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."chargesociales cs on bu1.url_id=cs.rowid";
-$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."c_chargesociales ccs on ccs.id=cs.fk_type";
 $sql.= " WHERE ba.entity = ".$conf->entity;
 if ($date_start && $date_end) $sql .= " AND b.dateo >= '".$db->idate($date_start)."' AND b.dateo <= '".$db->idate($date_end)."'";
 $sql.= " ORDER BY b.datev";
@@ -129,8 +127,8 @@ $num = $db->num_rows($result);
   // les variables
   $cptfour = (! empty($conf->global->COMPTA_ACCOUNT_SUPPLIER)?$conf->global->COMPTA_ACCOUNT_SUPPLIER:$langs->trans("CodeNotDef"));
   $cptcli = (! empty($conf->global->COMPTA_ACCOUNT_CUSTOMER)?$conf->global->COMPTA_ACCOUNT_CUSTOMER:$langs->trans("CodeNotDef"));
-  $cpttva = (! empty($conf->global->COMPTA_VAT_ACCOUNT))?$conf->global->COMPTA_VAT_ACCOUNT:$langs->trans("CodeNotDef");
-  $cptsocial = (! empty($conf->global->COMPTA_VAT_ACCOUNT))?$conf->global->COMPTA_VAT_ACCOUNT:$langs->trans("CodeNotDef");
+  $cpttva = (! empty($conf->global->VENTILATION_ACCOUNT_SUSPENSE)?$conf->global->VENTILATION_ACCOUNT_SUSPENSE:$langs->trans("CodeNotDef"));
+  $cptsociale = (! empty($conf->global->VENTILATION_ACCOUNT_SUSPENSE)?$conf->global->VENTILATION_ACCOUNT_SUSPENSE:$langs->trans("CodeNotDef"));
   
   $tabpay = array();
   $tabbq = array();
@@ -145,18 +143,18 @@ $num = $db->num_rows($result);
    	    $obj = $db->fetch_object($result);
   // contrôles
     
+    
+   
     $compta_bank =  $obj->account_number;
     if($obj->label == '(SupplierInvoicePayment)') $compta_soc = (! empty($obj->code_compta_fournisseur)?$obj->code_compta_fournisseur:$cptfour);
     if($obj->label == '(CustomerInvoicePayment)') $compta_soc = (! empty($obj->code_compta)?$obj->code_compta:$cptcli);
-  //  if($obj->label == '(%"TVA"%)') $compta_soc = (! empty($obj->code_compta)?$obj->code_compta:$cpttva);
-    if($obj->label == '(%"TVA"%)') $compta_soc = $cpttva;
-    if($obj->label == '(SocialContributionPayment)') $compta_soc = (! empty($obj->accountancy_code)?$obj->accountancy_code:$cptsocial);
-    //$compta_tva = (! empty($obj->account_tva)?$obj->account_tva:$cpttva);
-
+  
 //variable bookkeeping
 
 
     $tabpay[$obj->rowid]["date"]=$obj->do;
+    $tabpay[$obj->rowid]["ref"]=$obj->label;
+    $tabpay[$obj->rowid]["fk_bank"]=$obj->rowid;
     if (preg_match('/^\((.*)\)$/i',$obj->label,$reg))
     {
           $tabpay[$obj->rowid]["lib"]=$langs->trans($reg[1]);
@@ -181,7 +179,7 @@ $num = $db->num_rows($result);
             
             $societestatic->id=$links[$key]['url_id'];
             $societestatic->nom=$links[$key]['label'];
-            $tabpay[$obj->rowid]["soclib"]=$societestatic->getNomUrl(1,'',16);
+            $tabpay[$obj->rowid]["soclib"]=$societestatic->getNomUrl(1,'',30);
             $tabtp[$obj->rowid][$compta_soc] += $obj->amount;
           
           }else if ($links[$key]['type']=='sc')
@@ -189,8 +187,20 @@ $num = $db->num_rows($result);
             
             $chargestatic->id=$links[$key]['url_id'];
             $chargestatic->ref=$links[$key]['url_id'];
+            
             $tabpay[$obj->rowid]["lib"] .=' '.$chargestatic->getNomUrl(2);
-            $tabtp[$obj->rowid][$compta_soc] += $obj->amount;
+           	if (preg_match('/^\((.*)\)$/i',$links[$key]['label'],$reg))
+						{
+							if ($reg[1]=='socialcontribution') $reg[1]='SocialContribution';
+							$chargestatic->lib=$langs->trans($reg[1]);
+						}
+						else
+						{
+							$chargestatic->lib=$links[$key]['label'];
+						}
+						$chargestatic->ref=$chargestatic->lib;
+						$tabpay[$obj->rowid]["soclib"]=$chargestatic->getNomUrl(1,30);
+            $tabtp[$obj->rowid][$cptsociale] += $obj->amount;
           
           }else if ($links[$key]['type']=='payment_vat')
           {
@@ -198,7 +208,11 @@ $num = $db->num_rows($result);
             $paymentvatstatic->id=$links[$key]['url_id'];
             $paymentvatstatic->ref=$links[$key]['url_id'];
             $tabpay[$obj->rowid]["lib"] .=' '.$paymentvatstatic->getNomUrl(2);
-            $tabtp[$obj->rowid][$compta_soc] += $obj->amount;
+            $tabtp[$obj->rowid][$cpttva] += $obj->amount;
+          }else if ($links[$key]['type']=='banktransfert')
+          {
+          $tabpay[$obj->rowid]["lib"].=' '.$paymentvatstatic->getNomUrl(2);
+          $tabtp[$obj->rowid][$cpttva] += $obj->amount;;
           }
         }
     $tabbq[$obj->rowid][$compta_bank] += $obj->amount;
@@ -223,45 +237,40 @@ if (GETPOST('action') == 'writeBookKeeping')
 		    $bookkeeping = new BookKeeping($db);
 		    $bookkeeping->doc_date = $val["date"];
 		    $bookkeeping->doc_ref = $val["ref"];
-		    $bookkeeping->doc_type = 'facture_client';
+		    $bookkeeping->doc_type = 'banque';
 		    $bookkeeping->fk_doc = $key;
-		    $bookkeeping->fk_docdet = $val["fk_facturedet"];
+		    $bookkeeping->fk_docdet = $val["fk_bank"];
 		    $bookkeeping->code_tiers = $tabcompany[$key]['code_client'];
 		    $bookkeeping->numero_compte = $k;
 		    $bookkeeping->label_compte = $compte->intitule;
-		    $bookkeeping->montant = $mt;
+		    $bookkeeping->montant = ($mt < 0?price-($mt):$mt);
 		    $bookkeeping->sens = ($mt >= 0)?'D':'C';
 		    $bookkeeping->debit = ($mt >= 0)?$mt:0;
-		    $bookkeeping->credit = ($mt < 0)?$mt:0;
+		    $bookkeeping->credit = ($mt < 0?price-($mt):0);
 
 		    $bookkeeping->create();
 		}
 		// third party
 		foreach ($tabtp[$key] as $k => $mt)
 		{
-			if ($mt)
-			{
-			    // get compte id and label
-			    $compte = new ComptaCompte($db);
-			    if ($compte->fetch(null, $k))
-			    {
+					    
 				    $bookkeeping = new BookKeeping($db);
 				    $bookkeeping->doc_date = $val["date"];
 				    $bookkeeping->doc_ref = $val["ref"];
-				    $bookkeeping->doc_type = 'facture_client';
+				    $bookkeeping->doc_type = 'banque';
 				    $bookkeeping->fk_doc = $key;
-				    $bookkeeping->fk_docdet = $val["fk_facturedet"];
+				    $bookkeeping->fk_docdet = $val["fk_bank"];
 		    		$bookkeeping->code_tiers = $k;
 				    $bookkeeping->numero_compte = $conf->global->COMPTA_ACCOUNT_CUSTOMER;
 				    $bookkeeping->label_compte = $tabcompany[$key]['name'];
-				    $bookkeeping->montant = $mt;
+				    $bookkeeping->montant = ($mt < 0?price-($mt):$mt);
 				    $bookkeeping->sens = ($mt < 0)?'D':'C';
-				    $bookkeeping->debit = ($mt < 0)?$mt:0;
+				    $bookkeeping->debit = ($mt < 0?price-($mt):0);
 				    $bookkeeping->credit = ($mt >= 0)?$mt:0;
 
 				    $bookkeeping->create();
-			    }
-			}
+			   
+			
 		}
 
 	}
