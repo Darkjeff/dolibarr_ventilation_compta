@@ -94,10 +94,11 @@ $idpays = $p[0];
 $sql = "SELECT f.rowid, f.facnumber, f.type, f.datef as df, f.libelle,";
 $sql.= " fd.rowid as fdid, fd.total_ttc, fd.tva_tx, fd.total_ht, fd.tva as total_tva, fd.product_type,";
 $sql.= " s.rowid as socid, s.nom as name, s.code_compta_fournisseur, s.fournisseur,";
-$sql.= " s.code_compta_fournisseur, p.accountancy_code_buy , ct.accountancy_code_buy as account_tva";
+$sql.= " s.code_compta_fournisseur, p.accountancy_code_buy , ct.accountancy_code_buy as account_tva, ccg.rowid as fk_compte, ccg.numero as compte, ccg.intitule as label_compte";
 $sql.= " FROM ".MAIN_DB_PREFIX."facture_fourn_det fd";
 $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."c_tva ct ON fd.tva_tx = ct.taux AND ct.fk_pays = '".$idpays."'";
 $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."product p ON p.rowid = fd.fk_product";
+$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."compta_compte_generaux ccg ON ccg.rowid = fd.fk_code_ventilation";
 $sql.= " JOIN ".MAIN_DB_PREFIX."facture_fourn f ON f.rowid = fd.fk_facture_fourn";
 $sql.= " JOIN ".MAIN_DB_PREFIX."societe s ON s.rowid = f.fk_soc" ;
 $sql.= " WHERE f.fk_statut > 0 AND f.entity = ".$conf->entity;
@@ -126,7 +127,7 @@ if ($result)
 		$obj = $db->fetch_object($result);
 		// contrôles
 		$compta_soc = (! empty($obj->code_compta_fournisseur))?$obj->code_compta_fournisseur:$cptfour;
-		$compta_prod = $obj->accountancy_code_buy;
+		$compta_prod = $obj->compte;
 		if (empty($compta_prod))
 		{
 			if($obj->product_type == 0) $compta_prod = (! empty($conf->global->COMPTA_PRODUCT_BUY_ACCOUNT))?$conf->global->COMPTA_PRODUCT_BUY_ACCOUNT:$langs->trans("CodeNotDef");
@@ -171,6 +172,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 			    $bookkeeping->sens = ($mt >= 0)?'D':'C';
 			    $bookkeeping->debit = ($mt >= 0)?$mt:0;
 			    $bookkeeping->credit = ($mt < 0)?$mt:0;
+			    $bookkeeping->code_journal = $conf->global->VENTILATION_PURCHASE_JOURNAL;
 
 			    $bookkeeping->create();
 			}
@@ -197,6 +199,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 				    $bookkeeping->sens = ($mt < 0)?'D':'C';
 				    $bookkeeping->debit = ($mt < 0)?$mt:0;
 				    $bookkeeping->credit = ($mt >= 0)?$mt:0;
+				    $bookkeeping->code_journal = $conf->global->VENTILATION_PURCHASE_JOURNAL;
 
 				    $bookkeeping->create();
 			    }
@@ -224,6 +227,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 				    $bookkeeping->sens = ($mt < 0)?'D':'C';
 				    $bookkeeping->debit = ($mt < 0)?$mt:0;
 				    $bookkeeping->credit = ($mt >= 0)?$mt:0;
+				    $bookkeeping->code_journal = $conf->global->VENTILATION_PURCHASE_JOURNAL;
 
 				    $bookkeeping->create();
 				}
