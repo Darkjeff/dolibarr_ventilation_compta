@@ -24,5 +24,7 @@ CREATE TABLE llx_compta_compte_generaux
   intitule			varchar(255) DEFAULT NULL,
   sellsjournal		varchar(1) DEFAULT 'N'
   fk_user_author	int(11) DEFAULT NULL,
-  note				text
+  note				text,
+  libelle		    varchar(255) DEFAULT NULL,
+  sellsjournal 		varchar(1) DEFAULT 'N'
 ) ENGINE=innodb;

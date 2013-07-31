@@ -16,4 +16,4 @@
 --
 -- ============================================================================
 
-ALTER TABLE llx_facture_fourn_det add column fk_code_ventilation int(11) NOT NULL DEFAULT 0;
+ALTER TABLE 'llx_c_chargesociales' add column accountancy_code varcha(15) ;

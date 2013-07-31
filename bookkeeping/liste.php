@@ -20,139 +20,205 @@
  */
 
 /**
-        \file       htdocs/compta/param/comptes/liste.php
-        \ingroup    compta
-        \brief      Onglet de gestion de parametrages des ventilations
-        \version    $Revision: 1.12 $
-*/
+ * \file htdocs/compta/param/comptes/liste.php
+ * \ingroup compta
+ * \brief Onglet de gestion de parametrages des ventilations
+ * \version $Revision: 1.12 $
+ */
 
 // Dolibarr environment
-$res=@include("../main.inc.php");
-if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
-if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.php");
-if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
-if (! $res) die("Include of main fails");
+$res = @include ("../main.inc.php");
+if (! $res && file_exists ( "../main.inc.php" )) $res = @include ("../main.inc.php");
+if (! $res && file_exists ( "../../main.inc.php" )) $res = @include ("../../main.inc.php");
+if (! $res && file_exists ( "../../../main.inc.php" )) $res = @include ("../../../main.inc.php");
+
+require_once ("../compta/class/html.formventilation.class.php");
+require_once ("../compta/class/bookkeeping.class.php");
+
+if (! $res) die ( "Include of main fails" );
 
 
-llxHeader('','Compta - Grand Livre');
 
-$page = $_GET["page"];
-$sortorder = $_GET["sortorder"];
-$sortfield = $_GET["sortfield"];
-if ($sortorder == "") $sortorder="ASC";
-if ($sortfield == "") $sortfield="bk.rowid";
+$page = GETPOST ( "page" );
+$sortorder = GETPOST ( "sortorder" );
+$sortfield = GETPOST ( "sortfield" );
+$action = GETPOST ( 'action', 'alpha' );
 
-$offset = $conf->liste_limit * $page ;
+if ($sortorder == "") $sortorder = "ASC";
+if ($sortfield == "") $sortfield = "bk.rowid";
 
+$offset = $conf->liste_limit * $page;
+
+$formventilation = new FormVentilation ( $db );
+
+/*
+ * Action
+ */
+if ($action == 'delbookkeeping') {
+	
+	$import_key = GETPOST ( 'importkey', 'alpha' );
+	
+	if (! empty ( $import_key )) {
+		$object = new BookKeeping ( $db );
+		$result = $object->delete_by_importkey ( $import_key );
+		if ($result < 0) {
+			setEventMessage ( $object->errors, 'errors' );
+		}
+	}
+} // export csv
+else if ($action == 'export_csv') {
+	
+	header( 'Content-Type: text/csv' );
+	header( 'Content-Disposition: attachment;filename=export_csv.csv');
+	
+	$object = new BookKeeping ( $db );
+	$result = $object->export_bookkeping ('ebp');
+	if ($result < 0) {
+		setEventMessage ( $object->errors, 'errors' );
+	}
+	
+	foreach($object->linesexport as $line) {
+		print $line->id.',';
+		print '"'.dol_print_date($line->doc_date,'%d%m%Y').'",';
+		print '"'.$line->code_journal.'",';
+		print '"'.$line->numero_compte.'",';
+		print '"'.substr($line->code_journal,0,2).'",';
+		print '"'.substr($line->doc_ref,0,40).'",';
+		print '"'.$line->num_piece.'",';
+		print '"'.$line->montant.'",';
+		print '"'.$line->sens.'",';
+		print '"'.dol_print_date($line->doc_date,'%d%m%Y').'",';
+		print '"'.$conf->currency.'",';
+		print "\n";
+	}
+} 
+
+else {
+
+llxHeader ( '', 'Compta - Grand Livre' );
+	
 /*
  * Mode Liste
  *
  *
  *
  */
+	
+	$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal ";
+	
+	$sql .= " FROM " . MAIN_DB_PREFIX . "bookkeeping as bk";
+	
+	if (dol_strlen ( trim ( GETPOST ( "search_doc_type" ) ) )) {
+		
+		$sql .= " WHERE bk.doc_type LIKE '%" . GETPOST ( "search_doc_type" ) . "%'";
+		
+		if (dol_strlen ( trim ( GETPOST ( "search_doc_ref" ) ) )) {
+			$sql .= " AND bk.doc_ref LIKE '%" . GETPOST ( "search_doc_ref" ) . "%'";
+		}
+	}
+	if (dol_strlen ( trim ( GETPOST ( "search_doc_ref" ) ) )) {
+		$sql .= " WHERE bk.doc_ref LIKE '%" . GETPOST ( "search_doc_ref" ) . "%'";
+	}
+	if (dol_strlen ( trim ( GETPOST ( "search_compte" ) ) )) {
+		$sql .= " WHERE bk.numero_compte LIKE '%" . GETPOST ( "search_compte" ) . "%'";
+	}
+	
+	if (dol_strlen ( trim ( GETPOST ( "search_tiers" ) ) )) {
+		$sql .= " WHERE bk.code_tiers LIKE '%" . GETPOST ( "search_tiers" ) . "%'";
+	}
+	
+	$sql .= " ORDER BY $sortfield $sortorder " . $db->plimit ( $conf->liste_limit + 1, $offset );
+	
+	dol_syslog ( "bookkeping:liste:create sql=" . $sql, LOG_DEBUG );
+	$resql = $db->query ( $sql );
+	if ($resql) {
+		$num = $db->num_rows ( $resql );
+		$i = 0;
+		
+		print_barre_liste ( "Grand Livre", $page, "liste.php", "", $sortfield, $sortorder, '', $num );
+		
+		print '<form name="add" action="' . $_SERVER ["PHP_SELF"] . '" method="POST">';
+		print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '">';
+		print '<input type="hidden" name="action" value="delbookkeeping">';
+		
+		print $formventilation->select_bookkeeping_importkey ( 'importkey', GETPOST ( 'importkey' ) );
+		
+		print '<input type="submit" class="button" value="' . $langs->trans ( "delBookKeeping" ) . '" />';
+		
+		print '</form>';
+		
 
-$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens ";
-
-$sql .= " FROM ".MAIN_DB_PREFIX."bookkeeping as bk";
-
-if (dol_strlen(trim($_GET["search_doc_type"])) )
-{
-
-  $sql .= " WHERE bk.doc_type LIKE '%".$_GET["search_doc_type"]."%'";
-
-  if ( dol_strlen(trim($_GET["search_doc_ref"])))
-    {
-      $sql .= " AND bk.doc_ref LIKE '%".$_GET["search_doc_ref"]."%'";
-    }
-
+		print '<form name="add" action="' . $_SERVER ["PHP_SELF"] . '" method="POST">';
+		print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '">';
+		print '<input type="hidden" name="action" value="export_csv">';
+		print '<input type="submit" class="button" style="float: right;" value="Export CSV" />';
+		print '</form>';
+		
+		print "<table class=\"noborder\" width=\"100%\">";
+		print '<tr class="liste_titre">';
+		print_liste_field_titre ( $langs->trans ( "doctype" ), "liste.php", "bk.doc_type" );
+		print_liste_field_titre ( $langs->trans ( "docdate" ), "liste.php", "bk.doc_date" );
+		print_liste_field_titre ( $langs->trans ( "docref" ), "liste.php", "bk.doc_ref" );
+		print_liste_field_titre ( $langs->trans ( "numerocompte" ), "liste.php", "bk.numero_compte" );
+		print_liste_field_titre ( $langs->trans ( "code_tiers" ), "liste.php", "bk.code_tiers" );
+		print_liste_field_titre ( $langs->trans ( "labelcompte" ), "liste.php", "bk_label_compte" );
+		print_liste_field_titre ( $langs->trans ( "debit" ), "liste.php", "bk.debit" );
+		print_liste_field_titre ( $langs->trans ( "credit" ), "liste.php", "bk.credit" );
+		print_liste_field_titre ( $langs->trans ( "montant" ), "liste.php", "bk.montant" );
+		print_liste_field_titre ( $langs->trans ( "sens" ), "liste.php", "bk.sens" );
+		print_liste_field_titre ( $langs->trans ( "codejournal" ), "liste.php", "bk.code_journal" );
+		print "</tr>\n";
+		
+		print '<tr class="liste_titre">';
+		print '<form action="liste.php" method="GET">';
+		print '<td><input type="text" name="search_doc_type" value="' . $_GET ["search_doc_type"] . '"></td>';
+		print '<td>&nbsp;</td>';
+		print '<td><input type="text" name="search_doc_refe" value="' . $_GET ["search_doc_ref"] . '"></td>';
+		print '<td><input type="text" name="search_compte" value="' . $_GET ["search_compte"] . '"></td>';
+		print '<td><input type="text" name="search_tiers" value="' . $_GET ["search_tiers"] . '"></td>';
+		print '<td>&nbsp;</td>';
+		print '<td>&nbsp;</td>';
+		print '<td>&nbsp;</td>';
+		print '<td>&nbsp;</td>';
+		print '<td>&nbsp;</td>';
+		print '<td align="right">';
+		print '<input type="image" class="liste_titre" name="button_search" src="' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/search.png" value="' . dol_escape_htmltag ( $langs->trans ( "Search" ) ) . '" title="' . dol_escape_htmltag ( $langs->trans ( "Search" ) ) . '">';
+		print '</td>';
+		print '</form>';
+		print '</tr>';
+		
+		$var = True;
+		
+		while ( $i < min ( $num, $conf->liste_limit ) ) {
+			$obj = $db->fetch_object ( $resql );
+			$var = ! $var;
+			
+			print "<tr $bc[$var]>";
+			
+			print '<td><a href="./fiche.php?action=update&id=' . $obj->rowid . '">';
+			print img_edit ();
+			print '</a>&nbsp;' . $obj->doc_type . '</td>' . "\n";
+			print '<td>' . dol_print_date ( $db->jdate ( $obj->doc_date ), 'day' ) . '</td>';
+			print '<td>' . $obj->doc_ref . '</td>';
+			print '<td>' . $obj->numero_compte . '</td>';
+			print '<td>' . $obj->code_tiers . '</td>';
+			print '<td>' . $obj->label_compte . '</td>';
+			print '<td>' . $obj->debit . '</td>';
+			print '<td>' . $obj->credit . '</td>';
+			print '<td>' . $obj->montant . '</td>';
+			print '<td>' . $obj->sens . '</td>';
+			print '<td>' . $obj->code_journal . '</td>';
+			print "</tr>\n";
+			$i ++;
+		}
+		print "</table>";
+		$db->free ( $resql );
+	} else {
+		dol_print_error ( $db );
+	}
+	
+	llxFooter ( '' );
 }
-else
-{
-  if ( dol_strlen(trim($_GET["search_doc_ref"])))
-    {
-      $sql .= " WHERE bk.doc_ref LIKE '%".$_GET["search_doc_ref"]."%'";
-    }
-}
 
-
-$sql .= " ORDER BY $sortfield $sortorder " . $db->plimit($conf->liste_limit+1, $offset);
-
-$resql = $db->query($sql);
-if ($resql)
-{
-  $num = $db->num_rows($resql);
-  $i = 0;
-
-  print_barre_liste("Grand Livre", $page, "liste.php", "", $sortfield, $sortorder, '', $num);
-
-  print '<table class="liste">';
-  print '<tr class="liste_titre">';
-  print_liste_field_titre($langs->trans("doctype"),"liste.php","bk.doc_type");
-  print_liste_field_titre($langs->trans("docdate"),"liste.php","bk.doc_date");
-  print_liste_field_titre($langs->trans("docref"),"liste.php","bk.doc_ref");
-  print_liste_field_titre($langs->trans("numerocompte"),"liste.php","bk.numero_compte");
-  print_liste_field_titre($langs->trans("code_tiers"),"liste.php","bk.code_tiers");
-  print_liste_field_titre($langs->trans("labelcompte"),"liste.php","bk_label_compte");
-  print_liste_field_titre($langs->trans("debit"),"liste.php","bk.debit");
-  print_liste_field_titre($langs->trans("credit"),"liste.php","bk.credit");
-  print_liste_field_titre($langs->trans("montant"),"liste.php","bk.montant");
-  print_liste_field_titre($langs->trans("sens"),"liste.php","bk.sens");
-  print "</tr>\n";
-
-  print '<tr class="liste_titre">';
-  print '<form action="liste.php" method="GET">';
-  print '<td><input type="text" name="search_doc_type" value="'.$_GET["search_doc_type"].'"></td>';
-  print '<td>&nbsp;</td>';
-  print '<td><input type="text" name="search_doc_refe" value="'.$_GET["search_doc_ref"].'"></td>';
-  print '<td>&nbsp;</td>';
-  print '<td>&nbsp;</td>';
-  print '<td>&nbsp;</td>';
-  print '<td>&nbsp;</td>';
-  print '<td>&nbsp;</td>';
-  print '<td>&nbsp;</td>';
-  print '<td align="right">';
-  print '<input type="image" class="liste_titre" name="button_search" src="'.DOL_URL_ROOT.'/theme/'.$conf->theme.'/img/search.png" value="'.dol_escape_htmltag($langs->trans("Search")).'" title="'.dol_escape_htmltag($langs->trans("Search")).'">';
-  print '</td>';
-  print '</form>';
-  print '</tr>';
-
-  $var=True;
-
-  while ($i < min($num,$conf->liste_limit))
-    {
-      $obj = $db->fetch_object($resql);
-      $var=!$var;
-
-      print "<tr $bc[$var]>";
-
-      print '<td><a href="./fiche.php?action=update&id='.$obj->rowid.'">';
-	    print img_edit();
-	    print '</a>&nbsp;'.$obj->doc_type.'</td>'."\n";
-	    print '<td>'.dol_print_date($db->jdate($obj->doc_date)).'</td>';
-      print '<td>'.$obj->doc_ref.'</td>';
-      print '<td>'.$obj->numero_compte.'</td>';
-      print '<td>'.$obj->code_tiers.'</td>';
-      print '<td>'.$obj->label_compte.'</td>';
-      print '<td>'.$obj->debit.'</td>';
-      print '<td>'.$obj->credit.'</td>';
-      print '<td>'.$obj->montant.'</td>';
-      print '<td>'.$obj->sens.'</td>';
-      print '<td align="right" width="100">';
-      
-
-      print '</td>';
-      print "</tr>\n";
-      $i++;
-    }
-  print "</table>";
-  $db->free($resql);
-}
-else
-{
-  dol_print_error($db);
-}
-
-$db->close();
-
-llxFooter("<em>Derni&egrave;re modification $Date: 2011/07/31 22:23:31 $ r&eacute;vision $Revision: 1.12 $</em>");
+$db->close ();
 ?>

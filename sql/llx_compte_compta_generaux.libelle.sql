@@ -16,4 +16,5 @@
 --
 -- ============================================================================
 
-ALTER TABLE llx_facture_fourn_det add column fk_code_ventilation int(11) NOT NULL DEFAULT 0;
+ALTER TABLE 'llx_compta_compte_generaux' add column libelle varchar(255) DEFAULT NULL;
+

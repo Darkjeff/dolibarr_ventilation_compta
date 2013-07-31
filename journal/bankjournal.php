@@ -220,6 +220,7 @@ if ($result) {
 }
 // write bookkeeping
 if (GETPOST ( 'action' ) == 'writeBookKeeping') {
+	$error=0;
 	foreach ( $tabpay as $key => $val ) {
 		// bank
 		foreach ( $tabbq [$key] as $k => $mt ) {
@@ -238,7 +239,40 @@ if (GETPOST ( 'action' ) == 'writeBookKeeping') {
 			$bookkeeping->credit = ($mt < 0 ? price - ($mt) : 0);
 			$bookkeeping->code_journal = $conf->global->VENTILATION_BANK_JOURNAL;
 			
-			$bookkeeping->create ();
+			if ($tabtype[$key]=='payment') {
+
+				$sqlmid= 'SELECT fac.facnumber';
+				$sqlmid.= " FROM " . MAIN_DB_PREFIX . "facture fac ";
+				$sqlmid.= " INNER JOIN " . MAIN_DB_PREFIX . "paiement_facture as payfac ON  payfac.fk_facture=fac.rowid";
+				$sqlmid.= " INNER JOIN " . MAIN_DB_PREFIX . "paiement as pay ON  payfac.fk_paiement=pay.rowid";
+				$sqlmid.= " WHERE pay.fk_bank=".$key;
+				dol_syslog ( "bankjournal::  sqlmid=" . $sqlmid, LOG_DEBUG );
+				$resultmid = $db->query ( $sqlmid );
+				if ($resultmid) {
+					$objmid = $db->fetch_object ( $resultmid );
+					$bookkeeping->doc_ref=$objmid->facnumber;
+				}
+				}else if ($tabtype[$key]=='payment_supplier') {
+
+				$sqlmid= 'SELECT facf.facnumber';
+				$sqlmid.= " FROM " . MAIN_DB_PREFIX . "facture_fourn facf ";
+				$sqlmid.= " INNER JOIN " . MAIN_DB_PREFIX . "paiementfourn_facturefourn as payfacf ON  payfacf.fk_facturefourn=facf.rowid";
+				$sqlmid.= " INNER JOIN " . MAIN_DB_PREFIX . "paiementfourn as payf ON  payfacf.fk_paiementfourn=payf.rowid";
+				$sqlmid.= " WHERE payf.fk_bank=".$key;
+				dol_syslog ( "bankjournal::  sqlmid=" . $sqlmid, LOG_DEBUG );
+				$resultmid = $db->query ( $sqlmid );
+				if ($resultmid) {
+					$objmid = $db->fetch_object ( $resultmid );
+					$bookkeeping->doc_ref=$objmid->facnumber;
+				}
+			}
+			
+			
+			$result = $bookkeeping->create ();
+			if ($result < 0) {
+				$error++;
+				setEventMessage ( $object->errors, 'errors' );
+			}
 		}
 		// third party
 		foreach ( $tabtp [$key] as $k => $mt ) {
@@ -274,6 +308,21 @@ if (GETPOST ( 'action' ) == 'writeBookKeeping') {
 				}
 				$bookkeeping->code_tiers = $k;
 				$bookkeeping->numero_compte = $conf->global->COMPTA_ACCOUNT_CUSTOMER;
+				}else if ($tabtype[$key]=='payment_supplier') {
+
+				$sqlmid= 'SELECT facf.facnumber';
+				$sqlmid.= " FROM " . MAIN_DB_PREFIX . "facture_fourn facf ";
+				$sqlmid.= " INNER JOIN " . MAIN_DB_PREFIX . "paiementfourn_facturefourn as payfacf ON  payfacf.fk_facturefourn=facf.rowid";
+				$sqlmid.= " INNER JOIN " . MAIN_DB_PREFIX . "paiementfourn as payf ON  payfacf.fk_paiementfourn=payf.rowid";
+				$sqlmid.= " WHERE payf.fk_bank=".$key;
+				dol_syslog ( "bankjournal::  sqlmid=" . $sqlmid, LOG_DEBUG );
+				$resultmid = $db->query ( $sqlmid );
+				if ($resultmid) {
+					$objmid = $db->fetch_object ( $resultmid );
+					$bookkeeping->doc_ref=$objmid->facnumber;
+				}
+				$bookkeeping->code_tiers = $k;
+				$bookkeeping->numero_compte = $conf->global->COMPTA_ACCOUNT_SUPPLIER;
 			}else if ($tabtype[$key]=='company') {
 
 				$sqlmid= 'SELECT fac.facnumber';
@@ -296,8 +345,16 @@ if (GETPOST ( 'action' ) == 'writeBookKeeping') {
 				$bookkeeping->numero_compte = $conf->global->COMPTA_ACCOUNT_CUSTOMER;
 			}
 			
-			$bookkeeping->create ();
+			$result = $bookkeeping->create ();
+			if ($result < 0) {
+				$error++;
+				setEventMessage ( $object->errors, 'errors' );
+			}
 		}
+	}
+	
+	if (empty($error)) {
+		setEventMessage ( $langs->trans('Success'), 'mesgs' );
 	}
 }
 // export csv
@@ -376,12 +433,13 @@ if (GETPOST ( 'action' ) == 'export_csv') {
 	$r = '';
 	
 	foreach ( $tabpay as $key => $val ) {
+	$date = dol_print_date($db->jdate($val["date"]),'day');
 		
 		// Bank
 		foreach ( $tabbq [$key] as $k => $mt ) {
 			if (1) {
 				print "<tr " . $bc [$var] . " >";
-				print "<td>" . $val ["date"] . "</td>";
+				print "<td>" .$date. "</td>";
 				print "<td>" . $val ["lib"] . "</td>";
 				print "<td>" . $k . "</td>";
 				print '<td align="right">' . ($mt >= 0 ? price ( $mt ) : '') . "</td>";
@@ -395,7 +453,7 @@ if (GETPOST ( 'action' ) == 'export_csv') {
 			if ($k!='type') {
 				print "<tr " . $bc [$var] . ">";
 				
-				print "<td>" . $val ["date"] . "</td>";
+				print "<td>" .$date. "</td>";
 				print "<td>" . $val ["soclib"] . "</td>";
 				
 				print "<td>" . $k;

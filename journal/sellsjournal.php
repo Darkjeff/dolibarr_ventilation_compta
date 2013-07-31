@@ -183,6 +183,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 		    $bookkeeping->sens = ($mt >= 0)?'D':'C';
 		    $bookkeeping->debit = ($mt >= 0)?$mt:0;
 		    $bookkeeping->credit = ($mt < 0)?$mt:0;
+		    $bookkeeping->code_journal = $conf->global->VENTILATION_SELL_JOURNAL;
 
 		    $bookkeeping->create();
 		}
@@ -208,6 +209,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 				    $bookkeeping->sens = ($mt < 0)?'D':'C';
 				    $bookkeeping->debit = ($mt < 0)?$mt:0;
 				    $bookkeeping->credit = ($mt >= 0)?$mt:0;
+				    $bookkeeping->code_journal = $conf->global->VENTILATION_SELL_JOURNAL;
 
 				    $bookkeeping->create();
 			    }
@@ -233,6 +235,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 			    $bookkeeping->sens = ($mt < 0)?'D':'C';
 			    $bookkeeping->debit = ($mt < 0)?$mt:0;
 			    $bookkeeping->credit = ($mt >= 0)?$mt:0;
+			    $bookkeeping->code_journal = $conf->global->VENTILATION_SELL_JOURNAL;
 
 			    $bookkeeping->create();
 			}
