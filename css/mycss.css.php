@@ -15,3 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ *	\file		css/mycss.css.php
+ *	\ingroup	mymodule
+ *	\brief		This file is an example css file
+ *				Put some comments here
+ */
