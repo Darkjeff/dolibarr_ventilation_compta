@@ -91,7 +91,7 @@ if (empty($date_start) || empty($date_end)) // We define date_start and date_end
 $p = explode(":", $conf->global->MAIN_INFO_SOCIETE_PAYS);
 $idpays = $p[0];
 
-$sql = "SELECT f.rowid, f.facnumber, f.type, f.datef as df, f.libelle,";
+$sql = "SELECT f.rowid, f.ref, f.type, f.datef as df, f.libelle,";
 $sql.= " fd.rowid as fdid, fd.total_ttc, fd.tva_tx, fd.total_ht, fd.tva as total_tva, fd.product_type,";
 $sql.= " s.rowid as socid, s.nom as name, s.code_compta_fournisseur, s.fournisseur,";
 $sql.= " s.code_compta_fournisseur, p.accountancy_code_buy , ct.accountancy_code_buy as account_tva, ccg.rowid as fk_compte, ccg.numero as compte, ccg.intitule as label_compte";
