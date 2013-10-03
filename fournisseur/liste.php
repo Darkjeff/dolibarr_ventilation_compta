@@ -121,7 +121,7 @@ if ($page < 0) $page = 0;
 $limit = $conf->liste_limit;
 $offset = $limit * $page ;
 
-$sql = "SELECT f.facnumber, f.rowid as facid, l.fk_product, l.description, l.total_ht as price, l.rowid, l.fk_code_ventilation, ";
+$sql = "SELECT f.ref, f.rowid as facid, l.fk_product, l.description, l.total_ht as price, l.rowid, l.fk_code_ventilation, ";
 $sql.= " p.rowid as product_id, p.ref as product_ref, p.label as product_label, p.fk_product_type as type, p.accountancy_code_buy as code_buy";
 $sql .= " FROM ".MAIN_DB_PREFIX."facture_fourn as f";
 $sql .= " , ".MAIN_DB_PREFIX."facture_fourn_det as l";
