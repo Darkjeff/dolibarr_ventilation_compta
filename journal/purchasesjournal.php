@@ -88,7 +88,7 @@ if (empty($date_start) || empty($date_end)) // We define date_start and date_end
 
 
 
-$p = explode(":", $conf->global->MAIN_INFO_SOCIETE_PAYS);
+$p = explode(":", $conf->global->MAIN_INFO_SOCIETE_COUNTRY);
 $idpays = $p[0];
 
 $sql = "SELECT f.rowid, f.ref, f.type, f.datef as df, f.libelle,";

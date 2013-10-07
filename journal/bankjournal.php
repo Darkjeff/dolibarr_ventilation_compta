@@ -91,7 +91,7 @@ if (empty ( $date_start ) || empty ( $date_end )) // We define date_start and da
 	$date_end = dol_get_last_day ( $pastmonthyear, $pastmonth, false );
 }
 
-$p = explode ( ":", $conf->global->MAIN_INFO_SOCIETE_PAYS );
+$p = explode ( ":", $conf->global->MAIN_INFO_SOCIETE_COUNTRY );
 $idpays = $p [0];
 
 $sql = "SELECT b.rowid , b.dateo as do, b.datev as dv, b.amount, b.label, b.rappro, b.num_releve, b.num_chq, b.fk_type,soc.code_compta,";
