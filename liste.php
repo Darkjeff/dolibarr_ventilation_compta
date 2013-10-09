@@ -88,7 +88,7 @@ if ($result)
 	print '<td>'.$langs->trans("Account").'</td>';
 	print '<td>'.$langs->trans("Label").'</td>';
 	print '<td>'.$langs->trans("Description").'</td>';
-	print '<td align="right">'.$langs->trans("Montant").'</td>';
+	print '<td align="right">'.$langs->trans("Amount").'</td>';
 	print '<td>&nbsp;</td>';
 	print "</tr>\n";
 

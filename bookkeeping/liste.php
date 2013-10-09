@@ -164,7 +164,7 @@ llxHeader ( '', 'Compta - Grand Livre' );
 		print_liste_field_titre ( $langs->trans ( "labelcompte" ), "liste.php", "bk_label_compte" );
 		print_liste_field_titre ( $langs->trans ( "debit" ), "liste.php", "bk.debit" );
 		print_liste_field_titre ( $langs->trans ( "credit" ), "liste.php", "bk.credit" );
-		print_liste_field_titre ( $langs->trans ( "montant" ), "liste.php", "bk.montant" );
+		print_liste_field_titre ( $langs->trans ( "Amount" ), "liste.php", "bk.montant" );
 		print_liste_field_titre ( $langs->trans ( "sens" ), "liste.php", "bk.sens" );
 		print_liste_field_titre ( $langs->trans ( "codejournal" ), "liste.php", "bk.code_journal" );
 		print "</tr>\n";

@@ -133,7 +133,7 @@ if($_GET["id"])
 			      print '<td>'.$facture_static->getNomUrl(1).'</td>';
             print '</tr>';
 
-            print '<tr><td width="20%">Ligne</td>';
+            print '<tr><td width="20%">'.$langs->trans("Line").'</td>';
             print '<td>'.nl2br($objp->description).'</td></tr>';
             print '<tr><td width="20%">'.$langs->trans("Account").'</td><td>';
             print $cgs[$objp->fk_code_ventilation];

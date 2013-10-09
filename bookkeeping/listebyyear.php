@@ -87,7 +87,7 @@ if ($resql)
   print_liste_field_titre($langs->trans("labelcompte"));
   print_liste_field_titre($langs->trans("debit"));
   print_liste_field_titre($langs->trans("credit"));
-  print_liste_field_titre($langs->trans("montant"));
+  print_liste_field_titre($langs->trans("Amount"));
   print_liste_field_titre($langs->trans("sens"));
   print "</tr>\n";
 
