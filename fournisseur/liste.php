@@ -142,13 +142,13 @@ if ($result)
 
   print '<table class="noborder" width="100%">';
   print '<tr class="liste_titre"><td>Facture</td>';
-  print '<td align="left">Ref</td>';
-  print '<td align="left">Libelle</td>';
+  print '<td align="left">'.$langs->trans("Ref").'</td>';
+  print '<td align="left">'.$langs->trans("Label").'</td>';
   print '<td>'.$langs->trans("Description").'</td>';
-  print '<td align="right">Montant</td>';
-  print '<td align="right">Compte</td>';
-  print '<td align="center">Dans le compte</td>';
-  print '<td align="center">Ventiler</td>';
+  print '<td align="right">'.$langs->trans("Amount").'</td>';
+  print '<td align="right">'.$langs->trans("Compte").'</td>';
+  print '<td align="center">'.$langs->trans("IntoAccount").'</td>';
+  print '<td align="center">'.$langs->trans("Ventilate").'</td>';
   print "</tr>\n";
   
 

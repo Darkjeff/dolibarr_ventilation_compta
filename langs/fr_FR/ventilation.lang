@@ -5,6 +5,8 @@ Module61000Name= Ventilation
 Module61000Desc= Gestion des ventilations et des marges
 
 Ventilation=Ventilation
+ToDispatch=A effectuer
+Dispatched=Effectuée
 
 CustomersVentilation=Ventilation clients
 SuppliersVentilation=Ventilation fournisseurs
@@ -12,23 +14,24 @@ TradeMargin=Marge commerciale
 ByCustomerInvoice=Par factures clients
 ByMonth=Par mois
 Account=Compte comptable
-NewAccount=Nouveau Compte comptable
-update=Mettre a jour
-list=liste
-create=creer
+NewAccount=Nouveau compte comptable
+update=Mettre à jour
+list=Liste
+create=Créer
 UpdateAccount=Modification d'un compte
-writeBookKeeping=Ecrire les écritures comptables
-GeneralLedger=Grand Livre
+writeBookKeeping=Comptabiliser les écritures dans le grand livre
+GeneralLedger=Grand livre
 
-VentilationComptable=Ventilation Comptable
-VentilationComptableSupplier=Ventilation Comptable Fournisseur
-Intitule=Intitule
+VentilationComptable=Ventilation comptable
+VentilationComptableSupplier=Ventilation comptable fournisseur
+Intitule=Intitulé
+Line=Ligne
 
-CAHT=Total Chiffre Affaire HT
+CAHT=Total Chiffre Affaires HT
 CAHTF=Total Achat Fournisseur HT
 InvoiceLines=Lignes de facture à ventiler
 InvoiceLinesDone=Lignes de facture ventilées
-DansCompte=Dans le compte
+IntoAccount=Dans le compte
 
 Ventilate=Ventiler
 
@@ -46,5 +49,11 @@ code_tiers=Tiers
 labelcompte=Libellé compte
 debit=Débit
 credit=Crédit
-montant=Montant
+Amount=Montant
 sens=Sens
+codejournal=Journal
+
+delBookKeeping=Supprimer les écritures du grand livre
+
+BankJournal=Journal de banque
+DescBankJournal=Journal de banque

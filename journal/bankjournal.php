@@ -48,9 +48,10 @@ require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.class.php';
 dol_include_once ( '/ventilation/compta/class/comptacompte.class.php' );
 dol_include_once ( '/ventilation/compta/class/bookkeeping.class.php' );
 
-$langs->load ( "companies" );
-$langs->load ( "other" );
-$langs->load ( "compta" );
+$langs->load("companies");
+$langs->load("other");
+$langs->load("compta");
+$langs->load("ventilation@ventilation");
 
 $date_startmonth = GETPOST ( 'date_startmonth' );
 $date_startday = GETPOST ( 'date_startday' );

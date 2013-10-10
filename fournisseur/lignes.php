@@ -105,7 +105,7 @@ if ($result)
   print '<td>'.$langs->trans("Ref").'</td>';
   print '<td>'.$langs->trans("Label").'</td>';
   print '<td>'.$langs->trans("Description").'</td>';
-  print '<td align="left">'.$langs->trans("Montant").'</td>';
+  print '<td align="left">'.$langs->trans("Amount").'</td>';
   print '<td colspan="2" align="left">'.$langs->trans("Compte").'</td>';
   print '<td align="center">&nbsp;</td>';
   print "</tr>\n";
