@@ -45,7 +45,7 @@ if (!$user->rights->compta->ventilation->creer) accessforbidden();
 if ($user->societe_id > 0) accessforbidden();
 
 
-llxHeader('','Ventilation');
+llxHeader('',$langs->trans("Ventilation"));
 
 /*
 * Lignes de factures
@@ -71,7 +71,7 @@ if ($result)
 	$i = 0;
 	print '<table>';
 	print '<tr>';
-	print '<a class="butAction" href="liste2.php">Ventilation Automatique</a>';
+	print '<a class="butAction" href="liste2.php">'.$langs->trans("VentilationAuto").'</a>';
 	print '</tr>';
 	print '<tr>';
 	print '</tr>';

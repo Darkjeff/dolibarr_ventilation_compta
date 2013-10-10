@@ -184,7 +184,7 @@ class modVentilation extends DolibarrModules
 		
 		$this->menu[$r]=array(	'fk_menu'=>'r=0',
 								'type'=>'left',
-								'titre'=>'GeneralLedger',
+								'titre'=>'Bookkeeping',
 								'mainmenu'=>'ventilation',
 								'url'=>'/ventilation/bookkeeping/liste.php',
 								'langs'=>'ventilation@ventilation',
@@ -296,7 +296,7 @@ class modVentilation extends DolibarrModules
       		$r++;
       		$this->menu[$r]=array(  'fk_menu'=>'r=13',
 		                        'type'=>'left',
-		                        'titre'=>'Journal banque',
+		                        'titre'=>'BankJournal',
 		                        'mainmenu'=>'ventilation',
 		                        'url'=>'/ventilation/journal/bankjournal.php',
 		                        'langs'=>'ventilation@ventilation',
