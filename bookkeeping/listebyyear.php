@@ -47,7 +47,7 @@ if ($year == 0 )
   $year_start = $year;
 }
 
-llxHeader('',$langs->trans("bookkeeping"));
+llxHeader('',$langs->trans("Bookkeeping"));
 
 $textprevyear="<a href=\"listebyyear.php?year=" . ($year_current-1) . "\">".img_previous()."</a>";
 $textnextyear=" <a href=\"listebyyear.php?year=" . ($year_current+1) . "\">".img_next()."</a>";
@@ -79,16 +79,16 @@ if ($resql)
 
   print '<table class="liste">';
   print '<tr class="liste_titre">';
-  print_liste_field_titre($langs->trans("doctype"));
-  print_liste_field_titre($langs->trans("docdate"));
-  print_liste_field_titre($langs->trans("docref"));
-  print_liste_field_titre($langs->trans("numerocompte"));
-  print_liste_field_titre($langs->trans("code_tiers"));
-  print_liste_field_titre($langs->trans("labelcompte"));
-  print_liste_field_titre($langs->trans("debit"));
-  print_liste_field_titre($langs->trans("credit"));
+  print_liste_field_titre($langs->trans("Doctype"));
+  print_liste_field_titre($langs->trans("Docdate"));
+  print_liste_field_titre($langs->trans("Docref"));
+  print_liste_field_titre($langs->trans("Account"));
+  print_liste_field_titre($langs->trans("Code_tiers"));
+  print_liste_field_titre($langs->trans("Labelcompte"));
+  print_liste_field_titre($langs->trans("Debit"));
+  print_liste_field_titre($langs->trans("Credit"));
   print_liste_field_titre($langs->trans("Amount"));
-  print_liste_field_titre($langs->trans("sens"));
+  print_liste_field_titre($langs->trans("Sens"));
   print "</tr>\n";
 
   $var=True;
@@ -112,10 +112,11 @@ if ($resql)
       print '<td>'.$obj->credit.'</td>';
       print '<td>'.$obj->montant.'</td>';
       print '<td>'.$obj->sens.'</td>';
-      print '<td align="right" width="100">';
       
-
+      /*
+      print '<td align="right" width="100">';
       print '</td>';
+      */
       print "</tr>\n";
       $i++;
     }

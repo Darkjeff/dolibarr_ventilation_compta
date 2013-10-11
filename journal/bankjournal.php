@@ -401,7 +401,7 @@ if (GETPOST ( 'action' ) == 'export_csv') {
 	
 	print '<input type="button" class="button" style="float: right;" value="Export CSV" onclick="launch_export();" />';
 	
-	print '<input type="button" class="button" value="' . $langs->trans ( "writeBookKeeping" ) . '" onclick="writeBookKeeping();" />';
+	print '<input type="button" class="button" value="' . $langs->trans ( "WriteBookKeeping" ) . '" onclick="writeBookKeeping();" />';
 	
 	print '
 	<script type="text/javascript">

@@ -47,14 +47,14 @@ if (!$user->rights->compta->ventilation->creer) accessforbidden();
 if ($user->societe_id > 0) accessforbidden();
 
 
-llxHeader('','Ventilation');
+llxHeader('',$langs->trans("Ventilation"));
 
 if($_POST["action"] == 'ventil')
 {
-	print '<div><font color="red">Debut du traitement... </font></div>';
+	print '<div><font color="red">'.$langs->trans("Processing").'...</font></div>';
 	if($_POST['codeventil'] && $_POST["mesCasesCochees"])
 	{
-		print '<div><font color="red">'.count($_POST["mesCasesCochees"])." Lignes selectionnees</font></div>";
+		print '<div><font color="red">'.count($_POST["mesCasesCochees"]).' '.$langs->trans("SelectedLines").'</font></div>';
 		$mesLignesCochees=$_POST['mesCasesCochees'];
 		$mesCodesVentilChoisis = $_POST['codeventil'];
 		$cpt = 0;
@@ -72,11 +72,11 @@ if($_POST["action"] == 'ventil')
 
 			if($db->query($sql))
 			{
-				print '<div><font color="green"> Ligne de facture '.$monId.' ventilee <b>avec succes</b> dans le compte : '.$monCompte.'</font></div>';
+				print '<div><font color="green">'.$langs->trans("Line of invoice").' '.$monId.' '.$langs->trans("VentilatedinAccount").' : '.$monCompte.'</font></div>';
 			}
 			else 
 			{
-				print '<div><font color="red">Erreur BD : Ligne de facture '.$monId.' nom ventilee dans le compte : '.$monCompte.'<br/> <pre>'.$sql.'</pre></font></div>';
+				print '<div><font color="red">'.$langs->trans("ErrorDB").' : '.$langs->trans("Line of invoice").' '.$monId.' '.$langs->trans("NotVentilatedinAccount").' : '.$monCompte.'<br/> <pre>'.$sql.'</pre></font></div>';
 			}
   
 			$cpt++; 
@@ -85,9 +85,9 @@ if($_POST["action"] == 'ventil')
 	}
 	else
 	{
-		print '<div><font color="red">Aucune ligne à ventiler</font></div>';
+		print '<div><font color="red">'.$langs->trans("AnyLineVentilate").'</font></div>';
 	}
-	print '<div><font color="red">Traitement termine </font></div>';
+	print '<div><font color="red">'.$langs->trans("EndProcessing").'</font></div>';
 }
 
 /* 
@@ -148,8 +148,8 @@ if ($result)
 	print '<td align="right">'.$langs->trans("Amount").'</td>';
 	print '<td align="right">'.$langs->trans("Account").'</td>';
 	print '<td align="center">'.$langs->trans("IntoAccount").'</td>';
-    print '<td align="center">'.$langs->trans("Ventilate").'</td>';
-	print "</tr>\n";
+  print '<td align="center">'.$langs->trans("Ventilate").'</td>';
+	print '</tr>';
 
 	$facture_static=new Facture($db);
 	$product_static=new Product($db);
@@ -200,13 +200,13 @@ if ($result)
 		print '<input type="checkbox" name="mesCasesCochees[]" value="'.$objp->rowid."_".$i.'"'.($objp->code_sell?"checked":"").'/>';
 		print '</td>';
 
-		print "</tr>";
+		print '</tr>';
 		$i++;
 	}
 
 	print '<tr><td colspan="8">&nbsp;</td></tr><tr><td colspan="8" align="center"><input type="submit" class="butAction" value="'.$langs->trans("Ventilate").'"></td></tr>';
 
-	print "</table>";
+	print '</table>';
 	print '</form>';
 }
 else

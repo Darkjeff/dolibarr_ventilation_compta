@@ -98,7 +98,7 @@ if($_GET["id"])
     $sql .= " ".$db->idate("l.date_start")." as date_start, ".$db->idate("l.date_end")." as date_end,";
     $sql .= " l.fk_code_ventilation ";
     $sql .= " FROM ".MAIN_DB_PREFIX."facturedet as l";
-	$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = l.fk_product";
+	  $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = l.fk_product";
     $sql .= " , ".MAIN_DB_PREFIX."facture as f";
     $sql .= " WHERE f.rowid = l.fk_facture AND f.fk_statut > 0 AND l.rowid = ".$_GET["id"];
 
@@ -140,7 +140,7 @@ if($_GET["id"])
             print '<tr><td width="20%">'.$langs->trans("NewAccount").'</td><td>';
             print $form->selectarray("codeventil",$cgs, $cgn[$objp->code_sell]);            
             print '</td></tr>';
-            print '<tr><td>&nbsp;</td><td><input type="submit" class="button" value="'.$langs->trans("update").'"></td></tr>';
+            print '<tr><td>&nbsp;</td><td><input type="submit" class="button" value="'.$langs->trans("Update").'"></td></tr>';
             
             print '</table>';
             print '</form>';
