@@ -1,4 +1,4 @@
-# Dolibarr language file - en_US - ventilation
+﻿# Dolibarr language file - en_US - ventilation
 CHARSET=UTF-8
 
 Module61000Name= Ventilation
@@ -66,3 +66,5 @@ DelBookKeeping=Supprimer les écritures du grand livre
 
 BankJournal=Bank journal
 DescBankJournal=Bank Journal
+
+ThirdPartyAccount=Third Party Account

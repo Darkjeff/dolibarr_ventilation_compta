@@ -61,6 +61,7 @@ if ($action == 'delbookkeeping') {
 	if (! empty ( $import_key )) {
 		$object = new BookKeeping ( $db );
 		$result = $object->delete_by_importkey ( $import_key );
+		Header("Location: liste.php");
 		if ($result < 0) {
 			setEventMessage ( $object->errors, 'errors' );
 		}
@@ -104,7 +105,7 @@ llxHeader ( '', 'Compta - Grand Livre' );
  *
  */
 	
-	$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal ";
+	$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal , bk.piece_num ";
 	
 	$sql .= " FROM " . MAIN_DB_PREFIX . "bookkeeping as bk";
 	
@@ -195,7 +196,7 @@ llxHeader ( '', 'Compta - Grand Livre' );
 			
 			print "<tr $bc[$var]>";
 			
-			print '<td><a href="./fiche.php?action=update&id=' . $obj->rowid . '">';
+			print '<td><a href="./fiche.php?action=update&id=' . $obj->piece_num . '">';
 			print img_edit ();
 			print '</a>&nbsp;' . $obj->doc_type . '</td>' . "\n";
 			print '<td>' . dol_print_date ( $db->jdate ( $obj->doc_date ), 'day' ) . '</td>';

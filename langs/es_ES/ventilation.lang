@@ -1,4 +1,4 @@
-# Dolibarr language file - es_ES - ventilation
+﻿# Dolibarr language file - es_ES - ventilation
 CHARSET=UTF-8
 
 Module61000Name= Desglose contable
@@ -28,3 +28,5 @@ InvoiceLinesDone=Líneas de factura desglosadas
 IntoAccount=En la cuenta
 Ventilate=Desglosar
 GeneralLedger=Cuentas generales
+
+ThirdPartyAccount=Third Party Account
