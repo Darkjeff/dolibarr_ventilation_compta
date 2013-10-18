@@ -16,4 +16,4 @@
 --
 -- ============================================================================
 
-ALTER TABLE 'llx_c_chargesociales' add column accountancy_code varcha(15) ;
+ALTER TABLE llx_c_chargesociales add column accountancy_code varchar(15) ;
