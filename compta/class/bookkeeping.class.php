@@ -127,6 +127,26 @@ class BookKeeping {
 	}
 
 	/**
+	 * \brief Return next num mvt
+	 */
+	function next_num_mvt() {
+
+		$sql = "SELECT MAX(piece_num)+1 as max FROM " . MAIN_DB_PREFIX . "bookkeeping";
+		
+		dol_syslog ( get_class ( $this ) . "next_num_mvt sql=" . $sql, LOG_DEBUG );
+		$result = $this->db->query ( $sql );
+		if ($result) {
+			$obj = $this->db->fetch_object ( $result );
+			
+			return $obj->max;
+		} else {
+			$this->error = "Error " . $this->db->lasterror ();
+			dol_syslog ( get_class ( $this ) . "::fetch_per_mvt " . $this->error, LOG_ERR );
+			return - 1;
+		}
+	}
+
+	/**
 	 * \brief Load record in memory
 	 */
 	function fetch_all_per_mvt($piecenum) {
