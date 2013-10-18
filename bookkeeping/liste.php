@@ -196,7 +196,7 @@ llxHeader ( '', 'Compta - Grand Livre' );
 			
 			print "<tr $bc[$var]>";
 			
-			print '<td><a href="./fiche.php?action=update&id=' . $obj->piece_num . '">';
+			print '<td><a href="./fiche.php?piece_num=' . $obj->piece_num . '">';
 			print img_edit ();
 			print '</a>&nbsp;' . $obj->doc_type . '</td>' . "\n";
 			print '<td>' . dol_print_date ( $db->jdate ( $obj->doc_date ), 'day' ) . '</td>';

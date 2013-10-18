@@ -19,6 +19,7 @@ Update=Mettre à jour
 List=Liste
 Create=Créer
 UpdateAccount=Modification d'un compte
+UpdateMvts=Modification d'un mouvement
 WriteBookKeeping=Comptabiliser les écritures dans le grand livre
 Bookkeeping=Grand livre
 
@@ -68,3 +69,7 @@ BankJournal=Journal de banque
 DescBankJournal=Journal de banque
 
 ThirdPartyAccount=Compte Tiers
+
+NumMvts = Numero de mouvement 
+ListeMvts = Liste du mouvement 
+ErrorDebitCredit=Debit et Credit ne peuvent avoir une valeur en même temps
