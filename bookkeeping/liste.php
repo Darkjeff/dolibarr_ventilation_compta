@@ -144,9 +144,11 @@ llxHeader ( '', 'Compta - Grand Livre' );
 		
 		print $formventilation->select_bookkeeping_importkey ( 'importkey', GETPOST ( 'importkey' ) );
 		
-		print '<input type="submit" class="button" value="' . $langs->trans ( "DelBookKeeping" ) . '" />';
+		print '<div class="inline-block divButAction"><input type="submit" class="butAction" value="' . $langs->trans ( "DelBookKeeping" ) . '" /></div>';
 		
 		print '</form>';
+		
+		print '<a href="./fiche.php?action=create" class="butAction">Nouveau mouvement comptable</a>';
 		
 
 		print '<form name="add" action="' . $_SERVER ["PHP_SELF"] . '" method="POST">';
