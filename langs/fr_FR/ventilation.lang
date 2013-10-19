@@ -73,3 +73,7 @@ ThirdPartyAccount=Compte Tiers
 NumMvts = Numero de mouvement 
 ListeMvts = Liste du mouvement 
 ErrorDebitCredit=Debit et Credit ne peuvent avoir une valeur en même temps
+
+ReportThirdParty=Liste Compte Tiers
+DescThirdPartyReport=Consultez ici la liste des tiers clients et fournisseurs et leurs codes comptables
+
