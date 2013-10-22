@@ -340,7 +340,19 @@ class modVentilation extends DolibarrModules
 		                        'user'=>0);
      	 	$r++;
 
-
+      	
+     	 	$this->menu[$r]=array(  'fk_menu'=>'r=16',
+		                        'type'=>'left',
+		                        'titre'=>'Accounting Account',
+		                        'mainmenu'=>'ventilation',
+		                        'url'=>'/ventilation/accountingaccount/liste.php',
+		                        'langs'=>'ventilation@ventilation',
+		                        'position'=>153,
+		                        'enabled'=>1,
+		                        'perms'=>1,
+		                        'target'=>'',
+		                        'user'=>0);
+     	 	$r++;
 
 	}
 
