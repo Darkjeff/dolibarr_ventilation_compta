@@ -45,7 +45,7 @@ class modVentilation extends DolibarrModules
 		$this->family = "financial";
 		// Module label (no space allowed), used if translation string 'ModuleXXXName' not found (where XXX is value of numeric property 'numero' of module)
 		$this->name = preg_replace('/^mod/i','',get_class($this));
-		$this->description = "Gestion des ventilations";
+		$this->description = "Ventilation Comptable";
 
 		// Possible values for version are: 'development', 'experimental', 'dolibarr' or version
 		$this->version = '3.4.0';
@@ -77,6 +77,7 @@ class modVentilation extends DolibarrModules
 		$this->const[4] = array("VENTILATION_PURCHASE_JOURNAL","chaine","ACH");
 		$this->const[5] = array("VENTILATION_BANK_JOURNAL","chaine","BNK");
 		$this->const[6] = array("VENTILATION_SOCIAL_JOURNAL","chaine","SOC");
+		$this->const[7] = array("ACCOUNTING_PCG_VERSION","chaine","PCG99-BASE");
 
 		// Boxes
 		$this->boxes = array();

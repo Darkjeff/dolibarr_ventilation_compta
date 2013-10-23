@@ -29,6 +29,7 @@
 class AccountingAccount {
 	var $db;
 	var $id;
+	var $rowid;
 	var $fk_pcg_version;
 	var $pcg_type;
 	var $pcg_subtype;
@@ -43,32 +44,41 @@ class AccountingAccount {
 	 * \param DB handler acces base de donnees
 	 * \param id id compte (0 par defaut)
 	 */
-	function AccountingAccount($db) {
-
+	function __construct($db, $rowid = '') {
 		$this->db = $db;
+		
+		
+		
+		if ($rowid != '')
+			return $this->fetch ( $rowid );
 	}
-
 
 	/**
 	 * \brief Load record in memory
 	 */
 	 
-	 
-	function fetch($id) {
+	 function fetch($rowid = null, $account_number = null) {
 
-		$sql = "SELECT rowid, fk_pcg_version, pcg_type, ";
-		$sql .= "pcg_subtype, account_number, account_parent, label, ";
-		$sql .= "active";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "accountingaccount ";
-		$sql .= " WHERE rowid = '" . $id . "'";
+if ($rowid || $account_number) {
+			$sql = "SELECT * FROM " . MAIN_DB_PREFIX . "accountingaccount WHERE ";
+			if ($rowid) {
+				$sql .= " rowid = '" . $rowid . "'";
+			} elseif ($account_number) {
+				$sql .= " account_number = '" . $account_number . "'";
+			}
+			
+			dol_syslog ( get_class ( $this ) . "::fetch sql=" . $sql, LOG_DEBUG );
+			$result = $this->db->query ( $sql );
+			if ($result) {
+				$obj = $this->db->fetch_object ( $result );
+			} else {
+				return null;
+			}
+		}
 		
-		dol_syslog ( get_class ( $this ) . "fetch sql=" . $sql, LOG_DEBUG );
-		$result = $this->db->query ( $sql );
-		if ($result) {
-			$obj = $this->db->fetch_object ( $result );
 			
 			$this->id = $obj->rowid;
-			$this->ref = $obj->rowid;
+			$this->rowid = $obj->rowid;
 			$this->fk_pcg_version = $obj->fk_pcg_version;
 			$this->pcg_type = $obj->pcg_type;
 			$this->pcg_subtype = $obj->pcg_subtype;
@@ -76,13 +86,8 @@ class AccountingAccount {
 			$this->account_parent = $obj->account_parent;
 			$this->label = $obj->label;
 			$this->active = $obj->active;
-			} else {
-			$this->error = "Error " . $this->db->lasterror ();
-			dol_syslog ( get_class ( $this ) . "::fetch " . $this->error, LOG_ERR );
-			return - 1;
-		}
-		
-		return 1;
+			
+			return $obj->rowid;
 	}
 
 	

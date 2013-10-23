@@ -46,6 +46,60 @@ $action=GETPOST('action','alpha');
  * Affichage page
  *
  */
+ 
+ 
+ $compta_mode = defined('COMPTA_MODE')?COMPTA_MODE:'RECETTES-DEPENSES';
+ 
+ 
+if ($action == 'setcomptamode')
+{
+	$compta_mode = GETPOST('compta_mode','alpha');
+
+	$res = dolibarr_set_const($db, 'COMPTA_MODE', $compta_mode,'chaine',0,'',$conf->entity);
+
+	if (! $res > 0) $error++;
+
+ 	if (! $error)
+    {
+        $mesg = "<font class=\"ok\">".$langs->trans("SetupSaved")."</font>";
+    }
+    else
+    {
+        $mesg = "<font class=\"error\">".$langs->trans("Error")."</font>";
+    }
+
+}
+ 
+ if ($action == 'setchart')
+{
+	$chartofaccounts = GETPOST('chartofaccounts','alpha');
+
+	$res = dolibarr_set_const($db, 'CHARTOFACCOUNTS', $chartofaccounts,'chaine',0,'',$conf->entity);
+
+	if (! $res > 0) $error++;
+
+ 	if (! $error)
+    {
+        $mesg = "<font class=\"ok\">".$langs->trans("SetupSaved")."</font>";
+    }
+    else
+    {
+        $mesg = "<font class=\"error\">".$langs->trans("Error")."</font>";
+    }
+}
+ 
+ 
+
+if ($action == 'delete')
+{
+	if (! dolibarr_del_const($db, $_GET['constname'],$conf->entity));
+	{
+		print $db->error();
+	}
+}
+ 
+  
+ 
 if ($action == 'update' || $action == 'add')
 {
 	$constname = GETPOST('constname','alpha');
@@ -66,15 +120,121 @@ if ($action == 'update' || $action == 'add')
         $mesg = "<font class=\"error\">".$langs->trans("Error")."</font>";
     }
 }
+/*
+ * Affichage page
+ */
 
-llxHeader("","Accueil Compta");
+llxHeader();
 
 $form=new Form($db);
 
 $linkback='<a href="'.DOL_URL_ROOT.'/admin/modules.php">'.$langs->trans("BackToModuleList").'</a>';
 print_fiche_titre($langs->trans('ComptaSetup'),$linkback,'setup');
 
-$list=array('COMPTA_ACCOUNT_CUSTOMER','COMPTA_ACCOUNT_SUPPLIER','VENTILATION_ACCOUNT_SUSPENSE' , 'VENTILATION_SELL_JOURNAL','VENTILATION_PURCHASE_JOURNAL', 'VENTILATION_BANK_JOURNAL', 'VENTILATION_SOCIAL_JOURNAL'
+
+
+print '<br>';
+
+print '<table class="noborder" width="100%">';
+
+// Cas du parametre COMPTA_MODE
+print '<form action="'.$_SERVER["PHP_SELF"].'" method="post">';
+print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+print '<input type="hidden" name="action" value="setcomptamode">';
+print '<tr class="liste_titre">';
+print '<td>'.$langs->trans('OptionMode').'</td><td>'.$langs->trans('Description').'</td>';
+print '<td align="right"><input class="button" type="submit" value="'.$langs->trans('Modify').'"></td>';
+print "</tr>\n";
+print '<tr '.$bc[false].'><td width="200"><input type="radio" name="compta_mode" value="RECETTES-DEPENSES"'.($compta_mode != 'CREANCES-DETTES' ? ' checked' : '').'> '.$langs->trans('OptionModeTrue').'</td>';
+print '<td colspan="2">'.nl2br($langs->trans('OptionModeTrueDesc'));
+// Write info on way to count VAT
+if (! empty($conf->global->MAIN_MODULE_COMPTABILITE))
+{
+		print "<br>\n";
+		print nl2br($langs->trans('OptionModeTrueInfoModuleComptabilite'));
+}
+else
+{
+		print "<br>\n";
+		print nl2br($langs->trans('OptionModeTrueInfoExpert'));
+}
+print "</td></tr>\n";
+print '<tr '.$bc[true].'><td width="200"><input type="radio" name="compta_mode" value="CREANCES-DETTES"'.($compta_mode == 'CREANCES-DETTES' ? ' checked' : '').'> '.$langs->trans('OptionModeVirtual').'</td>';
+print '<td colspan="2">'.nl2br($langs->trans('OptionModeVirtualDesc'))."</td></tr>\n";
+print '</form>';
+
+print "</table>\n";
+
+/*
+ *  Define Chart of accounts
+ *
+ */
+if (! empty($conf->global->ACCOUNTING_SELECTCHART) && ! empty($conf->accounting->enabled))
+{
+  print '<br>';
+  print_titre($langs->trans("Definechartofaccounts"));
+
+  print '<form action="'.$_SERVER["PHP_SELF"].'" method="POST">';
+  print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'" />';
+
+  print '<table class="noborder" width="100%">';
+  $var=True;
+
+  print '<tr class="liste_titre">';
+  print '<td>';
+  print '<input type="hidden" name="action" value="setchart">';
+  print $langs->trans("Chartofaccounts").'</td>';
+  print '<td align="right"><input type="submit" class="button" value="'.$langs->trans("Modify").'"></td>';
+  print "</tr>\n";
+  $var=!$var;
+  print '<tr '.$bc[$var].'>';
+  print "<td>".$langs->trans("Selectchartofaccounts")."</td>";
+  print "<td>";
+  print '<select class="flat" name="chartofaccounts" id="chartofaccounts">';
+  print '<option value="0">'.$langs->trans("DoNotSuggestChart").'</option>';
+
+  $sql = "SELECT rowid, pcg_version, fk_pays, label, active";
+  $sql.= " FROM ".MAIN_DB_PREFIX."accounting_system";
+  $sql.= " WHERE active = 1";
+  $sql.= " AND fk_pays = ".$mysoc->country_id;
+  $var=True;
+  $resql=$db->query($sql);
+  if ($resql)
+  {
+      $num = $db->num_rows($resql);
+      $i = 0;
+      while ($i < $num)
+      {
+          $var=!$var;
+          $row = $db->fetch_row($resql);
+
+          print '<option value="'.$row[0].'"';
+          print $conf->global->CHARTOFACCOUNTS == $row[0] ? ' selected="selected"':'';
+          print '>'.$row[1].' - '.$row[3].'</option>';
+
+          $i++;
+      }
+  }
+  print "</select>";
+  print "</td></tr>";
+  print "</table>";
+  print "</form>";
+}
+
+print "<br>\n";
+
+
+
+
+
+
+
+
+
+
+
+
+$list=array('COMPTA_ACCOUNT_CUSTOMER','COMPTA_ACCOUNT_SUPPLIER','VENTILATION_ACCOUNT_SUSPENSE' , 'VENTILATION_SELL_JOURNAL','VENTILATION_PURCHASE_JOURNAL', 'VENTILATION_BANK_JOURNAL', 'VENTILATION_SOCIAL_JOURNAL', 'ACCOUNTING_PCG_VERSION'
 );
 
 $num=count($list);
@@ -92,6 +252,7 @@ foreach ($list as $key)
 
 	print '<form action="index.php" method="POST">';
 	print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+	
 	print '<input type="hidden" name="action" value="update">';
 	print '<input type="hidden" name="consttype" value="string">';
 	print '<input type="hidden" name="constname" value="'.$key.'">';

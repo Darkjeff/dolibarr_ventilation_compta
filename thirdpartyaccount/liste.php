@@ -90,21 +90,9 @@ if (empty($date_start) || empty($date_end)) // We define date_start and date_end
 }
 else
 {
-    // TODO We define q
+    
 
 }
-
-
-
-/*
- * Mode Liste
- *
- *
- *
- */
- 
- 
- 
 
 llxHeader();
 
@@ -122,8 +110,18 @@ $description=$langs->trans("DescThirdPartyReport");
 $builddate=time();
     
      
- report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportlink);
+ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportlink , array('action'=>''));
  
+print '<input type="button" class="button" style="float: right;" value="Export CSV" onclick="launch_export();" />';
+
+print '
+	<script type="text/javascript">
+		function launch_export() {
+		    $("div.fiche div.tabBar form input[name=\"action\"]").val("export_csv");
+			$("div.fiche div.tabBar form input[type=\"submit\"]").click();
+		    $("div.fiche div.tabBar form input[name=\"action\"]").val("");
+		}
+</script>';
 
 $sql = "(SELECT s.rowid, s.nom as name , s.address, s.zip , s.town, s.code_compta as compta , ";
 $sql.= " s.fk_forme_juridique , s.fk_pays , s.phone , s.fax ,   f.datec , f.fk_soc , cp.libelle as country ";
@@ -160,6 +158,50 @@ if ($resql)
 {
   $num = $db->num_rows($resql);
   $i = 0;
+
+
+// export csv
+if (GETPOST('action') == 'export_csv') {
+	
+	header( 'Content-Type: text/csv' );
+	header( 'Content-Disposition: attachment;filename=export_csv.csv');
+	
+	 
+      $obj = $db->fetch_object($resql);
+      $var=!$var;
+
+	
+	
+	
+ print '"'.$obj->compta.'",';
+ print '"'.$obj->address.'",';
+ print '"'.$obj->zip.'",';
+ print '"'.$obj->town.'",';
+ print '"'.$obj->country.'",';
+ print '"'.$obj->phone.'",';
+ print '"'.$obj->fax.'",';
+ print "\n";
+ $i++;
+   
+}
+
+
+
+
+
+
+
+/*
+ * Mode Liste
+ *
+ *
+ *
+ */
+ 
+ 
+ 
+
+
 
 
 
