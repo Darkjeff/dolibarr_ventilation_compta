@@ -50,6 +50,7 @@ VENTILATION_PURCHASE_JOURNAL=Journal des Achats
 VENTILATION_BANK_JOURNAL=Journal de Banque
 VENTILATION_SOCIAL_JOURNAL=Journal Social
 VENTILATION_ACCOUNT_SUSPENSE=Compte d'attente
+ACCOUNTING_PCG_VERSION=Plan Comptable
 
 Doctype=Type de document
 Docdate=Date

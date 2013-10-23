@@ -41,6 +41,8 @@ $langs->load("ventilation@ventilation");
 
 
 $mesg = '';
+$action = GETPOST ( 'action' );
+$id = GETPOST ( "id" );
 $html = new Form ( $db );
 
 // Securite acces client
@@ -48,6 +50,8 @@ if ($user->societe_id > 0) accessforbidden();
 if (!$user->rights->compta->ventilation->creer) accessforbidden();
 
 //action
+
+
 
 if (GETPOST ( "action" ) == 'add') {
 	
@@ -85,8 +89,8 @@ if (GETPOST ( "action" ) == 'add') {
 	
 	
 	
-		$accounting = new AccountingAccount ( $db );
-		$accounting->fetch ( $id );
+		$accounting = new AccountingAccount ( $db, GETPOST ( 'id' ) );
+		
 		
 	$accounting->fk_pcg_version = GETPOST ( "fk_pcg_version" );
 	$accounting->pcg_type = GETPOST ( "pcg_type" );
@@ -99,13 +103,14 @@ if (GETPOST ( "action" ) == 'add') {
 		$e_accounting = $accounting;
 		
 		$res = $charge->update ();
+			header ( "Location: " . DOL_URL_ROOT . "/custom/accountingaccount/fiche.php?id=" . $accounting->id );
 		
 		if ($res >= 0) {
 			setEventMessage ( $langs->trans ( "SocialContributionAdded" ), 'mesgs' );
 		} else
-			setEventMessage ( $charge->error, 'errors' );
+			dol_print_error ( $db );
 		
-		header ( "Location: " . DOL_URL_ROOT . "/custom/accountingaccount/fiche.php?id=" . $accounting->id );
+	
 	}
 
 /*
@@ -116,7 +121,7 @@ if (GETPOST ( "action" ) == 'add') {
  *
  *
  */
-if (GETPOST ( "action" ) == 'create') {
+if ($action == 'create') {
 	
 	llxheader ( '', $langs->trans ( "addaccounting" ), '' );
 	
@@ -148,15 +153,14 @@ if (GETPOST ( "action" ) == 'create') {
 	print '</form>';
 }
 
-if ($id > 0) {
+elseif ($action == 'update') {
 	
 	llxheader ( '', $langs->trans ( "changeaccounting" ), '' );
 	
 	$nbligne = 0;
 	
-	$accounting = new AccountingAccount ( $db );
-	$result = $accounting->fetch ( $id );
-	
+	$accounting = new Accountingaccount ( $db , GETPOST ( 'id' ));
+
 	
 	
 	print '<form action="' . $_SERVER ['PHP_SELF'] . '" method="post">';

@@ -93,7 +93,7 @@ if ($result)
 	
 	$param = '';
 	
-	
+	$obj = $db->fetch_object ( $result );
 	
 	print_barre_liste($langs->trans("AccountingAccount"),$page,"liste.php","",$sortfield,$sortorder,'',$num);
 
