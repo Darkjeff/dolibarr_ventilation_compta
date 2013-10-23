@@ -1,4 +1,4 @@
-# Dolibarr language file - fr_FR - ventilation
+﻿# Dolibarr language file - fr_FR - ventilation
 CHARSET=UTF-8
 
 Module61000Name= Ventilation
@@ -19,6 +19,7 @@ Update=Mettre à jour
 List=Liste
 Create=Créer
 UpdateAccount=Modification d'un compte
+UpdateMvts=Modification d'un mouvement
 WriteBookKeeping=Comptabiliser les écritures dans le grand livre
 Bookkeeping=Grand livre
 
@@ -66,3 +67,13 @@ DelBookKeeping=Supprimer les écritures du grand livre
 
 BankJournal=Journal de banque
 DescBankJournal=Journal de banque
+
+ThirdPartyAccount=Compte Tiers
+
+NumMvts = Numero de mouvement 
+ListeMvts = Liste du mouvement 
+ErrorDebitCredit=Debit et Credit ne peuvent avoir une valeur en même temps
+
+ReportThirdParty=Liste Compte Tiers
+DescThirdPartyReport=Consultez ici la liste des tiers clients et fournisseurs et leurs codes comptables
+
