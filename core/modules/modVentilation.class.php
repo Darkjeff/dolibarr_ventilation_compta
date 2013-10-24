@@ -41,6 +41,7 @@ class modVentilation extends DolibarrModules
 	{
 		$this->db = $DB;
 		$this->numero = 61000;
+    $this->rights_class = 'ventilation';
 
 		$this->family = "financial";
 		// Module label (no space allowed), used if translation string 'ModuleXXXName' not found (where XXX is value of numeric property 'numero' of module)
@@ -48,7 +49,8 @@ class modVentilation extends DolibarrModules
 		$this->description = "Ventilation Comptable";
 
 		// Possible values for version are: 'development', 'experimental', 'dolibarr' or version
-		$this->version = '3.4.0';
+		$this->version = 'Développement';
+    $this->revision = '';
 
 		$this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
 		$this->special = 0;
@@ -61,7 +63,7 @@ class modVentilation extends DolibarrModules
 		$this->dirs = array();
 
 		// Config pages
-		$this->config_page_url = array('index.php@ventilation');
+		// $this->config_page_url = array('index.php@ventilation'); Deprecated - Need an admin page into the module directly - Not reserve for the admin
 		
 		// Dependencies
 		$this->depends = array();		// List of modules id that must be enabled if this module is enabled
@@ -83,7 +85,22 @@ class modVentilation extends DolibarrModules
 		$this->boxes = array();
 
 		// Permissions
-		$this->rights = array();
+		$this->rights = array();		// Permission array used by this module
+		$r=0;
+
+    $this->rights[$r][0] = 61001; 				// Permission id (must not be already used)
+		$this->rights[$r][1] = 'Acces_module';	// Permission label
+		$this->rights[$r][3] = 0; 					// Permission by default for new user (0/1)
+		$this->rights[$r][4] = 'access';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
+		$this->rights[$r][5] = '';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
+		$r++;
+    
+		$this->rights[$r][0] = 61002; 				// Permission id (must not be already used)
+		$this->rights[$r][1] = 'Administration_module';	// Permission label
+		$this->rights[$r][3] = 0; 					// Permission by default for new user (0/1)
+		$this->rights[$r][4] = 'admin';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
+		$this->rights[$r][5] = '';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
+		$r++;
 		
 		// Main menu entries
 		$this->menus = array();			// List of menus to add
@@ -97,13 +114,13 @@ class modVentilation extends DolibarrModules
 								'url'=>'/ventilation/index.php',
 								'langs'=>'ventilation@ventilation',
 								'position'=>100,
-								'perms'=>1,
+								'perms'=>'$user->rights->ventilation->access',
 								'enabled'=>'$conf->ventilation->enabled',
 								'target'=>'',
 								'user'=>0);
 		$r++;
 		
-				$this->menu[$r]=array(	'fk_menu'=>'r=0',
+		$this->menu[$r]=array(	'fk_menu'=>'r=0',
 								'type'=>'left',
 								'titre'=>'Account',
 								'mainmenu'=>'ventilation',
@@ -115,31 +132,34 @@ class modVentilation extends DolibarrModules
 								'target'=>'',
 								'user'=>0);
 		$r++;
-		$this->menu[$r]=array(  'fk_menu'=>'r=1',
-		                        'type'=>'left',
-		                        'titre'=>'List',
-		                        'mainmenu'=>'ventilation',
-		                        'url'=>'/ventilation/param/liste.php',
-		                        'langs'=>'ventilation@ventilation',
-		                        'position'=>102,
-		                        'enabled'=>1,
-		                        'perms'=>1,
-		                        'target'=>'',
-		                        'user'=>0);
-      		$r++;
-		$this->menu[$r]=array(  'fk_menu'=>'r=1',
-		                        'type'=>'left',
-		                        'titre'=>'Create',
-		                        'mainmenu'=>'ventilation',
-		                        'url'=>'/ventilation/param/fiche.php?action=create',
-		                        'langs'=>'ventilation@ventilation',
-		                        'position'=>103,
-		                        'enabled'=>1,
-		                        'perms'=>1,
-		                        'target'=>'',
-		                        'user'=>0);
-      		$r++;
-      						$this->menu[$r]=array(	'fk_menu'=>'r=0',
+		
+    $this->menu[$r]=array(  'fk_menu'=>'r=1',
+		            'type'=>'left',
+		            'titre'=>'List',
+		            'mainmenu'=>'ventilation',
+		            'url'=>'/ventilation/param/liste.php',
+		            'langs'=>'ventilation@ventilation',
+		            'position'=>102,
+		            'enabled'=>1,
+		            'perms'=>1,
+		            'target'=>'',
+		            'user'=>0);
+    $r++;
+		
+    $this->menu[$r]=array(  'fk_menu'=>'r=1',
+		            'type'=>'left',
+		            'titre'=>'Create',
+		            'mainmenu'=>'ventilation',
+		            'url'=>'/ventilation/param/fiche.php?action=create',
+		            'langs'=>'ventilation@ventilation',
+		            'position'=>103,
+		            'enabled'=>1,
+		            'perms'=>1,
+		            'target'=>'',
+		            'user'=>0);
+    $r++;
+    
+    $this->menu[$r]=array(	'fk_menu'=>'r=0',
 								'type'=>'left',
 								'titre'=>'ThirdPartyAccount',
 								'mainmenu'=>'ventilation',
@@ -152,22 +172,20 @@ class modVentilation extends DolibarrModules
 								'user'=>0);
 		$r++;
 		
-				$this->menu[$r]=array(  'fk_menu'=>'r=4',
-		                        'type'=>'left',
-		                        'titre'=>'List',
-		                        'mainmenu'=>'ventilation',
-		                        'url'=>'/ventilation/thirdpartyaccount/liste.php',
-		                        'langs'=>'ventilation@ventilation',
-		                        'position'=>111,
-		                        'enabled'=>1,
-		                        'perms'=>1,
-		                        'target'=>'',
-		                        'user'=>0);
-      		$r++;
+		$this->menu[$r]=array(  'fk_menu'=>'r=4',
+		            'type'=>'left',
+		            'titre'=>'List',
+		            'mainmenu'=>'ventilation',
+		            'url'=>'/ventilation/thirdpartyaccount/liste.php',
+		            'langs'=>'ventilation@ventilation',
+		            'position'=>111,
+		            'enabled'=>1,
+		            'perms'=>1,
+		            'target'=>'',
+		            'user'=>0);
+    $r++;
 		
-	
-		
-		$this->menu[$r]=array(	'fk_menu'=>'r=0',
+	  $this->menu[$r]=array(	'fk_menu'=>'r=0',
 								'type'=>'left',
 								'titre'=>'CustomersVentilation',
 								'mainmenu'=>'ventilation',
@@ -206,9 +224,7 @@ class modVentilation extends DolibarrModules
 								'user'=>0);
 		$r++;
 
-	
-		
-		$this->menu[$r]=array(	'fk_menu'=>'r=0',
+	  $this->menu[$r]=array(	'fk_menu'=>'r=0',
 								'type'=>'left',
 								'titre'=>'SuppliersVentilation',
 								'mainmenu'=>'ventilation',
@@ -247,7 +263,6 @@ class modVentilation extends DolibarrModules
 								'user'=>0);
 		$r++;
 		
-				
 		$this->menu[$r]=array(	'fk_menu'=>'r=0',
 								'type'=>'left',
 								'titre'=>'Journaux',
@@ -261,45 +276,45 @@ class modVentilation extends DolibarrModules
 								'user'=>0);
 		$r++;
 		
-		
-				$this->menu[$r]=array(  'fk_menu'=>'r=12',
-		                        'type'=>'left',
-		                        'titre'=>'Journal des ventes',
-		                        'mainmenu'=>'ventilation',
-		                        'url'=>'/ventilation/journal/sellsjournal.php',
-		                        'langs'=>'ventilation@ventilation',
-		                        'position'=>141,
-		                        'enabled'=>1,
-		                        'perms'=>1,
-		                        'target'=>'',
-		                        'user'=>0);
-      		$r++;
 		$this->menu[$r]=array(  'fk_menu'=>'r=12',
-		                        'type'=>'left',
-		                        'titre'=>'Journal des achats',
-		                        'mainmenu'=>'ventilation',
-		                        'url'=>'/ventilation/journal/purchasesjournal.php',
-		                        'langs'=>'ventilation@ventilation',
-		                        'position'=>142,
-		                        'enabled'=>1,
-		                        'perms'=>1,
-		                        'target'=>'',
-		                        'user'=>0);
-      		$r++;
-      		$this->menu[$r]=array(  'fk_menu'=>'r=12',
-		                        'type'=>'left',
-		                        'titre'=>'Journal banque',
-		                        'mainmenu'=>'ventilation',
-		                        'url'=>'/ventilation/journal/bankjournal.php',
-		                        'langs'=>'ventilation@ventilation',
-		                        'position'=>143,
-		                        'enabled'=>1,
-		                        'perms'=>1,
-		                        'target'=>'',
-		                        'user'=>0);
-      		$r++;
+		            'type'=>'left',
+		            'titre'=>'Journal des ventes',
+		            'mainmenu'=>'ventilation',
+		            'url'=>'/ventilation/journal/sellsjournal.php',
+		            'langs'=>'ventilation@ventilation',
+		            'position'=>141,
+		            'enabled'=>1,
+		            'perms'=>1,
+		            'target'=>'',
+		            'user'=>0);
+    $r++;
 		
-		
+    $this->menu[$r]=array(  'fk_menu'=>'r=12',
+		            'type'=>'left',
+		            'titre'=>'Journal des achats',
+		            'mainmenu'=>'ventilation',
+		            'url'=>'/ventilation/journal/purchasesjournal.php',
+		            'langs'=>'ventilation@ventilation',
+		            'position'=>142,
+		            'enabled'=>1,
+		            'perms'=>1,
+		            'target'=>'',
+		            'user'=>0);
+    $r++;
+    
+    $this->menu[$r]=array(  'fk_menu'=>'r=12',
+		            'type'=>'left',
+		            'titre'=>'Journal banque',
+		            'mainmenu'=>'ventilation',
+		            'url'=>'/ventilation/journal/bankjournal.php',
+		            'langs'=>'ventilation@ventilation',
+		            'position'=>143,
+		            'enabled'=>1,
+		            'perms'=>1,
+		            'target'=>'',
+		            'user'=>0);
+    $r++;
+				
 		$this->menu[$r]=array(	'fk_menu'=>'r=0',
 								'type'=>'left',
 								'titre'=>'Bookkeeping',
@@ -317,45 +332,68 @@ class modVentilation extends DolibarrModules
 								'type'=>'left',
 								'titre'=>'ByYear',
 								'mainmenu'=>'ventilation',
-		                        'url'=>'/ventilation/bookkeeping/listebyyear.php',
-		                        'langs'=>'ventilation@ventilation',
-		                        'position'=>151,
-		                        'enabled'=>1,
-		                        'perms'=>1,
-		                        'target'=>'',
-		                        'user'=>0);
+		            'url'=>'/ventilation/bookkeeping/listebyyear.php',
+		            'langs'=>'ventilation@ventilation',
+		            'position'=>151,
+		            'enabled'=>1,
+		            'perms'=>1,
+		            'target'=>'',
+		            'user'=>0);
 		$r++;
       
-    
-      	
-     	 	$this->menu[$r]=array(  'fk_menu'=>'r=16',
-		                        'type'=>'left',
-		                        'titre'=>'Balance mensuelle',
-		                        'mainmenu'=>'ventilation',
-		                        'url'=>'/ventilation/bookkeeping/balancebymonth.php',
-		                        'langs'=>'ventilation@ventilation',
-		                        'position'=>152,
-		                        'enabled'=>1,
-		                        'perms'=>1,
-		                        'target'=>'',
-		                        'user'=>0);
-     	 	$r++;
-
-      	
-     	 	$this->menu[$r]=array(  'fk_menu'=>'r=16',
-		                        'type'=>'left',
-		                        'titre'=>'Accounting Account',
-		                        'mainmenu'=>'ventilation',
-		                        'url'=>'/ventilation/accountingaccount/liste.php',
-		                        'langs'=>'ventilation@ventilation',
-		                        'position'=>153,
-		                        'enabled'=>1,
-		                        'perms'=>1,
-		                        'target'=>'',
-		                        'user'=>0);
-     	 	$r++;
-
-	}
+    $this->menu[$r]=array(  'fk_menu'=>'r=16',
+		            'type'=>'left',
+		            'titre'=>'Balance mensuelle',
+		            'mainmenu'=>'ventilation',
+		            'url'=>'/ventilation/bookkeeping/balancebymonth.php',
+		            'langs'=>'ventilation@ventilation',
+		            'position'=>152,
+		            'enabled'=>1,
+		            'perms'=>1,
+		            'target'=>'',
+		            'user'=>0);
+     $r++;
+           	
+     // Parameters Menu
+     $this->menu[$r]=array(	'fk_menu'=>'r=0',
+								'type'=>'left',
+								'titre'=>'Parameters',
+								'mainmenu'=>'ventilation',
+								'url'=>'/ventilation/admin/index.php',
+								'langs'=>'ventilation@ventilation',
+								'position'=>160,
+								'enabled'=>1,
+								'perms'=>'$user->rights->ventilation->admin',
+								'target'=>'',
+								'user'=>0);
+		 $r++;
+      
+		 $this->menu[$r]=array(  'fk_menu'=>'r=19',
+								'type'=>'left',
+								'titre'=>'Globalparameters',
+								'mainmenu'=>'ventilation',
+		            'url'=>'/ventilation/admin/index.php',
+		            'langs'=>'ventilation@ventilation',
+		            'position'=>161,
+		            'enabled'=>1,
+		            'perms'=>'$user->rights->ventilation->admin',
+		            'target'=>'',
+		            'user'=>0);
+		 $r++;
+      
+     $this->menu[$r]=array(  'fk_menu'=>'r=19',
+		            'type'=>'left',
+		            'titre'=>'Chartofaccounts',
+		            'mainmenu'=>'ventilation',
+		            'url'=>'/ventilation/admin/liste.php',
+		            'langs'=>'ventilation@ventilation',
+		            'position'=>162,
+		            'enabled'=>1,
+		            'perms'=>1,
+		            'target'=>'',
+		            'user'=>0);
+     $r++;
+  }
 
 
 	/**
