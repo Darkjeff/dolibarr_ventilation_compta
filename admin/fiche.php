@@ -1,7 +1,8 @@
 <?PHP
 /* Copyright (C) 2004      Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2005-2006 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2013 Olivier Geffroy <jeff@jeffinfo.com>
+ * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +22,7 @@
 
 /**
  *      \file       htdocs/accountingaccount/fiche.php
- *      \ingroup    compta
+ *      \ingroup    Accounting Expert
  *      \brief      Page fiche accounting
  */
 $res=@include("../main.inc.php");
@@ -50,9 +51,6 @@ if ($user->societe_id > 0) accessforbidden();
 if (!$user->rights->compta->ventilation->creer) accessforbidden();
 
 //action
-
-
-
 if (GETPOST ( "action" ) == 'add') {
 	
 	$accounting = new AccountingAccount ( $db );
@@ -117,10 +115,6 @@ if (GETPOST ( "action" ) == 'add') {
  * View
  *
  */
-/*
- *
- *
- */
 if ($action == 'create') {
 	
 	llxheader ( '', $langs->trans ( "addaccounting" ), '' );
@@ -137,19 +131,22 @@ if ($action == 'create') {
 	print '<td><input name="AccountNumber" size="30" value="' . $accounting->AccountNumber . '"</td></tr>';
 	print '<tr><td width="20%">' . $langs->trans ( "Label" ) . '</td>';
 	print '<td><input name="Label" size="30" value="' . $accounting->Label . '"</td></tr>';
-  print '<tr><td width="20%">' . $langs->trans ( "AccountParent" ) . '</td>';
+  print '<tr><td width="20%">' . $langs->trans ( "Accountparent" ) . '</td>';
 	print '<td><input name="AccountParent" size="30" value="' . $accounting->AccountParent . '"</td></tr>';
-	print '<tr><td width="20%">' . $langs->trans ( "pcgType" ) . '</td>';
+	print '<tr><td width="20%">' . $langs->trans ( "Pcgtype" ) . '</td>';
 	print '<td><input name="pcgType" size="30" value="' . $accounting->pcgType . '"</td></tr>';
-	print '<tr><td width="20%">' . $langs->trans ( "pcgSubType" ) . '</td>';
+	print '<tr><td width="20%">' . $langs->trans ( "Pcgsubtype" ) . '</td>';
 	print '<td><input name="pcgSubType" size="30" value="' . $accounting->pcgSubType . '"</td></tr>';	
 	print '<tr><td width="20%">' . $langs->trans ( "Active" ) . '</td>';
 	print '<td><input name="Active" size="30" value="' . $accounting->Active . '"</td></tr>';	
-	
-	
-	print '<tr><td>&nbsp;</td><td><input type="submit" class="button" value="' . $langs->trans ( "Sauvegarder" ) . '"><input type="cancel" class="button" value="' . $langs->trans ( "Cancel" ) . '"></td></tr>';
-	
 	print '</table>';
+	print '<br/>';
+  print '<center>';
+  print '<input type="submit" value="'.$langs->trans("Save").'" name="bouton" class="button">';
+  print '&nbsp; &nbsp; ';
+  print '<input type="button" value="'.$langs->trans("Cancel").'" class="button" onclick="history.go(-1)">';
+  print '</center>';
+        
 	print '</form>';
 }
 

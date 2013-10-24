@@ -1,6 +1,7 @@
 <?php
 /* Copyright (C) 2002-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
- * Copyright (C) 2013 Olivier Geffroy <jeff@jeffinfo.com>
+ * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,11 +19,10 @@
  *
  */
 
-
 /**
  * 		\file       htdocs/accountingaccount/liste.php
- * 		\ingroup    compta
- * 		\brief      list accounting account
+ * 		\ingroup    Accounting Expert
+ * 		\brief      List chart of accounts and accounting account
  */
  
  // Dolibarr environment
@@ -33,27 +33,20 @@ if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.p
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 
-	// class
-
+// class
 require_once ("../compta/class/accountingaccount.class.php");
 require_once ("../compta/class/html.formventilation.class.php");
 
 
 // langs
-
 $langs->load("compta");
 $langs->load("ventilation@ventilation");
 
-
-
-
-
-// Securite acces client
+// Securite accès client
 if ($user->societe_id > 0) accessforbidden();
-if (!$user->rights->compta->ventilation->creer) accessforbidden();
+if (!$user->rights->ventilation->admin) accessforbidden();
 
 //filter
-
 $sortfield = GETPOST ( "sortfield", 'alpha' );
 $sortorder = GETPOST ( "sortorder", 'alpha' );
 $page = GETPOST ( "page" );
@@ -66,16 +59,10 @@ if (! $sortorder)
 	$sortorder = "ASC";
 $offset = $limit * $page;
 
-
-
-
-
-
-llxHeader('',$langs->trans("AccountingAccount"));
+llxHeader('',$langs->trans("Chartofaccounts"));
 
 /*
 * List accounting account
-*
 */
 
 $sql = "SELECT aa.rowid, aa.fk_pcg_version, aa.pcg_type, aa.pcg_subtype, aa.account_number, aa.account_parent , aa.label, aa.active ";
@@ -95,9 +82,9 @@ if ($result)
 	
 	$obj = $db->fetch_object ( $result );
 	
-	print_barre_liste($langs->trans("AccountingAccount"),$page,"liste.php","",$sortfield,$sortorder,'',$num);
+	print_barre_liste($langs->trans("Chartofaccounts"),$page,"liste.php","",$sortfield,$sortorder,'',$num);
 
-   print '<form method="GET" action="' . $_SERVER ["PHP_SELF"] . '">';
+  print '<form method="GET" action="' . $_SERVER ["PHP_SELF"] . '">';
 	
 	print '<table class="noborder" width="100%">';
 	print '<tr></tr>';
@@ -112,7 +99,7 @@ if ($result)
 	print_liste_field_titre ( $langs->trans ( "Active" ), "liste.php", "aa.active" , "", $param, "", $sortfield, $sortorder );
 	print "</tr>\n";
 
-print '<tr class="liste_titre">';
+  print '<tr class="liste_titre">';
 	print '<td class="liste_titre">&nbsp;</td>';
 	print '<td class="liste_titre"><input type="text" class="flat" size="15" name="search_account" value="' . GETPOST ( "search_account" ) . '"></td>';
 	print '<td class="liste_titre"><input type="text" class="flat" size="15" name="search_label" value="' . GETPOST ( "search_label" ) . '"></td>';
