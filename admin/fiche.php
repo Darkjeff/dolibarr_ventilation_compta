@@ -140,7 +140,8 @@ if ($action == 'create') {
 	print '<tr><td width="20%">' . $langs->trans ( "Active" ) . '</td>';
 	print '<td><input name="Active" size="30" value="' . $accounting->Active . '"</td></tr>';	
 	print '</table>';
-	print '<br/>';
+	
+  print '<br/>';
   print '<center>';
   print '<input type="submit" value="'.$langs->trans("Save").'" name="bouton" class="button">';
   print '&nbsp; &nbsp; ';
@@ -180,9 +181,14 @@ elseif ($action == 'update') {
 	print '<tr><td width="20%">' . $langs->trans ( "Active" ) . '</td>';
 	print '<td><input name="Active" size="30" value="' . $accounting->Active . '"</td></tr>';	
 	
-	print '<tr><td>&nbsp;</td><td><input type="submit" class="button" value="' . $langs->trans ( "Sauvegarder" ) . '"><input type="cancel" class="button" value="' . $langs->trans ( "Cancel" ) . '"></td></tr>';
-	
 	print '</table>';
+	
+  print '<br/>';
+  print '<center>';
+  print '<input type="submit" value="'.$langs->trans("Save").'" name="bouton" class="button">';
+  print '&nbsp; &nbsp; ';
+  print '<input type="button" value="'.$langs->trans("Cancel").'" class="button" onclick="history.go(-1)">';
+  print '</center>';
 	print '</form>';
 }
 

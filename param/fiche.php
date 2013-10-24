@@ -1,8 +1,9 @@
 <?php
 /* Copyright (C) 2001-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2004-2005 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2013 Olivier Geffroy  <jeff@jeffinfo.com>
- * Copyright (C) 2013 Florian Henry	  <florian.henry@open-concept.pro>
+ * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013      Florian Henry	      <florian.henry@open-concept.pro>
+ * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@fidurex.fr> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * $Id: fiche.php,v 1.14 2011/07/31 22:23:31 eldy Exp $
  */
 
-
 /**
-        \file       htdocs/custom/ventilation/param/comptes/fiche.php
-        \ingroup    ventilation compta
+        \file       ventilation/param/comptes/fiche.php
+        \ingroup    Accounting Expert
         \brief      Page de la fiche des comptes comptables
-        \version    $Revision: 1.14 $
 */
 
 // Dolibarr environment
@@ -42,7 +40,7 @@ $langs->load("ventilation@ventilation");
 $mesg = '';
 $action = GETPOST('action');
 
-if (GETPOST("action") == 'add' && $user->rights->compta->ventilation->parametrer)
+if (GETPOST("action") == 'add' && $user->rights->ventilation->admin)
 {
   $compte = new ComptaCompte($db);
 
@@ -74,7 +72,7 @@ if (GETPOST("action") == 'add' && $user->rights->compta->ventilation->parametrer
 		}
     }
 }
-elseif (GETPOST("action") == 'maj' && $user->rights->compta->ventilation->parametrer)
+elseif (GETPOST("action") == 'maj' && $user->rights->ventilation->admin)
 {
   $compte = new ComptaCompte($db, GETPOST('id'));
 
@@ -99,10 +97,10 @@ elseif (GETPOST("action") == 'maj' && $user->rights->compta->ventilation->parame
 
 
 /*
- * Cr�ation d'un compte
+ * Création d'un compte
  *
  */
-if ($action == 'create' && $user->rights->compta->ventilation->parametrer)
+if ($action == 'create' && $user->rights->ventilation->admin)
 {
 	llxHeader("","Nouveau compte");
 
@@ -121,7 +119,7 @@ if ($action == 'create' && $user->rights->compta->ventilation->parametrer)
     print '<td>'.$langs->trans("AccountNumber").'</td><td><input name="numero" size="20" value="'.$compte->numero.'">';
     if ($_error == 1)
     {
-        print "Ce num�ro de compte existe d�j�";
+        print "Ce numéro de compte existe déjà";
     }
     if ($_error == 2)
     {
@@ -138,7 +136,7 @@ if ($action == 'create' && $user->rights->compta->ventilation->parametrer)
     print '</table>';
     print '</form>';
 }
-elseif ($action == 'update' && $user->rights->compta->ventilation->parametrer)
+elseif ($action == 'update' && $user->rights->ventilation->admin)
 {
 	llxHeader("","Modification compte");
 
@@ -171,5 +169,5 @@ elseif ($action == 'update' && $user->rights->compta->ventilation->parametrer)
 
 $db->close();
 
-llxFooter('$Date: 2011/07/31 22:23:31 $ - $Revision: 1.14 $');
+llxFooter();
 ?>

@@ -1,6 +1,9 @@
 <?php
 /* Copyright (C) 2002-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
- * Copyright (C) 2005 Simon TOSSER <simon@kornog-computing.com>
+ * Copyright (C) 2005      Simon TOSSER         <simon@kornog-computing.com>
+ * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@fidurex.fr> 
+ *   
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -37,8 +40,8 @@ $langs->load("bills");
 $langs->load("compta");
 $langs->load("ventilation@ventilation");
 
-if (!$user->rights->facture->lire) accessforbidden();
-if (!$user->rights->compta->ventilation->creer) accessforbidden();
+if (!$user->rights->ventilation->access) accessforbidden();
+
 /*
  * Securite acces client
  */

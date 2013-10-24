@@ -90,26 +90,26 @@ if ($result)
 	print '<tr></tr>';
 	print '<a class="butAction" href="fiche.php?action=create">Ajouter un nouveau compte</a>';
 	print '<tr class="liste_titre">';
-	print_liste_field_titre ( $langs->trans ( "Ref" ), "liste.php", "aa.rowid" , "", $param, "", $sortfield, $sortorder );
 	print_liste_field_titre ( $langs->trans ( "AccountNumber" ), "liste.php", "aa.account_number", "", $param, "", $sortfield, $sortorder);
 	print_liste_field_titre ( $langs->trans ( "Label" ), "liste.php", "aa.label" , "", $param, "", $sortfield, $sortorder );
-	print_liste_field_titre ( $langs->trans ( "AccountParent" ), "liste.php", "aa.account_parent" , "", $param, "", $sortfield, $sortorder );
-	print_liste_field_titre ( $langs->trans ( "pcgType" ), "liste.php", "aa.pcg_type" , "", $param, "", $sortfield, $sortorder );
-	print_liste_field_titre ( $langs->trans ( "pcgSubType" ), "liste.php", "aa.pcg_subtype", "", $param, "", $sortfield, $sortorder  );
+	print_liste_field_titre ( $langs->trans ( "Accountparent" ), "liste.php", "aa.account_parent" , "", $param, "", $sortfield, $sortorder );
+	print_liste_field_titre ( $langs->trans ( "Pcgtype" ), "liste.php", "aa.pcg_type" , "", $param, "", $sortfield, $sortorder );
+	print_liste_field_titre ( $langs->trans ( "Pcgsubtype" ), "liste.php", "aa.pcg_subtype", "", $param, "", $sortfield, $sortorder  );
 	print_liste_field_titre ( $langs->trans ( "Active" ), "liste.php", "aa.active" , "", $param, "", $sortfield, $sortorder );
-	print "</tr>\n";
+	print_liste_field_titre ( "&nbsp;" );
+	print '</tr>';
 
   print '<tr class="liste_titre">';
-	print '<td class="liste_titre">&nbsp;</td>';
 	print '<td class="liste_titre"><input type="text" class="flat" size="15" name="search_account" value="' . GETPOST ( "search_account" ) . '"></td>';
 	print '<td class="liste_titre"><input type="text" class="flat" size="15" name="search_label" value="' . GETPOST ( "search_label" ) . '"></td>';
 	print '<td class="liste_titre"><input type="text" class="flat" size="15" name="search_accountparent" value="' . GETPOST ( "search_accountparent" ) . '"></td>';
 	print '<td class="liste_titre"><input type="text" class="flat" size="15" name="search_pcgtype" value="' . GETPOST ( "search_pcgtype" ) . '"></td>';
 	print '<td class="liste_titre"><input type="text" class="flat" size="15" name="search_pcgsubtype" value="' . GETPOST ( "search_pcgsubtype" ) . '"></td>';
+	print '<td class="liste_titre">&nbsp;</td>';
 	print '<td class="liste_titre" align="right">';
 	print '<input type="image" class="liste_titre" src="' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/search.png" name="button_search" value="' . dol_escape_htmltag ( $langs->trans ( "Search" ) ) . '" title="' . dol_escape_htmltag ( $langs->trans ( "Search" ) ) . '">';
 	print '</td>';
-	print "</tr>\n";
+	print '</tr>';
 
 
 
@@ -121,15 +121,15 @@ $var = True;
 			
 			print "<tr $bc[$var]>";
 
-      print '<td><a href="./fiche.php?action=update&id=' . $obj->rowid . '">';
-			print img_edit ();
-			print '</a>&nbsp;</td>' . "\n";
-			print '<td>' . $obj->account_number . '</td>';
+      print '<td>' . $obj->account_number . '</td>';
 			print '<td>' . $obj->label . '</td>';
 			print '<td>' . $obj->account_parent . '</td>';
 			print '<td>' . $obj->pcg_type . '</td>';
 			print '<td>' . $obj->pcg_subtype . '</td>';
 			print '<td>' . $obj->active . '</td>';
+      print '<td><a href="./fiche.php?action=update&id=' . $obj->rowid . '">';
+			print img_edit ();
+			print '</a>&nbsp;</td>' . "\n";
 			print "</tr>";
 		$i ++;
 	}
