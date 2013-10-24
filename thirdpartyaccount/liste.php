@@ -1,6 +1,8 @@
 <?PHP
 /* Copyright (C) 2004-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2005      Laurent Destailleur  <eldy@users.sourceforge.net>
+ * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@fidurex.fr> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,8 +44,7 @@ $langs->load("ventilation@ventilation");
 
 
 // Security check
-
-if (!$user->rights->compta->ventilation->creer) accessforbidden();
+if (!$user->rights->ventilation->admin) accessforbidden();
 if ($user->societe_id > 0) accessforbidden();
 
 // Date range

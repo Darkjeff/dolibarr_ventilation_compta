@@ -1,5 +1,7 @@
 <?php
-/* Copyright (C) 2010-2011 Regis Houssin  <regis@dolibarr.fr>
+/* Copyright (C) 2010-2011 Regis Houssin        <regis@dolibarr.fr>
+ * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,11 +19,9 @@
  */
 
 /**
- *      \defgroup   compta       Ventilation module
- *      \brief      Module to manage breakdown
- *       \file       htdocs/includes/modules/modVentilation.class.php
- *       \ingroup    compta
- *       \brief      Fichier de description et activation du module Ventilation
+ *    \file       core/modules/modVentilation.class.php
+ *    \ingroup    Accounting Expert 
+ *    \brief      Module to activate Accounting Expert module
  */
 
 include_once(DOL_DOCUMENT_ROOT ."/core/modules/DolibarrModules.class.php");
@@ -68,6 +68,7 @@ class modVentilation extends DolibarrModules
 		// Dependencies
 		$this->depends = array();		// List of modules id that must be enabled if this module is enabled
 		$this->requiredby = array();	// List of modules id to disable if this one is disabled
+    $this->conflictwith = array("modAccounting"); // List of modules are in conflict with this module
 		$this->phpmin = array(5,2);					// Minimum version of PHP required by module
 		$this->need_dolibarr_version = array(3,3);	// Minimum version of Dolibarr required by module
 		$this->langfiles = array("ventilation@ventilation");
@@ -79,7 +80,7 @@ class modVentilation extends DolibarrModules
 		$this->const[4] = array("VENTILATION_PURCHASE_JOURNAL","chaine","ACH");
 		$this->const[5] = array("VENTILATION_BANK_JOURNAL","chaine","BNK");
 		$this->const[6] = array("VENTILATION_SOCIAL_JOURNAL","chaine","SOC");
-		$this->const[7] = array("ACCOUNTING_PCG_VERSION","chaine","PCG99-BASE");
+		//$this->const[7] = array("ACCOUNTING_PCG_VERSION","chaine","PCG99-BASE"); Deprecated - already exist with constant CHARTOFACCOUNTS 
 
 		// Boxes
 		$this->boxes = array();
