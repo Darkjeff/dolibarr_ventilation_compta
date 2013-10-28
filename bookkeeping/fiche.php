@@ -38,7 +38,7 @@ if (! $res && file_exists ( "../../../main.inc.php" ))
 if (! $res)
 	die ( "Include of main fails" );
 
-dol_include_once ( "/ventilation/compta/class/bookkeeping.class.php" );
+require_once DOL_DOCUMENT_ROOT .'/ventilation/class/bookkeeping.class.php';
 
 $langs->load ( "ventilation@ventilation" );
 

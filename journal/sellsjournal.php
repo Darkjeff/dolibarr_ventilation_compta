@@ -1,11 +1,11 @@
 <?php
-/* Copyright (C) 2007-2010	Laurent Destailleur	<eldy@users.sourceforge.net>
- * Copyright (C) 2007-2010	Jean Heimburger		<jean@tiaris.info>
- * Copyright (C) 2011		Juanjo Menent		<jmenent@2byte.es>
- * Copyright (C) 2012		Regis Houssin		<regis@dolibarr.fr>
- * Copyright (C) 2013		Christophe Battarel	<christophe.battarel@altairis.fr>
- * Copyright (C) 2011-2012 Alexandre Spangaro	  <alexandre.spangaro@gmail.com>
- * Copyright (C) 2013       Florian Henry	  <florian.henry@open-concept.pro>
+/* Copyright (C) 2007-2010 Laurent Destailleur	<eldy@users.sourceforge.net>
+ * Copyright (C) 2007-2010 Jean Heimburger		  <jean@tiaris.info>
+ * Copyright (C) 2011		   Juanjo Menent		    <jmenent@2byte.es>
+ * Copyright (C) 2012		   Regis Houssin		    <regis@dolibarr.fr>
+ * Copyright (C) 2013		   Christophe Battarel	<christophe.battarel@altairis.fr>
+ * Copyright (C) 2011-2013 Alexandre Spangaro	  <alexandre.spangaro@gmail.com>
+ * Copyright (C) 2013      Florian Henry	      <florian.henry@open-concept.pro>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,17 +34,17 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 		
 		
-require_once(DOL_DOCUMENT_ROOT."/core/lib/report.lib.php");
-require_once(DOL_DOCUMENT_ROOT."/core/lib/date.lib.php");
-require_once(DOL_DOCUMENT_ROOT."/compta/facture/class/facture.class.php");
-require_once DOL_DOCUMENT_ROOT.'/societe/class/client.class.php';
-
-dol_include_once('/ventilation/compta/class/comptacompte.class.php');
-dol_include_once('/ventilation/compta/class/bookkeeping.class.php');
+require_once DOL_DOCUMENT_ROOT . '/core/lib/report.lib.php';
+require_once DOL_DOCUMENT_ROOT . '/core/lib/date.lib.php';
+require_once DOL_DOCUMENT_ROOT . '/compta/facture/class/facture.class.php';
+require_once DOL_DOCUMENT_ROOT . '/societe/class/client.class.php';
+require_once DOL_DOCUMENT_ROOT . '/ventilation/class/comptacompte.class.php';
+require_once DOL_DOCUMENT_ROOT . '/ventilation/class/bookkeeping.class.php';
 
 $langs->load("companies");
 $langs->load("other");
 $langs->load("compta");
+$langs->load("ventilation@ventilation");
 
 $date_startmonth=GETPOST('date_startmonth');
 $date_startday=GETPOST('date_startday');
