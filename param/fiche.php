@@ -33,7 +33,7 @@ if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.p
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 
-dol_include_once("/ventilation/compta/class/comptacompte.class.php");
+dol_include_once("/ventilation/class/comptacompte.class.php");
 
 $langs->load("ventilation@ventilation");
 

@@ -45,8 +45,8 @@ require_once DOL_DOCUMENT_ROOT . '/fourn/class/paiementfourn.class.php';
 require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.facture.class.php';
 require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.class.php';
 
-dol_include_once ( '/ventilation/compta/class/comptacompte.class.php' );
-dol_include_once ( '/ventilation/compta/class/bookkeeping.class.php' );
+dol_include_once ( '/ventilation/class/comptacompte.class.php' );
+dol_include_once ( '/ventilation/class/bookkeeping.class.php' );
 
 $langs->load("companies");
 $langs->load("other");

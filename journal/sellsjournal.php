@@ -39,8 +39,8 @@ require_once(DOL_DOCUMENT_ROOT."/core/lib/date.lib.php");
 require_once(DOL_DOCUMENT_ROOT."/compta/facture/class/facture.class.php");
 require_once DOL_DOCUMENT_ROOT.'/societe/class/client.class.php';
 
-dol_include_once('/ventilation/compta/class/comptacompte.class.php');
-dol_include_once('/ventilation/compta/class/bookkeeping.class.php');
+require_once DOL_DOCUMENT_ROOT.'/ventilation/class/comptacompte.class.php');
+require_once DOL_DOCUMENT_ROOT.'/ventilation/class/bookkeeping.class.php');
 
 $langs->load("companies");
 $langs->load("other");
