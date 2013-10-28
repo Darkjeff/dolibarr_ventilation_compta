@@ -1,7 +1,8 @@
-<?PHP
+<?php
 /* Copyright (C) 2004-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2005      Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2013 Florian Henry	  <florian.henry@open-concept.pro>
+ * Copyright (C) 2013      Florian Henry	      <florian.henry@open-concept.pro>
+ * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,8 +33,8 @@ if (! $res && file_exists ( "../main.inc.php" )) $res = @include ("../main.inc.p
 if (! $res && file_exists ( "../../main.inc.php" )) $res = @include ("../../main.inc.php");
 if (! $res && file_exists ( "../../../main.inc.php" )) $res = @include ("../../../main.inc.php");
 
-require_once DOL_DOCUMENT_ROOT.'ventilation/class/html.formventilation.class.php');
-require_once DOL_DOCUMENT_ROOT.'ventilation/class/bookkeeping.class.php");
+require_once DOL_DOCUMENT_ROOT . '/ventilation/class/html.formventilation.class.php';
+require_once DOL_DOCUMENT_ROOT . '/ventilation/class/bookkeeping.class.php');
 
 if (! $res) die ( "Include of main fails" );
 

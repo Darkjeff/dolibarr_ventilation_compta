@@ -30,10 +30,10 @@ if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
 if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.php");
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
-	// class
 
-require_once DOL_DOCUMENT_ROOT.'ventilation/class/accountingaccount.class.php');
-require_once DOL_DOCUMENT_ROOT.'ventilation/class/html.formventilation.class.php');
+// Class
+require_once DOL_DOCUMENT_ROOT . '/ventilation/class/accountingaccount.class.php';
+require_once DOL_DOCUMENT_ROOT . '/ventilation/class/html.formventilation.class.php';
 
 
 // langs
