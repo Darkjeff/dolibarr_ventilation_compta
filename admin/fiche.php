@@ -48,7 +48,7 @@ $html = new Form ( $db );
 
 // Securite acces client
 if ($user->societe_id > 0) accessforbidden();
-if (!$user->rights->compta->ventilation->creer) accessforbidden();
+if (!$user->rights->accountingex->admin) accessforbidden();
 
 //action
 if (GETPOST ( "action" ) == 'add') {
@@ -78,7 +78,7 @@ if (GETPOST ( "action" ) == 'add') {
 			$action = "create";
 		}
 	}
-	Header ( "Location: " . DOL_URL_ROOT . "/custom/accountingaccount/liste.php" );
+	Header ( "Location: " . DOL_DOCUMENT_ROOT . "/ventilation/accountingaccount/liste.php" );
 } elseif (GETPOST ( "action" ) == 'maj') {
 	
 	$error = 0;
@@ -101,7 +101,7 @@ if (GETPOST ( "action" ) == 'add') {
 		$e_accounting = $accounting;
 		
 		$res = $charge->update ();
-			header ( "Location: " . DOL_URL_ROOT . "/custom/accountingaccount/fiche.php?id=" . $accounting->id );
+			header ( "Location: " . DOL_DOCUMENT_ROOT . "/ventilation/accountingaccount/fiche.php?id=" . $accounting->id );
 		
 		if ($res >= 0) {
 			setEventMessage ( $langs->trans ( "SocialContributionAdded" ), 'mesgs' );

@@ -1,12 +1,15 @@
-# Dolibarr language file - fr_FR - ventilation
+# Dolibarr language file - fr_FR - Accounting Expert
 CHARSET=UTF-8
 
-Module61000Name= Ventilation
-Module61000Desc= Gestion des ventilations et des marges
+Module61000Name= Comptabilité Expert
+Module61000Desc= Gestion avancée de la comptabilité
 
+Accounting=Comptabilité
 Globalparameters=Paramètres globaux
-Definechartofaccounts=Définir un plan comptable
 Chartofaccounts=Plan comptable
+Fiscalyear=Exercices fiscaux
+
+Definechartofaccounts=Définir un plan comptable
 
 Ventilation=Ventilation
 ToDispatch=A effectuer
@@ -72,6 +75,7 @@ DelBookKeeping=Supprimer les écritures du grand livre
 
 BankJournal=Journal de banque
 DescBankJournal=Journal de banque
+CashJournal=Journal de caisse
 
 ThirdPartyAccount=Compte Tiers
 
@@ -87,4 +91,6 @@ Pcgtype=Classe de compte
 Pcgsubtype=Sous classe de compte
 Accountparent=Racine du compte
 Active=État
+
+NewFiscalYear=Nouvel exercice fiscal
 
