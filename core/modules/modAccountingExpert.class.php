@@ -54,7 +54,7 @@ class modAccountingExpert extends DolibarrModules
 
 		$this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
 		$this->special = 0;
-		//$this->picto = '';
+		$this->picto = 'accounting@ventilation';
 		
 		// Defined if the directory /mymodule/inc/triggers/ contains triggers or not
 		//$this->triggers = 1;
@@ -100,6 +100,13 @@ class modAccountingExpert extends DolibarrModules
 		$this->rights[$r][1] = 'Administration_module';	// Permission label
 		$this->rights[$r][3] = 0; 					// Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'admin';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
+		$this->rights[$r][5] = '';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
+		$r++;
+    
+    $this->rights[$r][0] = 61010; 				// Permission id (must not be already used)
+		$this->rights[$r][1] = 'Développement';	// Permission label
+		$this->rights[$r][3] = 0; 					// Permission by default for new user (0/1)
+		$this->rights[$r][4] = 'dev';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
 		$this->rights[$r][5] = '';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
 		$r++;
 		
@@ -324,7 +331,7 @@ class modAccountingExpert extends DolibarrModules
 		            'langs'=>'ventilation@ventilation',
 		            'position'=>144,
 		            'enabled'=>1,
-		            'perms'=>1,
+		            'perms'=>'$user->rights->accountingex->dev',
 		            'target'=>'',
 		            'user'=>0);
     $r++;
@@ -416,7 +423,7 @@ class modAccountingExpert extends DolibarrModules
 		            'langs'=>'ventilation@ventilation',
 		            'position'=>163,
 		            'enabled'=>1,
-		            'perms'=>'$user->rights->accountingex->admin',
+		            'perms'=>'$user->rights->accountingex->dev',
 		            'target'=>'',
 		            'user'=>0);
      $r++;
@@ -429,7 +436,7 @@ class modAccountingExpert extends DolibarrModules
 		            'langs'=>'ventilation@ventilation',
 		            'position'=>164,
 		            'enabled'=>1,
-		            'perms'=>'$user->rights->accountingex->admin',
+		            'perms'=>'$user->rights->accountingex->dev',
 		            'target'=>'',
 		            'user'=>0);
      $r++;
