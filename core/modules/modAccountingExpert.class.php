@@ -40,7 +40,7 @@ class modAccountingExpert extends DolibarrModules
 	function modAccountingExpert ($DB)
 	{
 		$this->db = $DB;
-		$this->numero = 61000;
+		$this->numero = 62000;
     $this->rights_class = 'accountingex';
 
 		$this->family = "financial";
@@ -89,21 +89,21 @@ class modAccountingExpert extends DolibarrModules
 		$this->rights = array();		// Permission array used by this module
 		$r=0;
 
-    $this->rights[$r][0] = 61001; 				// Permission id (must not be already used)
+    $this->rights[$r][0] = 62001; 				// Permission id (must not be already used)
 		$this->rights[$r][1] = 'Acces_module';	// Permission label
 		$this->rights[$r][3] = 0; 					// Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'access';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
 		$this->rights[$r][5] = '';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
 		$r++;
     
-		$this->rights[$r][0] = 61002; 				// Permission id (must not be already used)
+		$this->rights[$r][0] = 62002; 				// Permission id (must not be already used)
 		$this->rights[$r][1] = 'Administration_module';	// Permission label
 		$this->rights[$r][3] = 0; 					// Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'admin';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
 		$this->rights[$r][5] = '';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
 		$r++;
     
-    $this->rights[$r][0] = 61010; 				// Permission id (must not be already used)
+    $this->rights[$r][0] = 62010; 				// Permission id (must not be already used)
 		$this->rights[$r][1] = 'Développement';	// Permission label
 		$this->rights[$r][3] = 0; 					// Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'dev';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
