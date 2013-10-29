@@ -41,7 +41,7 @@ $langs->load('ventilation@ventilation');
 
 // Securite accès client
 if ($user->societe_id > 0) accessforbidden();
-if (!$user->rights->ventilation->admin) accessforbidden();
+if (!$user->rights->accountingex->admin) accessforbidden();
 
 $action=GETPOST('action','alpha');
 
