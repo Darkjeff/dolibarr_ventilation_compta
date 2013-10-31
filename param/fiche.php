@@ -40,7 +40,7 @@ $langs->load("ventilation@ventilation");
 $mesg = '';
 $action = GETPOST('action');
 
-if (GETPOST("action") == 'add' && $user->rights->ventilation->admin)
+if (GETPOST("action") == 'add' && $user->rights->accountingex->admin)
 {
   $compte = new ComptaCompte($db);
 
@@ -72,7 +72,7 @@ if (GETPOST("action") == 'add' && $user->rights->ventilation->admin)
 		}
     }
 }
-elseif (GETPOST("action") == 'maj' && $user->rights->ventilation->admin)
+elseif (GETPOST("action") == 'maj' && $user->rights->accountingex->admin)
 {
   $compte = new ComptaCompte($db, GETPOST('id'));
 
@@ -100,7 +100,7 @@ elseif (GETPOST("action") == 'maj' && $user->rights->ventilation->admin)
  * Création d'un compte
  *
  */
-if ($action == 'create' && $user->rights->ventilation->admin)
+if ($action == 'create' && $user->rights->accountingex->admin)
 {
 	llxHeader("","Nouveau compte");
 
@@ -136,7 +136,7 @@ if ($action == 'create' && $user->rights->ventilation->admin)
     print '</table>';
     print '</form>';
 }
-elseif ($action == 'update' && $user->rights->ventilation->admin)
+elseif ($action == 'update' && $user->rights->accountingex->admin)
 {
 	llxHeader("","Modification compte");
 
