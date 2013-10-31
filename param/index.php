@@ -16,14 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * $Id: index.php,v 1.12 2011/08/08 15:28:01 eldy Exp $
  */
 
 /**
-        \file       htdocs/compta/param/comptes/index.php
-        \ingroup    compta
-		\brief      Page acceuil zone parametrages
-		\version    $Revision: 1.12 $
+    \file       htdocs/ventilation/param/index.php
+    \ingroup    Accounting Expert
+		\brief      Page accueil zone parametrages
 */
 
 // Dolibarr environment

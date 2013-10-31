@@ -46,8 +46,6 @@ $offset = $conf->liste_limit * $page ;
 /*
  * Mode Liste
  *
- *
- *
  */
 
 $sql = "SELECT cg.rowid, cg.numero, cg.intitule, cg.sellsjournal, cg.date_creation as dc";
@@ -134,5 +132,5 @@ else
 
 $db->close();
 
-llxFooter("<em>Derni&egrave;re modification $Date: 2011/07/31 22:23:31 $ r&eacute;vision $Revision: 1.12 $</em>");
+llxFooter();
 ?>
