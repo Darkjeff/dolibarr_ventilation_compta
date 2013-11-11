@@ -29,6 +29,7 @@ if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.p
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 
+
 require_once(DOL_DOCUMENT_ROOT."/compta/facture/class/facture.class.php");
 
 $langs->load("bills");
