@@ -20,7 +20,7 @@
  */
 
 /**
- * 		\file       htdocs/accountingex/admin/chartofaccounts.php
+ * 		\file       htdocs/accountingaccount/liste.php
  * 		\ingroup    Accounting Expert
  * 		\brief      List chart of accounts and accounting account
  */
@@ -34,10 +34,8 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 
 // Class
-
-dol_include_once ( "/ventilation/class/accountingaccount.class.php");
-dol_include_once ( "/ventilation/class/html.formventilation.class.php");
-
+require_once DOL_DOCUMENT_ROOT . '/ventilation/class/accountingaccount.class.php';
+require_once DOL_DOCUMENT_ROOT . '/ventilation/class/html.formventilation.class.php';
 
 
 // langs
@@ -49,70 +47,30 @@ if ($user->societe_id > 0) accessforbidden();
 if (!$user->rights->accountingex->admin) accessforbidden();
 
 //filter
-$pcg_version = GETPOST ( "pcg_version", 'alpha' );
 $sortfield = GETPOST ( "sortfield", 'alpha' );
 $sortorder = GETPOST ( "sortorder", 'alpha' );
-if (! $pcg_version)
-	$pcg_version = "1";
+$page = GETPOST ( "page" );
+if ($page < 0)
+	$page = 0;
+$limit = $conf->liste_limit;
 if (! $sortfield)
 	$sortfield = "aa.rowid";
 if (! $sortorder)
 	$sortorder = "ASC";
+$offset = $limit * $page;
 
 llxHeader('',$langs->trans("Chartofaccounts"));
-
-print_barre_liste($langs->trans("Chartofaccounts"),$page,"chartofaccounts.php","",$sortfield,$sortorder,'',$num);
 
 /*
 * List accounting account
 */
 
-/*
-print '<form action="'.$_SERVER["PHP_SELF"].'" method="GET">';
-print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'" />';
+$sql = "SELECT aa.rowid, aa.fk_pcg_version, aa.pcg_type, aa.pcg_subtype, aa.account_number, aa.account_parent , aa.label, aa.active ";
+$sql .= " FROM " . MAIN_DB_PREFIX . "accountingaccount as aa";
+$sql .= " ORDER BY $sortfield $sortorder " . $db->plimit ( $conf->liste_limit + 1, $offset );
 
-$var=True;
 
-print '<input type="hidden" name="action" value="pcg_version">';
-print $langs->trans("Selectchartofaccounts").'<br/>';
-print '<select class="flat" name="chartofaccounts" id="chartofaccounts">';
-
-$sql = "SELECT rowid, pcg_version, fk_pays, label, active";
-$sql.= " FROM ".MAIN_DB_PREFIX."accounting_system";
-$sql.= " WHERE active = 1";
-$sql.= " AND fk_pays = ".$mysoc->country_id;
-$var=True;
-$resql=$db->query($sql);
-if ($resql)
-{
-    $num = $db->num_rows($resql);
-    $i = 0;
-    while ($i < $num)
-    {
-        //$var=!$var;
-        $row = $db->fetch_row($resql);
-
-        print '<option value="'.$row[0].'"';
-        print $conf->global->CHARTOFACCOUNTS == $row[0] ? ' selected="selected"':'';
-        print '>'.$row[1].' - '.$row[3].'</option>';
-
-        $i++;
-    }
-}
-print '</select>';
-print '&nbsp;&nbsp;<input type="submit" class="button" value="'.$langs->trans("Validate").'">';
-print '&nbsp;&nbsp;<input type="submit" class="button" value="'.$langs->trans("Edit").'">';
-print '</form>';
-print '<br/>';
-
-*/
-
-$sql2 = "SELECT aa.rowid, aa.fk_pcg_version, aa.pcg_type, aa.pcg_subtype, aa.account_number, aa.account_parent , aa.label, aa.active ";
-$sql2 .= " FROM " . MAIN_DB_PREFIX . "accountingaccount as aa";
-//$sql2 .= " WHERE aa.fk_pcg_version =".$pcg_version;
-$sql2 .= " ORDER BY $sortfield $sortorder"; // . $db->plimit ( $conf->liste_limit + 1, $offset );
-
-$result = $db->query($sql2);
+$result = $db->query($sql);
 if ($result)
 {
 	$num = $db->num_rows($result);
@@ -124,21 +82,20 @@ if ($result)
 	
 	$obj = $db->fetch_object ( $result );
 	
-	
+	print_barre_liste($langs->trans("Chartofaccounts"),$page,"liste.php","",$sortfield,$sortorder,'',$num);
+
   print '<form method="GET" action="' . $_SERVER ["PHP_SELF"] . '">';
 	
-  print '<a class="butAction" href="chartofaccounts.php?action=create">'.$langs->trans("Addanaccount").'</a>';
-  
-  print '<br/><br/>';
-	
 	print '<table class="noborder" width="100%">';
+	print '<tr></tr>';
+	print '<a class="butAction" href="fiche.php?action=create">Ajouter un nouveau compte</a>';
 	print '<tr class="liste_titre">';
-	print_liste_field_titre ( $langs->trans ( "AccountNumber" ), "chartofaccounts.php", "aa.account_number", "", $param, "", $sortfield, $sortorder);
-	print_liste_field_titre ( $langs->trans ( "Label" ), "chartofaccounts.php", "aa.label" , "", $param, "", $sortfield, $sortorder );
-	print_liste_field_titre ( $langs->trans ( "Accountparent" ), "chartofaccounts.php", "aa.account_parent" , "", $param, "", $sortfield, $sortorder );
-	print_liste_field_titre ( $langs->trans ( "Pcgtype" ), "chartofaccounts.php", "aa.pcg_type" , "", $param, "", $sortfield, $sortorder );
-	print_liste_field_titre ( $langs->trans ( "Pcgsubtype" ), "chartofaccounts.php", "aa.pcg_subtype", "", $param, "", $sortfield, $sortorder  );
-	print_liste_field_titre ( $langs->trans ( "Active" ), "chartofaccounts.php", "aa.active" , "", $param, "", $sortfield, $sortorder );
+	print_liste_field_titre ( $langs->trans ( "AccountNumber" ), "liste.php", "aa.account_number", "", $param, "", $sortfield, $sortorder);
+	print_liste_field_titre ( $langs->trans ( "Label" ), "liste.php", "aa.label" , "", $param, "", $sortfield, $sortorder );
+	print_liste_field_titre ( $langs->trans ( "Accountparent" ), "liste.php", "aa.account_parent" , "", $param, "", $sortfield, $sortorder );
+	print_liste_field_titre ( $langs->trans ( "Pcgtype" ), "liste.php", "aa.pcg_type" , "", $param, "", $sortfield, $sortorder );
+	print_liste_field_titre ( $langs->trans ( "Pcgsubtype" ), "liste.php", "aa.pcg_subtype", "", $param, "", $sortfield, $sortorder  );
+	print_liste_field_titre ( $langs->trans ( "Active" ), "liste.php", "aa.active" , "", $param, "", $sortfield, $sortorder );
 	print_liste_field_titre ( "&nbsp;" );
 	print '</tr>';
 
@@ -158,19 +115,19 @@ if ($result)
 
 $var = True;
 		
-		while ( $i < min ( $num, 1000 ) ) {
-			$obj2 = $db->fetch_object ( $resql2 );
+		while ( $i < min ( $num, $conf->liste_limit ) ) {
+			$obj = $db->fetch_object ( $resql );
 			$var = ! $var;
 			
 			print "<tr $bc[$var]>";
 
-      print '<td>' . $obj2->account_number . '</td>';
-			print '<td>' . $obj2->label . '</td>';
-			print '<td>' . $obj2->account_parent . '</td>';
-			print '<td>' . $obj2->pcg_type . '</td>';
-			print '<td>' . $obj2->pcg_subtype . '</td>';
-			print '<td>' . $obj2->active . '</td>';
-      print '<td><a href="./chartofaccounts.php?action=update&id=' . $obj2->rowid . '">';
+      print '<td>' . $obj->account_number . '</td>';
+			print '<td>' . $obj->label . '</td>';
+			print '<td>' . $obj->account_parent . '</td>';
+			print '<td>' . $obj->pcg_type . '</td>';
+			print '<td>' . $obj->pcg_subtype . '</td>';
+			print '<td>' . $obj->active . '</td>';
+      print '<td><a href="./fiche.php?action=update&id=' . $obj->rowid . '">';
 			print img_edit ();
 			print '</a>&nbsp;</td>' . "\n";
 			print "</tr>";

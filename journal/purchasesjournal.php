@@ -31,12 +31,14 @@ if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.p
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 
-require_once DOL_DOCUMENT_ROOT . '/core/lib/report.lib.php';
-require_once DOL_DOCUMENT_ROOT . '/core/lib/date.lib.php';
-require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.facture.class.php';
-require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.class.php';
-require_once DOL_DOCUMENT_ROOT . '/ventilation/class/comptacompte.class.php';
-require_once DOL_DOCUMENT_ROOT . '/ventilation/class/bookkeeping.class.php';
+
+dol_include_once ( "/core/lib/report.lib.php");
+dol_include_once ( "/core/lib/date.lib.php");
+dol_include_once ( "/fourn/class/fournisseur.facture.class.php");
+dol_include_once ( "/fourn/class/fournisseur.class.php");
+dol_include_once ( "/ventilation/class/comptacompte.class.php");
+dol_include_once ( "/ventilation/class/bookkeeping.class.php");
+
 
 $langs->load("companies");
 $langs->load("other");

@@ -33,19 +33,22 @@ if (! $res && file_exists ( "../../main.inc.php" )) $res = @include ("../../main
 if (! $res && file_exists ( "../../../main.inc.php" )) $res = @include ("../../../main.inc.php");
 if (! $res) die ( "Include of main fails" );
 
-require_once DOL_DOCUMENT_ROOT . '/core/lib/report.lib.php';
-require_once DOL_DOCUMENT_ROOT . '/core/lib/date.lib.php';
-require_once DOL_DOCUMENT_ROOT . '/core/lib/bank.lib.php';
-require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';
-require_once DOL_DOCUMENT_ROOT . '/adherents/class/adherent.class.php';
-require_once DOL_DOCUMENT_ROOT . '/compta/sociales/class/chargesociales.class.php';
-require_once DOL_DOCUMENT_ROOT . '/compta/paiement/class/paiement.class.php';
-require_once DOL_DOCUMENT_ROOT . '/compta/tva/class/tva.class.php';
-require_once DOL_DOCUMENT_ROOT . '/fourn/class/paiementfourn.class.php';
-require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.facture.class.php';
-require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.class.php';
-require_once DOL_DOCUMENT_ROOT . '/ventilation/class/comptacompte.class.php';
-require_once DOL_DOCUMENT_ROOT . '/ventilation/class/bookkeeping.class.php';
+
+dol_include_once ( "/core/lib/report.lib.php");
+dol_include_once ( "/core/lib/date.lib.php");
+dol_include_once ( "/core/lib/bank.lib.php");
+dol_include_once ( "/societe/class/societe.class.php");
+dol_include_once ( "/adherents/class/adherent.class.php");
+dol_include_once ( "/compta/sociales/class/chargesociales.class.php");
+dol_include_once ( "/compta/paiement/class/paiement.class.php");
+dol_include_once ( "/compta/tva/class/tva.class.php");
+dol_include_once ( "/fourn/class/paiementfourn.class.php");
+dol_include_once ( "/fourn/class/fournisseur.facture.class.php");
+dol_include_once ( "/fourn/class/fournisseur.class.php");
+dol_include_once ( "/ventilation/class/comptacompte.class.php");
+dol_include_once ( "/ventilation/class/bookkeeping.class.php");
+
+
 
 $langs->load("companies");
 $langs->load("other");
