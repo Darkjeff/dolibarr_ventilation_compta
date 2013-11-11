@@ -184,87 +184,42 @@ if ($rowid || $account_number) {
 		}
 	}
 	
-	/**
-	 *  Update object into database
+  /**
+	 *	Update record
 	 *
-	 *  @param	User	$user        User that modifies
-	 *  @param  int		$notrigger	 0=launch triggers after, 1=disable triggers
-	 *  @return int     		   	 <0 if KO, >0 if OK
+	 *	@param	User	$user		User making update
+	 *	@return	int					<0 if KO, >0 if OK
 	 */
-	 
-	function update($user=0, $notrigger=0)
+	function update($user)
 	{
-		global $conf, $langs;
-		$error=0;
-	
-		// Clean parameters
-	
-		if (isset($this->fk_pcg_version)) $this->fk_pcg_version=trim($this->fk_pcg_version);
-		if (isset($this->pcg_type)) $this->pcg_type=trim($this->pcg_type);
-		if (isset($this->pcg_subtype)) $this->pcg_subtype=trim($this->pcg_subtype);
-		if (isset($this->account_number)) $this->account_number=trim($this->account_number);
-		if (isset($this->account_parent)) $this->account_parent=trim($this->account_parent);
-		if (isset($this->label)) $this->label=trim($this->label);
-		if (isset($this->active)) $this->active=trim($this->active);
-		
-	
-	
-		// Check parameters
-		// Put here code to add a control on parameters values
-	
-		// Update request
-		$sql = "UPDATE ".MAIN_DB_PREFIX."accountingaccount SET";
-	
-		$sql.= " fk_pcg_version=".(isset($this->fk_pcg_version)?"'".$this->db->escape($this->fk_pcg_version)."'":"null").",";
-		$sql.= " pcg_type=".(isset($this->pcg_type)?"'".$this->db->escape($this->pcg_type)."'":"null").",";
-		$sql.= " pcg_subtype=".(isset($this->pcg_subtype)?$this->pcg_subtype:"null").",";
-		$sql.= " account_number=".(isset($this->account_number)?$this->account_number:"null").",";
-		$sql.= " account_parent=".(isset($this->account_parent)?"'".$this->db->escape($this->account_parent)."'":"null").",";
-		$sql.= " label=".(isset($this->label)?"'".$this->db->escape($this->label)."'":"null").",";
-		$sql.= " active=".(isset($this->active)?"'".$this->db->escape($this->active)."'":"null").",";
-			
-		$sql.= " WHERE rowid=".$this->id;
-	
+		global $langs;
+
 		$this->db->begin();
-	
+
+		$sql = "UPDATE ".MAIN_DB_PREFIX."accountingaccount ";
+		$sql .= " SET fk_pcg_version = ".$this->fk_pcg_version;
+		$sql .= " , pcg_type = '".$this->pcg_type."'";
+		$sql .= " , pcg_subtype = '".$this->pcg_subtype."'";
+		$sql .= " , account_number = '".$this->account_number."'";
+		$sql .= " , account_parent = '".$this->account_parent."'";
+		$sql .= " , label = ".($this->label?"'".$this->db->escape($this->label)."'":"null");
+		$sql .= " , active = '".$this->active."'";
+		$sql .= " WHERE rowid = ".$this->id;
+
 		dol_syslog(get_class($this)."::update sql=".$sql, LOG_DEBUG);
-		$resql = $this->db->query($sql);
-		if (! $resql) { $error++; $this->errors[]="Error ".$this->db->lasterror(); }
-	
-		if (! $error)
-		{
-			if (! $notrigger)
-			{
-				// Uncomment this and change MYOBJECT to your own tag if you
-				// want this action calls a trigger.
-	
-				//// Call triggers
-				//include_once DOL_DOCUMENT_ROOT . '/core/class/interfaces.class.php';
-				//$interface=new Interfaces($this->db);
-				//$result=$interface->run_triggers('MYOBJECT_MODIFY',$this,$user,$langs,$conf);
-				//if ($result < 0) { $error++; $this->errors=$interface->errors; }
-				//// End call triggers
-			}
-		}
-	
-		// Commit or rollback
-		if ($error)
-		{
-			foreach($this->errors as $errmsg)
-			{
-				dol_syslog(get_class($this)."::update ".$errmsg, LOG_ERR);
-				$this->error.=($this->error?', '.$errmsg:$errmsg);
-			}
-			$this->db->rollback();
-			return -1*$error;
-		}
-		else
+		$result = $this->db->query($sql);
+		if ($result)
 		{
 			$this->db->commit();
 			return 1;
 		}
+		else
+		{
+			$this->error=$this->db->lasterror();
+			$this->db->rollback();
+			return -1;
+		}
 	}
-	
 	
 	/**
 	 *  Delete object in database
