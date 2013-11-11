@@ -95,9 +95,9 @@ if($_POST["action"] == 'ventil')
  * Liste des comptes
 */
 
-$sqlCompte = "SELECT rowid, numero, intitule";
-$sqlCompte .= " FROM ".MAIN_DB_PREFIX."compta_compte_generaux";
-$sqlCompte .= " ORDER BY numero ASC";
+$sqlCompte = "SELECT rowid, account_number, label";
+$sqlCompte .= " FROM ".MAIN_DB_PREFIX."accountingaccount";
+$sqlCompte .= " ORDER BY account_number ASC";
 
 $resultCompte = $db->query($sqlCompte);
 $cgs = array();
