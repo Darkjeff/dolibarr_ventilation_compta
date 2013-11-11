@@ -127,7 +127,7 @@ if ($result)
 	
   print '<form method="GET" action="' . $_SERVER ["PHP_SELF"] . '">';
 	
-  print '<a class="butAction" href="chartofaccounts.php?action=create">'.$langs->trans("Addanaccount").'</a>';
+  print '<a class="butAction" href="fiche.php?action=create">'.$langs->trans("Addanaccount").'</a>';
   
   print '<br/><br/>';
 	
@@ -170,7 +170,7 @@ $var = True;
 			print '<td>' . $obj2->pcg_type . '</td>';
 			print '<td>' . $obj2->pcg_subtype . '</td>';
 			print '<td>' . $obj2->active . '</td>';
-      print '<td><a href="./chartofaccounts.php?action=update&id=' . $obj2->rowid . '">';
+      print '<td><a href="./fiche.php?action=update&id=' . $obj2->rowid . '">';
 			print img_edit ();
 			print '</a>&nbsp;</td>' . "\n";
 			print "</tr>";
