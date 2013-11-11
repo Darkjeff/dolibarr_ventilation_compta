@@ -58,9 +58,11 @@ NotVentilatedinAccount=non ventilée dans le compte
 VENTILATION_SELL_JOURNAL=Journal des Ventes
 VENTILATION_PURCHASE_JOURNAL=Journal des Achats
 VENTILATION_BANK_JOURNAL=Journal de Banque
+VENTILATION_CASH_JOURNAL=Journal de Caisse
+VENTILATION_MISCELLANEOUS_JOURNAL=Journal des Opérations Diverses
 VENTILATION_SOCIAL_JOURNAL=Journal Social
+VENTILATION_ACCOUNT_TRANSFER_CASH=Compte de transfert espèce
 VENTILATION_ACCOUNT_SUSPENSE=Compte d'attente
-ACCOUNTING_PCG_VERSION=Plan Comptable
 
 Doctype=Type de document
 Docdate=Date
@@ -77,8 +79,9 @@ Codejournal=Journal
 DelBookKeeping=Supprimer les écritures du grand livre
 
 BankJournal=Journal de banque
-DescBankJournal=Journal de banque
+DescBankJournal=Journal de banque description
 CashJournal=Journal de caisse
+DescCashJournal=Journal de caisse description
 
 ThirdPartyAccount=Compte Tiers
 
