@@ -41,8 +41,7 @@ class modAccountingExpert extends DolibarrModules
 	{
 		$this->db = $DB;
 		$this->numero = 62000;
-    $this->rights_class = 'accountingex';
-
+    
 		$this->family = "financial";
 		// Module label (no space allowed), used if translation string 'ModuleXXXName' not found (where XXX is value of numeric property 'numero' of module)
 		$this->name = preg_replace('/^mod/i','',get_class($this));
@@ -79,13 +78,17 @@ class modAccountingExpert extends DolibarrModules
 		$this->const[3] = array("VENTILATION_SELL_JOURNAL","chaine","VTE");
 		$this->const[4] = array("VENTILATION_PURCHASE_JOURNAL","chaine","ACH");
 		$this->const[5] = array("VENTILATION_BANK_JOURNAL","chaine","BNK");
-		$this->const[6] = array("VENTILATION_SOCIAL_JOURNAL","chaine","SOC");
-		//$this->const[7] = array("ACCOUNTING_PCG_VERSION","chaine","PCG99-BASE"); Deprecated - already exist with constant CHARTOFACCOUNTS 
-
+		$this->const[6] = array("VENTILATION_SOCIAL_JOURNAL","chaine","SOC");    
+		$this->const[7] = array("VENTILATION_CASH_JOURNAL","chaine","CAI");    
+		$this->const[8] = array("VENTILATION_MISCELLANEOUS_JOURNAL","chaine","OD");
+    $this->const[9] = array("VENTILATION_ACCOUNT_TRANSFER_CASH","chaine","58000000");
+    		
 		// Boxes
 		$this->boxes = array();
 
 		// Permissions
+    $this->rights_class = 'accountingex';
+
 		$this->rights = array();		// Permission array used by this module
 		$r=0;
 
@@ -406,7 +409,7 @@ class modAccountingExpert extends DolibarrModules
 		            'type'=>'left',
 		            'titre'=>'Chartofaccounts',
 		            'mainmenu'=>'accounting',
-		            'url'=>'/ventilation/admin/liste.php',
+		            'url'=>'/ventilation/admin/chartofaccounts.php',
 		            'langs'=>'ventilation@ventilation',
 		            'position'=>162,
 		            'enabled'=>1,

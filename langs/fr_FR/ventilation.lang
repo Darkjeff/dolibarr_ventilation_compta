@@ -1,8 +1,8 @@
 # Dolibarr language file - fr_FR - Accounting Expert
 CHARSET=UTF-8
 
-Module61000Name= Comptabilité Expert
-Module61000Desc= Gestion avancée de la comptabilité
+Module62000Name= Comptabilité Expert
+Module62000Desc= Gestion avancée de la comptabilité
 
 Accounting=Comptabilité
 Globalparameters=Paramètres globaux
@@ -10,6 +10,9 @@ Chartofaccounts=Plan comptable
 Fiscalyear=Exercices fiscaux
 
 Definechartofaccounts=Définir un plan comptable
+Selectchartofaccounts=Sélectionnez un plan comptable
+Validate=Valider
+Addanaccount=Ajouter un compte comptable
 
 Ventilation=Ventilation
 ToDispatch=A effectuer
@@ -55,9 +58,11 @@ NotVentilatedinAccount=non ventilée dans le compte
 VENTILATION_SELL_JOURNAL=Journal des Ventes
 VENTILATION_PURCHASE_JOURNAL=Journal des Achats
 VENTILATION_BANK_JOURNAL=Journal de Banque
+VENTILATION_CASH_JOURNAL=Journal de Caisse
+VENTILATION_MISCELLANEOUS_JOURNAL=Journal des Opérations Diverses
 VENTILATION_SOCIAL_JOURNAL=Journal Social
+VENTILATION_ACCOUNT_TRANSFER_CASH=Compte de transfert espèce
 VENTILATION_ACCOUNT_SUSPENSE=Compte d'attente
-ACCOUNTING_PCG_VERSION=Plan Comptable
 
 Doctype=Type de document
 Docdate=Date
@@ -74,8 +79,9 @@ Codejournal=Journal
 DelBookKeeping=Supprimer les écritures du grand livre
 
 BankJournal=Journal de banque
-DescBankJournal=Journal de banque
+DescBankJournal=Journal de banque description
 CashJournal=Journal de caisse
+DescCashJournal=Journal de caisse description
 
 ThirdPartyAccount=Compte Tiers
 
