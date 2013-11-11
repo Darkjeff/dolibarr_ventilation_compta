@@ -131,11 +131,16 @@ class modAccountingExpert extends DolibarrModules
 								'user'=>0);
 		$r++;
 		
-		$this->menu[$r]=array(	'fk_menu'=>'r=0',
+	
+  
+		
+	
+		
+	  $this->menu[$r]=array(	'fk_menu'=>'r=0',
 								'type'=>'left',
-								'titre'=>'Account',
+								'titre'=>'CustomersVentilation',
 								'mainmenu'=>'accounting',
-								'url'=>'/ventilation/param/index.php',
+								'url'=>'/ventilation/index.php',
 								'langs'=>'ventilation@ventilation',
 								'position'=>101,
 								'enabled'=>1,
@@ -144,91 +149,26 @@ class modAccountingExpert extends DolibarrModules
 								'user'=>0);
 		$r++;
 		
-    $this->menu[$r]=array(  'fk_menu'=>'r=1',
-		            'type'=>'left',
-		            'titre'=>'List',
-		            'mainmenu'=>'accounting',
-		            'url'=>'/ventilation/param/liste.php',
-		            'langs'=>'ventilation@ventilation',
-		            'position'=>102,
-		            'enabled'=>1,
-		            'perms'=>1,
-		            'target'=>'',
-		            'user'=>0);
-    $r++;
-		
-    $this->menu[$r]=array(  'fk_menu'=>'r=1',
-		            'type'=>'left',
-		            'titre'=>'Create',
-		            'mainmenu'=>'accounting',
-		            'url'=>'/ventilation/param/fiche.php?action=create',
-		            'langs'=>'ventilation@ventilation',
-		            'position'=>103,
-		            'enabled'=>1,
-		            'perms'=>1,
-		            'target'=>'',
-		            'user'=>0);
-    $r++;
-    
-    $this->menu[$r]=array(	'fk_menu'=>'r=0',
-								'type'=>'left',
-								'titre'=>'ThirdPartyAccount',
-								'mainmenu'=>'accounting',
-								'url'=>'/ventilation/thirdpartyaccount/index.php',
-								'langs'=>'ventilation@ventilation',
-								'position'=>110,
-								'enabled'=>1,
-								'perms'=>1,
-								'target'=>'',
-								'user'=>0);
-		$r++;
-		
-		$this->menu[$r]=array(  'fk_menu'=>'r=4',
-		            'type'=>'left',
-		            'titre'=>'List',
-		            'mainmenu'=>'accounting',
-		            'url'=>'/ventilation/thirdpartyaccount/liste.php',
-		            'langs'=>'ventilation@ventilation',
-		            'position'=>111,
-		            'enabled'=>1,
-		            'perms'=>1,
-		            'target'=>'',
-		            'user'=>0);
-    $r++;
-		
-	  $this->menu[$r]=array(	'fk_menu'=>'r=0',
-								'type'=>'left',
-								'titre'=>'CustomersVentilation',
-								'mainmenu'=>'accounting',
-								'url'=>'/ventilation/index.php',
-								'langs'=>'ventilation@ventilation',
-								'position'=>120,
-								'enabled'=>1,
-								'perms'=>1,
-								'target'=>'',
-								'user'=>0);
-		$r++;
-		
-		$this->menu[$r]=array(	'fk_menu'=>'r=6',
+		$this->menu[$r]=array(	'fk_menu'=>'r=1',
 								'type'=>'left',
 								'titre'=>'ToDispatch',
 								'mainmenu'=>'accounting',
 								'url'=>'/ventilation/liste2.php',
 								'langs'=>'ventilation@ventilation',
-								'position'=>121,
+								'position'=>102,
 								'enabled'=>1,
 								'perms'=>1,
 								'target'=>'',
 								'user'=>0);
 		$r++;
 		
-		$this->menu[$r]=array(	'fk_menu'=>'r=6',
+		$this->menu[$r]=array(	'fk_menu'=>'r=1',
 								'type'=>'left',
 								'titre'=>'Dispatched',
 								'mainmenu'=>'accounting',
 								'url'=>'/ventilation/lignes.php',
 								'langs'=>'ventilation@ventilation',
-								'position'=>122,
+								'position'=>103,
 								'enabled'=>1,
 								'perms'=>1,
 								'target'=>'',
@@ -241,33 +181,33 @@ class modAccountingExpert extends DolibarrModules
 								'mainmenu'=>'accounting',
 								'url'=>'/ventilation/fournisseur/index.php',
 								'langs'=>'ventilation@ventilation',
-								'position'=>130,
+								'position'=>110,
 								'enabled'=>1,
 								'perms'=>1,
 								'target'=>'',
 								'user'=>0);
 		$r++;
 		
-		$this->menu[$r]=array(	'fk_menu'=>'r=9',
+		$this->menu[$r]=array(	'fk_menu'=>'r=4',
 								'type'=>'left',
 								'titre'=>'ToDispatch',
 								'mainmenu'=>'accounting',
 								'url'=>'/ventilation/fournisseur/liste.php',
 								'langs'=>'ventilation@ventilation',
-								'position'=>131,
+								'position'=>111,
 								'enabled'=>1,
 								'perms'=>1,
 								'target'=>'',
 								'user'=>0);
 		$r++;
 		
-		$this->menu[$r]=array(  'fk_menu'=>'r=9',
+		$this->menu[$r]=array(  'fk_menu'=>'r=4',
 								'type'=>'left',
 								'titre'=>'Dispatched',
 								'mainmenu'=>'accounting',
 								'url'=>'/ventilation/fournisseur/lignes.php',
 								'langs'=>'ventilation@ventilation',
-								'position'=>132,
+								'position'=>112,
 								'enabled'=>1,
 								'perms'=>1,
 								'target'=>'',
@@ -280,59 +220,59 @@ class modAccountingExpert extends DolibarrModules
 								'mainmenu'=>'accounting',
 								'url'=>'/ventilation/journal/index.php',
 								'langs'=>'ventilation@ventilation',
-								'position'=>140,
+								'position'=>120,
 								'enabled'=>1,
 								'perms'=>1,
 								'target'=>'',
 								'user'=>0);
 		$r++;
 		
-		$this->menu[$r]=array(  'fk_menu'=>'r=12',
+		$this->menu[$r]=array(  'fk_menu'=>'r=7',
 		            'type'=>'left',
 		            'titre'=>'Journal des ventes',
 		            'mainmenu'=>'accounting',
 		            'url'=>'/ventilation/journal/sellsjournal.php',
 		            'langs'=>'ventilation@ventilation',
-		            'position'=>141,
+		            'position'=>121,
 		            'enabled'=>1,
 		            'perms'=>1,
 		            'target'=>'',
 		            'user'=>0);
     $r++;
 		
-    $this->menu[$r]=array(  'fk_menu'=>'r=12',
+    $this->menu[$r]=array(  'fk_menu'=>'r=7',
 		            'type'=>'left',
 		            'titre'=>'Journal des achats',
 		            'mainmenu'=>'accounting',
 		            'url'=>'/ventilation/journal/purchasesjournal.php',
 		            'langs'=>'ventilation@ventilation',
-		            'position'=>142,
+		            'position'=>122,
 		            'enabled'=>1,
 		            'perms'=>1,
 		            'target'=>'',
 		            'user'=>0);
     $r++;
     
-    $this->menu[$r]=array(  'fk_menu'=>'r=12',
+    $this->menu[$r]=array(  'fk_menu'=>'r=7',
 		            'type'=>'left',
 		            'titre'=>'BankJournal',
 		            'mainmenu'=>'accounting',
 		            'url'=>'/ventilation/journal/bankjournal.php',
 		            'langs'=>'ventilation@ventilation',
-		            'position'=>143,
+		            'position'=>123,
 		            'enabled'=>1,
 		            'perms'=>1,
 		            'target'=>'',
 		            'user'=>0);
     $r++;
     
-    $this->menu[$r]=array(  'fk_menu'=>'r=12',
+    $this->menu[$r]=array(  'fk_menu'=>'r=7',
 		            'type'=>'left',
 		            'titre'=>'CashJournal',
 		            'mainmenu'=>'accounting',
 		            'url'=>'/ventilation/journal/cashjournal.php',
 		            'langs'=>'ventilation@ventilation',
-		            'position'=>144,
+		            'position'=>124,
 		            'enabled'=>1,
 		            'perms'=>'$user->rights->accountingex->dev',
 		            'target'=>'',
@@ -345,33 +285,33 @@ class modAccountingExpert extends DolibarrModules
 								'mainmenu'=>'accounting',
 								'url'=>'/ventilation/bookkeeping/liste.php',
 								'langs'=>'ventilation@ventilation',
-								'position'=>150,
+								'position'=>130,
 								'enabled'=>1,
 								'perms'=>1,
 								'target'=>'',
 								'user'=>0);
 		$r++;
       
-		$this->menu[$r]=array(  'fk_menu'=>'r=17',
+		$this->menu[$r]=array(  'fk_menu'=>'r=12',
 								'type'=>'left',
 								'titre'=>'ByYear',
 								'mainmenu'=>'accounting',
 		            'url'=>'/ventilation/bookkeeping/listebyyear.php',
 		            'langs'=>'ventilation@ventilation',
-		            'position'=>151,
+		            'position'=>131,
 		            'enabled'=>1,
 		            'perms'=>1,
 		            'target'=>'',
 		            'user'=>0);
 		$r++;
       
-    $this->menu[$r]=array(  'fk_menu'=>'r=17',
+    $this->menu[$r]=array(  'fk_menu'=>'r=12',
 		            'type'=>'left',
 		            'titre'=>'Balance mensuelle',
 		            'mainmenu'=>'accounting',
 		            'url'=>'/ventilation/bookkeeping/balancebymonth.php',
 		            'langs'=>'ventilation@ventilation',
-		            'position'=>152,
+		            'position'=>132,
 		            'enabled'=>1,
 		            'perms'=>1,
 		            'target'=>'',
@@ -385,59 +325,72 @@ class modAccountingExpert extends DolibarrModules
 								'mainmenu'=>'accounting',
 								'url'=>'/ventilation/admin/index.php',
 								'langs'=>'ventilation@ventilation',
-								'position'=>160,
+								'position'=>140,
 								'enabled'=>1,
 								'perms'=>'$user->rights->accountingex->admin',
 								'target'=>'',
 								'user'=>0);
 		 $r++;
       
-		 $this->menu[$r]=array(  'fk_menu'=>'r=20',
+		 $this->menu[$r]=array(  'fk_menu'=>'r=15',
 								'type'=>'left',
 								'titre'=>'Globalparameters',
 								'mainmenu'=>'accounting',
 		            'url'=>'/ventilation/admin/index.php',
 		            'langs'=>'ventilation@ventilation',
-		            'position'=>161,
+		            'position'=>141,
 		            'enabled'=>1,
 		            'perms'=>'$user->rights->accountingex->admin',
 		            'target'=>'',
 		            'user'=>0);
 		 $r++;
       
-     $this->menu[$r]=array(  'fk_menu'=>'r=20',
+     $this->menu[$r]=array(  'fk_menu'=>'r=15',
 		            'type'=>'left',
 		            'titre'=>'Chartofaccounts',
 		            'mainmenu'=>'accounting',
 		            'url'=>'/ventilation/admin/chartofaccounts.php',
 		            'langs'=>'ventilation@ventilation',
-		            'position'=>162,
+		            'position'=>142,
 		            'enabled'=>1,
 		            'perms'=>'$user->rights->accountingex->admin',
 		            'target'=>'',
 		            'user'=>0);
      $r++;
      
-     $this->menu[$r]=array(  'fk_menu'=>'r=20',
+     	$this->menu[$r]=array(  'fk_menu'=>'r=15',
+		            'type'=>'left',
+		            'titre'=>'thirdpartyaccount',
+		            'mainmenu'=>'accounting',
+		            'url'=>'/ventilation/thirdpartyaccount/liste.php',
+		            'langs'=>'ventilation@ventilation',
+		            'position'=>143,
+		            'enabled'=>1,
+		            'perms'=>1,
+		            'target'=>'',
+		            'user'=>0);
+    $r++;
+     
+     $this->menu[$r]=array(  'fk_menu'=>'r=15',
 		            'type'=>'left',
 		            'titre'=>'Fiscalyear',
 		            'mainmenu'=>'accounting',
 		            'url'=>'/ventilation/admin/fiscalyear.php',
 		            'langs'=>'ventilation@ventilation',
-		            'position'=>163,
+		            'position'=>144,
 		            'enabled'=>1,
 		            'perms'=>'$user->rights->accountingex->dev',
 		            'target'=>'',
 		            'user'=>0);
      $r++;
      
-     $this->menu[$r]=array(  'fk_menu'=>'r=20',
+     $this->menu[$r]=array(  'fk_menu'=>'r=15',
 		            'type'=>'left',
 		            'titre'=>'Journaux',
 		            'mainmenu'=>'accounting',
 		            'url'=>'/ventilation/admin/journaux.php',
 		            'langs'=>'ventilation@ventilation',
-		            'position'=>164,
+		            'position'=>145,
 		            'enabled'=>1,
 		            'perms'=>'$user->rights->accountingex->dev',
 		            'target'=>'',

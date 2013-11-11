@@ -32,8 +32,9 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 
 // Class
-require_once DOL_DOCUMENT_ROOT . '/ventilation/class/accountingaccount.class.php';
-require_once DOL_DOCUMENT_ROOT . '/ventilation/class/html.formventilation.class.php';
+dol_include_once ( "/ventilation/class/accountingaccount.class.php");
+dol_include_once ( "/ventilation/class/html.formventilation.class.php");
+
 
 
 // langs
@@ -44,7 +45,7 @@ $langs->load("ventilation@ventilation");
 $mesg = '';
 $action = GETPOST ( 'action' );
 $id = GETPOST ( "id" );
-$html = new Form ( $db );
+
 
 // Securite acces client
 if ($user->societe_id > 0) accessforbidden();
@@ -119,49 +120,49 @@ if ($action == 'create') {
 	
 	llxheader ( '', $langs->trans ( "addaccounting" ), '' );
 	
+	$html = new Form ( $db );	
 	$nbligne = 0;
 	
-	print '<form action="' . $_SERVER ['PHP_SELF'] . '" method="post">';
+	print '<form action="fiche.php" method="post">';
 	print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '">';
 	print '<input type="hidden" name="action" value="add">';
 	
 	print '<table class="border" width="100%">';
 	
 	print '<tr><td width="20%">' . $langs->trans ( "AccountNumber" ) . '</td>';
-	print '<td><input name="AccountNumber" size="30" value="' . $accounting->AccountNumber . '"</td></tr>';
+	print '<td><input name="AccountNumber" size="30" value="' .$accounting->AccountNumber. '"</td></tr>';
 	print '<tr><td width="20%">' . $langs->trans ( "Label" ) . '</td>';
-	print '<td><input name="Label" size="30" value="' . $accounting->Label . '"</td></tr>';
+	print '<td><input name="Label" size="30" value="' .$accounting->Label. '"</td></tr>';
   print '<tr><td width="20%">' . $langs->trans ( "Accountparent" ) . '</td>';
-	print '<td><input name="AccountParent" size="30" value="' . $accounting->AccountParent . '"</td></tr>';
+	print '<td><input name="AccountParent" size="30" value="' .$accounting->AccountParent. '"</td></tr>';
 	print '<tr><td width="20%">' . $langs->trans ( "Pcgtype" ) . '</td>';
-	print '<td><input name="pcgType" size="30" value="' . $accounting->pcgType . '"</td></tr>';
+	print '<td><input name="pcgType" size="30" value="' .$accounting->pcgType. '"</td></tr>';
 	print '<tr><td width="20%">' . $langs->trans ( "Pcgsubtype" ) . '</td>';
-	print '<td><input name="pcgSubType" size="30" value="' . $accounting->pcgSubType . '"</td></tr>';	
+	print '<td><input name="pcgSubType" size="30" value="' .$accounting->pcgSubType. '"</td></tr>';	
 	print '<tr><td width="20%">' . $langs->trans ( "Active" ) . '</td>';
-	print '<td><input name="Active" size="30" value="' . $accounting->Active . '"</td></tr>';	
-	print '</table>';
+	print '<td><input name="Active" size="30" value="' .$accounting->Active. '"</td></tr>';	
+
+
+	print '<tr><td>&nbsp;</td><td><input type="submit" class="button" value="' . $langs->trans ( "Sauvegarder" ) . '"><input type="cancel" class="button" value="' . $langs->trans ( "Cancel" ) . '"></td></tr>';
 	
-  print '<br/>';
-  print '<center>';
-  print '<input type="submit" value="'.$langs->trans("Save").'" name="bouton" class="button">';
-  print '&nbsp; &nbsp; ';
-  print '<input type="button" value="'.$langs->trans("Cancel").'" class="button" onclick="history.go(-1)">';
-  print '</center>';
+	
         
+        	print '</table>';
 	print '</form>';
 }
 
-elseif ($action == 'update') {
+elseif ($action == 'update')  {
 	
 	llxheader ( '', $langs->trans ( "changeaccounting" ), '' );
 	
+	$html = new Form ( $db );	
 	$nbligne = 0;
 	
-	$accounting = new Accountingaccount ( $db , GETPOST ( 'id' ));
+	$accounting = new AccountingAccount ( $db , GETPOST ( 'id' ));
 
+	print_fiche_titre($langs->trans("UpdateAccount"));
 	
-	
-	print '<form action="' . $_SERVER ['PHP_SELF'] . '" method="post">';
+	print '<form action="fiche.php" method="post">';
 	print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '">';
 	print '<input type="hidden" name="action" value="maj">';
 	print '<input type="hidden" name="id" value="' . GETPOST ( "id" ) . '">' . "\n";
@@ -169,26 +170,23 @@ elseif ($action == 'update') {
 	print '<table class="border" width="100%">';
 	
 	print '<tr><td width="20%">' . $langs->trans ( "AccountNumber" ) . '</td>';
-	print '<td><input name="AccountNumber" size="30" value="' . $accounting->AccountNumber . '"</td></tr>';
+	print '<td><input name="AccountNumber" size="30" value="' .$accounting->AccountNumber. '"</td></tr>';
 	print '<tr><td width="20%">' . $langs->trans ( "Label" ) . '</td>';
-	print '<td><input name="Label" size="30" value="' . $accounting->Label . '"</td></tr>';
+	print '<td><input name="Label" size="30" value="' .$accounting->Label. '"</td></tr>';
   print '<tr><td width="20%">' . $langs->trans ( "AccountParent" ) . '</td>';
-	print '<td><input name="AccountParent" size="30" value="' . $accounting->AccountParent . '"</td></tr>';
+	print '<td><input name="AccountParent" size="30" value="' .$accounting->AccountParent. '"</td></tr>';
 	print '<tr><td width="20%">' . $langs->trans ( "pcgType" ) . '</td>';
-	print '<td><input name="pcgType" size="30" value="' . $accounting->pcgType . '"</td></tr>';
+	print '<td><input name="pcgType" size="30" value="' .$accounting->pcgType. '"</td></tr>';
 	print '<tr><td width="20%">' . $langs->trans ( "pcgSubType" ) . '</td>';
-	print '<td><input name="pcgSubType" size="30" value="' . $accounting->pcgSubType . '"</td></tr>';	
+	print '<td><input name="pcgSubType" size="30" value="' .$accounting->pcgSubType. '"</td></tr>';	
 	print '<tr><td width="20%">' . $langs->trans ( "Active" ) . '</td>';
-	print '<td><input name="Active" size="30" value="' . $accounting->Active . '"</td></tr>';	
+	print '<td><input name="Active" size="30" value="' .$accounting->Active. '"</td></tr>';	
 	
-	print '</table>';
+		
+	print '<tr><td>&nbsp;</td><td><input type="submit" class="button" value="' . $langs->trans ( "Sauvegarder" ) . '"><input type="cancel" class="button" value="' . $langs->trans ( "Cancel" ) . '"></td></tr>';
 	
-  print '<br/>';
-  print '<center>';
-  print '<input type="submit" value="'.$langs->trans("Save").'" name="bouton" class="button">';
-  print '&nbsp; &nbsp; ';
-  print '<input type="button" value="'.$langs->trans("Cancel").'" class="button" onclick="history.go(-1)">';
-  print '</center>';
+  	print '</table>';
+	
 	print '</form>';
 }
 
