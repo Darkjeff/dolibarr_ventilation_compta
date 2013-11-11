@@ -81,7 +81,8 @@ class modAccountingExpert extends DolibarrModules
 		$this->const[6] = array("VENTILATION_SOCIAL_JOURNAL","chaine","SOC");    
 		$this->const[7] = array("VENTILATION_CASH_JOURNAL","chaine","CAI");    
 		$this->const[8] = array("VENTILATION_MISCELLANEOUS_JOURNAL","chaine","OD");
-		
+    $this->const[9] = array("VENTILATION_ACCOUNT_TRANSFER_CASH","chaine","58000000");
+    		
 		// Boxes
 		$this->boxes = array();
 

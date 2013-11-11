@@ -1,8 +1,8 @@
 # Dolibarr language file - fr_FR - Accounting Expert
 CHARSET=UTF-8
 
-Module61000Name= Comptabilité Expert
-Module61000Desc= Gestion avancée de la comptabilité
+Module62000Name= Comptabilité Expert
+Module62000Desc= Gestion avancée de la comptabilité
 
 Accounting=Comptabilité
 Globalparameters=Paramètres globaux
@@ -10,6 +10,9 @@ Chartofaccounts=Plan comptable
 Fiscalyear=Exercices fiscaux
 
 Definechartofaccounts=Définir un plan comptable
+Selectchartofaccounts=Sélectionnez un plan comptable
+Validate=Valider
+Addanaccount=Ajouter un compte comptable
 
 Ventilation=Ventilation
 ToDispatch=A effectuer
