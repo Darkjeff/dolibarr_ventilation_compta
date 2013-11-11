@@ -1,6 +1,9 @@
 <?PHP
 /* Copyright (C) 2004      Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2005-2006 Laurent Destailleur  <eldy@users.sourceforge.net>
+ * Copyright (C) 2013      Olivier Geffroy  <jeff@jeffinfo.com>
+ * Copyright (C) 2013      Florian Henry	      <florian.henry@open-concept.pro>
+ * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@fidurex.fr> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,9 +67,9 @@ if ($cancel == $langs->trans("Cancel"))
  *
  */
 
-$sql = "SELECT rowid, numero, intitule";
-$sql .= " FROM ".MAIN_DB_PREFIX."compta_compte_generaux";
-$sql .= " ORDER BY numero ASC";
+$sql = "SELECT rowid, account_number, label";
+$sql .= " FROM ".MAIN_DB_PREFIX."accountingaccount";
+$sql .= " ORDER BY account_number ASC";
 
 $cgs = array();
 $cgn = array();

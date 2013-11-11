@@ -54,7 +54,7 @@ if (empty($_REQUEST['typeid']))
 	foreach($filterarray as $val)
 	{
 		$part=explode(':',$val);
-		if ($part[0] == 'c.intitule') $typeid=$part[1];
+		if ($part[0] == 'aa.label') $typeid=$part[1];
 	}
 }
 else
@@ -75,20 +75,20 @@ if ($page < 0) $page = 0;
 $limit = $conf->liste_limit;
 $offset = $limit * $page ;
 
-$sql = "SELECT f.ref, f.rowid as facid, l.fk_product, l.description, l.total_ht , l.qty, l.rowid, l.tva_tx, c.intitule, c.numero, ";
+$sql = "SELECT f.ref, f.rowid as facid, l.fk_product, l.description, l.total_ht , l.qty, l.rowid, l.tva_tx, aa.label, aa.account_number, ";
 $sql.= " p.rowid as product_id, p.ref as product_ref, p.label as product_label, p.fk_product_type as type";
 $sql .= " FROM ".MAIN_DB_PREFIX."facture_fourn as f";
-$sql.= " , ".MAIN_DB_PREFIX."compta_compte_generaux as c";
+$sql.= " , ".MAIN_DB_PREFIX."accountingaccount as aa";
 $sql.= " , ".MAIN_DB_PREFIX."facture_fourn_det as l";
 $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = l.fk_product";
 $sql .= " WHERE f.rowid = l.fk_facture_fourn and f.fk_statut >= 1 AND l.fk_code_ventilation <> 0 ";
-$sql.= " AND c.rowid = l.fk_code_ventilation";
+$sql.= " AND aa.rowid = l.fk_code_ventilation";
 if (strlen(trim($_GET["search_facture"])))
 {
   $sql .= " AND f.facnumber like '%".$_GET["search_facture"]."%'";
 }
 if ($typeid) {
-    $sql .= " AND c.intitule=".$typeid;
+    $sql .= " AND aa.label=".$typeid;
 }
 $sql .= " ORDER BY l.rowid DESC";
 $sql .= $db->plimit($limit+1,$offset);
@@ -133,7 +133,7 @@ if ($result)
     {
       $objp = $db->fetch_object($result);
       $var=!$var;
-      $codeCompta = $objp->numero.' '.$objp->intitule;
+      $codeCompta = $objp->account_number.' '.$objp->label;
       
       print "<tr $bc[$var]>";
       
