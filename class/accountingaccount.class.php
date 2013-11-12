@@ -37,6 +37,7 @@ class AccountingAccount {
 	var $account_parent;
 	var $label;
 	var $active;
+	var $fk_user_author;
 
 
 	/**
@@ -86,6 +87,7 @@ if ($rowid || $account_number) {
 			$this->account_parent = $obj->account_parent;
 			$this->label = $obj->label;
 			$this->active = $obj->active;
+			$this->fk_user_author = $obj->fk_user_author;
 			
 			return $obj->rowid;
 	}
@@ -111,6 +113,7 @@ if ($rowid || $account_number) {
 		if (isset($this->account_parent)) $this->account_parent=trim($this->account_parent);
 		if (isset($this->label)) $this->account_parent=trim($this->label);
 		if (isset($this->active)) $this->active=trim($this->active);
+		if (isset($this->fk_user_author)) $this->fk_user_author=trim($this->fk_user_author);
 		
 	
 	
@@ -127,6 +130,7 @@ if ($rowid || $account_number) {
 		$sql.= "account_parent,";
 		$sql.= "label,";
 		$sql.= "active,";
+		$sql .= " fk_user_author";
 			
 	
 		$sql.= ") VALUES (";
@@ -138,7 +142,7 @@ if ($rowid || $account_number) {
 		$sql.= " ".(! isset($this->account_parent)?'NULL':"'".$this->db->escape($this->account_parent)."'").",";
 		$sql.= " ".(! isset($this->label)?'NULL':"'".$this->db->escape($this->label)."'").",";
 		$sql.= " ".(! isset($this->active)?'NULL':"'".$this->db->escape($this->active)."'").",";
-	
+	  $sql .= "'" . $user->id . "'";
 	
 		$sql.= ")";
 	
@@ -197,13 +201,14 @@ if ($rowid || $account_number) {
 		$this->db->begin();
 
 		$sql = "UPDATE ".MAIN_DB_PREFIX."accountingaccount ";
-		$sql .= " SET fk_pcg_version = ".$this->fk_pcg_version;
-		$sql .= " , pcg_type = '".$this->pcg_type."'";
-		$sql .= " , pcg_subtype = '".$this->pcg_subtype."'";
+		$sql .= " SET fk_pcg_version = ".($this->fk_pcg_version?"'".$this->db->escape($this->fk_pcg_version)."'":"null");
+		$sql .= " , pcg_type = ".($this->pcg_type?"'".$this->db->escape($this->pcg_type)."'":"null");
+		$sql .= " , pcg_subtype = ".($this->pcg_subtype?"'".$this->db->escape($this->pcg_subtype)."'":"null");
 		$sql .= " , account_number = '".$this->account_number."'";
 		$sql .= " , account_parent = '".$this->account_parent."'";
 		$sql .= " , label = ".($this->label?"'".$this->db->escape($this->label)."'":"null");
 		$sql .= " , active = '".$this->active."'";
+		$sql .= " , fk_user_author = ".$user->id;
 		$sql .= " WHERE rowid = ".$this->id;
 
 		dol_syslog(get_class($this)."::update sql=".$sql, LOG_DEBUG);

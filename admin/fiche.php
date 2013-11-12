@@ -53,13 +53,13 @@ $accounting = new AccountingAccount($db);
 
 //action
 if (GETPOST ( "action" ) == 'add') {	
-	$accounting->fk_pcg_version = GETPOST ( "fk_pcg_version" );
-	$accounting->pcg_type = GETPOST ( "pcg_type" );
-	$accounting->pcg_subtype = GETPOST ( "pcg_subtype" );
-	$accounting->account_number = GETPOST ( "account_number" );
-	$accounting->account_parent = GETPOST ( "account_parent" );
-	$accounting->label = GETPOST ( "label" );
-	$accounting->active = GETPOST ( "active" );
+	$accounting->fk_pcg_version = $conf->global->ACCOUNTING_PCG_VERSION;
+	$accounting->pcg_type = GETPOST ( "pcgType" );
+	$accounting->pcg_subtype = GETPOST ( "pcgSubType" );
+	$accounting->account_number = GETPOST ( "AccountNumber" );
+	$accounting->account_parent = GETPOST ( "AccountParent" );
+	$accounting->label = GETPOST ( "Label" );
+	$accounting->active = GETPOST ( "Active" );
 	
 	
 	$e_accounting = $accounting;
@@ -85,13 +85,13 @@ else if ($action == 'edit')
     {
         $result = $accounting->fetch($id);
 
-        $accounting->fk_pcg_version	= GETPOST('fk_pcg_version','int');
-        $accounting->pcg_type 			= GETPOST('pcg_type','int');
-        $accounting->pcg_subtype		= GETPOST('pcg_subtype','int');
-        $accounting->account_number	= GETPOST('account_number','int');
-        $accounting->account_parent	= GETPOST('account_parent','int');
-        $accounting->label        	= GETPOST('label','alpha');
-        $accounting->active         = GETPOST('active','int');
+        $accounting->fk_pcg_version	= $conf->global->ACCOUNTING_PCG_VERSION;
+        $accounting->pcg_type 			= GETPOST('pcgType');
+        $accounting->pcg_subtype		= GETPOST('pcgSubType');
+        $accounting->account_number	= GETPOST('AccountNumber','int');
+        $accounting->account_parent	= GETPOST('AccountParent','int');
+        $accounting->label        	= GETPOST('Label','alpha');
+        $accounting->active         = GETPOST('Active','int');
 
         $result = $accounting->update($user);
 
@@ -129,11 +129,11 @@ if ($action == 'create') {
 	print '<table class="border" width="100%">';
 	
 	print '<tr><td width="20%">' . $langs->trans ( "AccountNumber" ) . '</td>';
-	print '<td><input name="AccountNumber" size="30" value="' .$accounting->AccountNumber. '"</td></tr>';
+	print '<td><input name="AccountNumber" size="30" value="' .$accounting->account_number. '"</td></tr>';
 	print '<tr><td width="20%">' . $langs->trans ( "Label" ) . '</td>';
 	print '<td><input name="Label" size="30" value="' .$accounting->Label. '"</td></tr>';
   print '<tr><td width="20%">' . $langs->trans ( "Accountparent" ) . '</td>';
-	print '<td><input name="AccountParent" size="30" value="' .$accounting->AccountParent. '"</td></tr>';
+	print '<td><input name="AccountParent" size="30" value="' .$accounting->account_parent. '"</td></tr>';
 	print '<tr><td width="20%">' . $langs->trans ( "Pcgtype" ) . '</td>';
 	print '<td><input name="pcgType" size="30" value="' .$accounting->pcgType. '"</td></tr>';
 	print '<tr><td width="20%">' . $langs->trans ( "Pcgsubtype" ) . '</td>';
