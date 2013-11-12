@@ -58,6 +58,19 @@ if (! $sortfield)
 	$sortfield = "aa.rowid";
 if (! $sortorder)
 	$sortorder = "ASC";
+	
+//import account
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
 
 llxHeader('',$langs->trans("Chartofaccounts"));
 
@@ -128,7 +141,7 @@ if ($result)
   print '<form method="GET" action="' . $_SERVER ["PHP_SELF"] . '">';
 	
   print '<a class="butAction" href="fiche.php?action=create">'.$langs->trans("Addanaccount").'</a>';
-  
+  print '<a class="butAction" href="importaccounts.php">' . $langs->trans ( "ImportAccount" ) . '</a>';
   print '<br/><br/>';
 	
 	print '<table class="noborder" width="100%">';

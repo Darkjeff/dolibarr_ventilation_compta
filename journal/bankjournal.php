@@ -6,6 +6,7 @@
  * Copyright (C) 2013		    Christophe Battarel	<christophe.battarel@altairis.fr>
  * Copyright (C) 2011-2013  Alexandre Spangaro	<alexandre.spangaro@gmail.com>
  * Copyright (C) 2013       Florian Henry	      <florian.henry@open-concept.pro>
+ * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -4,6 +4,7 @@
  * Copyright (C) 2011		    Juanjo Menent		    <jmenent@2byte.es>
  * Copyright (C) 2012		    Regis Houssin		    <regis@dolibarr.fr>
  * Copyright (C) 2013       Alexandre Spangaro  <alexandre.spangaro@gmail.com> 
+ * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -97,11 +98,11 @@ $idpays = $p[0];
 $sql = "SELECT f.rowid, f.ref, f.type, f.datef as df, f.libelle,";
 $sql.= " fd.rowid as fdid, fd.total_ttc, fd.tva_tx, fd.total_ht, fd.tva as total_tva, fd.product_type,";
 $sql.= " s.rowid as socid, s.nom as name, s.code_compta_fournisseur, s.fournisseur,";
-$sql.= " s.code_compta_fournisseur, p.accountancy_code_buy , ct.accountancy_code_buy as account_tva, ccg.rowid as fk_compte, ccg.numero as compte, ccg.intitule as label_compte";
+$sql.= " s.code_compta_fournisseur, p.accountancy_code_buy , ct.accountancy_code_buy as account_tva, aa.rowid as fk_compte, aa.account_number as compte, aa.label as label_compte";
 $sql.= " FROM ".MAIN_DB_PREFIX."facture_fourn_det fd";
 $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."c_tva ct ON fd.tva_tx = ct.taux AND ct.fk_pays = '".$idpays."'";
 $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."product p ON p.rowid = fd.fk_product";
-$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."compta_compte_generaux ccg ON ccg.rowid = fd.fk_code_ventilation";
+$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."accountingaccount aa ON aa.rowid = fd.fk_code_ventilation";
 $sql.= " JOIN ".MAIN_DB_PREFIX."facture_fourn f ON f.rowid = fd.fk_facture_fourn";
 $sql.= " JOIN ".MAIN_DB_PREFIX."societe s ON s.rowid = f.fk_soc" ;
 $sql.= " WHERE f.fk_statut > 0 AND f.entity = ".$conf->entity;

@@ -366,7 +366,7 @@ class modAccountingExpert extends DolibarrModules
 		            'langs'=>'ventilation@ventilation',
 		            'position'=>143,
 		            'enabled'=>1,
-		            'perms'=>1,
+		            'perms'=>'$user->rights->accountingex->admin',
 		            'target'=>'',
 		            'user'=>0);
     $r++;
