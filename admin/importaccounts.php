@@ -35,7 +35,7 @@ if (! $res) die("Include of main fails");
 
 require_once(DOL_DOCUMENT_ROOT."/compta/facture/class/facture.class.php");
 require_once(DOL_DOCUMENT_ROOT."/product/class/product.class.php");
-
+dol_include_once ( "/ventilation/class/accountingaccount.class" );
 
 $langs->load("compta");
 $langs->load("bills");
@@ -48,7 +48,7 @@ if (!$user->rights->ventilation->access) accessforbidden();
 if ($user->societe_id > 0) accessforbidden();
 
 
-llxHeader('',$langs->trans("Ventilation"));
+llxHeader('',$langs->trans("ImportAccount"));
 
 if($_POST["action"] == 'ventil')
 {
@@ -61,32 +61,35 @@ if($_POST["action"] == 'ventil')
 		$cpt = 0;
 		foreach($mesLignesCochees as $maLigneCochee) 
 		{
+		
+		$AccountingAccount = new AccountingAccount ($db);
+		
 			//print '<div><font color="red">id selectionnee : '.$monChoix."</font></div>";
 			$maLigneCourante = split("_", $maLigneCochee);
-			$monId = $maLigneCourante[0];
-			$monNumLigne = $maLigneCourante[1];
-			$monCompte = $mesCodesVentilChoisis[$monNumLigne];
+			$monAccount = $maLigneCourante[0];
+			$monLabel = $maLigneCourante[1];
+			$monParentAccount = $maLigneCourante[2];
+			//$monCompte = $mesCodesVentilChoisis[$monNumLigne];
   
-			$sql = " UPDATE ".MAIN_DB_PREFIX."facturedet";
-			$sql .= " SET fk_code_ventilation = ".$monCompte;
-			$sql .= " WHERE rowid = ".$monId;
-
-			if($db->query($sql))
-			{
-				print '<div><font color="green">'.$langs->trans("Line of invoice").' '.$monId.' '.$langs->trans("VentilatedinAccount").' : '.$monCompte.'</font></div>';
+			$AccountingAccount->fk_pcg_version = $conf->global->CHARTOFACCOUNTS;
+			$AccountingAccount->account_number = $monAccount;			
+			$AccountingAccount->label = $monLabel;
+			$AccountingAccount->account_parent = $monParentAccount;
+			
+			
+			$result = $AccountingAccount->create ( $user );
+			if ($result > 0) {
+				setEventMessage ( $langs->trans ( "AccountingAccountAdd" ), 'mesgs' );
+			} else {
+				dol_print_error ( $db );
 			}
-			else 
-			{
-				print '<div><font color="red">'.$langs->trans("ErrorDB").' : '.$langs->trans("Line of invoice").' '.$monId.' '.$langs->trans("NotVentilatedinAccount").' : '.$monCompte.'<br/> <pre>'.$sql.'</pre></font></div>';
-			}
-  
 			$cpt++; 
   
 		}
 	}
 	else
 	{
-		print '<div><font color="red">'.$langs->trans("AnyLineVentilate").'</font></div>';
+		print '<div><font color="red">'.$langs->trans("AnyLineImport").'</font></div>';
 	}
 	print '<div><font color="red">'.$langs->trans("EndProcessing").'</font></div>';
 }
@@ -117,7 +120,7 @@ if ($resultCompte)
 }
 
 /*
-* Lignes de factures
+* list accounting account from product 
 *
 */
 $page = $_GET["page"];
@@ -142,14 +145,14 @@ if ($result)
 {
 	$num_lignes = $db->num_rows($result);
 	$i = 0;
-	print_barre_liste($langs->trans("ImportAccount"),$page,"liste.php","",$sortfield,$sortorder,'',$num_lignes);
+	print_barre_liste($langs->trans("ImportAccount"),$page,"importaccounts.php","",$sortfield,$sortorder,'',$num_lignes);
 
 
 	print '<table class="noborder" width="100%">';
 	print '<tr class="liste_titre"><td>'.$langs->trans("accountingaccount").'</td>';
 	print '<td>'.$langs->trans("label").'</td>';
 	print '<td>'.$langs->trans("parentaccount").'</td>';
-  print '<td align="center">'.$langs->trans("Ventilate").'</td>';
+  print '<td align="center">'.$langs->trans("Import").'</td>';
 	print '</tr>';
 
 
@@ -166,25 +169,33 @@ if ($result)
 		print "<tr $bc[$var]>";
 
 		
-		print '<td align="right">';
+		
+		
+		print '<td align="left">';
 		print $objp->accounting;
 		print '</td>';	
 		
+		print '<td align="left">';
+		print '<input name="intitule" size="70" value="">';
+		print '</td>';	
 
 		//Colonne choix du compte
-		print '<td align="center">';
+		print '<td align="left">';
 		print $form->selectarray("codeventil[]",$cgs, $cgn[$objp->accounting]);
 		print '</td>';
 		//Colonne choix ligne a ventiler
+		
+		$checked = ('intitule' == 'O')?' checked=checked':'';
+		
 		print '<td align="center">';
-		print '<input type="checkbox" name="mesCasesCochees[]" value="'.$objp->rowid."_".$i.'"'.($objp->accounting?"checked":"").'/>';
+		print '<input type="checkbox" name="mesCasesCochees[]"'.$checked .'/>';
 		print '</td>';
 
 		print '</tr>';
 		$i++;
 	}
 
-	print '<tr><td colspan="8">&nbsp;</td></tr><tr><td colspan="8" align="center"><input type="submit" class="butAction" value="'.$langs->trans("Ventilate").'"></td></tr>';
+	print '<tr><td colspan="8">&nbsp;</td></tr><tr><td colspan="8" align="center"><input type="submit" class="butAction" value="'.$langs->trans("Import").'"></td></tr>';
 
 	print '</table>';
 	print '</form>';
