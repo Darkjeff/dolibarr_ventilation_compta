@@ -119,6 +119,7 @@ else if ($action == 'edit')
 llxheader ( '', $langs->trans ( "Account" ), '' );
 	 
 $form = new Form($db);
+$htmlacc = new FormVentilation ( $db );
 
 if ($action == 'create') {
 
@@ -131,13 +132,19 @@ if ($action == 'create') {
 	print '<tr><td width="20%">' . $langs->trans ( "AccountNumber" ) . '</td>';
 	print '<td><input name="AccountNumber" size="30" value="' .$accounting->account_number. '"</td></tr>';
 	print '<tr><td width="20%">' . $langs->trans ( "Label" ) . '</td>';
-	print '<td><input name="Label" size="30" value="' .$accounting->Label. '"</td></tr>';
+	print '<td><input name="Label" size="70" value="' .$accounting->Label. '"</td></tr>';
   print '<tr><td width="20%">' . $langs->trans ( "Accountparent" ) . '</td>';
-	print '<td><input name="AccountParent" size="30" value="' .$accounting->account_parent. '"</td></tr>';
+  print '<td>';
+	print $htmlacc->select_account_parent($accounting->account_parent, 'AccountParent');
+	print '</td></tr>';
 	print '<tr><td width="20%">' . $langs->trans ( "Pcgtype" ) . '</td>';
-	print '<td><input name="pcgType" size="30" value="' .$accounting->pcgType. '"</td></tr>';
+	print '<td>';
+	print $htmlacc->select_pcgtype($accounting->pcg_type, 'pcgType');
+	print '</td></tr>';
 	print '<tr><td width="20%">' . $langs->trans ( "Pcgsubtype" ) . '</td>';
-	print '<td><input name="pcgSubType" size="30" value="' .$accounting->pcgSubType. '"</td></tr>';	
+	print '<td>';
+	print $htmlacc->select_pcgsubtype($accounting->pcg_subtype, 'pcgSubType');
+	print '</td></tr>';
 	print '<tr><td width="20%">' . $langs->trans ( "Active" ) . '</td>';
 	print '<td><input name="Active" size="30" value="' .$accounting->Active. '"</td></tr>';	
 
@@ -159,6 +166,8 @@ else if ($id)
      if ($action == 'update')
      {
           //WYSIWYG Editor
+          $htmlacc = new FormVentilation ( $db );
+          
           require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
  
           $soc = new Societe($db);
@@ -179,13 +188,19 @@ else if ($id)
         	print '<tr><td width="20%">' . $langs->trans ( "AccountNumber" ) . '</td>';
         	print '<td><input name="AccountNumber" size="30" value="' .$accounting->account_number. '"</td></tr>';
         	print '<tr><td width="20%">' . $langs->trans ( "Label" ) . '</td>';
-        	print '<td><input name="Label" size="30" value="' .$accounting->label. '"</td></tr>';
+        	print '<td><input name="Label" size="70" value="' .$accounting->label. '"</td></tr>';
           print '<tr><td width="20%">' . $langs->trans ( "Accountparent" ) . '</td>';
-        	print '<td><input name="AccountParent" size="30" value="' .$accounting->account_parent. '"</td></tr>';
+          print '<td>';
+	        print $htmlacc->select_account_parent($accounting->account_parent, 'AccountParent');
+	        print '</td></tr>';
         	print '<tr><td width="20%">' . $langs->trans ( "Pcgtype" ) . '</td>';
-        	print '<td><input name="pcgType" size="30" value="' .$accounting->pcg_type. '"</td></tr>';
+        	print '<td>';
+	        print $htmlacc->select_pcgtype($accounting->pcg_type, 'pcgType');
+	        print '</td></tr>';
         	print '<tr><td width="20%">' . $langs->trans ( "Pcgsubtype" ) . '</td>';
-        	print '<td><input name="pcgSubType" size="30" value="' .$accounting->pcg_subtype. '"</td></tr>';	
+        	print '<td>';
+	        print $htmlacc->select_pcgsubtype($accounting->pcg_subtype, 'pcgSubType');
+	        print '</td></tr>';
         	print '<tr><td width="20%">' . $langs->trans ( "Active" ) . '</td>';
         	print '<td><input name="Active" size="30" value="' .$accounting->active. '"</td></tr>';	
 	
