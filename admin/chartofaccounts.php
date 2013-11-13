@@ -59,70 +59,40 @@ if (! $sortfield)
 if (! $sortorder)
 	$sortorder = "ASC";
 	
-//import account
-
-
-
-	
-	
-	
-	
-	
-	
-	
-	
+if ($action == 'delete') {
+	$formconfirm = $html->formconfirm ( $_SERVER ["PHP_SELF"] . '?id=' . $id, $langs->trans ( 'DeleteAccount' ), $langs->trans ( 'ConfirmDeleteAccount' ), 'confirm_delete', '', 0, 1 );
+	print $formconfirm;
+}
 
 llxHeader('',$langs->trans("Chartofaccounts"));
 
 print_barre_liste($langs->trans("Chartofaccounts"),$page,"chartofaccounts.php","",$sortfield,$sortorder,'',$num);
 
-/*
-* List accounting account
-*/
-
-/*
-print '<form action="'.$_SERVER["PHP_SELF"].'" method="GET">';
-print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'" />';
-
-$var=True;
-
-print '<input type="hidden" name="action" value="pcg_version">';
-print $langs->trans("Selectchartofaccounts").'<br/>';
-print '<select class="flat" name="chartofaccounts" id="chartofaccounts">';
-
-$sql = "SELECT rowid, pcg_version, fk_pays, label, active";
-$sql.= " FROM ".MAIN_DB_PREFIX."accounting_system";
-$sql.= " WHERE active = 1";
-$sql.= " AND fk_pays = ".$mysoc->country_id;
-$var=True;
-$resql=$db->query($sql);
-if ($resql)
-{
-    $num = $db->num_rows($resql);
-    $i = 0;
-    while ($i < $num)
-    {
-        //$var=!$var;
-        $row = $db->fetch_row($resql);
-
-        print '<option value="'.$row[0].'"';
-        print $conf->global->CHARTOFACCOUNTS == $row[0] ? ' selected="selected"':'';
-        print '>'.$row[1].' - '.$row[3].'</option>';
-
-        $i++;
-    }
-}
-print '</select>';
-print '&nbsp;&nbsp;<input type="submit" class="button" value="'.$langs->trans("Validate").'">';
-print '&nbsp;&nbsp;<input type="submit" class="button" value="'.$langs->trans("Edit").'">';
-print '</form>';
-print '<br/>';
-
-*/
+// $pcgver = $conf->global->ACCOUNTING_PCG_VERSION; pour clause where en fonction du plan comptable
 
 $sql2 = "SELECT aa.rowid, aa.fk_pcg_version, aa.pcg_type, aa.pcg_subtype, aa.account_number, aa.account_parent , aa.label, aa.active ";
 $sql2 .= " FROM " . MAIN_DB_PREFIX . "accountingaccount as aa";
-//$sql2 .= " WHERE aa.fk_pcg_version =".$pcg_version;
+$sql2 .= " WHERE aa.active = 1";
+if (strlen(trim($_GET["search_account"])))
+{
+	$sql2 .= " AND aa.account_number like '%".$_GET["search_account"]."%'";
+}
+if (strlen(trim($_GET["search_label"])))
+{
+	$sql2 .= " AND aa.label like '%".$_GET["search_label"]."%'";
+}
+if (strlen(trim($_GET["search_accountparent"])))
+{
+	$sql2 .= " AND aa.account_parent like '%".$_GET["search_accountparent"]."%'";
+}
+if (strlen(trim($_GET["search_pcgtype"])))
+{
+	$sql2 .= " AND aa.pcg_type like '%".$_GET["search_pcgtype"]."%'";
+}
+if (strlen(trim($_GET["search_pcgsubtype"])))
+{
+	$sql2 .= " AND aa.pcg_subtype like '%".$_GET["search_pcgsubtype"]."%'";
+}
 $sql2 .= " ORDER BY $sortfield $sortorder"; // . $db->plimit ( $conf->liste_limit + 1, $offset );
 
 $result = $db->query($sql2);
@@ -183,9 +153,20 @@ $var = True;
 			print '<td>' . $obj2->pcg_type . '</td>';
 			print '<td>' . $obj2->pcg_subtype . '</td>';
 			print '<td>' . $obj2->active . '</td>';
-      print '<td><a href="./fiche.php?action=update&id=' . $obj2->rowid . '">';
-			print img_edit ();
-			print '</a>&nbsp;</td>' . "\n";
+			
+				print '<td>';
+						if ($user->rights->compta->ventilation->parametrer) {
+							print '<a href="./fiche.php?action=update&id=' . $obj2->rowid  . '">';
+							print img_edit ();
+							print '</a>&nbsp;';
+							print '<a href="./fiche.php?action=delete&id=' . $obj2->rowid  . '">';
+							print img_delete ();
+							print '</a>';
+						}
+						print '</td>' . "\n";
+			
+			
+ 
 			print "</tr>";
 		$i ++;
 	}

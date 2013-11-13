@@ -60,12 +60,12 @@ if (GETPOST ( "action" ) == 'add') {
 	$accounting->account_number = GETPOST ( "AccountNumber" );
 	$accounting->account_parent = GETPOST ( "AccountParent" );
 	$accounting->label = GETPOST ( "Label" );
-	$accounting->active = GETPOST ( "Active" );
+	$accounting->active = 1;
 	
 	
 	$e_accounting = $accounting;
 	
-	$res = $accounting->create (  );
+	$res = $accounting->create ($user  );
 	if ($res == 0) {
 	} else {
 		if ($res == - 3) {
@@ -148,8 +148,7 @@ if ($action == 'create') {
 	print '<td>';
 	print $htmlacc->select_pcgsubtype($accounting->pcg_subtype, 'pcgSubType');
 	print '</td></tr>';
-	print '<tr><td>' . $langs->trans ( "Active" ) . '</td>';
-	print '<td><input name="Active" size="30" value="' .$accounting->active. '"</td></tr>';	
+	
 
   print '</table>';
   

@@ -71,7 +71,7 @@ if($_POST["action"] == 'import')
 			
 			$maLigneCourante = split("_", $maLigneCochee);
 			$monAccount = $maLigneCourante[0];
-			$monLabel = $maLigneCourante[1];
+			$monLabel = $maLigneCourante[0];
 			$monLabel2=$mesLabelChoisis[$monLabel];
 			$monParentAccount = $maLigneCourante[2];
 			$monType = $maLigneCourante[3];
@@ -116,24 +116,17 @@ if ($page < 0) $page = 0;
 $limit = $conf->liste_limit;
 $offset = $limit * $page ;
 
-$sql = "(SELECT p.rowid as product_id, p.accountancy_code_sell as accounting ";
-$sql.= " FROM  ".MAIN_DB_PREFIX."product as p ";
-$sql.= " WHERE p.accountancy_code_sell >=0";
-$sql .= " GROUP BY accounting ";
-$sql .= ")";
-$sql .= "UNION ALL(SELECT p.rowid as product_id, p.accountancy_code_buy as accounting ";
-$sql.= " FROM  ".MAIN_DB_PREFIX."product as p ";
-$sql.= " WHERE p.accountancy_code_buy >=0";
-$sql .= " GROUP BY accounting ";
-$sql .= ") ";
-$sql.= " ORDER BY accounting DESC ".$db->plimit($limit+1,$offset);
+$sql = "SELECT cg.rowid, cg.numero, cg.intitule";
+$sql .= " FROM ".MAIN_DB_PREFIX."compta_compte_generaux as cg";
+//$sql .= " ORDER BY $sortfield $sortorder " . $db->plimit($conf->liste_limit+1, $offset);
+
 
 $result = $db->query($sql);
 if ($result)
 {
 	$num_lignes = $db->num_rows($result);
 	$i = 0;
-	print_barre_liste($langs->trans("ImportAccount"),$page,"importaccounts.php","",$sortfield,$sortorder,'',$num_lignes);
+	print_barre_liste($langs->trans("ImportAccount"),$page,"importaccountsex.php","",$sortfield,$sortorder,'',$num_lignes);
 
 
 	print '<table class="noborder" width="100%">';
@@ -149,7 +142,7 @@ if ($result)
   	$form = new Form($db);
   	$htmlacc = new FormVentilation ( $db );
 
-	print '<form action="importaccounts.php" method="post">'."\n";
+	print '<form action="importaccountsex.php" method="post">'."\n";
 	print '<input type="hidden" name="action" value="import">';
 
 	$var=True;
@@ -163,11 +156,11 @@ if ($result)
 		
 		
 		print '<td align="left">';
-		print $objp->accounting;
+		print $objp->numero;
 		print '</td>';	
 		
 		print '<td align="left">';
-		print '<input name="intitule" size="70" value="">';
+		print $objp->intitule;
 		print '</td>';	
 
 		//Colonne choix du compte
