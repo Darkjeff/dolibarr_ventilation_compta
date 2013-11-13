@@ -30,7 +30,7 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 
 require_once DOL_DOCUMENT_ROOT . '/core/lib/date.lib.php';
-require_once DOL_DOCUMENT_ROOT . '/ventilation/class/fiscalyear.class.php';
+dol_include_once ( "/ventilation/class/fiscalyear.class.php");
 
 $langs->load("companies");
 $langs->load("admin");

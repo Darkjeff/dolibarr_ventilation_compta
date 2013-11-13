@@ -33,8 +33,8 @@ if (! $res && file_exists ( "../main.inc.php" )) $res = @include ("../main.inc.p
 if (! $res && file_exists ( "../../main.inc.php" )) $res = @include ("../../main.inc.php");
 if (! $res && file_exists ( "../../../main.inc.php" )) $res = @include ("../../../main.inc.php");
 
-require_once DOL_DOCUMENT_ROOT . '/ventilation/class/html.formventilation.class.php';
-require_once DOL_DOCUMENT_ROOT . '/ventilation/class/bookkeeping.class.php');
+dol_include_once ( "/ventilation/class/html.formventilation.class.php");
+dol_include_once ( "/ventilation/class/bookkeeping.class.php");
 
 if (! $res) die ( "Include of main fails" );
 

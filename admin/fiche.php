@@ -65,7 +65,7 @@ if (GETPOST ( "action" ) == 'add') {
 	
 	$e_accounting = $accounting;
 	
-	$res = $accounting->create (  );
+	$res = $accounting->create ($user  );
 	if ($res == 0) {
 	} else {
 		if ($res == - 3) {

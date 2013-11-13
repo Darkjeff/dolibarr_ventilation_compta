@@ -59,66 +59,12 @@ if (! $sortfield)
 if (! $sortorder)
 	$sortorder = "ASC";
 	
-//import account
-
-
-
-	
-	
-	
-	
-	
-	
-	
-	
 
 llxHeader('',$langs->trans("Chartofaccounts"));
 
 print_barre_liste($langs->trans("Chartofaccounts"),$page,"chartofaccounts.php","",$sortfield,$sortorder,'',$num);
 
-/*
-* List accounting account
-*/
 
-/*
-print '<form action="'.$_SERVER["PHP_SELF"].'" method="GET">';
-print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'" />';
-
-$var=True;
-
-print '<input type="hidden" name="action" value="pcg_version">';
-print $langs->trans("Selectchartofaccounts").'<br/>';
-print '<select class="flat" name="chartofaccounts" id="chartofaccounts">';
-
-$sql = "SELECT rowid, pcg_version, fk_pays, label, active";
-$sql.= " FROM ".MAIN_DB_PREFIX."accounting_system";
-$sql.= " WHERE active = 1";
-$sql.= " AND fk_pays = ".$mysoc->country_id;
-$var=True;
-$resql=$db->query($sql);
-if ($resql)
-{
-    $num = $db->num_rows($resql);
-    $i = 0;
-    while ($i < $num)
-    {
-        //$var=!$var;
-        $row = $db->fetch_row($resql);
-
-        print '<option value="'.$row[0].'"';
-        print $conf->global->CHARTOFACCOUNTS == $row[0] ? ' selected="selected"':'';
-        print '>'.$row[1].' - '.$row[3].'</option>';
-
-        $i++;
-    }
-}
-print '</select>';
-print '&nbsp;&nbsp;<input type="submit" class="button" value="'.$langs->trans("Validate").'">';
-print '&nbsp;&nbsp;<input type="submit" class="button" value="'.$langs->trans("Edit").'">';
-print '</form>';
-print '<br/>';
-
-*/
 
 $sql2 = "SELECT aa.rowid, aa.fk_pcg_version, aa.pcg_type, aa.pcg_subtype, aa.account_number, aa.account_parent , aa.label, aa.active ";
 $sql2 .= " FROM " . MAIN_DB_PREFIX . "accountingaccount as aa";
