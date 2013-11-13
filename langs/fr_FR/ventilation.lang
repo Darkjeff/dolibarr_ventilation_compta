@@ -8,6 +8,8 @@ Accounting=Comptabilité
 Globalparameters=Paramètres globaux
 Chartofaccounts=Plan comptable
 Fiscalyear=Exercices fiscaux
+Menuaccount=Comptes comptables
+Menuthirdpartyaccount=Comptes tiers
 
 Definechartofaccounts=Définir un plan comptable
 Selectchartofaccounts=Sélectionnez un plan comptable

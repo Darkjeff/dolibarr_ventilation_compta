@@ -358,18 +358,31 @@ class modAccountingExpert extends DolibarrModules
 		            'user'=>0);
      $r++;
      
-     	$this->menu[$r]=array(  'fk_menu'=>'r=15',
+     $this->menu[$r]=array(  'fk_menu'=>'r=17',
 		            'type'=>'left',
-		            'titre'=>'thirdpartyaccount',
+		            'titre'=>'Menuaccount',
 		            'mainmenu'=>'accounting',
-		            'url'=>'/ventilation/thirdpartyaccount/liste.php',
+		            'url'=>'/ventilation/admin/chartofaccounts.php',
 		            'langs'=>'ventilation@ventilation',
 		            'position'=>143,
 		            'enabled'=>1,
 		            'perms'=>'$user->rights->accountingex->admin',
 		            'target'=>'',
 		            'user'=>0);
-    $r++;
+     $r++;
+     
+     $this->menu[$r]=array(  'fk_menu'=>'r=17',
+		            'type'=>'left',
+		            'titre'=>'Menuthirdpartyaccount',
+		            'mainmenu'=>'accounting',
+		            'url'=>'/ventilation/admin/thirdpartyaccount.php',
+		            'langs'=>'ventilation@ventilation',
+		            'position'=>144,
+		            'enabled'=>1,
+		            'perms'=>'$user->rights->accountingex->admin',
+		            'target'=>'',
+		            'user'=>0);
+     $r++;
      
      $this->menu[$r]=array(  'fk_menu'=>'r=15',
 		            'type'=>'left',
@@ -377,7 +390,7 @@ class modAccountingExpert extends DolibarrModules
 		            'mainmenu'=>'accounting',
 		            'url'=>'/ventilation/admin/fiscalyear.php',
 		            'langs'=>'ventilation@ventilation',
-		            'position'=>144,
+		            'position'=>145,
 		            'enabled'=>1,
 		            'perms'=>'$user->rights->accountingex->dev',
 		            'target'=>'',
@@ -390,7 +403,7 @@ class modAccountingExpert extends DolibarrModules
 		            'mainmenu'=>'accounting',
 		            'url'=>'/ventilation/admin/journaux.php',
 		            'langs'=>'ventilation@ventilation',
-		            'position'=>145,
+		            'position'=>146,
 		            'enabled'=>1,
 		            'perms'=>'$user->rights->accountingex->dev',
 		            'target'=>'',

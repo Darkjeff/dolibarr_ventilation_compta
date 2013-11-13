@@ -44,7 +44,7 @@ dol_include_once ( "/ventilation/class/html.formventilation.class.php");
 $langs->load("compta");
 $langs->load("ventilation@ventilation");
 
-// Securite accès client
+// Security check
 if ($user->societe_id > 0) accessforbidden();
 if (!$user->rights->accountingex->admin) accessforbidden();
 

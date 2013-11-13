@@ -42,11 +42,9 @@ $langs->load("bills");
 $langs->load("main");
 $langs->load("ventilation@ventilation");
 
-if (!$user->rights->ventilation->access) accessforbidden();
-
-// Securite acces client
+// Security check
 if ($user->societe_id > 0) accessforbidden();
-
+if (!$user->rights->accountingex->access) accessforbidden();
 
 llxHeader('',$langs->trans("Ventilation"));
 
