@@ -177,7 +177,7 @@ $var = True;
 			
 			print "<tr $bc[$var]>";
 
-      print '<td>' . $obj2->account_number . '</td>';
+      print '<td><a href="./fiche.php?id='. $obj2->rowid . '">' . $obj2->account_number . '</td>';
 			print '<td>' . $obj2->label . '</td>';
 			print '<td>' . $obj2->account_parent . '</td>';
 			print '<td>' . $obj2->pcg_type . '</td>';

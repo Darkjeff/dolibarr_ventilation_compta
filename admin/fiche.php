@@ -32,6 +32,7 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 
 // Class
+dol_include_once ( "/ventilation/core/lib/account.lib.php");
 dol_include_once ( "/ventilation/class/accountingaccount.class.php");
 dol_include_once ( "/ventilation/class/html.formventilation.class.php");
 
@@ -45,7 +46,7 @@ $action = GETPOST('action');
 $id = GETPOST('id','int');
 $rowid = GETPOST('rowid','int');
 
-// Securite acces client
+// Security check
 if ($user->societe_id > 0) accessforbidden();
 if (!$user->rights->accountingex->admin) accessforbidden();
 
@@ -76,7 +77,7 @@ if (GETPOST ( "action" ) == 'add') {
 			$action = "create";
 		}
 	}
-	Header ( "Location: " . DOL_DOCUMENT_ROOT . "/ventilation/accountingaccount/liste.php" );
+	Header ( "Location: chartofaccounts.php" );
 }
 // Update record
 else if ($action == 'edit')
@@ -123,36 +124,39 @@ $htmlacc = new FormVentilation ( $db );
 
 if ($action == 'create') {
 
+  print_fiche_titre($langs->trans("NewAccount"));
+  
 	print '<form name="add" action="' . $_SERVER["PHP_SELF"] . '" method="POST">' . "\n";
   print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
   print '<input type="hidden" name="action" value="add">';
 	
 	print '<table class="border" width="100%">';
 	
-	print '<tr><td width="20%">' . $langs->trans ( "AccountNumber" ) . '</td>';
+	print '<tr><td width="25%">' . $langs->trans ( "AccountNumber" ) . '</td>';
 	print '<td><input name="AccountNumber" size="30" value="' .$accounting->account_number. '"</td></tr>';
-	print '<tr><td width="20%">' . $langs->trans ( "Label" ) . '</td>';
-	print '<td><input name="Label" size="70" value="' .$accounting->Label. '"</td></tr>';
-  print '<tr><td width="20%">' . $langs->trans ( "Accountparent" ) . '</td>';
+	print '<tr><td>' . $langs->trans ( "Label" ) . '</td>';
+	print '<td><input name="Label" size="70" value="' .$accounting->label. '"</td></tr>';
+  print '<tr><td>' . $langs->trans ( "Accountparent" ) . '</td>';
   print '<td>';
 	print $htmlacc->select_account_parent($accounting->account_parent, 'AccountParent');
 	print '</td></tr>';
-	print '<tr><td width="20%">' . $langs->trans ( "Pcgtype" ) . '</td>';
+	print '<tr><td>' . $langs->trans ( "Pcgtype" ) . '</td>';
 	print '<td>';
 	print $htmlacc->select_pcgtype($accounting->pcg_type, 'pcgType');
 	print '</td></tr>';
-	print '<tr><td width="20%">' . $langs->trans ( "Pcgsubtype" ) . '</td>';
+	print '<tr><td>' . $langs->trans ( "Pcgsubtype" ) . '</td>';
 	print '<td>';
 	print $htmlacc->select_pcgsubtype($accounting->pcg_subtype, 'pcgSubType');
 	print '</td></tr>';
-	print '<tr><td width="20%">' . $langs->trans ( "Active" ) . '</td>';
-	print '<td><input name="Active" size="30" value="' .$accounting->Active. '"</td></tr>';	
+	print '<tr><td>' . $langs->trans ( "Active" ) . '</td>';
+	print '<td><input name="Active" size="30" value="' .$accounting->active. '"</td></tr>';	
 
-
-	print '<tr><td>&nbsp;</td><td><input type="submit" class="button" value="' . $langs->trans ( "Sauvegarder" ) . '"><input type="cancel" class="button" value="' . $langs->trans ( "Cancel" ) . '"></td></tr>';
-        
   print '</table>';
-	print '</form>';
+  
+  print '<br><center><input class="button" type="submit" value="'.$langs->trans("Save").'"> &nbsp; &nbsp; ';
+  print '<input class="button" type="submit" name="cancel" value="'.$langs->trans("Cancel").'"></center';
+      
+  print '</form>';
 }
 else if ($id)
 {
@@ -162,6 +166,10 @@ else if ($id)
   if ($account > 0)
   {	
      dol_htmloutput_mesg($mesg);
+
+     $head = account_prepare_head($accounting);
+
+     dol_fiche_head($head, 'card', $langs->trans("AccountCard"), 0, 'accounting@ventilation');
 
      if ($action == 'update')
      {
@@ -185,23 +193,23 @@ else if ($id)
 	
         	print '<table class="border" width="100%">';
         	
-        	print '<tr><td width="20%">' . $langs->trans ( "AccountNumber" ) . '</td>';
+        	print '<tr><td width="25%">' . $langs->trans ( "AccountNumber" ) . '</td>';
         	print '<td><input name="AccountNumber" size="30" value="' .$accounting->account_number. '"</td></tr>';
-        	print '<tr><td width="20%">' . $langs->trans ( "Label" ) . '</td>';
+        	print '<tr><td>' . $langs->trans ( "Label" ) . '</td>';
         	print '<td><input name="Label" size="70" value="' .$accounting->label. '"</td></tr>';
-          print '<tr><td width="20%">' . $langs->trans ( "Accountparent" ) . '</td>';
+          print '<tr><td>' . $langs->trans ( "Accountparent" ) . '</td>';
           print '<td>';
 	        print $htmlacc->select_account_parent($accounting->account_parent, 'AccountParent');
 	        print '</td></tr>';
-        	print '<tr><td width="20%">' . $langs->trans ( "Pcgtype" ) . '</td>';
+        	print '<tr><td>' . $langs->trans ( "Pcgtype" ) . '</td>';
         	print '<td>';
 	        print $htmlacc->select_pcgtype($accounting->pcg_type, 'pcgType');
 	        print '</td></tr>';
-        	print '<tr><td width="20%">' . $langs->trans ( "Pcgsubtype" ) . '</td>';
+        	print '<tr><td>' . $langs->trans ( "Pcgsubtype" ) . '</td>';
         	print '<td>';
 	        print $htmlacc->select_pcgsubtype($accounting->pcg_subtype, 'pcgSubType');
 	        print '</td></tr>';
-        	print '<tr><td width="20%">' . $langs->trans ( "Active" ) . '</td>';
+        	print '<tr><td>' . $langs->trans ( "Active" ) . '</td>';
         	print '<td><input name="Active" size="30" value="' .$accounting->active. '"</td></tr>';	
 	
 		      print '</table>';
@@ -216,24 +224,49 @@ else if ($id)
      } 
      else
      {
-          print_fiche_titre($langs->trans("Account"));
-	
           print '<table class="border" width="100%">';
-        	
-        	print '<tr><td width="20%">'.$langs->trans("AccountNumber").'</td>';
+        
+        	$linkback = '<a href="'.DOL_URL_ROOT.'/compta/deplacement/list.php'.(! empty($socid)?'?socid='.$socid:'').'">'.$langs->trans("BackToList").'</a>';
+
+        	print '<tr><td width="25%">'.$langs->trans("AccountNumber").'</td>';
         	print '<td>'.$accounting->account_number.'</td></tr>';
-        	print '<tr><td width="20%">'.$langs->trans("Label").'</td>';
+        	print '<tr><td>'.$langs->trans("Label").'</td>';
         	print '<td>'.$accounting->label.'</td></tr>';
-          print '<tr><td width="20%">'.$langs->trans("Accountparent").'</td>';
+          print '<tr><td>'.$langs->trans("Accountparent").'</td>';
         	print '<td>'.$accounting->account_parent.'</td></tr>';
-        	print '<tr><td width="20%">'.$langs->trans("Pcgtype").'</td>';
+        	print '<tr><td>'.$langs->trans("Pcgtype").'</td>';
         	print '<td>'.$accounting->pcg_type.'</td></tr>';
-        	print '<tr><td width="20%">'.$langs->trans("Pcgsubtype").'</td>';
+        	print '<tr><td>'.$langs->trans("Pcgsubtype").'</td>';
         	print '<td>'.$accounting->pcg_subtype.'</td></tr>';	
-        	print '<tr><td width="20%">'.$langs->trans("Active").'</td>';
+        	print '<tr><td>'.$langs->trans("Active").'</td>';
         	print '<td>'.$accounting->active.'</td></tr>';	
 	
 		      print '</table>';
+
+          print '</div>';
+          
+          /*
+           * Barre d'actions
+           */
+
+          print '<div class="tabsAction">';
+
+          if ($user->rights->accountingex->admin)
+          {
+              print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?action=update&id='.$id.'">'.$langs->trans('Modify').'</a>';
+          }
+          else
+          {
+              print '<a class="butActionRefused" href="#" title="'.dol_escape_htmltag($langs->trans("NotAllowed")).'">'.$langs->trans('Modify').'</a>';
+          }
+          if ($user->rights->accountingex->supprimer) // Mauvaise permission en attendant d'écrire la fonction
+          {
+              print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?action=delete&id='.$id.'">'.$langs->trans('Delete').'</a>';
+          }
+          else
+          {
+              print '<a class="butActionRefused" href="#" title="'.dol_escape_htmltag($langs->trans("NotAllowed")).'">'.$langs->trans('Delete').'</a>';
+          }
 
           print '</div>';
     }
