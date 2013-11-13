@@ -42,10 +42,9 @@ $langs->load("compta");
 $langs->load("main");
 $langs->load("ventilation@ventilation");
 
-
 // Security check
-if (!$user->rights->ventilation->admin) accessforbidden();
 if ($user->societe_id > 0) accessforbidden();
+if (!$user->rights->accountingex->admin) accessforbidden();
 
 // Date range
 $year=GETPOST("year");

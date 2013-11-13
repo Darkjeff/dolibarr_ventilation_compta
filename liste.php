@@ -38,12 +38,9 @@ require_once(DOL_DOCUMENT_ROOT."/product/class/product.class.php");
 $langs->load("compta");
 $langs->load("bills");
 
-if (!$user->rights->facture->lire) accessforbidden();
-if (!$user->rights->compta->ventilation->creer) accessforbidden();
-
-// Securite acces client
+// Security check
 if ($user->societe_id > 0) accessforbidden();
-
+if (!$user->rights->accountingex->access) accessforbidden();
 
 llxHeader('',$langs->trans("Ventilation"));
 
