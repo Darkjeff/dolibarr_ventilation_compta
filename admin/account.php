@@ -20,9 +20,9 @@
  */
 
 /**
- * 		\file       htdocs/accountingex/admin/chartofaccounts.php
+ * 		\file       htdocs/accountingex/admin/account.php
  * 		\ingroup    Accounting Expert
- * 		\brief      List chart of accounts and accounting account
+ * 		\brief      List accounting account
  */
  
  // Dolibarr environment
@@ -64,9 +64,9 @@ if ($action == 'delete') {
 	print $formconfirm;
 }
 
-llxHeader('',$langs->trans("Chartofaccounts"));
+llxHeader('',$langs->trans("Accounts"));
 
-print_barre_liste($langs->trans("Chartofaccounts"),$page,"chartofaccounts.php","",$sortfield,$sortorder,'',$num);
+print_barre_liste($langs->trans("Accounts"),$page,"account.php","",$sortfield,$sortorder,'',$num);
 
 // $pcgver = $conf->global->ACCOUNTING_PCG_VERSION; pour clause where en fonction du plan comptable
 
@@ -116,12 +116,12 @@ if ($result)
 	
 	print '<table class="noborder" width="100%">';
 	print '<tr class="liste_titre">';
-	print_liste_field_titre ( $langs->trans ( "AccountNumber" ), "chartofaccounts.php", "aa.account_number", "", $param, "", $sortfield, $sortorder);
-	print_liste_field_titre ( $langs->trans ( "Label" ), "chartofaccounts.php", "aa.label" , "", $param, "", $sortfield, $sortorder );
-	print_liste_field_titre ( $langs->trans ( "Accountparent" ), "chartofaccounts.php", "aa.account_parent" , "", $param, "", $sortfield, $sortorder );
-	print_liste_field_titre ( $langs->trans ( "Pcgtype" ), "chartofaccounts.php", "aa.pcg_type" , "", $param, "", $sortfield, $sortorder );
-	print_liste_field_titre ( $langs->trans ( "Pcgsubtype" ), "chartofaccounts.php", "aa.pcg_subtype", "", $param, "", $sortfield, $sortorder  );
-	print_liste_field_titre ( $langs->trans ( "Active" ), "chartofaccounts.php", "aa.active" , "", $param, "", $sortfield, $sortorder );
+	print_liste_field_titre ( $langs->trans ( "AccountNumber" ), "account.php", "aa.account_number", "", $param, "", $sortfield, $sortorder);
+	print_liste_field_titre ( $langs->trans ( "Label" ), "account.php", "aa.label" , "", $param, "", $sortfield, $sortorder );
+	print_liste_field_titre ( $langs->trans ( "Accountparent" ), "account.php", "aa.account_parent" , "", $param, "", $sortfield, $sortorder );
+	print_liste_field_titre ( $langs->trans ( "Pcgtype" ), "account.php", "aa.pcg_type" , "", $param, "", $sortfield, $sortorder );
+	print_liste_field_titre ( $langs->trans ( "Pcgsubtype" ), "account.php", "aa.pcg_subtype", "", $param, "", $sortfield, $sortorder  );
+	print_liste_field_titre ( $langs->trans ( "Active" ), "account.php", "aa.active" , "", $param, "", $sortfield, $sortorder );
 	print_liste_field_titre ( "&nbsp;" );
 	print '</tr>';
 

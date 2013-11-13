@@ -362,7 +362,7 @@ class modAccountingExpert extends DolibarrModules
 		            'type'=>'left',
 		            'titre'=>'Menuaccount',
 		            'mainmenu'=>'accounting',
-		            'url'=>'/ventilation/admin/chartofaccounts.php',
+		            'url'=>'/ventilation/admin/account.php',
 		            'langs'=>'ventilation@ventilation',
 		            'position'=>143,
 		            'enabled'=>1,
