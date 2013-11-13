@@ -23,21 +23,24 @@
  */
 
 /**
- * \class BookKeeping
+ * \class AccountingAccount
  * \brief Classe permettant la gestion des comptes generaux de compta
  */
 class AccountingAccount {
 	var $db;
 	var $id;
 	var $rowid;
+	var $datec;         // Creation date
 	var $fk_pcg_version;
 	var $pcg_type;
 	var $pcg_subtype;
 	var $account_number;
 	var $account_parent;
 	var $label;
+  var $fk_user_author;
+  var $fk_user_modif;
 	var $active;
-	var $fk_user_author;
+	
 
 
 	/**
@@ -80,14 +83,17 @@ if ($rowid || $account_number) {
 			
 			$this->id = $obj->rowid;
 			$this->rowid = $obj->rowid;
+      $this->datec = $obj->datec;
+      $this->tms = $obj->tms;
 			$this->fk_pcg_version = $obj->fk_pcg_version;
 			$this->pcg_type = $obj->pcg_type;
 			$this->pcg_subtype = $obj->pcg_subtype;
 			$this->account_number = $obj->account_number;
 			$this->account_parent = $obj->account_parent;
 			$this->label = $obj->label;
+      $this->fk_user_author = $obj->fk_user_author;
+      $this->fk_user_modif = $obj->fk_user_modif;
 			$this->active = $obj->active;
-			$this->fk_user_author = $obj->fk_user_author;
 			
 			return $obj->rowid;
 	}
@@ -105,15 +111,14 @@ if ($rowid || $account_number) {
 		$error=0;
 	
 		// Clean parameters
-	
-		if (isset($this->fk_pcg_version)) $this->fk_pcg_version=trim($this->fk_pcg_version);
+    if (isset($this->fk_pcg_version)) $this->fk_pcg_version=trim($this->fk_pcg_version);
 		if (isset($this->pcg_type)) $this->pcg_type=trim($this->pcg_type);
 		if (isset($this->pcg_subtype)) $this->pcg_subtype=trim($this->pcg_subtype);
 		if (isset($this->account_number)) $this->account_number=trim($this->account_number);
 		if (isset($this->account_parent)) $this->account_parent=trim($this->account_parent);
 		if (isset($this->label)) $this->account_parent=trim($this->label);
-		if (isset($this->active)) $this->active=trim($this->active);
 		if (isset($this->fk_user_author)) $this->fk_user_author=trim($this->fk_user_author);
+		if (isset($this->active)) $this->active=trim($this->active);
 		
 	
 	
@@ -122,28 +127,31 @@ if ($rowid || $account_number) {
 	
 		// Insert request
 		$sql = "INSERT INTO ".MAIN_DB_PREFIX."accountingaccount(";
-	
-		$sql.= "fk_pcg_version,";
-		$sql.= "pcg_type,";
-		$sql.= "pcg_subtype,";
-		$sql.= "account_number,";
-		$sql.= "account_parent,";
-		$sql.= "label,";
-		$sql.= "active,";
-		$sql .= " fk_user_author";
+	  
+    $sql.= "datec";
+		$sql.= ", entity";
+		$sql.= ", fk_pcg_version";
+		$sql.= ", pcg_type";
+		$sql.= ", pcg_subtype";
+		$sql.= ", account_number";
+		$sql.= ", account_parent";
+		$sql.= ", label";
+    $sql.= ", fk_user_author";
+		$sql.= ", active";
 			
-	
 		$sql.= ") VALUES (";
 	
-		$sql.= " ".(! isset($this->fk_pcg_version)?'NULL':"'".$this->db->escape($this->fk_pcg_version)."'").",";
-		$sql.= " ".(! isset($this->pcg_type)?'NULL':"'".$this->db->escape($this->pcg_type)."'").",";
-		$sql.= " ".(! isset($this->pcg_subtype)?'NULL':"'".$this->pcg_subtype."'").",";
-		$sql.= " ".(! isset($this->account_number)?'NULL':"'".$this->account_number."'").",";
-		$sql.= " ".(! isset($this->account_parent)?'NULL':"'".$this->db->escape($this->account_parent)."'").",";
-		$sql.= " ".(! isset($this->label)?'NULL':"'".$this->db->escape($this->label)."'").",";
-		$sql.= " ".(! isset($this->active)?'NULL':"'".$this->db->escape($this->active)."'").",";
-	  $sql .= "'" . $user->id . "'";
-	
+    $sql.= " '".$this->db->idate($now)."'";
+		$sql.= ", ".$conf->entity;
+		$sql.= ", ".(! isset($this->fk_pcg_version)?'NULL':"'".$this->db->escape($this->fk_pcg_version)."'");
+		$sql.= ", ".(! isset($this->pcg_type)?'NULL':"'".$this->db->escape($this->pcg_type)."'");
+		$sql.= ", ".(! isset($this->pcg_subtype)?'NULL':"'".$this->pcg_subtype."'");
+		$sql.= ", ".(! isset($this->account_number)?'NULL':"'".$this->account_number."'");
+		$sql.= ", ".(! isset($this->account_parent)?'NULL':"'".$this->db->escape($this->account_parent)."'");
+		$sql.= ", ".(! isset($this->label)?'NULL':"'".$this->db->escape($this->label)."'");
+		$sql.= ", ".$user->id;
+	  $sql.= ", ".(! isset($this->active)?'NULL':"'".$this->db->escape($this->active)."'");
+	  
 		$sql.= ")";
 	
 		$this->db->begin();
@@ -207,8 +215,9 @@ if ($rowid || $account_number) {
 		$sql .= " , account_number = '".$this->account_number."'";
 		$sql .= " , account_parent = '".$this->account_parent."'";
 		$sql .= " , label = ".($this->label?"'".$this->db->escape($this->label)."'":"null");
-		$sql .= " , active = '".$this->active."'";
-		$sql .= " , fk_user_author = ".$user->id;
+    $sql .= " , fk_user_modif = ".$user->id;
+    $sql .= " , active = '".$this->active."'";                                          		
+    
 		$sql .= " WHERE rowid = ".$this->id;
 
 		dol_syslog(get_class($this)."::update sql=".$sql, LOG_DEBUG);
@@ -285,11 +294,49 @@ if ($rowid || $account_number) {
 		}
 	}
 
-	
-			
-	
+  /**
+	 * Information on record
+	 *
+	 * @param	int		$id      Id of record
+	 * @return	void
+	 */
+	function info($id)
+	{
+		$sql = 'SELECT a.rowid, a.datec, a.fk_user_author, a.fk_user_modif, a.tms';
+		$sql.= ' FROM '.MAIN_DB_PREFIX.'accountingaccount as a';
+		$sql.= ' WHERE a.rowid = '.$id;
+
+		dol_syslog(get_class($this).'::info sql='.$sql);
+		$result = $this->db->query($sql);
+
+		if ($result)
+		{
+			if ($this->db->num_rows($result))
+			{
+				$obj = $this->db->fetch_object($result);
+				$this->id = $obj->rowid;
+				if ($obj->fk_user_author)
+				{
+					$cuser = new User($this->db);
+					$cuser->fetch($obj->fk_user_author);
+					$this->user_creation = $cuser;
+				}
+				if ($obj->fk_user_modif)
+				{
+					$muser = new User($this->db);
+					$muser->fetch($obj->fk_user_modif);
+					$this->user_modification = $muser;
+				}
+				$this->date_creation     = $this->db->jdate($obj->datec);
+				$this->date_modification = $this->db->jdate($obj->tms);
 			}
-
-
-
+			$this->db->free($result);
+		}
+		else
+		{
+			dol_print_error($this->db);
+		}
+	}	
+			
+}
 ?>

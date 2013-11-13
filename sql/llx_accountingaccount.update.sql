@@ -1,5 +1,6 @@
 -- ============================================================================
--- Copyright (C) 2013 Olivier Geffroy  <jeff@jeffinfo.com>
+-- Copyright (C) 2013 Olivier Geffroy    <jeff@jeffinfo.com>
+-- Copyright (C) 2013 Alexandre Spangaro <alexandre.spangaro@gmail.com>
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -16,5 +17,9 @@
 --
 -- ============================================================================
 
-ALTER TABLE llx_accountingaccount add column fk_user_author int(11) DEFAULT NULL
+ALTER TABLE llx_accountingaccount add column entity integer DEFAULT 1 NOT NULL AFTER rowid;
+ALTER TABLE llx_accountingaccount add column datec datetime NOT NULL AFTER entity;
+ALTER TABLE llx_accountingaccount add column tms timestamp DEFAULT NULL AFTER datec;
+ALTER TABLE llx_accountingaccount add column fk_user_author integer DEFAULT NULL AFTER label;
+ALTER TABLE llx_accountingaccount add column fk_user_modif integer DEFAULT NULL AFTER fk_user_author;
 
