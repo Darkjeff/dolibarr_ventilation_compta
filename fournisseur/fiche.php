@@ -39,9 +39,11 @@ $langs->load("ventilation@ventilation");
 
 $mesg = '';
 
-if (!$user->rights->compta->ventilation->creer) accessforbidden();
+// Security check
+if ($user->societe_id > 0) accessforbidden();
+if (!$user->rights->accountingex->access) accessforbidden();
 
-if ($_POST["action"] == 'ventil' && $user->rights->compta->ventilation->creer)
+if ($_POST["action"] == 'ventil' && $user->rights->accountingex->access)
 {
   $sql = " UPDATE ".MAIN_DB_PREFIX."facture_fourn_det";
   $sql .= " SET fk_code_ventilation = ".$_POST["codeventil"];
