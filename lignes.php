@@ -31,6 +31,7 @@ if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.p
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 
+dol_include_once ( "/ventilation/class/html.formventilation.class.php");
 require_once(DOL_DOCUMENT_ROOT."/compta/facture/class/facture.class.php");
 require_once(DOL_DOCUMENT_ROOT."/product/class/product.class.php");
 
@@ -58,7 +59,7 @@ else
 	$typeid=$_REQUEST['typeid'];
 }
 
-
+$formventilation = new FormVentilation ( $db );
 
 llxHeader('');
 
@@ -83,6 +84,18 @@ if (strlen(trim($_GET["search_facture"])))
 {
 	$sql .= " AND f.facnumber like '%".$_GET["search_facture"]."%'";
 }
+if (strlen(trim($_GET["search_ref"])))
+{
+	$sql .= " AND p.ref like '%".$_GET["search_ref"]."%'";
+}
+if (strlen(trim($_GET["search_label"])))
+{
+	$sql .= " AND p.label like '%".$_GET["search_label"]."%'";
+}
+if (strlen(trim($_GET["search_account"])))
+{
+	$sql .= " AND aa.account_number like '%".$_GET["search_account"]."%'";
+}
 if ($typeid) {
     $sql .= " AND c.intitule=".$typeid;
 }
@@ -102,6 +115,11 @@ if ($result)
 
 	print '<form method="GET" action="lignes.php">';
 	print '<table class="noborder" width="100%">';
+	
+  print '<div class="inline-block divButAction"><input type="submit" class="butAction" value="' . $langs->trans ( "ChangeAccount" ) . '" /></div>';
+
+	print $formventilation->select_account_parent ( 'account_parent', GETPOST ( 'account_parent' ) );
+	
 	print '<tr class="liste_titre"><td>'.$langs->trans("Invoice").'</td>';
 	print '<td>'.$langs->trans("Ref").'</td>';
 	print '<td>'.$langs->trans("Label").'</td>';
@@ -112,11 +130,11 @@ if ($result)
 	print "</tr>\n";
 
 	print '<tr class="liste_titre"><td><input name="search_facture" size="8" value="'.$_GET["search_facture"].'"></td>';
-	print '<td>&nbsp;</td>';
+	print '<td class="liste_titre"><input type="text" class="flat" size="15" name="search_ref" value="' . GETPOST ( "search_ref" ) . '"></td>';
+	print '<td class="liste_titre"><input type="text" class="flat" size="15" name="search_label" value="' . GETPOST ( "search_label" ) . '"></td>';
 	print '<td align="right">&nbsp;</td>';
 	print '<td align="right">&nbsp;</td>';
-	print '<td align="center">&nbsp;</td>';
-	print '<td align="center">&nbsp;</td>';
+	print '<td class="liste_titre"><input type="text" class="flat" size="15" name="search_account" value="' . GETPOST ( "search_account" ) . '"></td>';
 	print '<td align="center">&nbsp;</td>';
 	print '<td align="right">';
 	print '<input type="image" class="liste_titre" name="button_search" src="'.DOL_URL_ROOT.'/theme/'.$conf->theme.'/img/search.png" alt="'.$langs->trans("Search").'">';
