@@ -61,6 +61,54 @@ else
 
 $formventilation = new FormVentilation ( $db );
 
+// change account
+
+if ($action == 'changeaccount') {
+	$error = 0;
+	
+	$db->begin ();
+	
+	$sql1 = "UPDATE " . MAIN_DB_PREFIX . "facturedet as l";
+	$sql1 .= " SET l.fk_code_ventilation= 1";
+	$sql1 .= " FROM ".MAIN_DB_PREFIX."facture as f";
+  $sql1 .= " , ".MAIN_DB_PREFIX."accountingaccount as aa";
+  $sql1 .= " , ".MAIN_DB_PREFIX."facturedet as l";
+  $sql1 .= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = l.fk_product";
+  $sql1 .= " WHERE f.rowid = l.fk_facture AND f.fk_statut >= 1 AND l.fk_code_ventilation <> 0 ";
+  $sql1 .= " AND aa.rowid = l.fk_code_ventilation";
+if (strlen(trim($_GET["search_facture"])))
+{
+	$sql1 .= " AND f.facnumber like '%".$_GET["search_facture"]."%'";
+}
+if (strlen(trim($_GET["search_ref"])))
+{
+	$sql1 .= " AND p.ref like '%".$_GET["search_ref"]."%'";
+}
+if (strlen(trim($_GET["search_label"])))
+{
+	$sql1 .= " AND p.label like '%".$_GET["search_label"]."%'";
+}
+if (strlen(trim($_GET["search_account"])))
+{
+	$sql1 .= " AND aa.account_number like '%".$_GET["search_account"]."%'";
+}
+		$resql1 = $db->query ( $sql1 );
+			if (! $resql1) {
+				$error ++;
+				setEventMessage ( $db->lasterror (), 'errors' );
+			}
+						
+				$db->commit ();
+				
+				setEventMessage ( 'compte change', 'mesgs' );
+
+	} else {
+			$db->rollback ();
+			setEventMessage ( $db->lasterror (), 'errors' );
+		}
+
+
+
 llxHeader('');
 
 /*
@@ -116,8 +164,9 @@ if ($result)
 	print '<form method="GET" action="lignes.php">';
 	print '<table class="noborder" width="100%">';
 	
-  print '<div class="inline-block divButAction"><input type="submit" class="butAction" value="' . $langs->trans ( "ChangeAccount" ) . '" /></div>';
-
+	print '<a class="butAction" href="' . $_SERVER ['PHP_SELF'] . '?action=changeaccount">' . $langs->trans ( "ChangeAccount" ) . '</a>';
+  //print '<div class="inline-block divButAction"><input type="submit" class="butAction" value="' . $langs->trans ( "ChangeAccount" ) . '" /></div>';
+  print '<tr class="liste_titre">';
 	print $formventilation->select_account_parent ( 'account_parent', GETPOST ( 'account_parent' ) );
 	
 	print '<tr class="liste_titre"><td>'.$langs->trans("Invoice").'</td>';

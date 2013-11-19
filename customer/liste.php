@@ -154,7 +154,7 @@ if ($result)
 	$product_static=new Product($db);
   	$form = new Form($db);
 
-	print '<form action="liste2.php" method="post">'."\n";
+	print '<form action="liste.php" method="post">'."\n";
 	print '<input type="hidden" name="action" value="ventil">';
 
 	$var=True;
