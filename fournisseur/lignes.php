@@ -42,8 +42,10 @@ $langs->load("compta");
 $langs->load("ventilation@ventilation");
 
 // Security check
-if ($user->societe_id > 0) accessforbidden();
-if (!$user->rights->accountingex->access) accessforbidden();
+if ($user->societe_id > 0)
+	accessforbidden ();
+if (! $user->rights->accountingex->access)
+	accessforbidden ();
 
 if (empty($_REQUEST['typeid']))
 {
@@ -61,6 +63,35 @@ else
 }
 
 $formventilation = new FormVentilation ( $db );
+
+$changeaccount = GETPOST ( 'changeaccount' );
+
+$is_search = GETPOST ( 'button_search_x' );
+
+if (is_array ( $changeaccount ) && count ( $changeaccount ) > 0 && empty ( $is_search )) {
+	$error = 0;
+	
+	$db->begin ();
+	
+	$sql1 = "UPDATE " . MAIN_DB_PREFIX . "facture_fourn_det as l";
+	$sql1 .= " SET l.fk_code_ventilation=" . GETPOST ( 'account_parent' );
+	$sql1 .= ' WHERE l.rowid IN (' . implode ( ',', $changeaccount ) . ')';
+	
+	dol_syslog ( 'htdocs/compta/ventilation/fournisseur/lignes.php::changeaccount sql= ' . $sql1 );
+	$resql1 = $db->query ( $sql1 );
+	if (! $resql1) {
+		$error ++;
+		setEventMessage ( $db->lasterror (), 'errors' );
+	}
+	if (! $error) {
+		$db->commit ();
+		setEventMessage ( $langs->trans ( 'Save' ), 'mesgs' );
+	} else {
+		$db->rollback ();
+		setEventMessage ( $db->lasterror (), 'errors' );
+	}
+}
+
 
 llxHeader('');
 
@@ -121,8 +152,7 @@ if ($result)
   
   print '<div class="inline-block divButAction"><input type="submit" class="butAction" value="' . $langs->trans ( "ChangeAccount" ) . '" /></div>';
 
-	print $formventilation->select_account_parent ( 'account_parent', GETPOST ( 'account_parent' ) );
-  
+	print $formventilation->select_account_parent  ( GETPOST ( 'account_parent' ), 'account_parent', 1 );
   
   print '<tr class="liste_titre"><td>'.$langs->trans("Invoice").'</td>';
   print '<td>'.$langs->trans("Ref").'</td>';
@@ -180,6 +210,8 @@ if ($result)
 		  print '<td><a href="./fiche.php?id='.$objp->rowid.'">';
 		  print img_edit();
 		  print '</a></td>';
+      
+      print '<td align="center"><input type="checkbox" name="changeaccount[]" value="' . $objp->rowid . '"/></td>';
 
       print "</tr>";
       $i++;
