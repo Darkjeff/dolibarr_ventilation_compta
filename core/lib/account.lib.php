@@ -35,7 +35,7 @@ function account_prepare_head($object)
 	$h = 0;
 	$head = array();
 
-	$head[$h][0] = DOL_URL_ROOT . '/ventilation/admin/fiche.php?id=' . $object->id;
+	$head[$h][0] = dol_buildpath('/ventilation/admin/fiche.php',1).'?id=' . $object->id;
 	$head[$h][1] = $langs->trans("Card");
 	$head[$h][2] = 'card';
 	$h++;
@@ -52,8 +52,7 @@ function account_prepare_head($object)
 	$head[$h][2] = 'documents';
 	$h++;
   */
-
-	$head[$h][0] = DOL_URL_ROOT . '/ventilation/admin/info.php?id=' . $object->id;
+	$head[$h][0] = dol_buildpath('/ventilation/admin/info.php',1).'?id=' . $object->id;
 	$head[$h][1] = $langs->trans("Info");
 	$head[$h][2] = 'info';
 	$h++;

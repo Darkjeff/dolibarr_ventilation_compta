@@ -95,9 +95,11 @@ class FormVentilation extends Form {
 	
 		$out = '';
 	
-		$sql = "SELECT DISTINCT account_number ";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "accountingaccount ";
-		$sql .= " ORDER BY account_number";
+		$sql = "SELECT DISTINCT aa.account_number, aa.label, aa.rowid";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "accountingaccount as aa";
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "accounting_system   as actsystem ON aa.fk_pcg_version=actsystem.pcg_version ";
+		$sql .= " AND actsystem.rowid=".$conf->global->CHARTOFACCOUNTS;
+		$sql .= " ORDER BY aa.account_number";
 	
 		dol_syslog ( get_class ( $this ) . "::select_account_parent sql=" . $sql, LOG_DEBUG );
 		$resql = $this->db->query ( $sql );
@@ -114,12 +116,12 @@ class FormVentilation extends Form {
 			if ($num) {
 				while ( $i < $num ) {
 					$obj = $this->db->fetch_object ( $resql );
-					$label = $obj->account_number;
+					$label = $obj->account_number.'-'.$obj->label;
 	
 					if (($selectid != '') && $selectid == $obj->account_number) {
-						$out .= '<option value="' . $obj->account_number . '" selected="selected">' . $label . '</option>';
+						$out .= '<option value="' . $obj->rowid . '" selected="selected">' . $label . '</option>';
 					} else {
-						$out .= '<option value="' . $obj->account_number . '">' . $label . '</option>';
+						$out .= '<option value="' . $obj->rowid . '">' . $label . '</option>';
 					}
 					$i ++;
 				}

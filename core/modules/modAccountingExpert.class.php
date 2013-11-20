@@ -53,7 +53,7 @@ class modAccountingExpert extends DolibarrModules
 
 		$this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
 		$this->special = 0;
-		$this->picto = 'accounting@ventilation';
+		$this->picto = 'ventilation@ventilation';
 		
 		// Defined if the directory /mymodule/inc/triggers/ contains triggers or not
 		//$this->triggers = 1;
@@ -67,7 +67,7 @@ class modAccountingExpert extends DolibarrModules
 		// Dependencies
 		$this->depends = array();		// List of modules id that must be enabled if this module is enabled
 		$this->requiredby = array();	// List of modules id to disable if this one is disabled
-    $this->conflictwith = array("modAccounting"); // List of modules are in conflict with this module
+    	$this->conflictwith = array("modAccounting"); // List of modules are in conflict with this module
 		$this->phpmin = array(5,2);					// Minimum version of PHP required by module
 		$this->need_dolibarr_version = array(3,3);	// Minimum version of Dolibarr required by module
 		$this->langfiles = array("ventilation@ventilation");
@@ -81,18 +81,18 @@ class modAccountingExpert extends DolibarrModules
 		$this->const[6] = array("VENTILATION_SOCIAL_JOURNAL","chaine","SOC");    
 		$this->const[7] = array("VENTILATION_CASH_JOURNAL","chaine","CAI");    
 		$this->const[8] = array("VENTILATION_MISCELLANEOUS_JOURNAL","chaine","OD");
-    $this->const[9] = array("VENTILATION_ACCOUNT_TRANSFER_CASH","chaine","58000000");
+    	$this->const[9] = array("VENTILATION_ACCOUNT_TRANSFER_CASH","chaine","58000000");
     		
 		// Boxes
 		$this->boxes = array();
 
 		// Permissions
-    $this->rights_class = 'accountingex';
+    	$this->rights_class = 'accountingex';
 
 		$this->rights = array();		// Permission array used by this module
 		$r=0;
 
-    $this->rights[$r][0] = 62001; 				// Permission id (must not be already used)
+    	$this->rights[$r][0] = 62001; 				// Permission id (must not be already used)
 		$this->rights[$r][1] = 'Acces_module';	// Permission label
 		$this->rights[$r][3] = 0; 					// Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'access';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
@@ -106,7 +106,7 @@ class modAccountingExpert extends DolibarrModules
 		$this->rights[$r][5] = '';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
 		$r++;
     
-    $this->rights[$r][0] = 62010; 				// Permission id (must not be already used)
+    	$this->rights[$r][0] = 62010; 				// Permission id (must not be already used)
 		$this->rights[$r][1] = 'Développement';	// Permission label
 		$this->rights[$r][3] = 0; 					// Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'dev';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
