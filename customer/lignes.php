@@ -120,6 +120,9 @@ if (strlen ( trim ( GETPOST ( "search_ref" ) ) )) {
 if (strlen ( trim ( GETPOST ( "search_label" ) ) )) {
 	$sql .= " AND p.label like '%" . GETPOST ( "search_label" ) . "%'";
 }
+if (strlen ( trim ( GETPOST ( "search_desc" ) ) )) {
+	$sql .= " AND l.description like '%" . GETPOST ( "search_desc" ) . "%'";
+}
 if (strlen ( trim ( GETPOST ( "search_account" ) ) )) {
 	$sql .= " AND aa.account_number like '%" . GETPOST ( "search_account" ) . "%'";
 }
@@ -159,7 +162,7 @@ if ($result) {
 	print '<tr class="liste_titre"><td><input name="search_facture" size="8" value="' . GETPOST ( "search_facture" ) . '"></td>';
 	print '<td class="liste_titre"><input type="text" class="flat" size="15" name="search_ref" value="' . GETPOST ( "search_ref" ) . '"></td>';
 	print '<td class="liste_titre"><input type="text" class="flat" size="15" name="search_label" value="' . GETPOST ( "search_label" ) . '"></td>';
-	print '<td align="right">&nbsp;</td>';
+	print '<td class="liste_titre"><input type="text" class="flat" size="15" name="search_desc" value="' . GETPOST ( "search_desc" ) . '"></td>';
 	print '<td align="right">&nbsp;</td>';
 	print '<td class="liste_titre"><input type="text" class="flat" size="15" name="search_account" value="' . GETPOST ( "search_account" ) . '"></td>';
 	print '<td align="center">&nbsp;</td>';
