@@ -7,7 +7,7 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -16,17 +16,16 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
-
 /**
- * 		\file       htdocs/compta/ventilation/liste.php
- * 		\ingroup    compta
- * 		\brief      Page de ventilation des lignes de facture
+ * 		\file       accountingex/customer/liste.php
+ * 		\ingroup    Accounting Expert
+ * 		\brief      Page de ventilation des lignes de facture clients
  */
+
 $res=@include("../main.inc.php");
 if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
 if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.php");
@@ -40,7 +39,7 @@ require_once(DOL_DOCUMENT_ROOT."/product/class/product.class.php");
 $langs->load("compta");
 $langs->load("bills");
 $langs->load("main");
-$langs->load("ventilation@ventilation");
+$langs->load("accountingex@accountingex");
 
 // Security check
 if ($user->societe_id > 0) accessforbidden();
@@ -93,9 +92,11 @@ if($_POST["action"] == 'ventil')
  * Liste des comptes
 */
 
-$sqlCompte = "SELECT rowid, account_number, label";
-$sqlCompte .= " FROM ".MAIN_DB_PREFIX."accountingaccount";
-$sqlCompte .= " ORDER BY account_number ASC";
+$sqlCompte = "SELECT a.rowid, a.account_number, a.label, a.fk_pcg_version";
+$sqlCompte .= " , s.rowid, s.pcg_version";
+$sqlCompte .= " FROM ".MAIN_DB_PREFIX."accountingaccount as a, ".MAIN_DB_PREFIX."accounting_system as s";
+$sqlCompte .= " WHERE a.fk_pcg_version = s.pcg_version AND ".$conf->global->CHARTOFACCOUNTS."=s.rowid";
+$sqlCompte .= " ORDER BY a.account_number ASC";
 
 $resultCompte = $db->query($sqlCompte);
 $cgs = array();
@@ -194,6 +195,7 @@ if ($result)
 		print '<td align="center">';
 		print $form->selectarray("codeventil[]",$cgs, $cgn[$objp->code_sell]);
 		print '</td>';
+        
 		//Colonne choix ligne a ventiler
 		print '<td align="center">';
 		print '<input type="checkbox" name="mesCasesCochees[]" value="'.$objp->rowid."_".$i.'"'.($objp->code_sell?"checked":"").'/>';

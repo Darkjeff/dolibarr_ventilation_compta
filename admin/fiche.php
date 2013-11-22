@@ -21,9 +21,9 @@
  */
 
 /**
- * \file htdocs/accountingaccount/fiche.php
- * \ingroup Accounting Expert
- * \brief Page fiche accounting
+ * \file      accountingex/admin/fiche.php
+ * \ingroup   Accounting Expert
+ * \brief     Page fiche accounting
  */
 
 $res = @include ("../main.inc.php");
@@ -37,13 +37,13 @@ if (! $res)
 	die ( "Include of main fails" );
 	
 	// Class
-dol_include_once ( "/ventilation/core/lib/account.lib.php" );
-dol_include_once ( "/ventilation/class/accountingaccount.class.php" );
-dol_include_once ( "/ventilation/class/html.formventilation.class.php" );
+dol_include_once ( "/accountingex/core/lib/account.lib.php" );
+dol_include_once ( "/accountingex/class/accountingaccount.class.php" );
+dol_include_once ( "/accountingex/class/html.formventilation.class.php" );
 
 // langs
 $langs->load ( "bills" );
-$langs->load ( "ventilation@ventilation" );
+$langs->load ( "accountingex@accountingex" );
 
 $mesg = '';
 $action = GETPOST ( 'action' );
@@ -60,7 +60,7 @@ $accounting = new AccountingAccount ( $db );
 
 // action
 if ($action == 'add') {
-	$accounting->fk_pcg_version = $conf->global->ACCOUNTING_PCG_VERSION;
+	$accounting->pcg_version = $conf->global->CHARTOFACCOUNTS;
 	$accounting->pcg_type = GETPOST ( "pcgType" );
 	$accounting->pcg_subtype = GETPOST ( "pcgSubType" );
 	$accounting->account_number = GETPOST ( "AccountNumber" );
@@ -82,13 +82,13 @@ if ($action == 'add') {
 			$action = "create";
 		}
 	}
-	Header ( "Location: chartofaccounts.php" );
+	Header ( "Location: account.php" );
 } // Update record
 else if ($action == 'edit') {
 	if (! GETPOST ( 'cancel', 'alpha' )) {
 		$result = $accounting->fetch ( $id );
 		
-		$accounting->fk_pcg_version = $conf->global->ACCOUNTING_PCG_VERSION;
+		$accounting->fk_pcg_version = $conf->global->CHARTOFACCOUNTS;
 		$accounting->pcg_type = GETPOST ( 'pcgType' );
 		$accounting->pcg_subtype = GETPOST ( 'pcgSubType' );
 		$accounting->account_number = GETPOST ( 'AccountNumber', 'int' );
@@ -198,7 +198,7 @@ if ($action == 'create') {
 		
 		$head = account_prepare_head ( $accounting );
 		
-		dol_fiche_head ( $head, 'card', $langs->trans ( "AccountCard" ), 0, 'accounting@ventilation' );
+		dol_fiche_head ( $head, 'card', $langs->trans ( "AccountCard" ), 0, 'billr' );
 		
 		if ($action == 'update') {
 			// WYSIWYG Editor
@@ -302,8 +302,7 @@ if ($action == 'create') {
 			} else {
 				print '<a class="butActionRefused" href="#" title="' . dol_escape_htmltag ( $langs->trans ( "NotAllowed" ) ) . '">' . $langs->trans ( 'Modify' ) . '</a>';
 			}
-			if ($user->rights->accountingex->admin) 			// Mauvaise permission en attendant d'écrire la fonction
-			{
+			if ($user->rights->accountingex->admin) {
 				print '<a class="butActionDelete" href="' . $_SERVER ["PHP_SELF"] . '?action=delete&id=' . $id . '">' . $langs->trans ( 'Delete' ) . '</a>';
 			} else {
 				print '<a class="butActionRefused" href="#" title="' . dol_escape_htmltag ( $langs->trans ( "NotAllowed" ) ) . '">' . $langs->trans ( 'Delete' ) . '</a>';

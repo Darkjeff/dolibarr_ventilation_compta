@@ -17,7 +17,7 @@
  */
 
 /**
- *    \file       ventilation/admin/fiscalyear.php
+ *    \file       accountingex/admin/fiscalyear.php
  *		\ingroup    Accounting Expert
  *		\brief      Page to setup fiscal year for accountancy
  */
@@ -30,12 +30,12 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 
 require_once DOL_DOCUMENT_ROOT . '/core/lib/date.lib.php';
-dol_include_once ( "/ventilation/class/fiscalyear.class.php");
+dol_include_once ( "/accountingex/class/fiscalyear.class.php");
 
 $langs->load("companies");
 $langs->load("admin");
 $langs->load("compta");
-$langs->load("ventilation@ventilation");
+$langs->load("accountingex@accountingex");
 
 // Securite accès client
 if ($user->societe_id > 0) accessforbidden();

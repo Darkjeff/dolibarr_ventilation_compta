@@ -23,7 +23,7 @@
 
 
 /**
- * 		\file       htdocs/compta/ventilation/liste.php
+ * 		\file       htdocs/compta/accountingex/liste.php
  * 		\ingroup    compta
  * 		\brief      Page IMPORT COMPTE COMPTABLE
  */
@@ -34,15 +34,15 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 
 // Class
-dol_include_once ( "/ventilation/core/lib/account.lib.php");
-dol_include_once ( "/ventilation/class/accountingaccount.class.php");
-dol_include_once ( "/ventilation/class/html.formventilation.class.php");
+dol_include_once ( "/accountingex/core/lib/account.lib.php");
+dol_include_once ( "/accountingex/class/accountingaccount.class.php");
+dol_include_once ( "/accountingex/class/html.formventilation.class.php");
 
 // langs
 $langs->load("compta");
 $langs->load("bills");
 $langs->load("main");
-$langs->load("ventilation@ventilation");
+$langs->load("accountingex@accountingex");
 
 // Security check
 if ($user->societe_id > 0) accessforbidden();

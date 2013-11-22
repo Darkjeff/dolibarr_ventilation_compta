@@ -6,7 +6,7 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -17,14 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * $Id: liste.php,v 1.12 2011/07/31 22:23:31 eldy Exp $
  */
 
 /**
- * \file htdocs/compta/param/comptes/liste.php
- * \ingroup compta
- * \brief Onglet de gestion de parametrages des ventilations
- * \version $Revision: 1.12 $
+ * \file    accountingex/bookkeeping/liste.php
+ * \ingroup Accounting Expert
+ * \brief   Onglet de gestion de parametrages des ventilations
  */
 
 // Dolibarr environment
@@ -33,8 +31,8 @@ if (! $res && file_exists ( "../main.inc.php" )) $res = @include ("../main.inc.p
 if (! $res && file_exists ( "../../main.inc.php" )) $res = @include ("../../main.inc.php");
 if (! $res && file_exists ( "../../../main.inc.php" )) $res = @include ("../../../main.inc.php");
 
-dol_include_once ( "/ventilation/class/html.formventilation.class.php");
-dol_include_once ( "/ventilation/class/bookkeeping.class.php");
+dol_include_once ( "/accountingex/class/html.formventilation.class.php");
+dol_include_once ( "/accountingex/class/bookkeeping.class.php");
 
 if (! $res) die ( "Include of main fails" );
 

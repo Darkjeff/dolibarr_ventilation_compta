@@ -1,11 +1,13 @@
 <?PHP
 /* Copyright (C) 2004-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2005      Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2013 Florian Henry	  <florian.henry@open-concept.pro>
+ * Copyright (C) 2013      Florian Henry	      <florian.henry@open-concept.pro>
+ * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -16,15 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * $Id: liste.php,v 1.12 2011/07/31 22:23:31 eldy Exp $
  */
 
 /**
-        \file       htdocs/compta/param/comptes/liste.php
-        \ingroup    compta
-        \brief      Onglet de gestion de parametrages des ventilations
-        \version    $Revision: 1.12 $
-*/
+ * \file       accountingex/bookkeeping/listebyyear.php
+ * \ingroup    Accounting Expert
+ * \brief      Grand livre par année
+ */
 
 // Dolibarr environment
 $res=@include("../main.inc.php");
@@ -35,7 +35,7 @@ if (! $res) die("Include of main fails");
 
 require_once(DOL_DOCUMENT_ROOT."/core/lib/date.lib.php");
 
-
+$langs->load("accountingex@accountingex");
 
 $year=$_GET["year"];
 if ($year == 0 )
@@ -77,7 +77,7 @@ if ($resql)
 
  
 
-  print '<table class="liste">';
+  print '<table class="liste" width="100%">';
   print '<tr class="liste_titre">';
   print_liste_field_titre($langs->trans("Doctype"));
   print_liste_field_titre($langs->trans("Docdate"));
@@ -108,15 +108,11 @@ if ($resql)
       print '<td>'.$obj->numero_compte.'</td>';
       print '<td>'.$obj->code_tiers.'</td>';
       print '<td>'.$obj->label_compte.'</td>';
-      print '<td>'.$obj->debit.'</td>';
-      print '<td>'.$obj->credit.'</td>';
-      print '<td>'.$obj->montant.'</td>';
-      print '<td>'.$obj->sens.'</td>';
+      print '<td align="right">'.$obj->debit.'</td>';
+      print '<td align="right">'.$obj->credit.'</td>';
+      print '<td align="right">'.$obj->montant.'</td>';
+      print '<td align="center">'.$obj->sens.'</td>';
       
-      /*
-      print '<td align="right" width="100">';
-      print '</td>';
-      */
       print "</tr>\n";
       $i++;
     }
@@ -130,5 +126,5 @@ else
 
 $db->close();
 
-llxFooter("<em>Derni&egrave;re modification $Date: 2011/07/31 22:23:31 $ r&eacute;vision $Revision: 1.12 $</em>");
+llxFooter();
 ?>

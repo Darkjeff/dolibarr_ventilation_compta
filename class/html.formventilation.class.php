@@ -1,26 +1,26 @@
 <?php
 /*
- * Copyright (C) 2013  Florian Henry   <florian.henry@open-concept.pro>
- * 
-*
-*
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Copyright (C) 2013  Florian Henry        <florian.henry@open-concept.pro>
+ * Copyright (C) 2013  Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013  Alexandre Spangaro   <alexandre.spangaro@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
- * \file ventilation/compte/class/html.formvenitlation.class.php
- * \brief Class for HML form
+ * \file    accountingex/class/html.formvenitlation.class.php
+ * \brief   Class for HML form
  */
 class FormVentilation extends Form {
 	var $db;
@@ -95,10 +95,10 @@ class FormVentilation extends Form {
 	
 		$out = '';
 	
-		$sql = "SELECT DISTINCT aa.account_number, aa.label, aa.rowid";
+		$sql = "SELECT DISTINCT aa.account_number, aa.label, aa.rowid, aa.fk_pcg_version";
 		$sql .= " FROM " . MAIN_DB_PREFIX . "accountingaccount as aa";
-		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "accounting_system   as actsystem ON aa.fk_pcg_version=actsystem.pcg_version ";
-		$sql .= " AND actsystem.rowid=".$conf->global->CHARTOFACCOUNTS;
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "accounting_system as asy ON aa.fk_pcg_version = asy.pcg_version";
+		$sql .= " AND asy.rowid = ".$conf->global->CHARTOFACCOUNTS;
 		$sql .= " ORDER BY aa.account_number";
 	
 		dol_syslog ( get_class ( $this ) . "::select_account_parent sql=" . $sql, LOG_DEBUG );
@@ -218,10 +218,5 @@ class FormVentilation extends Form {
 		$this->db->free ( $resql );
 		return $out;
 	}
-
-	
-	
-	
-	
 	
 }

@@ -21,10 +21,9 @@
  */
 
 /**
-        \file       htdocs/compta/param/comptes/liste.php
+        \file       accountingex/admin/thirdpartyaccount.php
         \ingroup    compta
         \brief      Onglet de gestion de parametrages des ventilations
-        \version    $Revision: 1.12 $
 */
 
 // Dolibarr environment
@@ -40,7 +39,7 @@ require_once (DOL_DOCUMENT_ROOT . "/core/lib/date.lib.php");
 $langs->load("companies");
 $langs->load("compta");
 $langs->load("main");
-$langs->load("ventilation@ventilation");
+$langs->load("accountingex@accountingex");
 
 // Security check
 if ($user->societe_id > 0) accessforbidden();

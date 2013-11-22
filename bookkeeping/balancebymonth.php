@@ -1,11 +1,12 @@
 <?php
 /* Copyright (C) 2001-2006 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2004-2005 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2013 Olivier Geffroy  <jeff@jeffinfo.com>
+ * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -14,16 +15,16 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 /**
- *    \file       htdocs/custom/ventilation/index.php
- *    \ingroup    ventilation compta
- *    \brief      Page accueil ventilation
+ *    \file       accountingex/bookkeeping/balancebymonth.php
+ *    \ingroup    Accounting Expert
+ *    \brief      Balance par mois
  */
+ 
 $res=@include("../main.inc.php");
 if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
 if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.php");
@@ -32,10 +33,11 @@ if (! $res) die("Include of main fails");
 
 require_once(DOL_DOCUMENT_ROOT."/core/lib/date.lib.php");
 
+$langs->load("main");
 $langs->load("compta");
 $langs->load("bills");
 $langs->load("other");
-$langs->load("ventilation@ventilation");
+$langs->load("accountingex@accountingex");
 
 $year=$_GET["year"];
 if ($year == 0 )
@@ -56,14 +58,7 @@ llxHeader('',$langs->trans("CustomersVentilation"));
 $textprevyear="<a href=\"balancebymonth.php?year=" . ($year_current-1) . "\">".img_previous()."</a>";
 $textnextyear=" <a href=\"balancebymonth.php?year=" . ($year_current+1) . "\">".img_next()."</a>";
 
-
 print_fiche_titre("Balance $textprevyear ".$langs->trans("Year")." $year_start $textnextyear");
-
-
-
-print '<table border="0" width="100%" class="notopnoleftnoright">';
-
-print '<tr><td valign="top" width="30%" class="notopnoleft">';
 
 $sql = "SELECT count(*) FROM ".MAIN_DB_PREFIX."facturedet as fd";
 $sql.= " , ".MAIN_DB_PREFIX."facture as f";
@@ -85,14 +80,7 @@ $y = $year_current ;
 $var=true;
 
 print '<table class="noborder" width="100%">';
-print "</table>\n";
-
-print '</td><td valign="top" width="70%" class="notopnoleftnoright"></td>';
-
-print '</tr><tr><td colspan=2>';
-
-print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre"><td width=150>'.$langs->trans("Intitule").'</td><td align="center">Janvier</td><td align="center">Fevrier</td><td align="center">Mars</td><td align="center">Avril</td><td align="center">Mai</td><td align="center">Juin</td><td align="center">Juillet</td><td align="center">Aout</td><td align="center">Septembre</td><td align="center">Octobre</td><td align="center">Novembre</td><td align="center">Decembre</td><td align="center"><b>Total</b></td></tr>';
+print '<tr class="liste_titre"><td width=150>'.$langs->trans("Intitule").'</td><td align="center">'.$langs->trans("JanuaryMin").'</td><td align="center">'.$langs->trans("FebruaryMin").'</td><td align="center">'.$langs->trans("MarchMin").'</td><td align="center">'.$langs->trans("AprilMin").'</td><td align="center">'.$langs->trans("MayMin").'</td><td align="center">'.$langs->trans("JuneMin").'</td><td align="center">'.$langs->trans("JulyMin").'</td><td align="center">'.$langs->trans("AugustMin").'</td><td align="center">'.$langs->trans("SeptemberMin").'</td><td align="center">'.$langs->trans("OctoberMin").'</td><td align="center">'.$langs->trans("NovemberMin").'</td><td align="center">'.$langs->trans("DecemberMin").'</td><td align="center"><b>Total</b></td></tr>';
 
 $sql = "SELECT bk.numero_compte AS 'compte',";
 $sql .= "  ROUND(SUM(IF(MONTH(bk.doc_date)=1,bk.montant,0)),2) AS 'Janvier',";
@@ -121,24 +109,25 @@ if ($resql)
 
   while ($i < $num)
     {
-
+      
       $row = $db->fetch_row($resql);
 
-      print '<tr><td>'.$row[0].'</td>';
-	print '<td align="right">'.$row[1].'</td>';
-	print '<td align="right">'.$row[2].'</td>';
-	print '<td align="right">'.$row[3].'</td>';
-	print '<td align="right">'.$row[4].'</td>';
-	print '<td align="right">'.$row[5].'</td>';
-	print '<td align="right">'.$row[6].'</td>';
-	print '<td align="right">'.$row[7].'</td>';
-	print '<td align="right">'.$row[8].'</td>';
-	print '<td align="right">'.$row[9].'</td>';
-	print '<td align="right">'.$row[10].'</td>';
-	print '<td align="right">'.$row[11].'</td>';
-	print '<td align="right">'.$row[12].'</td>';
-	print '<td align="right"><b>'.$row[13].'</b></td>';
-	print '</tr>';
+      print '<tr><td width="14%">'.$row[0].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[1].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[2].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[3].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[4].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[5].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[6].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[7].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[8].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[9].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[10].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[11].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[12].'</td>';
+	    print '<td align="right" width="8%"><b>'.$row[13].'</b></td>';
+	    print '</tr>';
+      
       $i++;
     }
   $db->free($resql);
@@ -156,10 +145,9 @@ print '</td><td valign="top" width="70%" class="notopnoleftnoright"></td>';
 print '</tr><tr><td colspan=2>';
 
 print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre"><td width=150>Total</td><td align="center">Janvier</td><td align="center">Fevrier</td><td align="center">Mars</td><td align="center">Avril</td><td align="center">Mai</td><td align="center">Juin</td><td align="center">Juillet</td><td align="center">Aout</td><td align="center">Septembre</td><td align="center">Octobre</td><td align="center">Novembre</td><td align="center">Decembre</td><td align="center"><b>Total</b></td></tr>';
+print '<tr class="liste_titre"><td width=150>'.$langs->trans("Total").'</td><td align="center">'.$langs->trans("JanuaryMin").'</td><td align="center">'.$langs->trans("FebruaryMin").'</td><td align="center">'.$langs->trans("MarchMin").'</td><td align="center">'.$langs->trans("AprilMin").'</td><td align="center">'.$langs->trans("MayMin").'</td><td align="center">'.$langs->trans("JuneMin").'</td><td align="center">'.$langs->trans("JulyMin").'</td><td align="center">'.$langs->trans("AugustMin").'</td><td align="center">'.$langs->trans("SeptemberMin").'</td><td align="center">'.$langs->trans("OctoberMin").'</td><td align="center">'.$langs->trans("NovemberMin").'</td><td align="center">'.$langs->trans("DecemberMin").'</td><td align="center"><b>Total</b></td></tr>';
 
-
-$sql = "SELECT 'Total Chiffre Affaire HT' AS 'Total',";
+$sql = "SELECT 'Total chiffre affaires HT' AS 'Total',";
 $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=1,fd.total_ht,0)),2) AS 'Janvier',";
 $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=2,fd.total_ht,0)),2) AS 'Fevrier',";
 $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=3,fd.total_ht,0)),2) AS 'Mars',";
@@ -190,21 +178,22 @@ if ($resql)
 
       $row = $db->fetch_row($resql);
 
-      print '<tr><td>'.$row[0].'</td>';
-	print '<td align="right">'.$row[1].'</td>';
-	print '<td align="right">'.$row[2].'</td>';
-	print '<td align="right">'.$row[3].'</td>';
-	print '<td align="right">'.$row[4].'</td>';
-	print '<td align="right">'.$row[5].'</td>';
-	print '<td align="right">'.$row[6].'</td>';
-	print '<td align="right">'.$row[7].'</td>';
-	print '<td align="right">'.$row[8].'</td>';
-	print '<td align="right">'.$row[9].'</td>';
-	print '<td align="right">'.$row[10].'</td>';
-	print '<td align="right">'.$row[11].'</td>';
-	print '<td align="right">'.$row[12].'</td>';
-	print '<td align="right"><b>'.$row[13].'</b></td>';
-	print '</tr>';
+      print '<tr><td width="14%">'.$row[0].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[1].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[2].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[3].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[4].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[5].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[6].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[7].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[8].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[9].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[10].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[11].'</td>';
+	    print '<td align="right" width="6.5%">'.$row[12].'</td>';
+	    print '<td align="right" width="8%"><b>'.$row[13].'</b></td>';
+	    print '</tr>';
+      
       $i++;
     }
   $db->free($resql);

@@ -18,8 +18,8 @@
  */
 
 /**
- *	\file       htdocs/accountancy/class/accountancy.class.php
- * 	\ingroup    accounting
+ *	\file       accountingex/class/accountancy.class.php
+ * 	\ingroup    Accounting Expert
  * 	\brief      Fichier de la classe comptabilité expert
  */
 require_once DOL_DOCUMENT_ROOT .'/core/class/commonobject.class.php';

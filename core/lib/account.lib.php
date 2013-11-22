@@ -14,11 +14,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * or see http://www.gnu.org/
  */
 
 /**
- *	  \file       htdocs/core/lib/account.lib.php
+ *	  \file       accountingex/core/lib/account.lib.php
+ *	  \ingroup    Accounting Expert
  *		\brief      Ensemble de fonctions de base pour les comptes comptables
  */
 
@@ -35,7 +35,7 @@ function account_prepare_head($object)
 	$h = 0;
 	$head = array();
 
-	$head[$h][0] = dol_buildpath('/ventilation/admin/fiche.php',1).'?id=' . $object->id;
+	$head[$h][0] = dol_buildpath('/accountingex/admin/fiche.php',1).'?id=' . $object->id;
 	$head[$h][1] = $langs->trans("Card");
 	$head[$h][2] = 'card';
 	$h++;
@@ -47,12 +47,12 @@ function account_prepare_head($object)
 	complete_head_from_modules($conf,$langs,$object,$head,$h,'accounting');
 
 	/*
-  $head[$h][0] = DOL_URL_ROOT.'/ventilation/admin/document.php?id='.$object->id;
+  $head[$h][0] = DOL_URL_ROOT.'/accountingex/admin/document.php?id='.$object->id;
 	$head[$h][1] = $langs->trans("Documents");
 	$head[$h][2] = 'documents';
 	$h++;
   */
-	$head[$h][0] = dol_buildpath('/ventilation/admin/info.php',1).'?id=' . $object->id;
+	$head[$h][0] = dol_buildpath('/accountingex/admin/info.php',1).'?id=' . $object->id;
 	$head[$h][1] = $langs->trans("Info");
 	$head[$h][2] = 'info';
 	$h++;

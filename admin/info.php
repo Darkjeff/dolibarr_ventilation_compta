@@ -19,8 +19,8 @@
  */
 
 /**
- * 	\file       htdocs/ventilation/admin/info.php
- * 	\ingroup    accountingex
+ * 	\file       htdocs/accountingex/admin/info.php
+ * 	\ingroup    Accounting Expert
  * 	\brief      Page to show an account information
  */
 
@@ -31,11 +31,11 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 
 // Class
-dol_include_once ( "/ventilation/core/lib/account.lib.php");
-dol_include_once ( "/ventilation/class/accountingaccount.class.php");
+dol_include_once ( "/accountingex/core/lib/account.lib.php");
+dol_include_once ( "/accountingex/class/accountingaccount.class.php");
 dol_include_once ( "/core/lib/functions2.lib.php");
 
-$langs->load("ventilation@ventilation");
+$langs->load("accountingex@accountingex");
 
 // Security check
 if ($user->societe_id > 0) accessforbidden();
@@ -56,7 +56,7 @@ if ($id)
 	
 	$head = account_prepare_head($object);
 	
-	dol_fiche_head($head, 'info', $langs->trans("AccountCard"), 0, 'accounting@ventilation');
+	dol_fiche_head($head, 'info', $langs->trans("AccountCard"), 0, 'billr');
 
     print '<table width="100%"><tr><td>';
     dol_print_object_info($object);

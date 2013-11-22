@@ -1,13 +1,13 @@
 <?PHP
 /* Copyright (C) 2004      Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2005-2006 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2013      Olivier Geffroy  <jeff@jeffinfo.com>
+ * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
  * Copyright (C) 2013      Florian Henry	      <florian.henry@open-concept.pro>
  * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@fidurex.fr> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -16,14 +16,13 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 /**
- *      \file       htdocs/compta/ventilation/fiche.php
- *      \ingroup    compta
+ *      \file       accountingex/customer/fiche.php
+ *      \ingroup    Accounting Expert
  *      \brief      Page fiche ventilation
  */
 $res=@include("../main.inc.php");
@@ -36,18 +35,18 @@ if (! $res) die("Include of main fails");
 require_once(DOL_DOCUMENT_ROOT."/compta/facture/class/facture.class.php");
 
 $langs->load("bills");
-$langs->load("ventilation@ventilation");
+$langs->load("accountingex@accountingex");
 
 $mesg = '';
 
-if (!$user->rights->compta->ventilation->creer) accessforbidden();
+if (!$user->rights->accountingex->access) accessforbidden();
 
 
 /*
  * Actions
  */
 
-if ($_POST["action"] == 'ventil' && $user->rights->compta->ventilation->creer)
+if ($_POST["action"] == 'ventil' && $user->rights->accountingex->access)
 {
   $sql = " UPDATE ".MAIN_DB_PREFIX."facturedet";
   $sql .= " SET fk_code_ventilation = ".$_POST["codeventil"];
@@ -67,9 +66,11 @@ if ($cancel == $langs->trans("Cancel"))
  *
  */
 
-$sql = "SELECT rowid, account_number, label";
-$sql .= " FROM ".MAIN_DB_PREFIX."accountingaccount";
-$sql .= " ORDER BY account_number ASC";
+$sql = "SELECT a.rowid, a.account_number, a.label, a.fk_pcg_version";
+$sql .= " , s.rowid, s.pcg_version";
+$sql .= " FROM ".MAIN_DB_PREFIX."accountingaccount as a, ".MAIN_DB_PREFIX."accounting_system as s";
+$sql .= " WHERE a.fk_pcg_version = s.pcg_version AND ".$conf->global->CHARTOFACCOUNTS."=s.rowid";
+$sql .= " ORDER BY a.account_number ASC";
 
 $cgs = array();
 $cgn = array();
@@ -83,13 +84,13 @@ if ($result)
     {
       $row = $db->fetch_row($result);
       $cgs[$row[0]] = $row[1] . ' ' . $row[2];
-      $cgn[$row[1]] = $row[0];
+      $cgn[$row[2]] = $row[0];
       $i++;
     }
 }
 
 /*
- * Cr�ation
+ * Création
  *
  */
 $form = new Form($db);
@@ -130,7 +131,7 @@ if($_GET["id"])
 
             print '<table class="border" width="100%">';
 
-			// Ref facture
+			      // Ref facture
             print '<tr><td>'.$langs->trans("Invoice").'</td>';
 			      $facture_static->ref=$objp->facnumber;
 			      $facture_static->id=$objp->facid;

@@ -4,13 +4,13 @@
  * Copyright (C) 2011		   Juanjo Menent		    <jmenent@2byte.es>
  * Copyright (C) 2012		   Regis Houssin		    <regis@dolibarr.fr>
  * Copyright (C) 2013		   Christophe Battarel	<christophe.battarel@altairis.fr>
- * Copyright (C) 2011-2013 Alexandre Spangaro	  <alexandre.spangaro@gmail.com>
+ * Copyright (C) 2013      Alexandre Spangaro	  <alexandre.spangaro@gmail.com>
  * Copyright (C) 2013      Florian Henry	      <florian.henry@open-concept.pro>
  * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -23,30 +23,29 @@
  */
 
 /**
- *   	\file       htdocs/compta/journal/sellsjournal.php
- *		\ingroup    societe, facture
+ *   	\file       accountingex/journal/sellsjournal.php
+ *		\ingroup    Accounting Expert
  *		\brief      Page with sells journal
  */
+ 
 // Dolibarr environment
 $res=@include("../main.inc.php");
 if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
 if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.php");
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
-		
-		
+				
 dol_include_once ( "/core/lib/report.lib.php");
 dol_include_once ( "/core/lib/date.lib.php");
 dol_include_once ( "/compta/facture/class/facture.class.php");
 dol_include_once ( "/societe/class/client.class.php");
-dol_include_once ( "/ventilation/class/comptacompte.class.php");
-dol_include_once ( "/ventilation/class/bookkeeping.class.php");
-
+dol_include_once ( "/accountingex/class/comptacompte.class.php");
+dol_include_once ( "/accountingex/class/bookkeeping.class.php");
 
 $langs->load("companies");
 $langs->load("other");
 $langs->load("compta");
-$langs->load("ventilation@ventilation");
+$langs->load("accountingex@accountingex");
 
 $date_startmonth=GETPOST('date_startmonth');
 $date_startday=GETPOST('date_startday');
@@ -185,7 +184,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 		    $bookkeeping->sens = ($mt >= 0)?'D':'C';
 		    $bookkeeping->debit = ($mt >= 0)?$mt:0;
 		    $bookkeeping->credit = ($mt < 0)?$mt:0;
-		    $bookkeeping->code_journal = $conf->global->VENTILATION_SELL_JOURNAL;
+		    $bookkeeping->code_journal = $conf->global->ACCOUNTINGEX_SELL_JOURNAL;
 
 		    $bookkeeping->create();
 		}
@@ -211,7 +210,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 				    $bookkeeping->sens = ($mt < 0)?'D':'C';
 				    $bookkeeping->debit = ($mt < 0)?$mt:0;
 				    $bookkeeping->credit = ($mt >= 0)?$mt:0;
-				    $bookkeeping->code_journal = $conf->global->VENTILATION_SELL_JOURNAL;
+				    $bookkeeping->code_journal = $conf->global->ACCOUNTINGEX_SELL_JOURNAL;
 
 				    $bookkeeping->create();
 			    }
@@ -237,7 +236,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 			    $bookkeeping->sens = ($mt < 0)?'D':'C';
 			    $bookkeeping->debit = ($mt < 0)?$mt:0;
 			    $bookkeeping->credit = ($mt >= 0)?$mt:0;
-			    $bookkeeping->code_journal = $conf->global->VENTILATION_SELL_JOURNAL;
+			    $bookkeeping->code_journal = $conf->global->ACCOUNTINGEX_SELL_JOURNAL;
 
 			    $bookkeeping->create();
 			}

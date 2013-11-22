@@ -20,7 +20,7 @@
  */
 
 /**
-    \file       htdocs/ventilation/admin/index.php
+    \file       htdocs/accountingex/admin/index.php
     \ingroup    Accounting Expert
 		\brief      Page administration du module
 */
@@ -37,7 +37,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/admin.lib.php';
 $langs->load("compta");
 $langs->load("bills");
 $langs->load('admin');
-$langs->load('ventilation@ventilation');
+$langs->load('accountingex@accountingex');
 
 // Securite accès client
 if ($user->societe_id > 0) accessforbidden();
@@ -76,7 +76,7 @@ if ($action == 'setcomptamode')
 {
 	$chartofaccounts = GETPOST('chartofaccounts','alpha');
 
-	$res = dolibarr_set_const($db, 'CHARTOFACCOUNTS', $chartofaccounts,'chaine',0,'',$conf->entity);
+	$res = dolibarr_set_const($db, 'CHARTOFACCOUNTS', $chartofaccounts,'string',0,'',$conf->entity);
 
 	if (! $res > 0) $error++;
 
@@ -181,7 +181,7 @@ print '<tr '.$bc[$var].'>';
 print "<td>".$langs->trans("Selectchartofaccounts")."</td>";
 print "<td>";
 print '<select class="flat" name="chartofaccounts" id="chartofaccounts">';
-print '<option value="0">'.$langs->trans("DoNotSuggestChart").'</option>';
+// print '<option value="0">'.$langs->trans("DoNotSuggestChart").'</option>';
 
 $sql = "SELECT rowid, pcg_version, fk_pays, label, active";
 $sql.= " FROM ".MAIN_DB_PREFIX."accounting_system";
@@ -212,7 +212,7 @@ print "</form>";
 
 print "<br>\n";
 
-$list=array('COMPTA_ACCOUNT_CUSTOMER','COMPTA_ACCOUNT_SUPPLIER','VENTILATION_ACCOUNT_SUSPENSE','VENTILATION_SELL_JOURNAL','VENTILATION_PURCHASE_JOURNAL','VENTILATION_BANK_JOURNAL','VENTILATION_SOCIAL_JOURNAL','VENTILATION_CASH_JOURNAL','VENTILATION_MISCELLANEOUS_JOURNAL','VENTILATION_ACCOUNT_TRANSFER_CASH'
+$list=array('COMPTA_ACCOUNT_CUSTOMER','COMPTA_ACCOUNT_SUPPLIER','ACCOUNTINGEX_ACCOUNT_SUSPENSE','ACCOUNTINGEX_ACCOUNT_TRANSFER_CASH','ACCOUNTINGEX_SELL_JOURNAL','ACCOUNTINGEX_PURCHASE_JOURNAL','ACCOUNTINGEX_BANK_JOURNAL','ACCOUNTINGEX_SOCIAL_JOURNAL','ACCOUNTINGEX_CASH_JOURNAL','ACCOUNTINGEX_MISCELLANEOUS_JOURNAL'
 );
 
 $num=count($list);

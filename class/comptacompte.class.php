@@ -1,9 +1,11 @@
 <?php
 /* Copyright (C) 2004-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
+ * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -16,15 +18,14 @@
  */
 
 /**
- *	\file       htdocs/compta/class/comptacompte.class.php
- * 	\ingroup    compta
+ *	\file       accountingex/class/comptacompte.class.php
+ * 	\ingroup    Accounting Expert
  * 	\brief      Fichier de la classe des comptes comptable
- * 	\version    $Id: comptacompte.class.php,v 1.3 2011/08/03 00:46:33 eldy Exp $
  */
 
 
 /** 	\class ComptaCompte
- *    	\brief Classe permettant la gestion des comptes generaux de compta
+ *    \brief Classe permettant la gestion des comptes generaux de compta
  */
 
 class ComptaCompte

@@ -4,11 +4,11 @@
  * Copyright (C) 2011		    Juanjo Menent		    <jmenent@2byte.es>
  * Copyright (C) 2012		    Regis Houssin		    <regis@dolibarr.fr>
  * Copyright (C) 2013       Alexandre Spangaro  <alexandre.spangaro@gmail.com> 
- * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013       Olivier Geffroy     <jeff@jeffinfo.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -21,10 +21,11 @@
  */
 
 /**
- *   	\file       htdocs/compta/journal/purchasesjournal.php
- *		\ingroup    societe, fournisseur, facture
+ *   	\file       accountingex/journal/purchasesjournal.php
+ *		\ingroup    Accounting Expert
  *		\brief      Page with purchases journal
  */
+ 
 // Dolibarr environment
 $res=@include("../main.inc.php");
 if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
@@ -37,14 +38,14 @@ dol_include_once ( "/core/lib/report.lib.php");
 dol_include_once ( "/core/lib/date.lib.php");
 dol_include_once ( "/fourn/class/fournisseur.facture.class.php");
 dol_include_once ( "/fourn/class/fournisseur.class.php");
-dol_include_once ( "/ventilation/class/comptacompte.class.php");
-dol_include_once ( "/ventilation/class/bookkeeping.class.php");
+dol_include_once ( "/accountingex/class/comptacompte.class.php");
+dol_include_once ( "/accountingex/class/bookkeeping.class.php");
 
 
 $langs->load("companies");
 $langs->load("other");
 $langs->load("compta");
-$langs->load("ventilation@ventilation");
+$langs->load("accountingex@accountingex");
 
 $date_startmonth=GETPOST('date_startmonth');
 $date_startday=GETPOST('date_startday');
@@ -55,9 +56,6 @@ $date_endyear=GETPOST('date_endyear');
 
 // Security check
 if ($user->societe_id > 0) $socid = $user->societe_id;
-if (! empty($conf->comptabilite->enabled)) $result=restrictedArea($user,'compta','','','resultat');
-if (! empty($conf->accounting->enabled)) $result=restrictedArea($user,'accounting','','','comptarapport');
-
 
 
 /*
@@ -176,7 +174,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 			    $bookkeeping->sens = ($mt >= 0)?'D':'C';
 			    $bookkeeping->debit = ($mt >= 0)?$mt:0;
 			    $bookkeeping->credit = ($mt < 0)?$mt:0;
-			    $bookkeeping->code_journal = $conf->global->VENTILATION_PURCHASE_JOURNAL;
+			    $bookkeeping->code_journal = $conf->global->ACCOUNTINGEX_PURCHASE_JOURNAL;
 
 			    $bookkeeping->create();
 			}
@@ -203,7 +201,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 				    $bookkeeping->sens = ($mt < 0)?'D':'C';
 				    $bookkeeping->debit = ($mt < 0)?$mt:0;
 				    $bookkeeping->credit = ($mt >= 0)?$mt:0;
-				    $bookkeeping->code_journal = $conf->global->VENTILATION_PURCHASE_JOURNAL;
+				    $bookkeeping->code_journal = $conf->global->ACCOUNTINGEX_PURCHASE_JOURNAL;
 
 				    $bookkeeping->create();
 			    }
@@ -231,7 +229,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 				    $bookkeeping->sens = ($mt < 0)?'D':'C';
 				    $bookkeeping->debit = ($mt < 0)?$mt:0;
 				    $bookkeeping->credit = ($mt >= 0)?$mt:0;
-				    $bookkeeping->code_journal = $conf->global->VENTILATION_PURCHASE_JOURNAL;
+				    $bookkeeping->code_journal = $conf->global->ACCOUNTINGEX_PURCHASE_JOURNAL;
 
 				    $bookkeeping->create();
 				}

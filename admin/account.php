@@ -38,12 +38,12 @@ if (! $res)
 	
 	// Class
 
-dol_include_once ( "/ventilation/class/accountingaccount.class.php" );
-dol_include_once ( "/ventilation/class/html.formventilation.class.php" );
+dol_include_once ( "/accountingex/class/accountingaccount.class.php" );
+dol_include_once ( "/accountingex/class/html.formventilation.class.php" );
 
 // langs
 $langs->load ( "compta" );
-$langs->load ( "ventilation@ventilation" );
+$langs->load ( "accountingex@accountingex" );
 
 // Security check
 if ($user->societe_id > 0)
@@ -52,11 +52,9 @@ if (! $user->rights->accountingex->admin)
 	accessforbidden ();
 	
 	// filter
-$pcg_version = GETPOST ( "pcg_version", 'alpha' );
 $sortfield = GETPOST ( "sortfield", 'alpha' );
 $sortorder = GETPOST ( "sortorder", 'alpha' );
-if (! $pcg_version)
-	$pcg_version = "1";
+
 if (! $sortfield)
 	$sortfield = "aa.rowid";
 if (! $sortorder)
@@ -71,11 +69,13 @@ llxHeader ( '', $langs->trans ( "Accounts" ) );
 
 print_barre_liste ( $langs->trans ( "Accounts" ), $page, "account.php", "", $sortfield, $sortorder, '', $num );
 
-// $pcgver = $conf->global->ACCOUNTING_PCG_VERSION; pour clause where en fonction du plan comptable
+//$pcgver = $conf->global->CHARTOFACCOUNTS;
 
 $sql2 = "SELECT aa.rowid, aa.fk_pcg_version, aa.pcg_type, aa.pcg_subtype, aa.account_number, aa.account_parent , aa.label, aa.active ";
 $sql2 .= " FROM " . MAIN_DB_PREFIX . "accountingaccount as aa";
-$sql2 .= " WHERE aa.active = 1";
+$sql2 .= " WHERE aa.active = 1"; 
+//$sql2 .= " AND aa.fk_pcg_version = ".$pcgver;
+
 if (strlen ( trim ( $_GET ["search_account"] ) )) {
 	$sql2 .= " AND aa.account_number like '%" . $_GET ["search_account"] . "%'";
 }

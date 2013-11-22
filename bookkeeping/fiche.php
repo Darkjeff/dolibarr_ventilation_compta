@@ -1,8 +1,8 @@
 <?php
 /* Copyright (C) 2001-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2004-2005 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2013 Olivier Geffroy  <jeff@jeffinfo.com>
- * Copyright (C) 2013 Florian Henry	  <florian.henry@open-concept.pro>
+ * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013      Florian Henry	      <florian.henry@open-concept.pro>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,10 +21,9 @@
  */
 
 /**
- * \file htdocs/custom/ventilation/param/comptes/fiche.php
- * \ingroup ventilation compta
- * \brief Page de la fiche des comptes comptables
- * \version $Revision: 1.14 $
+ * \file      accountingex/param/comptes/fiche.php
+ * \ingroup   Accounting Expert
+ * \brief      Page de la fiche des comptes comptables
  */
 
 // Dolibarr environment
@@ -38,9 +37,9 @@ if (! $res && file_exists ( "../../../main.inc.php" ))
 if (! $res)
 	die ( "Include of main fails" );
 
-require_once DOL_DOCUMENT_ROOT .'/ventilation/class/bookkeeping.class.php';
+require_once DOL_DOCUMENT_ROOT .'/accountingex/class/bookkeeping.class.php';
 
-$langs->load ( "ventilation@ventilation" );
+$langs->load ( "accountingex@accountingex" );
 
 $mesg = '';
 $action = GETPOST ( 'action' );
@@ -200,10 +199,10 @@ if ($action == 'create') {
 	print_fiche_titre ( $langs->trans ( "CreateMvts" ) );
 	
 	$code_journal_array = array (
-		$conf->global->VENTILATION_SELL_JOURNAL=>$conf->global->VENTILATION_SELL_JOURNAL,
-		$conf->global->VENTILATION_PURCHASE_JOURNAL=>$conf->global->VENTILATION_PURCHASE_JOURNAL,
-		$conf->global->VENTILATION_BANK_JOURNAL=>$conf->global->VENTILATION_BANK_JOURNAL,
-		$conf->global->VENTILATION_SOCIAL_JOURNAL=>$conf->global->VENTILATION_SOCIAL_JOURNAL 
+		$conf->global->ACCOUNTINGEX_SELL_JOURNAL=>$conf->global->ACCOUNTINGEX_SELL_JOURNAL,
+		$conf->global->ACCOUNTINGEX_PURCHASE_JOURNAL=>$conf->global->ACCOUNTINGEX_PURCHASE_JOURNAL,
+		$conf->global->ACCOUNTINGEX_BANK_JOURNAL=>$conf->global->ACCOUNTINGEX_BANK_JOURNAL,
+		$conf->global->ACCOUNTINGEX_SOCIAL_JOURNAL=>$conf->global->ACCOUNTINGEX_SOCIAL_JOURNAL 
 	);
 	
 	$book = new BookKeeping ( $db );
@@ -316,7 +315,7 @@ if ($action == 'create') {
 						print '<td>' . $line->sens . '</td>';
 						
 						print '<td>';
-						if ($user->rights->compta->ventilation->parametrer) {
+						if ($user->rights->accountingex->access) {
 							print '<input type="submit" class="button" value="' . $langs->trans ( "Update" ) . '">';
 						}
 						print '</form>';
@@ -331,7 +330,7 @@ if ($action == 'create') {
 						print '<td>' . $line->sens . '</td>';
 						
 						print '<td>';
-						if ($user->rights->compta->ventilation->parametrer) {
+						if ($user->rights->accoutingex->access) {
 							print '<a href="./fiche.php?action=update&id=' . $line->id . '&piece_num=' . $line->piece_num . '">';
 							print img_edit ();
 							print '</a>&nbsp;';

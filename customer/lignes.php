@@ -2,11 +2,11 @@
 /* Copyright (C) 2002-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2006      Laurent Destailleur  <eldy@users.sourceforge.net>
  * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@fidurex.fr>  
+ * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com>  
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -15,16 +15,16 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 /**
- * \file htdocs/compta/ventilation/lignes.php
- * \ingroup facture
- * \brief Page de detail des lignes de ventilation d'une facture
+ * \file      accountingex/customer/lignes.php
+ * \ingroup   Accounting Expert
+ * \brief     Page de detail des lignes de ventilation d'une facture client
  */
+ 
 // Dolibarr environment
 $res=@include("../main.inc.php");
 if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
@@ -32,14 +32,14 @@ if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.p
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 
-dol_include_once ( "/ventilation/class/html.formventilation.class.php" );
+dol_include_once ( "/accountingex/class/html.formventilation.class.php" );
 require_once (DOL_DOCUMENT_ROOT . "/compta/facture/class/facture.class.php");
 require_once (DOL_DOCUMENT_ROOT . "/product/class/product.class.php");
 
 $langs->load ( "bills" );
 $langs->load ( "compta" );
 $langs->load ( "main" );
-$langs->load ( "ventilation@ventilation" );
+$langs->load ( "accountingex@accountingex" );
 
 // Security check
 if ($user->societe_id > 0)
@@ -76,7 +76,7 @@ if (is_array ( $changeaccount ) && count ( $changeaccount ) > 0 && empty ( $is_s
 	$sql1 .= " SET l.fk_code_ventilation=" . GETPOST ( 'account_parent' );
 	$sql1 .= ' WHERE l.rowid IN (' . implode ( ',', $changeaccount ) . ')';
 	
-	dol_syslog ( 'htdocs/compta/ventilation/lignes.php::changeaccount sql= ' . $sql1 );
+	dol_syslog ( 'accountingex/customer/lignes.php::changeaccount sql= ' . $sql1 );
 	$resql1 = $db->query ( $sql1 );
 	if (! $resql1) {
 		$error ++;
@@ -121,7 +121,7 @@ if (strlen ( trim ( GETPOST ( "search_label" ) ) )) {
 	$sql .= " AND p.label like '%" . GETPOST ( "search_label" ) . "%'";
 }
 if (strlen ( trim ( GETPOST ( "search_desc" ) ) )) {
-	$sql .= " AND l.description like '%" . GETPOST ( "search_desc" ) . "%'";
+  $sql .= " AND l.description like '%" . GETPOST ( "search_desc" ) . "%'";
 }
 if (strlen ( trim ( GETPOST ( "search_account" ) ) )) {
 	$sql .= " AND aa.account_number like '%" . GETPOST ( "search_account" ) . "%'";
@@ -146,7 +146,6 @@ if ($result) {
 	
 	// print '<a class="butAction" href="' . $_SERVER ['PHP_SELF'] . '?action=changeaccount">' . $langs->trans ( "ChangeAccount" ) . '</a>';
 	print '<div class="inline-block divButAction"><input type="submit" class="butAction" value="' . $langs->trans ( "ChangeAccount" ) . '"/></div>';
-	print '<tr class="liste_titre">';
 	print $formventilation->select_account_parent ( GETPOST ( 'account_parent' ), 'account_parent', 1 );
 	
 	print '<tr class="liste_titre"><td>' . $langs->trans ( "Invoice" ) . '</td>';

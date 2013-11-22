@@ -1,13 +1,13 @@
 <?php
 /* Copyright (C) 2001-2006 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2004-2005 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2013      Olivier Geffroy  <jeff@jeffinfo.com>
+ * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
  * Copyright (C) 2013      Florian Henry	      <florian.henry@open-concept.pro>
- * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@fidurex.fr> 
+ * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -16,15 +16,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 /**
- *    \file       htdocs/custom/ventilation/index.php
- *    \ingroup    ventilation compta
- *    \brief      Page accueil ventilation
+ *    \file       accountingex/customer/index.php
+ *    \ingroup    Accounting Expert
+ *    \brief      Page accueil clients ventilation comptable
  */
 $res=@include("../main.inc.php");
 if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
@@ -38,7 +37,7 @@ $langs->load("compta");
 $langs->load("bills");
 $langs->load("other");
 $langs->load("main");
-$langs->load("ventilation@ventilation");
+$langs->load("accountingex@accountingex");
 
 $year=$_GET["year"];
 if ($year == 0 )
@@ -63,9 +62,6 @@ $textnextyear=" <a href=\"index.php?year=" . ($year_current+1) . "\">".img_next(
 
 print_fiche_titre($langs->trans("VentilationComptable")." ".$textprevyear." ".$langs->trans("Year")." ".$year_start." ".$textnextyear);
 
-print '<table border="0" width="100%" class="notopnoleftnoright">';
-print '<tr><td valign="top" width="30%" class="notopnoleft">';
-
 $sql = "SELECT count(*) FROM ".MAIN_DB_PREFIX."facturedet as fd";
 $sql.= " , ".MAIN_DB_PREFIX."facture as f";
 $sql.= " WHERE fd.fk_code_ventilation = 0";
@@ -84,24 +80,20 @@ $y = $year_current ;
 $var=true;
 
 print '<table class="noborder" width="100%">';
-print "</table>\n";
-print '</td><td valign="top" width="70%" class="notopnoleftnoright"></td>';
-print '</tr><tr><td colspan=2>';
-print '<table class="noborder" width="100%">';
 print '<tr class="liste_titre"><td width=60>'.$langs->trans("Account").'</td>';
 print '<td align="left">'.$langs->trans("Intitule").'</td>';
-print '<td align="center">'.$langs->trans("January").'</td>';
-print '<td align="center">'.$langs->trans("February").'</td>';
-print '<td align="center">'.$langs->trans("March").'</td>';
-print '<td align="center">'.$langs->trans("April").'</td>';
-print '<td align="center">'.$langs->trans("May").'</td>';
-print '<td align="center">'.$langs->trans("June").'</td>';
-print '<td align="center">'.$langs->trans("July").'</td>';
-print '<td align="center">'.$langs->trans("August").'</td>';
-print '<td align="center">'.$langs->trans("September").'</td>';
-print '<td align="center">'.$langs->trans("October").'</td>';
-print '<td align="center">'.$langs->trans("November").'</td>';
-print '<td align="center">'.$langs->trans("December").'</td>';
+print '<td align="center">'.$langs->trans("JanuaryMin").'</td>';
+print '<td align="center">'.$langs->trans("FebruaryMin").'</td>';
+print '<td align="center">'.$langs->trans("MarchMin").'</td>';
+print '<td align="center">'.$langs->trans("AprilMin").'</td>';
+print '<td align="center">'.$langs->trans("MayMin").'</td>';
+print '<td align="center">'.$langs->trans("JuneMin").'</td>';
+print '<td align="center">'.$langs->trans("JulyMin").'</td>';
+print '<td align="center">'.$langs->trans("AugustMin").'</td>';
+print '<td align="center">'.$langs->trans("SeptemberMin").'</td>';
+print '<td align="center">'.$langs->trans("OctoberMin").'</td>';
+print '<td align="center">'.$langs->trans("NovemberMin").'</td>';
+print '<td align="center">'.$langs->trans("DecemberMin").'</td>';
 print '<td align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
 
 $sql = "SELECT IF(aa.account_number IS NULL, 'Non pointe', aa.account_number) AS 'code comptable',";
@@ -161,25 +153,21 @@ else
 	print $db->lasterror(); // affiche la derniere erreur sql
 }
 
-print "</table>\n";
-print '</td><td valign="top" width="70%" class="notopnoleftnoright">';
-print '</td><td valign="top" width="70%" class="notopnoleftnoright"></td>';
-print '</tr><tr><td colspan=2>';
-print "\n<br>\n";
+print "<br>\n";
 print '<table class="noborder" width="100%">';
 print '<tr class="liste_titre"><td align="left">'.$langs->trans("TotalVente").'</td>';
-print '<td align="center">'.$langs->trans("January").'</td>';
-print '<td align="center">'.$langs->trans("February").'</td>';
-print '<td align="center">'.$langs->trans("March").'</td>';
-print '<td align="center">'.$langs->trans("April").'</td>';
-print '<td align="center">'.$langs->trans("May").'</td>';
-print '<td align="center">'.$langs->trans("June").'</td>';
-print '<td align="center">'.$langs->trans("July").'</td>';
-print '<td align="center">'.$langs->trans("August").'</td>';
-print '<td align="center">'.$langs->trans("September").'</td>';
-print '<td align="center">'.$langs->trans("October").'</td>';
-print '<td align="center">'.$langs->trans("November").'</td>';
-print '<td align="center">'.$langs->trans("December").'</td>';
+print '<td align="center">'.$langs->trans("JanuaryMin").'</td>';
+print '<td align="center">'.$langs->trans("FebruaryMin").'</td>';
+print '<td align="center">'.$langs->trans("MarchMin").'</td>';
+print '<td align="center">'.$langs->trans("AprilMin").'</td>';
+print '<td align="center">'.$langs->trans("MayMin").'</td>';
+print '<td align="center">'.$langs->trans("JuneMin").'</td>';
+print '<td align="center">'.$langs->trans("JulyMin").'</td>';
+print '<td align="center">'.$langs->trans("AugustMin").'</td>';
+print '<td align="center">'.$langs->trans("SeptemberMin").'</td>';
+print '<td align="center">'.$langs->trans("OctoberMin").'</td>';
+print '<td align="center">'.$langs->trans("NovemberMin").'</td>';
+print '<td align="center">'.$langs->trans("DecemberMin").'</td>';
 print '<td align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
 
 
@@ -237,28 +225,23 @@ else
 {
 	print $db->lasterror(); // affiche la derniere erreur sql
 }
-
-
-
 print "</table>\n";
-print '</td><td valign="top" width="70%" class="notopnoleftnoright">';
-print '</td><td valign="top" width="70%" class="notopnoleftnoright"></td>';
-print '</tr><tr><td colspan=2>';
-print "\n<br>\n";
+
+print "<br>\n";
 print '<table class="noborder" width="100%">';
 print '<tr class="liste_titre"><td width=150>'.$langs->trans("TotalMarge").'</td>';
-print '<td align="center">'.$langs->trans("January").'</td>';
-print '<td align="center">'.$langs->trans("February").'</td>';
-print '<td align="center">'.$langs->trans("March").'</td>';
-print '<td align="center">'.$langs->trans("April").'</td>';
-print '<td align="center">'.$langs->trans("May").'</td>';
-print '<td align="center">'.$langs->trans("June").'</td>';
-print '<td align="center">'.$langs->trans("July").'</td>';
-print '<td align="center">'.$langs->trans("August").'</td>';
-print '<td align="center">'.$langs->trans("September").'</td>';
-print '<td align="center">'.$langs->trans("October").'</td>';
-print '<td align="center">'.$langs->trans("November").'</td>';
-print '<td align="center">'.$langs->trans("December").'</td>';
+print '<td align="center">'.$langs->trans("JanuaryMin").'</td>';
+print '<td align="center">'.$langs->trans("FebruaryMin").'</td>';
+print '<td align="center">'.$langs->trans("MarchMin").'</td>';
+print '<td align="center">'.$langs->trans("AprilMin").'</td>';
+print '<td align="center">'.$langs->trans("MayMin").'</td>';
+print '<td align="center">'.$langs->trans("JuneMin").'</td>';
+print '<td align="center">'.$langs->trans("JulyMin").'</td>';
+print '<td align="center">'.$langs->trans("AugustMin").'</td>';
+print '<td align="center">'.$langs->trans("SeptemberMin").'</td>';
+print '<td align="center">'.$langs->trans("OctoberMin").'</td>';
+print '<td align="center">'.$langs->trans("NovemberMin").'</td>';
+print '<td align="center">'.$langs->trans("DecemberMin").'</td>';
 print '<td align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
 
 

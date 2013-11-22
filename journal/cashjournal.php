@@ -4,9 +4,8 @@
  * Copyright (C) 2011		    Juanjo Menent		    <jmenent@2byte.es>
  * Copyright (C) 2012		    Regis Houssin		    <regis@dolibarr.fr>
  * Copyright (C) 2013		    Christophe Battarel	<christophe.battarel@altairis.fr>
- * Copyright (C) 2013       Alexandre Spangaro	<alexandre.spangaro@gmail.com>
+ * Copyright (C) 2011-2013  Alexandre Spangaro	<alexandre.spangaro@gmail.com>
  * Copyright (C) 2013       Florian Henry	      <florian.henry@open-concept.pro>
- * Copyright (C) 2013       Olivier Geffroy     <jeff@jeffinfo.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,11 +22,10 @@
  */
 
 /**
- * \file      accountingex/journal/bankjournal.php
- * \ingroup   Accounting Expert
- * \brief     Page with sells journal
+ * \file htdocs/compta/journal/cashjournal.php
+ * \ingroup societe, facture
+ * \brief Page with sells journal
  */
- 
 // Dolibarr environment
 $res = @include ("../main.inc.php");
 if (! $res && file_exists ( "../main.inc.php" )) $res = @include ("../main.inc.php");
@@ -35,25 +33,24 @@ if (! $res && file_exists ( "../../main.inc.php" )) $res = @include ("../../main
 if (! $res && file_exists ( "../../../main.inc.php" )) $res = @include ("../../../main.inc.php");
 if (! $res) die ( "Include of main fails" );
 
-
-dol_include_once ( "/core/lib/report.lib.php");
-dol_include_once ( "/core/lib/date.lib.php");
-dol_include_once ( "/core/lib/bank.lib.php");
-dol_include_once ( "/societe/class/societe.class.php");
-dol_include_once ( "/adherents/class/adherent.class.php");
-dol_include_once ( "/compta/sociales/class/chargesociales.class.php");
-dol_include_once ( "/compta/paiement/class/paiement.class.php");
-dol_include_once ( "/compta/tva/class/tva.class.php");
-dol_include_once ( "/fourn/class/paiementfourn.class.php");
-dol_include_once ( "/fourn/class/fournisseur.facture.class.php");
-dol_include_once ( "/fourn/class/fournisseur.class.php");
-dol_include_once ( "/accountingex/class/comptacompte.class.php");
-dol_include_once ( "/accountingex/class/bookkeeping.class.php");
+require_once DOL_DOCUMENT_ROOT . '/core/lib/report.lib.php';
+require_once DOL_DOCUMENT_ROOT . '/core/lib/date.lib.php';
+require_once DOL_DOCUMENT_ROOT . '/core/lib/bank.lib.php';
+require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';
+require_once DOL_DOCUMENT_ROOT . '/adherents/class/adherent.class.php';
+require_once DOL_DOCUMENT_ROOT . '/compta/sociales/class/chargesociales.class.php';
+require_once DOL_DOCUMENT_ROOT . '/compta/paiement/class/paiement.class.php';
+require_once DOL_DOCUMENT_ROOT . '/compta/tva/class/tva.class.php';
+require_once DOL_DOCUMENT_ROOT . '/fourn/class/paiementfourn.class.php';
+require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.facture.class.php';
+require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.class.php';
+require_once DOL_DOCUMENT_ROOT . '/ventilation/class/comptacompte.class.php';
+require_once DOL_DOCUMENT_ROOT . '/ventilation/class/bookkeeping.class.php';
 
 $langs->load("companies");
 $langs->load("other");
 $langs->load("compta");
-$langs->load("accountingex@accountingex");
+$langs->load("ventilation@ventilation");
 
 $date_startmonth = GETPOST ( 'date_startmonth' );
 $date_startday = GETPOST ( 'date_startday' );
@@ -98,12 +95,12 @@ $p = explode ( ":", $conf->global->MAIN_INFO_SOCIETE_COUNTRY );
 $idpays = $p [0];
 
 $sql = "SELECT b.rowid , b.dateo as do, b.datev as dv, b.amount, b.label, b.rappro, b.num_releve, b.num_chq, b.fk_type,soc.code_compta,";
-$sql .= " soc.code_compta_fournisseur,soc.rowid as socid,soc.nom as name,ba.account_number";
+$sql .= " soc.code_compta_fournisseur,soc.rowid as socid,soc.nom as name,ba.account_number,bu1.type";
 $sql .= " FROM " . MAIN_DB_PREFIX . "bank b";
 $sql .= " JOIN " . MAIN_DB_PREFIX . "bank_account ba on b.fk_account=ba.rowid";
 $sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "bank_url bu1 ON bu1.fk_bank = b.rowid AND bu1.type='company'";
 $sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "societe soc on bu1.url_id=soc.rowid";
-$sql .= " WHERE ba.entity = " . $conf->entity;
+$sql .= " WHERE b.rowid=2 AND ba.entity = " . $conf->entity;
 if ($date_start && $date_end) $sql .= " AND b.dateo >= '" . $db->idate ( $date_start ) . "' AND b.dateo <= '" . $db->idate ( $date_end ) . "'";
 $sql .= " ORDER BY b.datev";
 
@@ -114,7 +111,7 @@ $societestatic = new Societe ( $db );
 $chargestatic = new ChargeSociales ( $db );
 $paymentvatstatic = new TVA ( $db );
 
-dol_syslog ( "bankjournal::create sql=" . $sql, LOG_DEBUG );
+dol_syslog ( "cashjournal::create sql=" . $sql, LOG_DEBUG );
 $result = $db->query ( $sql );
 if ($result) {
 	
@@ -122,8 +119,8 @@ if ($result) {
 	// les variables
 	$cptfour = (! empty ( $conf->global->COMPTA_ACCOUNT_SUPPLIER ) ? $conf->global->COMPTA_ACCOUNT_SUPPLIER : $langs->trans ( "CodeNotDef" ));
 	$cptcli = (! empty ( $conf->global->COMPTA_ACCOUNT_CUSTOMER ) ? $conf->global->COMPTA_ACCOUNT_CUSTOMER : $langs->trans ( "CodeNotDef" ));
-	$cpttva = (! empty ( $conf->global->ACCOUNTINGEX_ACCOUNT_SUSPENSE ) ? $conf->global->ACCOUNTINGEX_ACCOUNT_SUSPENSE : $langs->trans ( "CodeNotDef" ));
-	$cptsociale = (! empty ( $conf->global->ACCOUNTINGEX_ACCOUNT_SUSPENSE ) ? $conf->global->ACCOUNTINGEX_ACCOUNT_SUSPENSE : $langs->trans ( "CodeNotDef" ));
+	$cpttva = (! empty ( $conf->global->VENTILATION_ACCOUNT_SUSPENSE ) ? $conf->global->VENTILATION_ACCOUNT_SUSPENSE : $langs->trans ( "CodeNotDef" ));
+	$cptsociale = (! empty ( $conf->global->VENTILATION_ACCOUNT_SUSPENSE ) ? $conf->global->VENTILATION_ACCOUNT_SUSPENSE : $langs->trans ( "CodeNotDef" ));
 	
 	
 	$tabpay = array ();
@@ -135,14 +132,13 @@ if ($result) {
 	$i = 0;
 	while ( $i < $num ) {
 		$obj = $db->fetch_object ( $result );
-		// contr�les
 		
+    // Controls
 		$compta_bank = $obj->account_number;
 		if ($obj->label == '(SupplierInvoicePayment)') $compta_soc = (! empty ( $obj->code_compta_fournisseur ) ? $obj->code_compta_fournisseur : $cptfour);
 		if ($obj->label == '(CustomerInvoicePayment)') $compta_soc = (! empty ( $obj->code_compta ) ? $obj->code_compta : $cptcli);
-		
-		// variable bookkeeping
-		
+    
+		// Variable bookkeeping
 		$tabpay [$obj->rowid] ["date"] = $obj->do;
 		$tabpay [$obj->rowid] ["ref"] = $obj->label;
 		$tabpay [$obj->rowid] ["fk_bank"] = $obj->rowid;
@@ -160,17 +156,21 @@ if ($result) {
 			if ($links [$key] ['type'] == 'payment') {
 				$paymentstatic->id = $links [$key] ['url_id'];
 				$tabpay [$obj->rowid] ["lib"] .= ' ' . $paymentstatic->getNomUrl ( 2 );
-			} else if ($links [$key] ['type'] == 'payment_supplier') {
-				$paymentsupplierstatic->id = $links [$key] ['url_id'];
+			
+      } else if ($links [$key] ['type'] == 'payment_supplier') {
+			
+      	$paymentsupplierstatic->id = $links [$key] ['url_id'];
 				$paymentsupplierstatic->ref = $links [$key] ['url_id'];
 				$tabpay [$obj->rowid] ["lib"] .= ' ' . $paymentsupplierstatic->getNomUrl ( 2 );
-			} else if ($links [$key] ['type'] == 'company') {
+			
+      } else if ($links [$key] ['type'] == 'company') {
 				
 				$societestatic->id = $links [$key] ['url_id'];
 				$societestatic->nom = $links [$key] ['label'];
 				$tabpay [$obj->rowid] ["soclib"] = $societestatic->getNomUrl ( 1, '', 30 );
 				$tabtp [$obj->rowid] [$compta_soc] += $obj->amount;
-			} else if ($links [$key] ['type'] == 'sc') {
+			
+      } else if ($links [$key] ['type'] == 'sc') {
 				
 				$chargestatic->id = $links [$key] ['url_id'];
 				$chargestatic->ref = $links [$key] ['url_id'];
@@ -191,7 +191,7 @@ if ($result) {
 				$sqlmid.= " INNER JOIN " . MAIN_DB_PREFIX . "paiementcharge as paycharg ON  paycharg.fk_charge=chgsoc.rowid";
 				$sqlmid.= " INNER JOIN " . MAIN_DB_PREFIX . "bank_url as bkurl ON  bkurl.url_id=paycharg.rowid";
 				$sqlmid.= " WHERE bkurl.fk_bank=".$obj->rowid;
-				dol_syslog ( "bankjournal::  sqlmid=" . $sqlmid, LOG_DEBUG );
+				dol_syslog ( "cashjournal::  sqlmid=" . $sqlmid, LOG_DEBUG );
 				$resultmid = $db->query ( $sqlmid );
 				if ($resultmid) {
 					$objmid = $db->fetch_object ( $resultmid );
@@ -204,14 +204,17 @@ if ($result) {
 				$paymentvatstatic->ref = $links [$key] ['url_id'];
 				$tabpay [$obj->rowid] ["lib"] .= ' ' . $paymentvatstatic->getNomUrl ( 2 );
 				$tabtp [$obj->rowid] [$cpttva] += $obj->amount;
+        
 			} else if ($links [$key] ['type'] == 'banktransfert') {
-				$tabpay [$obj->rowid] ["lib"] .= ' ' . $paymentvatstatic->getNomUrl ( 2 );
+				
+        $tabpay [$obj->rowid] ["lib"] .= ' ' . $paymentvatstatic->getNomUrl ( 2 );
 				$tabtp [$obj->rowid] [$cpttva] += $obj->amount;
 			} 
 			/*else {
 				$tabtp [$obj->rowid] [$cptsociale] += $obj->amount;
 			}*/
 		}
+    
 		$tabbq [$obj->rowid] [$compta_bank] += $obj->amount;
 		
 		// if($obj->socid)$tabtp[$obj->rowid][$compta_soc] += $obj->amount;
@@ -230,7 +233,7 @@ if (GETPOST ( 'action' ) == 'writeBookKeeping') {
 			$bookkeeping = new BookKeeping ( $db );
 			$bookkeeping->doc_date = $val ["date"];
 			$bookkeeping->doc_ref = $val ["ref"];
-			$bookkeeping->doc_type = 'banque';
+			$bookkeeping->doc_type = 'cash';
 			$bookkeeping->fk_doc = $key;
 			$bookkeeping->fk_docdet = $val ["fk_bank"];
 			$bookkeeping->code_tiers = $tabcompany [$key] ['code_client'];
@@ -240,7 +243,7 @@ if (GETPOST ( 'action' ) == 'writeBookKeeping') {
 			$bookkeeping->sens = ($mt >= 0) ? 'D' : 'C';
 			$bookkeeping->debit = ($mt >= 0) ? $mt : 0;
 			$bookkeeping->credit = ($mt < 0 ? price - ($mt) : 0);
-			$bookkeeping->code_journal = $conf->global->ACCOUNTINGEX_BANK_JOURNAL;
+			$bookkeeping->code_journal = $conf->global->VENTILATION_CASH_JOURNAL;
 			
 			if ($tabtype[$key]=='payment') {
 
@@ -283,7 +286,7 @@ if (GETPOST ( 'action' ) == 'writeBookKeeping') {
 			$bookkeeping = new BookKeeping ( $db );
 			$bookkeeping->doc_date = $val ["date"];
 			$bookkeeping->doc_ref = $val ["ref"];
-			$bookkeeping->doc_type = 'banque';
+			$bookkeeping->doc_type = 'cash';
 			$bookkeeping->fk_doc = $key;
 			$bookkeeping->fk_docdet = $val ["fk_bank"];
 			$bookkeeping->label_compte = $tabcompany [$key] ['name'];
@@ -291,7 +294,7 @@ if (GETPOST ( 'action' ) == 'writeBookKeeping') {
 			$bookkeeping->sens = ($mt < 0) ? 'D' : 'C';
 			$bookkeeping->debit = ($mt < 0 ? price - ($mt) : 0);
 			$bookkeeping->credit = ($mt >= 0) ? $mt : 0;
-			$bookkeeping->code_journal = $conf->global->ACCOUNTINGEX_BANK_JOURNAL;
+			$bookkeeping->code_journal = $conf->global->VENTILATION_CASH_JOURNAL;
 			
 			if ($tabtype[$key]=='sc') {
 				$bookkeeping->code_tiers = '';
@@ -333,7 +336,7 @@ if (GETPOST ( 'action' ) == 'writeBookKeeping') {
 				$sqlmid.= " INNER JOIN " . MAIN_DB_PREFIX . "paiement_facture as payfac ON  payfac.fk_facture=fac.rowid";
 				$sqlmid.= " INNER JOIN " . MAIN_DB_PREFIX . "paiement as pay ON  payfac.fk_paiement=pay.rowid";
 				$sqlmid.= " WHERE pay.fk_bank=".$key;
-				dol_syslog ( "bankjournal::  sqlmid=" . $sqlmid, LOG_DEBUG );
+				dol_syslog ( "cashjournal::  sqlmid=" . $sqlmid, LOG_DEBUG );
 				$resultmid = $db->query ( $sqlmid );
 				if ($resultmid) {
 					$objmid = $db->fetch_object ( $resultmid );
@@ -363,13 +366,13 @@ if (GETPOST ( 'action' ) == 'writeBookKeeping') {
 // export csv
 if (GETPOST ( 'action' ) == 'export_csv') {
 	header ( 'Content-Type: text/csv' );
-	header ( 'Content-Disposition: attachment;filename=journal_banque.csv' );
+	header ( 'Content-Disposition: attachment;filename=journal_caisse.csv' );
 	foreach ( $tabpay as $key => $val ) {
 		$date = dol_print_date ( $db->jdate ( $val ["date"] ), 'day' );
 		print '"' . $date . '",';
 		print '"' . $val ["ref"] . '",';
 		
-		// banq
+		// caisse
 		foreach ( $tabbq [$key] as $k => $mt ) {
 			print '"' . html_entity_decode ( $k ) . '","' . $langs->trans ( "Bank" ) . '","' . ($mt >= 0 ? price ( $mt ) : '') . '","' . ($mt < 0 ? price ( - $mt ) : '') . '"';
 		}
@@ -388,14 +391,14 @@ if (GETPOST ( 'action' ) == 'export_csv') {
 	
 	$form = new Form ( $db );
 	
-	llxHeader ( '', $langs->trans ( "BankJournal" ), '' );
+	llxHeader ( '', $langs->trans ( "CashJournal" ), '' );
 	
-	$nom = $langs->trans ( "BankJournal" );
+	$nom = $langs->trans ( "CashJournal" );
 	$nomlink = '';
 	$periodlink = '';
 	$exportlink = '';
 	$builddate = time ();
-	$description = $langs->trans ( "DescBankJournal" ) . '<br>';
+	$description = $langs->trans ( "DescCashJournal" ) . '<br>';
 	$period = $form->select_date ( $date_start, 'date_start', 0, 0, 0, '', 1, 0, 1 ) . ' - ' . $form->select_date ( $date_end, 'date_end', 0, 0, 0, '', 1, 0, 1 );
 	report_header ( $nom, $nomlink, $period, $periodlink, $description, $builddate, $exportlink, array (
 		'action' => '' 
@@ -422,15 +425,16 @@ if (GETPOST ( 'action' ) == 'export_csv') {
 	/*
 	 * Show result array
 	 */
+  print '<br><br>';
 	
 	$i = 0;
-	print "<table class=\"noborder\" width=\"100%\">";
-	print "<tr class=\"liste_titre\">";
-	print "<td>" . $langs->trans ( "Date" ) . "</td>";
-	print "<td>" . $langs->trans ( "Piece" ) . ' (' . $langs->trans ( "InvoiceRef" ) . ")</td>";
-	print "<td>" . $langs->trans ( "Account" ) . "</td>";
-	print "<td align='right'>" . $langs->trans ( "Debit" ) . "</td><td align='right'>" . $langs->trans ( "Credit" ) . "</td>";
-	print "</tr>\n";
+	print '<table class="noborder" width="100%">';
+	print '<tr class="liste_titre">';
+	print '<td>'.$langs->trans("Date").'</td>';
+	print '<td>'.$langs->trans("Piece").'('.$langs->trans("InvoiceRef").')</td>';
+	print '<td>'.$langs->trans("Account").'</td>';
+	print '<td align="right">'.$langs->trans("Debit").'</td><td align="right">'.$langs->trans("Credit").'</td>';
+	print '</tr>';
 	
 	$var = true;
 	$r = '';
@@ -438,7 +442,7 @@ if (GETPOST ( 'action' ) == 'export_csv') {
 	foreach ( $tabpay as $key => $val ) {
 	$date = dol_print_date($db->jdate($val["date"]),'day');
 		
-		// Bank
+		// Cash
 		foreach ( $tabbq [$key] as $k => $mt ) {
 			if (1) {
 				print "<tr " . $bc [$var] . " >";
@@ -469,7 +473,7 @@ if (GETPOST ( 'action' ) == 'export_csv') {
 		$var = ! $var;
 	}
 	
-	print "</table>";
+	print '</table>';
 	
 	// End of page
 	llxFooter ();

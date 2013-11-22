@@ -1,5 +1,7 @@
 <?php
 /* Copyright (C) 2004-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
+ * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +18,9 @@
  */
 
 /**
- * \file htdocs/compta/class/BookKeeping.class.php
- * \ingroup compta
- * \brief Fichier de la classe des comptes comptable
- * \version $Id: BookKeeping.class.php,v 1.3 2011/08/03 00:46:33 eldy Exp $
+ * \file      accountingex/class/bookkeeping.class.php
+ * \ingroup   Accounting Expert
+ * \brief     Fichier de la classe des comptes comptable
  */
 
 /**

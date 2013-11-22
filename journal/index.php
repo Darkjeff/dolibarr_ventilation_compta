@@ -1,10 +1,12 @@
 <?php
 /* Copyright (C) 2007-2010 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2007-2010 Jean Heimburger  <jean@tiaris.info>
+ * Copyright (C) 2007-2010 Jean Heimburger      <jean@tiaris.info>
+ * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -14,8 +16,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
+ /**
+ *    \file       accountingex/journal/index.php
+ *    \ingroup    Accounting Expert
+ *    \brief      Balance par mois
+ */
+ 
 // Dolibarr environment
 $res=@include("../main.inc.php");
 if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
@@ -27,6 +36,7 @@ if (! $res) die("Include of main fails");
 $langs->load("companies");
 $langs->load("other");
 $langs->load("compta");
+$langs->load("accountingex@accountingex");
 
 // Protection if external user
 if ($user->societe_id > 0)
