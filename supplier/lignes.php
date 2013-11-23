@@ -32,20 +32,21 @@ if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.p
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 
+// Class
 dol_include_once ( "/accountingex/class/html.formventilation.class.php");
 require_once(DOL_DOCUMENT_ROOT."/fourn/class/fournisseur.facture.class.php");
 require_once(DOL_DOCUMENT_ROOT."/product/class/product.class.php");
 
+// langs
 $langs->load("bills");
 $langs->load("compta");
 $langs->load("accountingex@accountingex");
 
 // Security check
-if ($user->societe_id > 0)
-	accessforbidden ();
-if (! $user->rights->accountingex->access)
-	accessforbidden ();
+if ($user->societe_id > 0) accessforbidden();
+if (!$user->rights->accountingex->admin) accessforbidden();
 
+// Filter
 if (empty($_REQUEST['typeid']))
 {
 	$newfiltre=str_replace('filtre=','',$filtre);
@@ -92,7 +93,7 @@ if (is_array ( $changeaccount ) && count ( $changeaccount ) > 0 && empty ( $is_s
 }
 
 
-llxHeader('');
+llxHeader ( '',$langs->trans("SuppliersVentilation").' - '.$langs->trans("Dispatched") );
 
 /*
  * Lignes de factures
@@ -148,8 +149,10 @@ if ($result)
   $num_lignes = $db->num_rows($result);
   $i = 0; 
   
-  print_barre_liste("Lignes de facture ventilées",$page,"lignes.php","",$sortfield,$sortorder,'',$num_lignes);
-
+print_barre_liste ( $langs->trans ( "InvoiceLinesDone" ), $page, "lignes.php", "", $sortfield, $sortorder, '', $num_lignes );
+	
+	print '<td align="left"><br><b>'.$langs->trans("DescVentilDoneSupplier").'</b></br></td>';
+	
   print '<form method="GET" action="lignes.php">';
   print '<table class="noborder" width="100%">';
   
@@ -162,7 +165,7 @@ if ($result)
   print '<td>'.$langs->trans("Label").'</td>';
   print '<td>'.$langs->trans("Description").'</td>';
   print '<td align="left">'.$langs->trans("Amount").'</td>';
-  print '<td colspan="2" align="left">'.$langs->trans("Compte").'</td>';
+  print '<td colspan="2" align="left">'.$langs->trans("Account").'</td>';
   print '<td align="center">&nbsp;</td>';
   print '<td align="center">&nbsp;</td>';
   print "</tr>\n";
@@ -170,14 +173,14 @@ if ($result)
   print '<tr class="liste_titre"><td><input name="search_facture" size="8" value="'.$_GET["search_facture"].'"></td>';
   print '<td class="liste_titre"><input type="text" class="flat" size="15" name="search_ref" value="' . GETPOST ( "search_ref" ) . '"></td>';
 	print '<td class="liste_titre"><input type="text" class="flat" size="15" name="search_label" value="' . GETPOST ( "search_label" ) . '"></td>';
-	print '<td align="right">&nbsp;</td>';
 	print '<td class="liste_titre"><input type="text" class="flat" size="15" name="search_desc" value="' . GETPOST ( "search_desc" ) . '"></td>';
+	print '<td align="right">&nbsp;</td>';
 	print '<td class="liste_titre"><input type="text" class="flat" size="15" name="search_account" value="' . GETPOST ( "search_account" ) . '"></td>';
 	print '<td align="center">&nbsp;</td>';
-	print '<td align="right">&nbsp;</td>';
-  print '<td align="right">&nbsp;</td>';
-	print '<input type="image" class="liste_titre" name="button_search" src="'.DOL_URL_ROOT.'/theme/'.$conf->theme.'/img/search.png" alt="'.$langs->trans("Search").'">';
+	print '<td align="right">';
+  print '<input type="image" class="liste_titre" name="button_search" src="'.DOL_URL_ROOT.'/theme/'.$conf->theme.'/img/search.png" alt="'.$langs->trans("Search").'">';
 	print '</td>';
+	print '<td align="center">&nbsp;</td>';
   print "</tr>\n";
   
   $facturefournisseur_static=new FactureFournisseur($db);

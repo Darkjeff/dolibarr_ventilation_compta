@@ -34,14 +34,22 @@ if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.p
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 
+// Class
 require_once(DOL_DOCUMENT_ROOT."/core/lib/date.lib.php");
 
+// Langs
 $langs->load("suppliers");
 $langs->load("compta");
 $langs->load("bills");
 $langs->load("other");
 $langs->load("accountingex@accountingex");
 
+// Security check
+if ($user->societe_id > 0) accessforbidden();
+if (!$user->rights->accountingex->admin) accessforbidden();
+
+
+// Filter
 $year=$_GET["year"];
 if ($year == 0 )
 {
@@ -64,6 +72,8 @@ $textnextyear=" <a href=\"index.php?year=" . ($year_current+1) . "\">".img_next(
 
 
 print_fiche_titre($langs->trans("VentilationComptableSupplier")." ".$textprevyear." ".$langs->trans("Year")." ".$year_start." ".$textnextyear);
+
+print '<td align="left"><br><b>'.$langs->trans("DescVentilSupplier").'</b></br></td>';
 
 $y = $year_current ;
 

@@ -34,14 +34,19 @@ if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.p
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 
+// Class
+
+// Langs
 $langs->load("bills");
 $langs->load("accountingex@accountingex");
+
+
 
 // Security check
 if ($user->societe_id > 0) accessforbidden();
 if (!$user->rights->accountingex->access) accessforbidden();
 
-llxHeader('','Ventilation');
+llxHeader('',$langs->trans("Ventilation"));
 
 if($_POST["action"] == 'ventil')
   {
@@ -133,6 +138,8 @@ if ($result)
   $i = 0; 
   
   print_barre_liste("Lignes de facture fournisseurs à ventiler",$page,"liste.php","",$sortfield,$sortorder,'',$num_lignes);
+
+ print '<td align="left"><br><b>'.$langs->trans("DescVentilTodoSupplier").'</b></br></td>';
 
 	print '<form action="liste.php" method="post">'."\n";
 	print '<input type="hidden" name="action" value="ventil">';

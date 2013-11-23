@@ -142,7 +142,7 @@ if ($result) {
 	
 	print_barre_liste ( $langs->trans ( "InvoiceLinesDone" ), $page, "lignes.php", "", $sortfield, $sortorder, '', $num_lignes );
 	
-	print '<td align="left">'.$langs->trans("DescVentilDoneCustomer").'</td>';
+	print '<td align="left"><br><b>'.$langs->trans("DescVentilDoneCustomer").'</b></br></td>';
 	
 	print '<form method="POST" action="lignes.php">';
 	print '<table class="noborder" width="100%">';

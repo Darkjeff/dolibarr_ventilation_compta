@@ -145,7 +145,7 @@ if ($result)
 	$i = 0;
 	print_barre_liste($langs->trans("InvoiceLines"),$page,"liste.php","",$sortfield,$sortorder,'',$num_lignes);
 
- print '<td align="left">'.$langs->trans("DescVentilTodoCustomer").'</td>';
+ print '<td align="left"><br><b>'.$langs->trans("DescVentilTodoCustomer").'</b></br></td>';
 
 	print '<table class="noborder" width="100%">';
 	print '<tr class="liste_titre"><td>'.$langs->trans("Invoice").'</td>';

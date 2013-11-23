@@ -1,4 +1,4 @@
-# Dolibarr language file - fr_FR - Accounting Expert
+﻿# Dolibarr language file - fr_FR - Accounting Expert
 CHARSET=UTF-8
 
 Module150000Name= Comptabilité Expert
@@ -40,7 +40,6 @@ VentilationComptableSupplier=Ventilation comptable fournisseur
 Intitule=Intitulé
 Line=Ligne
 
-CAHT=Total Chiffre Affaires HT
 CAHTF=Total Achat Fournisseur HT
 InvoiceLines=Lignes de facture à ventiler
 InvoiceLinesDone=Lignes de facture ventilées
@@ -102,3 +101,14 @@ Active=État
 
 NewFiscalYear=Nouvel exercice fiscal
 
+
+DescVentilCustomer=Consultez ici la ventilation comptable annuelle de vos Factures Client
+TotalVente=Total Chiffre Affaires HT
+TotalMarge=Total Marge Commerciale
+DescVentilDoneCustomer=Consultez ici la liste des lignes de factures clients et leur compte comptable
+DescVentilTodoCustomer=Ventilez vos lignes de facture client avec un compte comptable
+ChangeAccount=Changer le compte comptable pour les lignes sélectionnées par le compte :
+Vide=-
+DescVentilSupplier=Consultez ici la ventilation comptable annuelle de vos Factures Fournisseur
+DescVentilTodoSupplier=Ventilez vos lignes de facture fournisseur avec un compte comptable
+DescVentilDoneSupplier=Consultez ici la liste des lignes de factures fournisseur et leur compte comptable
