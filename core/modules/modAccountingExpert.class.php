@@ -52,7 +52,7 @@ class modAccountingExpert extends DolibarrModules
 
 		$this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
 		$this->special = 0;
-		$this->picto = 'billr';
+		$this->picto = 'accountingex@accountingex';
 		
 		// Defined if the directory /mymodule/inc/triggers/ contains triggers or not
 		//$this->triggers = 1;

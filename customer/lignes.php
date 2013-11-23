@@ -32,21 +32,22 @@ if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.p
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 
+// Class
 dol_include_once ( "/accountingex/class/html.formventilation.class.php" );
 require_once (DOL_DOCUMENT_ROOT . "/compta/facture/class/facture.class.php");
 require_once (DOL_DOCUMENT_ROOT . "/product/class/product.class.php");
 
+// langs
 $langs->load ( "bills" );
 $langs->load ( "compta" );
 $langs->load ( "main" );
 $langs->load ( "accountingex@accountingex" );
 
 // Security check
-if ($user->societe_id > 0)
-	accessforbidden ();
-if (! $user->rights->accountingex->access)
-	accessforbidden ();
+if ($user->societe_id > 0) accessforbidden();
+if (!$user->rights->accountingex->admin) accessforbidden();
 
+// Filter
 if (empty ( $_REQUEST ['typeid'] )) {
 	$newfiltre = str_replace ( 'filtre=', '', $filtre );
 	$filterarray = explode ( '-', $newfiltre );
@@ -140,6 +141,8 @@ if ($result) {
 	$i = 0;
 	
 	print_barre_liste ( $langs->trans ( "InvoiceLinesDone" ), $page, "lignes.php", "", $sortfield, $sortorder, '', $num_lignes );
+	
+	print '<td align="left">'.$langs->trans("DescVentilDoneCustomer").'</td>';
 	
 	print '<form method="POST" action="lignes.php">';
 	print '<table class="noborder" width="100%">';

@@ -25,20 +25,29 @@
  *    \ingroup    Accounting Expert
  *    \brief      Page accueil clients ventilation comptable
  */
+ // Dolibarr environment
 $res=@include("../main.inc.php");
 if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
 if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.php");
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 
+// Class
 require_once(DOL_DOCUMENT_ROOT."/core/lib/date.lib.php");
 
+// Langs
 $langs->load("compta");
 $langs->load("bills");
 $langs->load("other");
 $langs->load("main");
 $langs->load("accountingex@accountingex");
 
+// Security check
+if ($user->societe_id > 0) accessforbidden();
+if (!$user->rights->accountingex->admin) accessforbidden();
+
+
+// Filter
 $year=$_GET["year"];
 if ($year == 0 )
 {
@@ -60,7 +69,9 @@ llxHeader('',$langs->trans("CustomersVentilation"));
 $textprevyear="<a href=\"index.php?year=" . ($year_current-1) . "\">".img_previous()."</a>";
 $textnextyear=" <a href=\"index.php?year=" . ($year_current+1) . "\">".img_next()."</a>";
 
-print_fiche_titre($langs->trans("VentilationComptable")." ".$textprevyear." ".$langs->trans("Year")." ".$year_start." ".$textnextyear);
+print_fiche_titre($langs->trans("CustomersVentilation")." ".$textprevyear." ".$langs->trans("Year")." ".$year_start." ".$textnextyear);
+
+print '<td align="left">'.$langs->trans("DescVentilCustomer").'</td>';
 
 $sql = "SELECT count(*) FROM ".MAIN_DB_PREFIX."facturedet as fd";
 $sql.= " , ".MAIN_DB_PREFIX."facture as f";
@@ -81,7 +92,7 @@ $var=true;
 
 print '<table class="noborder" width="100%">';
 print '<tr class="liste_titre"><td width=60>'.$langs->trans("Account").'</td>';
-print '<td align="left">'.$langs->trans("Intitule").'</td>';
+print '<td width=200 align="left">'.$langs->trans("Intitule").'</td>';
 print '<td align="center">'.$langs->trans("JanuaryMin").'</td>';
 print '<td align="center">'.$langs->trans("FebruaryMin").'</td>';
 print '<td align="center">'.$langs->trans("MarchMin").'</td>';
@@ -128,8 +139,8 @@ if ($resql)
     {
 		$row = $db->fetch_row($resql);
 
-		print '<tr><td>'.$row[0].'</td>';
-		print '<td align="left">'.$row[1].'</td>';
+		print '<tr><td width=60>'.$row[0].'</td>';
+		print '<td width=200 align="left">'.$row[1].'</td>';
 		print '<td align="right">'.$row[2].'</td>';
 		print '<td align="right">'.$row[3].'</td>';
 		print '<td align="right">'.$row[4].'</td>';
@@ -155,7 +166,8 @@ else
 
 print "<br>\n";
 print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre"><td align="left">'.$langs->trans("TotalVente").'</td>';
+print '<tr class="liste_titre"><td width=60 align="left">'.$langs->trans("TotalVente").'</td>';
+print '<td width=200 align="left">'.$langs->trans("Vide").'</td>';
 print '<td align="center">'.$langs->trans("JanuaryMin").'</td>';
 print '<td align="center">'.$langs->trans("FebruaryMin").'</td>';
 print '<td align="center">'.$langs->trans("MarchMin").'</td>';
@@ -171,7 +183,7 @@ print '<td align="center">'.$langs->trans("DecemberMin").'</td>';
 print '<td align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
 
 
-$sql = "SELECT '".$langs->trans("CAHT")."' AS 'Total',";
+$sql = "SELECT '".$langs->trans("Vide")."' AS 'Total','".$langs->trans("Vide")."' AS 'Vide',";
 $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=1,fd.total_ht,0)),2) AS 'Janvier',";
 $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=2,fd.total_ht,0)),2) AS 'Fevrier',";
 $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=3,fd.total_ht,0)),2) AS 'Mars',";
@@ -201,8 +213,8 @@ if ($resql)
     {
 		$row = $db->fetch_row($resql);
 
-		print '<tr><td>'.$row[0].'</td>';
-		print '<td align="right">'.$row[1].'</td>';
+		print '<tr><td width=60>'.$row[0].'</td>';
+		print '<td width=200 align="right">'.$row[1].'</td>';
 		print '<td align="right">'.$row[2].'</td>';
 		print '<td align="right">'.$row[3].'</td>';
 		print '<td align="right">'.$row[4].'</td>';
@@ -229,7 +241,8 @@ print "</table>\n";
 
 print "<br>\n";
 print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre"><td width=150>'.$langs->trans("TotalMarge").'</td>';
+print '<tr class="liste_titre"><td width=60>'.$langs->trans("TotalMarge").'</td>';
+print '<td width=200 align="left">'.$langs->trans("Vide").'</td>';
 print '<td align="center">'.$langs->trans("JanuaryMin").'</td>';
 print '<td align="center">'.$langs->trans("FebruaryMin").'</td>';
 print '<td align="center">'.$langs->trans("MarchMin").'</td>';
@@ -245,7 +258,7 @@ print '<td align="center">'.$langs->trans("DecemberMin").'</td>';
 print '<td align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
 
 
-$sql = "SELECT '".$langs->trans("Marge")."' AS 'Marge',";
+$sql = "SELECT '".$langs->trans("Vide")."' AS 'Marge','".$langs->trans("Vide")."' AS 'Vide',";
 $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=1,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Janvier',";
 $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=2,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Fevrier',";
 $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=3,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Mars',";
@@ -275,8 +288,8 @@ if ($resql)
     {
 		$row = $db->fetch_row($resql);
 
-		print '<tr><td>'.$row[0].'</td>';
-		print '<td align="right">'.$row[1].'</td>';
+		print '<tr><td width=60>'.$row[0].'</td>';
+		print '<td width=200 align="right">'.$row[1].'</td>';
 		print '<td align="right">'.$row[2].'</td>';
 		print '<td align="right">'.$row[3].'</td>';
 		print '<td align="right">'.$row[4].'</td>';

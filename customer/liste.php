@@ -25,17 +25,18 @@
  * 		\ingroup    Accounting Expert
  * 		\brief      Page de ventilation des lignes de facture clients
  */
-
+ // Dolibarr environment
 $res=@include("../main.inc.php");
 if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
 if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.php");
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 
+// Class
 require_once(DOL_DOCUMENT_ROOT."/compta/facture/class/facture.class.php");
 require_once(DOL_DOCUMENT_ROOT."/product/class/product.class.php");
 
-
+// Langs
 $langs->load("compta");
 $langs->load("bills");
 $langs->load("main");
@@ -44,6 +45,11 @@ $langs->load("accountingex@accountingex");
 // Security check
 if ($user->societe_id > 0) accessforbidden();
 if (!$user->rights->accountingex->access) accessforbidden();
+
+
+/*
+ * View
+ */
 
 llxHeader('',$langs->trans("Ventilation"));
 
@@ -139,6 +145,7 @@ if ($result)
 	$i = 0;
 	print_barre_liste($langs->trans("InvoiceLines"),$page,"liste.php","",$sortfield,$sortorder,'',$num_lignes);
 
+ print '<td align="left">'.$langs->trans("DescVentilTodoCustomer").'</td>';
 
 	print '<table class="noborder" width="100%">';
 	print '<tr class="liste_titre"><td>'.$langs->trans("Invoice").'</td>';
