@@ -6,6 +6,7 @@
  * Copyright (C) 2013		    Christophe Battarel	<christophe.battarel@altairis.fr>
  * Copyright (C) 2011-2013  Alexandre Spangaro	<alexandre.spangaro@gmail.com>
  * Copyright (C) 2013       Florian Henry	      <florian.henry@open-concept.pro>
+ * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +34,8 @@ if (! $res && file_exists ( "../../main.inc.php" )) $res = @include ("../../main
 if (! $res && file_exists ( "../../../main.inc.php" )) $res = @include ("../../../main.inc.php");
 if (! $res) die ( "Include of main fails" );
 
+// Class
+require_once(DOL_DOCUMENT_ROOT."/core/lib/date.lib.php");
 require_once DOL_DOCUMENT_ROOT . '/core/lib/report.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/date.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/bank.lib.php';
@@ -47,6 +50,7 @@ require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.class.php';
 require_once DOL_DOCUMENT_ROOT . '/ventilation/class/comptacompte.class.php';
 require_once DOL_DOCUMENT_ROOT . '/ventilation/class/bookkeeping.class.php';
 
+// Langs
 $langs->load("companies");
 $langs->load("other");
 $langs->load("compta");
@@ -60,9 +64,8 @@ $date_endday = GETPOST ( 'date_endday' );
 $date_endyear = GETPOST ( 'date_endyear' );
 
 // Security check
-if ($user->societe_id > 0) $socid = $user->societe_id;
-if (! empty ( $conf->comptabilite->enabled )) $result = restrictedArea ( $user, 'compta', '', '', 'resultat' );
-if (! empty ( $conf->accounting->enabled )) $result = restrictedArea ( $user, 'accounting', '', '', 'comptarapport' );
+if ($user->societe_id > 0) accessforbidden();
+if (!$user->rights->accountingex->access) accessforbidden();
 
 /*
  * Actions

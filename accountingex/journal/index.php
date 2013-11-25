@@ -33,16 +33,16 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 
 
-$langs->load("companies");
-$langs->load("other");
+// Langs
 $langs->load("compta");
+$langs->load("bills");
+$langs->load("other");
+$langs->load("main");
 $langs->load("accountingex@accountingex");
 
-// Protection if external user
-if ($user->societe_id > 0)
-{
-	accessforbidden();
-}
+/ Security check
+if ($user->societe_id > 0) accessforbidden();
+if (!$user->rights->accountingex->access) accessforbidden();
 
 
 /*******************************************************************

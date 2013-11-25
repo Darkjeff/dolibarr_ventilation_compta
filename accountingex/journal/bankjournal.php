@@ -50,6 +50,7 @@ dol_include_once ( "/fourn/class/fournisseur.class.php");
 dol_include_once ( "/accountingex/class/comptacompte.class.php");
 dol_include_once ( "/accountingex/class/bookkeeping.class.php");
 
+// Langs
 $langs->load("companies");
 $langs->load("other");
 $langs->load("compta");
@@ -63,10 +64,8 @@ $date_endday = GETPOST ( 'date_endday' );
 $date_endyear = GETPOST ( 'date_endyear' );
 
 // Security check
-if ($user->societe_id > 0) $socid = $user->societe_id;
-if (! empty ( $conf->comptabilite->enabled )) $result = restrictedArea ( $user, 'compta', '', '', 'resultat' );
-if (! empty ( $conf->accounting->enabled )) $result = restrictedArea ( $user, 'accounting', '', '', 'comptarapport' );
-
+if ($user->societe_id > 0) accessforbidden();
+if (!$user->rights->accountingex->access) accessforbidden();
 /*
  * Actions
  */

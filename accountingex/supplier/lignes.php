@@ -33,13 +33,13 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 
 // Class
-dol_include_once ( "/accountingex/class/html.formventilation.class.php");
-require_once(DOL_DOCUMENT_ROOT."/fourn/class/fournisseur.facture.class.php");
-require_once(DOL_DOCUMENT_ROOT."/product/class/product.class.php");
+require_once(DOL_DOCUMENT_ROOT."/core/lib/date.lib.php");
 
-// langs
-$langs->load("bills");
+// Langs
 $langs->load("compta");
+$langs->load("bills");
+$langs->load("other");
+$langs->load("main");
 $langs->load("accountingex@accountingex");
 
 // Security check

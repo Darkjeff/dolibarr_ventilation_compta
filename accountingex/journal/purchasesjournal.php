@@ -42,9 +42,11 @@ dol_include_once ( "/accountingex/class/comptacompte.class.php");
 dol_include_once ( "/accountingex/class/bookkeeping.class.php");
 
 
-$langs->load("companies");
-$langs->load("other");
+// Langs
 $langs->load("compta");
+$langs->load("bills");
+$langs->load("other");
+$langs->load("main");
 $langs->load("accountingex@accountingex");
 
 $date_startmonth=GETPOST('date_startmonth');
@@ -55,7 +57,8 @@ $date_endday=GETPOST('date_endday');
 $date_endyear=GETPOST('date_endyear');
 
 // Security check
-if ($user->societe_id > 0) $socid = $user->societe_id;
+if ($user->societe_id > 0) accessforbidden();
+if (!$user->rights->accountingex->access) accessforbidden();
 
 
 /*

@@ -33,16 +33,21 @@ if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.p
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 
+// Class
 require_once(DOL_DOCUMENT_ROOT."/core/lib/date.lib.php");
 
+// Langs
 $langs->load("accountingex@accountingex");
 
+// Filter
 $year=$_GET["year"];
 if ($year == 0 )
 {
   $year_current = strftime("%Y",time());
   $year_start = $year_current;
-} else {
+} 
+else 
+{
   $year_current = $year;
   $year_start = $year;
 }
