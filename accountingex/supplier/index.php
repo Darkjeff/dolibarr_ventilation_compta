@@ -46,7 +46,7 @@ $langs->load("accountingex@accountingex");
 
 // Security check
 if ($user->societe_id > 0) accessforbidden();
-if (!$user->rights->accountingex->admin) accessforbidden();
+if (!$user->rights->accountingex->access) accessforbidden();
 
 
 // Filter
