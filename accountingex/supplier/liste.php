@@ -37,15 +37,21 @@ if (! $res) die("Include of main fails");
 // Class
 
 // Langs
+$langs->load("compta");
 $langs->load("bills");
+$langs->load("other");
+$langs->load("main");
 $langs->load("accountingex@accountingex");
-
 
 
 // Security check
 if ($user->societe_id > 0) accessforbidden();
 if (!$user->rights->accountingex->access) accessforbidden();
 
+/*
+ * View
+ */
+ 
 llxHeader('',$langs->trans("Ventilation"));
 
 if($_POST["action"] == 'ventil')

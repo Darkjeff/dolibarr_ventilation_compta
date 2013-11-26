@@ -38,10 +38,10 @@ if (! $res) die("Include of main fails");
 require_once(DOL_DOCUMENT_ROOT."/core/lib/date.lib.php");
 
 // Langs
-$langs->load("suppliers");
 $langs->load("compta");
 $langs->load("bills");
 $langs->load("other");
+$langs->load("main");
 $langs->load("accountingex@accountingex");
 
 // Security check
@@ -55,7 +55,9 @@ if ($year == 0 )
 {
   $year_current = strftime("%Y",time());
   $year_start = $year_current;
-} else {
+} 
+else 
+{
   $year_current = $year;
   $year_start = $year;
 }

@@ -50,39 +50,36 @@ if (!$user->rights->accountingex->admin) accessforbidden();
 
 llxHeader('',$langs->trans("ImportAccount"));
 
+$to_import = GETPOST ( "mesCasesCochees" );
+
 if($_POST["action"] == 'import')
 {
 	print '<div><font color="red">'.$langs->trans("Processing").'...</font></div>';
-	if( $_POST["mesCasesCochees"])
-	{
-		print '<div><font color="red">'.count($_POST["mesCasesCochees"]).' '.$langs->trans("SelectedLines").'</font></div>';
-		$mesLignesCochees=$_POST['mesCasesCochees'];
-		$mesLabelChoisis = $_POST['intitule'];
-		$mesTypesChoisis = $_POST['pcgType'];
-		$mesSubTypesChoisis = $_POST['pcgSubType'];
-		$cpt = 0;
-		foreach($mesLignesCochees as $maLigneCochee) 
-		{
+	if (is_array ( $to_import ) && count ( $to_import ) > 0) {
+		print '<div><font color="red">' . count ( $to_import ) . ' ' . $langs->trans ( "SelectedLines" ) . '</font></div>';
+		$sql = 'SELECT pcg_version FROM ' . MAIN_DB_PREFIX . 'accounting_system WHERE rowid=' . $conf->global->CHARTOFACCOUNTS;
+		$result = $db->query ( $sql );
+		if ($result && ($db->num_rows ( $result )>0)) {
+			
+			$obj = $db->fetch_object ( $result );
+
+			$cpt = 0;
+			foreach ( $to_import as $maLigneCochee ) {
 		
 		$accounting = new AccountingAccount ($db);
 		
 			
-			$maLigneCourante = split("_", $maLigneCochee);
-			$monAccount = $maLigneCourante[0];
-			$monLabel = $maLigneCourante[1];
-			$monLabel2=$mesLabelChoisis[$monLabel];
-			$monParentAccount = $maLigneCourante[2];
-			$monType = $maLigneCourante[3];
-			$monType2=$mesTypesChoisis[$monType];
-			$monSubType = $maLigneCourante[4];
-			$monSubType2=$mesSubTypesChoisis[$monSubType];
+			$monLabel = GETPOST ( 'intitule' . $maLigneCochee );
+				$monParentAccount = GETPOST ( 'AccountParent' . $maLigneCochee );
+				$monType = GETPOST ( 'pcgType' . $maLigneCochee );
+				$monSubType = GETPOST ( 'pcgSubType' . $maLigneCochee );
   
-			$accounting->fk_pcg_version = $conf->global->ACCOUNTING_PCG_VERSION;
-			$accounting->account_number = $monAccount;			
-			$accounting->label = $monLabel2;
+			$accounting->fk_pcg_version = $obj->pcg_version;
+			$accounting->account_number = $maLigneCochee;			
+			$accounting->label = $monLabel;
 			$accounting->account_parent = $monParentAccount;
-			$accounting->pcg_type =$monType2 ;
-			$accounting->pcg_subtype =$monSubType2 ;
+			$accounting->pcg_type =$monType ;
+			$accounting->pcg_subtype =$monSubType ;
 			$accounting->active = 1;
 			
 			
@@ -90,10 +87,13 @@ if($_POST["action"] == 'import')
 			if ($result > 0) {
 				setEventMessage ( $langs->trans ( "AccountingAccountAdd" ), 'mesgs' );
 			} else {
-				dol_print_error ( $db );
+				setEventMessage ( $accounting->error, 'errors' );
 			}
 			$cpt++; 
   
+		}
+		}else {
+			setEventMessage($langs->trans('AccountPlanNotFoundCheckSetting'),'errors');
 		}
 	}
 	else
@@ -191,10 +191,8 @@ if ($result)
 		$checked = ('intitule' == 'O')?' checked=checked':'';
 		
 		print '<td align="center">';
-		print '<input type="checkbox" name="mesCasesCochees[]"'.$checked .'/>';
+		print '<input type="checkbox" name="mesCasesCochees[]" ' . $checked . ' value="' . $objp->accounting . '"/>';
 		print '</td>';
-		
-		
 		
 		
 		
@@ -208,16 +206,14 @@ if ($result)
 		$i++;
 	}
 
-	print '<tr><td colspan="8">&nbsp;</td></tr><tr><td colspan="8" align="center"><input type="submit" class="butAction" value="'.$langs->trans("Import").'"></td></tr>';
-
+	print '<tr><td colspan="8">&nbsp;</td></tr><tr><td colspan="8" align="center"><input type="submit" class="butAction" value="' . $langs->trans ( "Import" ) . '"></td></tr>';
+	
 	print '</table>';
 	print '</form>';
+} else {
+	print $db->error ();
 }
-else
-{
-	print $db->error();
-}
-$db->close();
+$db->close ();
 
-llxFooter();
+llxFooter ();
 ?>

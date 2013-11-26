@@ -30,10 +30,14 @@ if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.p
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 
+// Class
 require_once(DOL_DOCUMENT_ROOT."/fourn/class/fournisseur.facture.class.php");
 
+// Langs
+$langs->load("compta");
 $langs->load("bills");
-$langs->load("products");
+$langs->load("other");
+$langs->load("main");
 $langs->load("accountingex@accountingex");
 
 $mesg = '';
@@ -49,6 +53,10 @@ if ($_POST["action"] == 'ventil' && $user->rights->accountingex->access)
   $sql .= " WHERE rowid = ".$_GET["id"];
   $db->query($sql);
 }
+
+/*
+ * View
+ */
 
 llxHeader("","","Fiche ventilation");
 
