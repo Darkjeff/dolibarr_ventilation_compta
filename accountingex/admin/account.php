@@ -56,7 +56,7 @@ $sortfield = GETPOST ( "sortfield", 'alpha' );
 $sortorder = GETPOST ( "sortorder", 'alpha' );
 
 if (! $sortfield)
-	$sortfield = "aa.rowid";
+	$sortfield = "aa.account_number";
 if (! $sortorder)
 	$sortorder = "ASC";
 
@@ -69,12 +69,13 @@ llxHeader ( '', $langs->trans ( "Accounts" ) );
 
 print_barre_liste ( $langs->trans ( "Accounts" ), $page, "account.php", "", $sortfield, $sortorder, '', $num );
 
-//$pcgver = $conf->global->CHARTOFACCOUNTS;
+$pcgver = $conf->global->CHARTOFACCOUNTS;
 
 $sql2 = "SELECT aa.rowid, aa.fk_pcg_version, aa.pcg_type, aa.pcg_subtype, aa.account_number, aa.account_parent , aa.label, aa.active ";
-$sql2 .= " FROM " . MAIN_DB_PREFIX . "accountingaccount as aa";
-$sql2 .= " WHERE aa.active = 1"; 
-//$sql2 .= " AND aa.fk_pcg_version = ".$pcgver;
+$sql2 .= " FROM " . MAIN_DB_PREFIX . "accountingaccount as aa, " . MAIN_DB_PREFIX . "accounting_system as asy";
+$sql2 .= " WHERE aa.active = 1";
+$sql2 .= " AND aa.fk_pcg_version = asy.pcg_version"; 
+$sql2 .= " AND asy.rowid = ".$pcgver;
 
 if (strlen ( trim ( $_GET ["search_account"] ) )) {
 	$sql2 .= " AND aa.account_number like '%" . $_GET ["search_account"] . "%'";

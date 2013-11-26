@@ -81,6 +81,7 @@ class modAccountingExpert extends DolibarrModules
 		$this->const[7] = array("ACCOUNTINGEX_CASH_JOURNAL","chaine","CAI");    
 		$this->const[8] = array("ACCOUNTINGEX_MISCELLANEOUS_JOURNAL","chaine","OD");
     $this->const[9] = array("ACCOUNTINGEX_ACCOUNT_TRANSFER_CASH","chaine","580000");
+    $this->const[10] = array("CHARTOFACCOUNTS","string","2");
     		
 		// Boxes
 		$this->boxes = array();
@@ -217,7 +218,7 @@ class modAccountingExpert extends DolibarrModules
 								'type'=>'left',
 								'titre'=>'Journaux',
 								'mainmenu'=>'accounting',
-								'url'=>'/accountingex/journal/index.php',
+								'url'=>'',
 								'langs'=>'accountingex@accountingex',
 								'position'=>120,
 								'enabled'=>1,
