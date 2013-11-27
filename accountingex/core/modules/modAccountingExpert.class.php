@@ -58,7 +58,7 @@ class modAccountingExpert extends DolibarrModules
 		//$this->triggers = 1;
 
 		// Data directories to create when module is enabled
-		$this->dirs = array();
+		$this->dirs = array('/accountingex/temp');
 
 		// Config pages
 		// $this->config_page_url = array('index.php@accountingex'); Deprecated - Need an admin page into the module directly - Not reserve for the admin
@@ -81,7 +81,10 @@ class modAccountingExpert extends DolibarrModules
 		$this->const[7] = array("ACCOUNTINGEX_CASH_JOURNAL","chaine","CAI");    
 		$this->const[8] = array("ACCOUNTINGEX_MISCELLANEOUS_JOURNAL","chaine","OD");
     $this->const[9] = array("ACCOUNTINGEX_ACCOUNT_TRANSFER_CASH","chaine","580000");
-    $this->const[10] = array("CHARTOFACCOUNTS","string","2");
+    $this->const[10] = array("CHARTOFACCOUNTS","chaine","2");
+    
+    // Css
+    $this->module_parts = array('css' => array('/accountingex/css/accountingex.css.php'));
     		
 		// Boxes
 		$this->boxes = array();
@@ -218,7 +221,7 @@ class modAccountingExpert extends DolibarrModules
 								'type'=>'left',
 								'titre'=>'Journaux',
 								'mainmenu'=>'accounting',
-								'url'=>'',
+								//'url'=>'',
 								'langs'=>'accountingex@accountingex',
 								'position'=>120,
 								'enabled'=>1,
