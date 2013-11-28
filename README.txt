@@ -1,18 +1,19 @@
 ===================================================
-*				Accounting Expert MODULE		  *
-*		 by Olivier Geffroy (Jeffinfo)            *
-*		         And Alexandre Spangaro           *
-*				     version	3.4         	  *
-*	    for Dolibarr >= 3.4.0                     *
-*			release date 2013/11/28				  *
-*			last update (see on github)			  *
+*		Accounting Expert MODULE
+*		by Olivier Geffroy (Jeffinfo)
+*		And Alexandre Spangaro
+*		
+*   Version	3.4 - Revision 1.0.0
+*	    for Dolibarr >= 3.4.x
+*			release date 2013/11/28
+*			last update (see on github)
 ===================================================
 
 ===== DESCRIPTION =====
 
 This module was created to export accounting data from Dolibarr to all (we try) accouting software. These exports are in csv format in order to be easily import by accounting software. 
 Export is possible though Journal Sales Journal Purchases or Journal banking or directly via the ledger
-I a line has not been codified in Dolibarr upstram, a suspense account exists but it is especially possible to ventilate the accounting line or accouting lines via this module. 
+If a line has not been codified in Dolibarr upstream, a suspense account exists but it is especially possible to ventilate the accounting line or accounting lines via this module. 
 This module is suitable for so-called "commitment" accounting and respects French accounting standards.
 
 ===== FREE VERSION =====
@@ -34,6 +35,7 @@ To download the latest Accounting Expert Free edition, please check the github:
 
 For Dolibarr 3.4.x and above:
 
+https://github.com/Darkjeff/dolibarr_ventilation_compta/tree/3.4
 
 ===== CONTACT =====
 
