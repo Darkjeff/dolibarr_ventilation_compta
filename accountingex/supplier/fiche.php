@@ -57,7 +57,6 @@ if ($_POST["action"] == 'ventil' && $user->rights->accountingex->access)
 /*
  * View
  */
-
 llxHeader("","","Fiche ventilation");
 
 if ($cancel == $langs->trans("Cancel"))
@@ -69,9 +68,11 @@ if ($cancel == $langs->trans("Cancel"))
  *
  *
  */
-$sql = "SELECT rowid, numero, intitule";
-$sql .= " FROM ".MAIN_DB_PREFIX."compta_compte_generaux";
-$sql .= " ORDER BY numero ASC";
+$sql = "SELECT a.rowid, a.account_number, a.label, a.fk_pcg_version";
+$sql .= " , s.rowid, s.pcg_version";
+$sql .= " FROM ".MAIN_DB_PREFIX."accountingaccount as a, ".MAIN_DB_PREFIX."accounting_system as s";
+$sql .= " WHERE a.fk_pcg_version = s.pcg_version AND ".$conf->global->CHARTOFACCOUNTS."=s.rowid";
+$sql .= " ORDER BY a.account_number ASC";
 
 $cgs = array();
 $cgn = array();
