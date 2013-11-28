@@ -324,6 +324,8 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
 	/*
 	 * Show result array
 	 */
+  print '<br><br>';
+  
 	$i = 0;
 	print "<table class=\"noborder\" width=\"100%\">";
 	print "<tr class=\"liste_titre\">";

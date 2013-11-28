@@ -421,6 +421,7 @@ if (GETPOST ( 'action' ) == 'export_csv') {
 	/*
 	 * Show result array
 	 */
+  print '<br><br>';
 	
 	$i = 0;
 	print "<table class=\"noborder\" width=\"100%\">";
