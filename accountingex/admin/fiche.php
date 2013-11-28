@@ -26,15 +26,11 @@
  * \brief     Page fiche accounting
  */
 
-$res = @include ("../main.inc.php");
-if (! $res && file_exists ( "../main.inc.php" ))
-	$res = @include ("../main.inc.php");
-if (! $res && file_exists ( "../../main.inc.php" ))
-	$res = @include ("../../main.inc.php");
-if (! $res && file_exists ( "../../../main.inc.php" ))
-	$res = @include ("../../../main.inc.php");
-if (! $res)
-	die ( "Include of main fails" );
+$res=@include("../main.inc.php");
+if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
+if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.php");
+if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
+if (! $res) die("Include of main fails");
 	
 	// Class
 dol_include_once ( "/accountingex/core/lib/account.lib.php" );
@@ -51,16 +47,19 @@ $id = GETPOST ( 'id', 'int' );
 $rowid = GETPOST ( 'rowid', 'int' );
 
 // Security check
-if ($user->societe_id > 0)
-	accessforbidden ();
-if (! $user->rights->accountingex->admin)
-	accessforbidden ();
-
+if ($user->societe_id > 0) accessforbidden();
+if (!$user->rights->accountingex->admin) accessforbidden();
 $accounting = new AccountingAccount ( $db );
 
 // action
 if ($action == 'add') {
-	$accounting->pcg_version = $conf->global->CHARTOFACCOUNTS;
+
+$sql = 'SELECT pcg_version FROM ' . MAIN_DB_PREFIX . 'accounting_system WHERE rowid=' . $conf->global->CHARTOFACCOUNTS;
+		$result = $db->query ( $sql );
+		$obj = $db->fetch_object ( $result );
+		$cpt = 0;
+		
+	$accounting->fk_pcg_version = $obj->pcg_version;
 	$accounting->pcg_type = GETPOST ( "pcgType" );
 	$accounting->pcg_subtype = GETPOST ( "pcgSubType" );
 	$accounting->account_number = GETPOST ( "AccountNumber" );
@@ -88,7 +87,13 @@ else if ($action == 'edit') {
 	if (! GETPOST ( 'cancel', 'alpha' )) {
 		$result = $accounting->fetch ( $id );
 		
-		$accounting->fk_pcg_version = $conf->global->CHARTOFACCOUNTS;
+		$sql = 'SELECT pcg_version FROM ' . MAIN_DB_PREFIX . 'accounting_system WHERE rowid=' . $conf->global->CHARTOFACCOUNTS;
+		$result2 = $db->query ( $sql );
+		$obj = $db->fetch_object ( $result2 );
+		$cpt = 0;
+		
+		
+		$accounting->fk_pcg_version = $obj->pcg_version;
 		$accounting->pcg_type = GETPOST ( 'pcgType' );
 		$accounting->pcg_subtype = GETPOST ( 'pcgSubType' );
 		$accounting->account_number = GETPOST ( 'AccountNumber', 'int' );
