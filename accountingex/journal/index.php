@@ -40,7 +40,7 @@ $langs->load("other");
 $langs->load("main");
 $langs->load("accountingex@accountingex");
 
-/ Security check
+// Security check
 if ($user->societe_id > 0) accessforbidden();
 if (!$user->rights->accountingex->access) accessforbidden();
 
