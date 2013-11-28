@@ -51,6 +51,8 @@ if ($_POST["action"] == 'ventil' && $user->rights->accountingex->access)
   $sql = " UPDATE ".MAIN_DB_PREFIX."facture_fourn_det";
   $sql .= " SET fk_code_ventilation = ".$_POST["codeventil"];
   $sql .= " WHERE rowid = ".$_GET["id"];
+  dol_syslog ( "Accountancy Expert :: Card Supplier :: Update sql=" . $sql, LOG_DEBUG );
+  
   $db->query($sql);
 }
 
@@ -73,6 +75,7 @@ $sql .= " , s.rowid, s.pcg_version";
 $sql .= " FROM ".MAIN_DB_PREFIX."accountingaccount as a, ".MAIN_DB_PREFIX."accounting_system as s";
 $sql .= " WHERE a.fk_pcg_version = s.pcg_version AND ".$conf->global->CHARTOFACCOUNTS."=s.rowid";
 $sql .= " ORDER BY a.account_number ASC";
+dol_syslog ( "Accountancy Expert :: Card Supplier :: Fetch sql=" . $sql, LOG_DEBUG );
 
 $cgs = array();
 $cgn = array();
