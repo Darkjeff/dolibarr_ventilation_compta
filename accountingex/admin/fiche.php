@@ -59,7 +59,7 @@ $sql = 'SELECT pcg_version FROM ' . MAIN_DB_PREFIX . 'accounting_system WHERE ro
 		$obj = $db->fetch_object ( $result );
 		$cpt = 0;
 		
-	$accounting->pcg_version = $obj->pcg_version;
+	$accounting->fk_pcg_version = $obj->pcg_version;
 	$accounting->pcg_type = GETPOST ( "pcgType" );
 	$accounting->pcg_subtype = GETPOST ( "pcgSubType" );
 	$accounting->account_number = GETPOST ( "AccountNumber" );
