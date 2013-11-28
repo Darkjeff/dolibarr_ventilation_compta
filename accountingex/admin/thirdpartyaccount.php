@@ -184,33 +184,13 @@ if (GETPOST('action') == 'export_csv') {
    
 }
 
-
-
-
-
-
-
-/*
- * Mode Liste
- *
- *
- *
- */
- 
- 
- 
-
-
-
-
-
 /*
 * view
 */
 
 $thirdpartystatic=new Societe($db);
 
-
+print '<br><br>';
 
 print '<table class="noborder" width="100%">';
 print "</table>\n";
