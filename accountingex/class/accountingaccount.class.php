@@ -244,7 +244,7 @@ class AccountingAccount {
 			$this->db->begin ();
 			
 			$sql = "UPDATE " . MAIN_DB_PREFIX . "accountingaccount ";
-			$sql .= "  active = 0";
+			$sql .= "SET active = '0'";
 			
 			$sql .= " WHERE rowid = " . $this->id;
 			
@@ -276,7 +276,7 @@ class AccountingAccount {
 		$this->db->begin ();
 		
 		$sql = "UPDATE " . MAIN_DB_PREFIX . "accountingaccount ";
-		$sql .= "  active = 1";
+		$sql .= "SET active = '1'";
 		
 		$sql .= " WHERE rowid = " . $this->id;
 		
