@@ -74,6 +74,7 @@ $sql = "SELECT a.rowid, a.account_number, a.label, a.fk_pcg_version";
 $sql .= " , s.rowid, s.pcg_version";
 $sql .= " FROM ".MAIN_DB_PREFIX."accountingaccount as a, ".MAIN_DB_PREFIX."accounting_system as s";
 $sql .= " WHERE a.fk_pcg_version = s.pcg_version AND ".$conf->global->CHARTOFACCOUNTS."=s.rowid";
+$sql .= " AND a.active = '1'";
 $sql .= " ORDER BY a.account_number ASC";
 dol_syslog ( "Accountancy Expert :: Card Supplier :: Fetch sql=" . $sql, LOG_DEBUG );
 
