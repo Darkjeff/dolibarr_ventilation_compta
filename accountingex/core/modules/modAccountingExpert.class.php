@@ -47,8 +47,8 @@ class modAccountingExpert extends DolibarrModules
 		$this->description = "Gestion avancé de la comptabilité";
 
 		// Possible values for version are: 'development', 'experimental', 'dolibarr' or version
-		$this->version = '3.4.x';
-    $this->revision = '1.0.0';
+		$this->version = '3.5.x';
+    $this->revision = '2.0.0';
 
 		$this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
 		$this->special = 0;
@@ -66,7 +66,7 @@ class modAccountingExpert extends DolibarrModules
 		// Dependencies
 		$this->depends = array();		// List of modules id that must be enabled if this module is enabled
 		$this->requiredby = array();	// List of modules id to disable if this one is disabled
-    $this->conflictwith = array("modAccounting"); // List of modules are in conflict with this module
+    $this->conflictwith = array("modComptabilite","modAccounting"); // List of modules are in conflict with this module
 		$this->phpmin = array(5,2);					// Minimum version of PHP required by module
 		$this->need_dolibarr_version = array(3,4);	// Minimum version of Dolibarr required by module
 		$this->langfiles = array("accountingex@accountingex");
@@ -135,11 +135,7 @@ class modAccountingExpert extends DolibarrModules
 		$r++;
 		
 	
-  
-		
-	
-		
-	  $this->menu[$r]=array(	'fk_menu'=>'r=0',
+    $this->menu[$r]=array(	'fk_menu'=>'r=0',
 								'type'=>'left',
 								'titre'=>'CustomersVentilation',
 								'mainmenu'=>'accounting',
