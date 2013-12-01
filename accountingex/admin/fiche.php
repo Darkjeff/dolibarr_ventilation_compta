@@ -6,7 +6,7 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -15,15 +15,13 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
  * \file      accountingex/admin/fiche.php
  * \ingroup   Accounting Expert
- * \brief     Page fiche accounting
+ * \brief     Page fiche de compte
  */
 
 $res=@include("../main.inc.php");
@@ -32,12 +30,12 @@ if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.p
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 	
-	// Class
+// Class
 dol_include_once ( "/accountingex/core/lib/account.lib.php" );
 dol_include_once ( "/accountingex/class/accountingaccount.class.php" );
 dol_include_once ( "/accountingex/class/html.formventilation.class.php" );
 
-// langs
+// Langs
 $langs->load ( "bills" );
 $langs->load ( "accountingex@accountingex" );
 
@@ -116,7 +114,7 @@ else if ($action == 'edit') {
 	
 	$result = $accounting->fetch ( $id );
 	if (!empty($accounting->id)) {
-		$result = $accounting->desactivate ( $user );
+		$result = $accounting->account_desactivate ( $user );
 	}
 	
 	$action = 'update';
@@ -128,7 +126,7 @@ else if ($action == 'edit') {
 	$result = $accounting->fetch ( $id );
 
 	if (!empty($accounting->id)) {
-		$result = $accounting->activate ( $user );
+		$result = $accounting->account_activate ( $user );
 	}
 	$action = 'update';
 	if ($result < 0) {
@@ -252,8 +250,6 @@ if ($action == 'create') {
 				print img_picto ( $langs->trans ( "Activated" ), 'switch_on' );
 				print '</a>';
 			}
-			
-			// '<input name="Active" size="30" value="' . $accounting->active . '"</td></tr>';
 			
 			print '</table>';
 			

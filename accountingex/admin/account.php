@@ -5,7 +5,7 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -14,15 +14,13 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
- * \file htdocs/accountingex/admin/account.php
- * \ingroup Accounting Expert
- * \brief List accounting account
+ * \file      accountingex/admin/account.php
+ * \ingroup   Accounting Expert
+ * \brief     List accounting account
  */
 
 // Dolibarr environment
@@ -32,20 +30,23 @@ if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.p
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 	
-	// Class
-
+// Class
+dol_include_once ( "/accountingex/core/lib/account.lib.php" );
 dol_include_once ( "/accountingex/class/accountingaccount.class.php" );
 dol_include_once ( "/accountingex/class/html.formventilation.class.php" );
 
-// langs
+// Langs
 $langs->load ( "compta" );
 $langs->load ( "accountingex@accountingex" );
+
+$mesg = '';
+$action = GETPOST ( 'action' );
 
 // Security check
 if ($user->societe_id > 0) accessforbidden();
 if (!$user->rights->accountingex->admin) accessforbidden();
-	
-	// filter
+
+// Filter
 $sortfield = GETPOST ( "sortfield", 'alpha' );
 $sortorder = GETPOST ( "sortorder", 'alpha' );
 
@@ -59,6 +60,35 @@ if ($action == 'delete') {
 	print $formconfirm;
 }
 
+/*
+if ($action == 'disable') {
+	$accounting = $obj->fetch ( $id );
+	if (!empty($accounting->id)) {
+		$result = $accounting->account_desactivate ( $user );
+	}
+	
+	$action = 'update';
+	if ($result < 0) {
+		setEventMessage ( $accounting->error, 'errors' );
+	}
+} else if ($action == 'enable') {
+	
+	$accounting = $obj->fetch ( $id );
+
+	if (!empty($accounting->id)) {
+		$result = $accounting->account_activate ( $user );
+	}
+	$action = 'update';
+	if ($result < 0) {
+		setEventMessage ( $accounting->error, 'errors' );
+	}
+}
+*/
+
+/*
+ * View
+ *
+ */
 llxHeader ( '', $langs->trans ( "Accounts" ) );
 
 print_barre_liste ( $langs->trans ( "Accounts" ), $page, "account.php", "", $sortfield, $sortorder, '');
@@ -67,8 +97,7 @@ $pcgver = $conf->global->CHARTOFACCOUNTS;
 
 $sql2 = "SELECT aa.rowid, aa.fk_pcg_version, aa.pcg_type, aa.pcg_subtype, aa.account_number, aa.account_parent , aa.label, aa.active ";
 $sql2 .= " FROM " . MAIN_DB_PREFIX . "accountingaccount as aa, " . MAIN_DB_PREFIX . "accounting_system as asy";
-$sql2 .= " WHERE aa.active = 1";
-$sql2 .= " AND aa.fk_pcg_version = asy.pcg_version"; 
+$sql2 .= " WHERE aa.fk_pcg_version = asy.pcg_version"; 
 $sql2 .= " AND asy.rowid = ".$pcgver;
 
 if (strlen ( trim ( $_GET ["search_account"] ) )) {
@@ -96,8 +125,6 @@ if ($result) {
 	$var = true;
 	
 	$param = '';
-	
-	$obj = $db->fetch_object ( $result );
 	
 	print '<form method="GET" action="' . $_SERVER ["PHP_SELF"] . '">';
 	
@@ -143,9 +170,13 @@ if ($result) {
 		print '<td>' . $obj2->pcg_subtype . '</td>';
 		print '<td>';
 		if (empty ( $obj2->active )) {
-			print img_picto ( $langs->trans ( "Disabled" ), 'switch_off' );
+				print '<a href="' . $_SERVER ["PHP_SELF"] . '?id=' . $obj2->id . '&action=enable">';
+				print img_picto ( $langs->trans ( "Disabled" ), 'switch_off' );
+				print '</a>';
 		} else {
-			print img_picto ( $langs->trans ( "Activated" ), 'switch_on' );
+				print '<a href="' . $_SERVER ["PHP_SELF"] . '?id=' . $obj2->id . '&action=disable">';
+				print img_picto ( $langs->trans ( "Activated" ), 'switch_on' );
+				print '</a>';
 		}
 		print '</td>';
 		
