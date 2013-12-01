@@ -99,8 +99,9 @@ Pcgsubtype=Sous classe de compte
 Accountparent=Racine du compte
 Active=État
 
-NewFiscalYear=Nouvel exercice fiscal
+AccountCard=Fiche compte comptable
 
+NewFiscalYear=Nouvel exercice fiscal
 
 DescVentilCustomer=Consultez ici la ventilation comptable annuelle de vos factures clients
 TotalVente=Total chiffre affaires HT
