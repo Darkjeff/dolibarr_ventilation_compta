@@ -97,9 +97,12 @@ if($_POST["action"] == 'ventil')
 /* Liste des comptes
 */
 
-$sqlCompte = "SELECT rowid, account_number, label";
-$sqlCompte .= " FROM ".MAIN_DB_PREFIX."accountingaccount";
-$sqlCompte .= " ORDER BY account_number ASC";
+$sqlCompte = "SELECT a.rowid, a.account_number, a.label, a.fk_pcg_version";
+$sqlCompte .= " , s.rowid, s.pcg_version";
+$sqlCompte .= " FROM ".MAIN_DB_PREFIX."accountingaccount as a, ".MAIN_DB_PREFIX."accounting_system as s";
+$sqlCompte .= " WHERE a.fk_pcg_version = s.pcg_version AND ".$conf->global->CHARTOFACCOUNTS."=s.rowid";
+$sqlCompte .= " AND a.active = '1'";
+$sqlCompte .= " ORDER BY a.account_number ASC";
 
 $resultCompte = $db->query($sqlCompte);
 $cgs = array();
