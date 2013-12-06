@@ -11,6 +11,11 @@ Fiscalyear=Exercices fiscaux
 Menuaccount=Comptes comptables
 Menuthirdpartyaccount=Comptes tiers
 
+Modelcsv=Modèle d'export
+Selectmodelcsv=Sélectionnez un modèle d'export
+Modelcsv_normal=Export classique
+Modelcsv_CEGID=Export vers CEGID Expert
+
 Definechartofaccounts=Définir un plan comptable
 Selectchartofaccounts=Sélectionnez un plan comptable
 Validate=Valider
@@ -51,7 +56,7 @@ VentilationAuto=Ventilation automatique
 Processing=Traitement en cours
 EndProcessing=Fin de traitement
 AnyLineVentilate=Aucune ligne à ventiler
-SelectedLines=Lignes selectionnées
+SelectedLines=Lignes sélectionnées
 Lineofinvoice=Ligne de facture
 VentilatedinAccount=ventilée avec succès dans le compte
 NotVentilatedinAccount=non ventilée dans le compte

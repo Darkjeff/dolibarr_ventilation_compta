@@ -72,11 +72,29 @@ if ($action == 'setcomptamode')
 
 }
  
- if ($action == 'setchart')
+if ($action == 'setchart')
 {
 	$chartofaccounts = GETPOST('chartofaccounts','alpha');
 
 	$res = dolibarr_set_const($db, 'CHARTOFACCOUNTS', $chartofaccounts,'string',0,'',$conf->entity);
+
+	if (! $res > 0) $error++;
+
+ 	if (! $error)
+    {
+        $mesg = "<font class=\"ok\">".$langs->trans("SetupSaved")."</font>";
+    }
+    else
+    {
+        $mesg = "<font class=\"error\">".$langs->trans("Error")."</font>";
+    }
+}
+
+if ($action == 'setmodelcsv')
+{
+	$modelcsv = GETPOST('modelcsv','int');
+
+	$res = dolibarr_set_const($db, 'ACCOUNTINGEX_MODELCSV', $modelcsv,'chaine',0,'',$conf->entity);
 
 	if (! $res > 0) $error++;
 
@@ -212,6 +230,51 @@ print "</form>";
 
 print "<br>\n";
 
+/*
+ *  Select Export Model CSV
+ *  
+ */
+print '<form action="'.$_SERVER["PHP_SELF"].'" method="POST">';
+print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'" />';
+print '<input type="hidden" name="action" value="setmodelcsv">';
+
+print '<table class="noborder" width="100%">';
+$var=True;
+
+print '<tr class="liste_titre">';
+print '<td>';
+
+print $langs->trans("Modelcsv").'</td>';
+print '<td align="right"><input type="submit" class="button" value="'.$langs->trans("Modify").'"></td>';
+print "</tr>\n";
+$var=!$var;
+print '<tr '.$bc[$var].'>';
+print "<td>".$langs->trans("Selectmodelcsv")."</td>";
+print "<td>";
+print '<select class="flat" name="modelcsv" id="modelcsv">';
+print '<option value="0"';
+      if($conf->global->ACCOUNTINGEX_MODELCSV == 0)
+      {
+        print ' selected="selected"';
+      } 
+print '>'.$langs->trans("Modelcsv_normal").'</option>';
+print '<option value="1"';
+      if($conf->global->ACCOUNTINGEX_MODELCSV == 1)
+      {
+        print ' selected="selected"';
+      } 
+print '>'.$langs->trans("Modelcsv_CEGID").'</option>';
+print "</select>";
+print "</td></tr>";
+print "</table>";
+print "</form>";
+
+print "<br>\n";
+
+/*
+ *  Params
+ *
+ */
 $list=array('COMPTA_ACCOUNT_CUSTOMER','COMPTA_ACCOUNT_SUPPLIER','ACCOUNTINGEX_ACCOUNT_SUSPENSE','ACCOUNTINGEX_ACCOUNT_TRANSFER_CASH','ACCOUNTINGEX_SELL_JOURNAL','ACCOUNTINGEX_PURCHASE_JOURNAL','ACCOUNTINGEX_BANK_JOURNAL','ACCOUNTINGEX_SOCIAL_JOURNAL','ACCOUNTINGEX_CASH_JOURNAL','ACCOUNTINGEX_MISCELLANEOUS_JOURNAL'
 );
 
