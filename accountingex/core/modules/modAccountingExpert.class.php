@@ -73,6 +73,7 @@ class modAccountingExpert extends DolibarrModules
 
 		// Constantes
 		$this->const = array();
+		$this->const[1] = array("ACCOUNTINGEX_SEPARATORCSV","string",",");
 		$this->const[2] = array("ACCOUNTINGEX_ACCOUNT_SUSPENSE","chaine","471000");
 		$this->const[3] = array("ACCOUNTINGEX_SELL_JOURNAL","chaine","VTE");
 		$this->const[4] = array("ACCOUNTINGEX_PURCHASE_JOURNAL","chaine","ACH");
