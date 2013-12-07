@@ -247,41 +247,43 @@ if (GETPOST('action') == 'writeBookKeeping')
 // export csv
 if (GETPOST('action') == 'export_csv')
 {
+    $sep = $conf->global->ACCOUNTINGEX_SEPARATORCSV;
+    
     header( 'Content-Type: text/csv' );
     header( 'Content-Disposition: attachment;filename=journal_ventes.csv');
-	foreach ($tabfac as $key => $val)
-	{
+  	foreach ($tabfac as $key => $val)
+  	{
 	    $date = dol_print_date($db->jdate($val["date"]),'day');
-		print '"'.$date.'",';
-		print '"'.$val["ref"].'",';
-		foreach ($tabttc[$key] as $k => $mt)
-		{
-			print '"'.html_entity_decode($k).'","'.$langs->trans("ThirdParty").'","'.($mt>=0?price($mt):'').'","'.($mt<0?price(-$mt):'').'"';
-		}
-		print "\n";
-		// product
-		foreach ($tabht[$key] as $k => $mt)
-		{
-			if ($mt)
-			{
-				print '"'.$date.'",';
-				print '"'.$val["ref"].'",';
-				print '"'.html_entity_decode($k).'","'.$langs->trans("Products").'","'.($mt<0?price(-$mt):'').'","'.($mt>=0?price($mt):'').'"';
-				print "\n";
-			}
-		}
-		// vat
-		//var_dump($tabtva);
-		foreach ($tabtva[$key] as $k => $mt)
-		{
-		    if ($mt)
-		    {
-				print '"'.$date.'",';
-				print '"'.$val["ref"].'",';
-				print '"'.html_entity_decode($k).'","'.$langs->trans("VAT").'","'.($mt<0?price(-$mt):'').'","'.($mt>=0?price($mt):'').'"';
-				print "\n";
-			}
-		}
+  		print '"'.$date.'"'.$sep;
+  		print '"'.$val["ref"].'"'.$sep;
+  		foreach ($tabttc[$key] as $k => $mt)
+  		{
+  			print '"'.html_entity_decode($k).'"'.$sep.'"'.$langs->trans("ThirdParty").'"'.$sep.'"'.($mt>=0?price($mt):'').'"'.$sep.'"'.($mt<0?price(-$mt):'').'"';
+  		}
+  		print "\n";
+  		// product
+  		foreach ($tabht[$key] as $k => $mt)
+  		{
+  			if ($mt)
+  			{
+  				print '"'.$date.'"'.$sep;
+  				print '"'.$val["ref"].'"'.$sep;
+  				print '"'.html_entity_decode($k).'"'.$sep.'"'.$langs->trans("Products").'"'.$sep.'"'.($mt<0?price(-$mt):'').'"'.$sep.'"'.($mt>=0?price($mt):'').'"';
+  				print "\n";
+  			}
+  		}
+  		// vat
+  		//var_dump($tabtva);
+  		foreach ($tabtva[$key] as $k => $mt)
+  		{
+  		  if ($mt)
+  		  {
+  			print '"'.$date.'"'.$sep;
+  			print '"'.$val["ref"].'"'.$sep;
+  			print '"'.html_entity_decode($k).'"'.$sep.'"'.$langs->trans("VAT").'"'.$sep.'"'.($mt<0?price(-$mt):'').'"'.$sep.'"'.($mt>=0?price($mt):'').'"';
+  			print "\n";
+  		  }
+  		}
 	}
 }
 else

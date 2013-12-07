@@ -61,6 +61,7 @@ Lineofinvoice=Ligne de facture
 VentilatedinAccount=ventilée avec succès dans le compte
 NotVentilatedinAccount=non ventilée dans le compte
 
+ACCOUNTINGEX_SEPARATORCSV=Séparateur CSV
 ACCOUNTINGEX_SELL_JOURNAL=Journal des Ventes
 ACCOUNTINGEX_PURCHASE_JOURNAL=Journal des Achats
 ACCOUNTINGEX_BANK_JOURNAL=Journal de Banque

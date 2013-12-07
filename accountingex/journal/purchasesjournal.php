@@ -244,8 +244,10 @@ if (GETPOST('action') == 'writeBookKeeping')
 
 if (GETPOST('action') == 'export_csv')
 {
-    header( 'Content-Type: text/csv' );
-    header( 'Content-Disposition: attachment;filename=journal_achats.csv');
+  $sep = $conf->global->ACCOUNTINGEX_SEPARATORCSV;
+  
+  header( 'Content-Type: text/csv' );
+  header( 'Content-Disposition: attachment;filename=journal_achats.csv');
 	foreach ($tabfac as $key => $val)
 	{
 	$date = dol_print_date($db->jdate($val["date"]),'day');
@@ -254,9 +256,9 @@ if (GETPOST('action') == 'export_csv')
 		{
 			if ($mt)
 			{
-				print '"'.$date.'",';
-				print '"'.$val["ref"].'",';
-				print '"'.html_entity_decode($k).'","'.$langs->trans("Products").'","'.($mt>=0?price($mt):'').'","'.($mt<0?price(-$mt):'').'"';
+				print '"'.$date.'"'.$sep;
+				print '"'.$val["ref"].'"'.$sep;
+				print '"'.html_entity_decode($k).'"'.$sep.'"'.$langs->trans("Products").'"'.$sep.'"'.($mt>=0?price($mt):'').'"'.$sep.'"'.($mt<0?price(-$mt):'').'"';
 				print "\n";
 			}
 		}
@@ -266,17 +268,17 @@ if (GETPOST('action') == 'export_csv')
 		{
 		    if ($mt)
 		    {
-				print '"'.$date.'",';
-				print '"'.$val["ref"].'",';
-				print '"'.html_entity_decode($k).'","'.$langs->trans("VAT").'","'.($mt>=0?price($mt):'').'","'.($mt<0?price(-$mt):'').'"';
+				print '"'.$date.'"'.$sep;
+				print '"'.$val["ref"].'"'.$sep;
+				print '"'.html_entity_decode($k).'"'.$sep.'"'.$langs->trans("VAT").'"'.$sep.'"'.($mt>=0?price($mt):'').'"'.$sep.'"'.($mt<0?price(-$mt):'').'"';
 				print "\n";
 			}
 		}
-		print '"'.$date.'",';
-		print '"'.$val["ref"].'",';
+		print '"'.$date.'"'.$sep;
+		print '"'.$val["ref"].'"'.$sep;
 		foreach ($tabttc[$key] as $k => $mt)
 		{
-			print '"'.html_entity_decode($k).'","'.$langs->trans("ThirdParty").'","'.($mt<0?price(-$mt):'').'","'.($mt>=0?price($mt):'').'"';
+			print '"'.html_entity_decode($k).'"'.$sep.'"'.$langs->trans("ThirdParty").'"'.$sep.'"'.($mt<0?price(-$mt):'').'"'.$sep.'"'.($mt>=0?price($mt):'').'"';
 		}
 		print "\n";
 	}

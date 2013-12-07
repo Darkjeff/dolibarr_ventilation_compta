@@ -360,29 +360,37 @@ if (GETPOST ( 'action' ) == 'writeBookKeeping') {
 	}
 }
 // export csv
-if (GETPOST ( 'action' ) == 'export_csv') {
-	header ( 'Content-Type: text/csv' );
-	header ( 'Content-Disposition: attachment;filename=journal_banque.csv' );
-	foreach ( $tabpay as $key => $val ) {
-		$date = dol_print_date ( $db->jdate ( $val ["date"] ), 'day' );
-		print '"' . $date . '",';
-		print '"' . $val ["ref"] . '",';
+if (GETPOST ( 'action' ) == 'export_csv')
+{
+    $sep = $conf->global->ACCOUNTINGEX_SEPARATORCSV;
+  
+    header ( 'Content-Type: text/csv' );
+	  header ( 'Content-Disposition: attachment;filename=journal_banque.csv' );
+	  foreach ( $tabpay as $key => $val )
+    {
+		  $date = dol_print_date ( $db->jdate ( $val ["date"] ), 'day' );
+		  print '"' . $date . '"'.$sep;
+		  print '"' . $val ["ref"] . '"'.$sep;
 		
-		// banq
-		foreach ( $tabbq [$key] as $k => $mt ) {
-			print '"' . html_entity_decode ( $k ) . '","' . $langs->trans ( "Bank" ) . '","' . ($mt >= 0 ? price ( $mt ) : '') . '","' . ($mt < 0 ? price ( - $mt ) : '') . '"';
-		}
-		print "\n";
-		// third party
-		foreach ( $tabtp [$key] as $k => $mt ) {
-			if ($mt) {
-				print '"' . $date . '",';
-				print '"' . $val ["ref"] . '",';
-				print '"' . html_entity_decode ( $k ) . '","' . $langs->trans ( "ThirdParty" ) . '","' . ($mt < 0 ? price ( - $mt ) : '') . '","' . ($mt >= 0 ? price ( $mt ) : '') . '"';
-				print "\n";
-			}
-		}
-	}
+		  // bank
+		  foreach ( $tabbq [$key] as $k => $mt ) 
+      {
+			   print '"' . html_entity_decode ( $k ) . '"'.$sep.'"' . $langs->trans ( "Bank" ) . '"'.$sep.'"' . ($mt >= 0 ? price ( $mt ) : '') . '"'.$sep.'"' . ($mt < 0 ? price ( - $mt ) : '') . '"';
+		  }
+		  print "\n";
+		
+      // third party
+		  foreach ( $tabtp [$key] as $k => $mt ) 
+      {
+			   if ($mt)
+         {
+				    print '"' . $date . '"'.$sep;
+				    print '"' . $val ["ref"] . '"'.$sep;
+				    print '"' . html_entity_decode ( $k ) . '"'.$sep.'"' . $langs->trans ( "ThirdParty" ) . '"'.$sep.'"' . ($mt < 0 ? price ( - $mt ) : '') . '"'.$sep.'"' . ($mt >= 0 ? price ( $mt ) : '') . '"';
+				    print "\n";
+			   }
+		  }
+	  }
 } else {
 	
 	$form = new Form ( $db );
@@ -439,7 +447,7 @@ if (GETPOST ( 'action' ) == 'export_csv') {
 	$date = dol_print_date($db->jdate($val["date"]),'day');
 		
 		// Bank
-		foreach ( $tabbq [$key] as $k => $mt ) {
+		foreach ( $tabbq[$key] as $k => $mt ) {
 			if (1) {
 				print "<tr " . $bc [$var] . " >";
 				print "<td>" .$date. "</td>";
@@ -452,7 +460,7 @@ if (GETPOST ( 'action' ) == 'export_csv') {
 		}
 		
 		// third party
-		foreach ( $tabtp [$key] as $k => $mt ) {
+		foreach ( $tabtp[$key] as $k => $mt ) {
 			if ($k!='type') {
 				print "<tr " . $bc [$var] . ">";
 				
