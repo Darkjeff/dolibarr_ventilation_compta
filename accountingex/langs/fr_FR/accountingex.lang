@@ -62,6 +62,8 @@ VentilatedinAccount=ventilée avec succès dans le compte
 NotVentilatedinAccount=non ventilée dans le compte
 
 ACCOUNTINGEX_SEPARATORCSV=Séparateur CSV
+ACCOUNTINGEX_LENGTH_GACCOUNT=Longueur des comptes généraux (Si nécessaire)
+ACCOUNTINGEX_LENGTH_AACCOUNT=Longueur des comptes auxiliaires (Si nécessaire)
 ACCOUNTINGEX_SELL_JOURNAL=Journal des Ventes
 ACCOUNTINGEX_PURCHASE_JOURNAL=Journal des Achats
 ACCOUNTINGEX_BANK_JOURNAL=Journal de Banque

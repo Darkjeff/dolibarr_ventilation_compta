@@ -38,7 +38,6 @@ dol_include_once ( "/core/lib/report.lib.php");
 dol_include_once ( "/core/lib/date.lib.php");
 dol_include_once ( "/fourn/class/fournisseur.facture.class.php");
 dol_include_once ( "/fourn/class/fournisseur.class.php");
-dol_include_once ( "/accountingex/class/comptacompte.class.php");
 dol_include_once ( "/accountingex/class/bookkeeping.class.php");
 
 

@@ -125,5 +125,62 @@ if ($result) {
 	}
 }
 
+/**
+ *	Return account with defined length
+ *
+ * 	@param $account	,
+ *         $mode,  '0'=> general account
+ *                 '1'=> thirdparty account     					
+ *
+ *	@return $account
+ */
+function length_account($account,$mode)
+{
+	global $conf,$langs;
+  
+  $g = $conf->global->ACCOUNTINGEX_LENGTH_GACCOUNT;
+  $a = $conf->global->ACCOUNTINGEX_LENGTH_AACCOUNT;
+  
+  if (! empty($g))
+  {
+    // Clean parameters
+  	$i = strlen($account);
+    
+    if ($mode == 0)
+    {
+      while ($i < $g)
+      {
+        $account .= '0';
+        
+        $i++;
+      }
+    }
+    else
+    {
+      return $account;
+    }
+  }
+  if (! empty($a))
+  { 
+    // Clean parameters
+  	$i = strlen($account);
+    
+    if ($mode == 1)
+    {
+      while ($i < $a)
+      {
+        $account .= '0';
+        
+        $i++;
+      }
+    }
+    else
+    {
+      return $account;
+    }
+  }  
+ 
+	return $account;
+}
 
 ?>
