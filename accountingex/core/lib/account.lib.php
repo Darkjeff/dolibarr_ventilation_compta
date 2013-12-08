@@ -126,61 +126,69 @@ if ($result) {
 }
 
 /**
- *	Return account with defined length
+ *	Return general account with defined length
  *
- * 	@param $account	,
- *         $mode,  '0'=> general account
- *                 '1'=> thirdparty account     					
+ * 	@param $account   					
  *
  *	@return $account
  */
-function length_account($account,$mode)
+function length_accountg($account)
 {
 	global $conf,$langs;
   
   $g = $conf->global->ACCOUNTINGEX_LENGTH_GACCOUNT;
-  $a = $conf->global->ACCOUNTINGEX_LENGTH_AACCOUNT;
   
   if (! empty($g))
   {
     // Clean parameters
   	$i = strlen($account);
     
-    if ($mode == 0)
+    while ($i < $g)
     {
-      while ($i < $g)
-      {
-        $account .= '0';
+      $account .= '0';
         
-        $i++;
-      }
+      $i++;
     }
-    else
-    {
-      return $account;
-    }
-  }
-  if (! empty($a))
-  { 
-    // Clean parameters
-  	$i = strlen($account);
     
-    if ($mode == 1)
+    return $account;
+  }
+  else
+  { 
+	  return $account;
+  }
+}
+
+/**
+ *	Return auxiliary account with defined length
+ *
+ * 	@param $account   					
+ *
+ *	@return $account
+ */
+function length_accounta($accounta)
+{
+	global $conf,$langs;
+  
+  $a = $conf->global->ACCOUNTINGEX_LENGTH_AACCOUNT;
+  
+  if (! empty($a))
+  {
+    // Clean parameters
+  	$i = strlen($accounta);
+    
+    while ($i < $a)
     {
-      while ($i < $a)
-      {
-        $account .= '0';
+      $accounta .= '0';
         
-        $i++;
-      }
+      $i++;
     }
-    else
-    {
-      return $account;
-    }
-  }  
- 
-	return $account;
+    
+    return $accounta;
+  }
+  else
+  { 
+	  return $accounta;
+  }
 }
 
 ?>

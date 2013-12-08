@@ -36,6 +36,7 @@ if (! $res) die("Include of main fails");
 
 dol_include_once ( "/core/lib/report.lib.php");
 dol_include_once ( "/core/lib/date.lib.php");
+dol_include_once ( "/accountingex/core/lib/account.lib.php" );
 dol_include_once ( "/fourn/class/fournisseur.facture.class.php");
 dol_include_once ( "/fourn/class/fournisseur.class.php");
 dol_include_once ( "/accountingex/class/bookkeeping.class.php");
@@ -247,40 +248,98 @@ if (GETPOST('action') == 'export_csv')
   
   header( 'Content-Type: text/csv' );
   header( 'Content-Disposition: attachment;filename=journal_achats.csv');
-	foreach ($tabfac as $key => $val)
-	{
-	$date = dol_print_date($db->jdate($val["date"]),'day');
-		// product
-		foreach ($tabht[$key] as $k => $mt)
-		{
-			if ($mt)
-			{
-				print '"'.$date.'"'.$sep;
-				print '"'.$val["ref"].'"'.$sep;
-				print '"'.html_entity_decode($k).'"'.$sep.'"'.$langs->trans("Products").'"'.$sep.'"'.($mt>=0?price($mt):'').'"'.$sep.'"'.($mt<0?price(-$mt):'').'"';
-				print "\n";
-			}
-		}
-		// vat
-		//var_dump($tabtva);
-		foreach ($tabtva[$key] as $k => $mt)
-		{
-		    if ($mt)
-		    {
-				print '"'.$date.'"'.$sep;
-				print '"'.$val["ref"].'"'.$sep;
-				print '"'.html_entity_decode($k).'"'.$sep.'"'.$langs->trans("VAT").'"'.$sep.'"'.($mt>=0?price($mt):'').'"'.$sep.'"'.($mt<0?price(-$mt):'').'"';
-				print "\n";
-			}
-		}
-		print '"'.$date.'"'.$sep;
-		print '"'.$val["ref"].'"'.$sep;
-		foreach ($tabttc[$key] as $k => $mt)
-		{
-			print '"'.html_entity_decode($k).'"'.$sep.'"'.$langs->trans("ThirdParty").'"'.$sep.'"'.($mt<0?price(-$mt):'').'"'.$sep.'"'.($mt>=0?price($mt):'').'"';
-		}
-		print "\n";
-	}
+	
+  if ($conf->global->ACCOUNTINGEX_MODELCSV == 1) // Modèle Cegid Expert
+  {
+    foreach ($tabfac as $key => $val)
+  	{
+  	  $date = dol_print_date($db->jdate($val["date"]),'%d%m%Y');
+  		
+      // product
+  		foreach ($tabht[$key] as $k => $mt)
+  		{
+  			if ($mt)
+  			{
+  				print '"'.$date.'"'.$sep;
+  				print '"'.$conf->global->ACCOUNTINGEX_SELL_JOURNAL.'"'.$sep;
+          print '"'.length_accountg(html_entity_decode($k)).'"'.$sep;
+          print '""'.$sep;
+          print '"'.($mt < 0?'C':'D').'"'.$sep;
+          print '"'.price($mt).'"'.$sep;
+          print '"'.$langs->trans("Products").'"'.$sep;
+          print '"'.$val["ref"].'"';
+  				print "\n";
+  			}
+  		}
+  		
+      // vat
+  		//var_dump($tabtva);
+  		foreach ($tabtva[$key] as $k => $mt)
+  		{
+  		    if ($mt)
+  		    {
+  				print '"'.$date.'"'.$sep;
+  				print '"'.$conf->global->ACCOUNTINGEX_SELL_JOURNAL.'"'.$sep;
+          print '"'.length_accountg(html_entity_decode($k)).'"'.$sep;
+          print '""'.$sep;
+          print '"'.($mt < 0?'C':'D').'"'.$sep;
+          print '"'.price($mt).'"'.$sep;
+          print '"'.$langs->trans("VAT").'"'.$sep;
+          print '"'.$val["ref"].'"';
+  				print "\n";
+  			}
+  		}
+  		print '"'.$date.'"'.$sep;
+  		print '"'.$conf->global->ACCOUNTINGEX_SELL_JOURNAL.'"'.$sep;
+      print '"'.length_accountg($conf->global->COMPTA_ACCOUNT_SUPPLIER).'"'.$sep;
+      foreach ($tabttc[$key] as $k => $mt)
+  		{
+  			print '"'.length_accounta(html_entity_decode($k)).'"'.$sep;
+        print '"'.($mt < 0?'D':'C').'"'.$sep;
+        print '"'.price($mt).'"'.$sep;
+        print '"'.$langs->trans("ThirdParty").'"'.$sep;
+        print '"'.$val["ref"].'"';
+  		}
+  		print "\n";
+  	}
+  }
+  else
+  {
+    foreach ($tabfac as $key => $val)
+  	{
+  	$date = dol_print_date($db->jdate($val["date"]),'day');
+  		// product
+  		foreach ($tabht[$key] as $k => $mt)
+  		{
+  			if ($mt)
+  			{
+  				print '"'.$date.'"'.$sep;
+  				print '"'.$val["ref"].'"'.$sep;
+  				print '"'.html_entity_decode($k).'"'.$sep.'"'.$langs->trans("Products").'"'.$sep.'"'.($mt>=0?price($mt):'').'"'.$sep.'"'.($mt<0?price(-$mt):'').'"';
+  				print "\n";
+  			}
+  		}
+  		// vat
+  		//var_dump($tabtva);
+  		foreach ($tabtva[$key] as $k => $mt)
+  		{
+  		    if ($mt)
+  		    {
+  				print '"'.$date.'"'.$sep;
+  				print '"'.$val["ref"].'"'.$sep;
+  				print '"'.html_entity_decode($k).'"'.$sep.'"'.$langs->trans("VAT").'"'.$sep.'"'.($mt>=0?price($mt):'').'"'.$sep.'"'.($mt<0?price(-$mt):'').'"';
+  				print "\n";
+  			}
+  		}
+  		print '"'.$date.'"'.$sep;
+  		print '"'.$val["ref"].'"'.$sep;
+  		foreach ($tabttc[$key] as $k => $mt)
+  		{
+  			print '"'.html_entity_decode($k).'"'.$sep.'"'.$langs->trans("ThirdParty").'"'.$sep.'"'.($mt<0?price(-$mt):'').'"'.$sep.'"'.($mt>=0?price($mt):'').'"';
+  		}
+  		print "\n";
+  	}
+  }  
 }
 
 
@@ -350,9 +409,9 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
 		$invoicestatic->id=$key;
 		$invoicestatic->ref=$val["ref"];
 		$invoicestatic->type=$val["type"];
-$date = dol_print_date($db->jdate($val["date"]),'day');		
+    
+    $date = dol_print_date($db->jdate($val["date"]),'day');		
 		
-
 		// product
 		foreach ($tabht[$key] as $k => $mt)
 		{
@@ -362,7 +421,7 @@ $date = dol_print_date($db->jdate($val["date"]),'day');
 				//print "<td>".$conf->global->COMPTA_JOURNAL_BUY."</td>";
 				print "<td>".$date."</td>";
 				print "<td>".$invoicestatic->getNomUrl(1)."</td>";
-				print "<td>".$k."</td><td>".$langs->trans("Products")."</td>";
+				print "<td>".length_accountg($k)."</td><td>".$langs->trans("Products")."</td>";
 				print '<td align="right">'.($mt>=0?price($mt):'')."</td>";
 				print '<td align="right">'.($mt<0?price(-$mt):'')."</td>";
 				print "</tr>";
@@ -378,7 +437,7 @@ $date = dol_print_date($db->jdate($val["date"]),'day');
 				//print "<td>".$conf->global->COMPTA_JOURNAL_BUY."</td>";
 				print "<td>".$date."</td>";
 				print "<td>".$invoicestatic->getNomUrl(1)."</td>";
-				print "<td>".$k."</td><td>".$langs->trans("VAT")." ".$key."</td>";
+				print "<td>".length_accountg($k)."</td><td>".$langs->trans("VAT")." ".$key."</td>";
 				print '<td align="right">'.($mt>=0?price($mt):'')."</td>";
 				print '<td align="right">'.($mt<0?price(-$mt):'')."</td>";
 				print "</tr>";
@@ -395,7 +454,7 @@ $date = dol_print_date($db->jdate($val["date"]),'day');
 		    $companystatic->id=$tabcompany[$key]['id'];
     	  $companystatic->name=$tabcompany[$key]['name'];
     	  
-		    print "<td>".$k;
+		    print "<td>".length_accounta($k);
 		    print "</td><td>".$langs->trans("ThirdParty");
 		    print ' ('.$companystatic->getNomUrl(0,'supplier',16).')';
 	      print "</td>";

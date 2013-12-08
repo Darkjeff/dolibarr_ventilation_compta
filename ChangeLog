@@ -4,7 +4,7 @@ English Accounting Expert ChangeLog
 ***** ChangeLog for 3.5.x compared to none *****
 New: Possibility of defining the separator in the export csv
 New: Possibility of defining the length of account
-Add: Export Model - CEGID Expert
+Add: CSV Export Model - CEGID Expert
 
 ***** ChangeLog for 3.4.x compared to none *****
 First release of this module
