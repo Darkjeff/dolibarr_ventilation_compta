@@ -47,7 +47,6 @@ dol_include_once ( "/compta/tva/class/tva.class.php");
 dol_include_once ( "/fourn/class/paiementfourn.class.php");
 dol_include_once ( "/fourn/class/fournisseur.facture.class.php");
 dol_include_once ( "/fourn/class/fournisseur.class.php");
-dol_include_once ( "/accountingex/class/comptacompte.class.php");
 dol_include_once ( "/accountingex/class/bookkeeping.class.php");
 
 // Langs

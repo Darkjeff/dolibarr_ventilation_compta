@@ -47,7 +47,6 @@ require_once DOL_DOCUMENT_ROOT . '/compta/tva/class/tva.class.php';
 require_once DOL_DOCUMENT_ROOT . '/fourn/class/paiementfourn.class.php';
 require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.facture.class.php';
 require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.class.php';
-require_once DOL_DOCUMENT_ROOT . '/ventilation/class/comptacompte.class.php';
 require_once DOL_DOCUMENT_ROOT . '/ventilation/class/bookkeeping.class.php';
 
 // Langs

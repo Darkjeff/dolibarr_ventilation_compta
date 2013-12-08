@@ -84,6 +84,9 @@ class modAccountingExpert extends DolibarrModules
     $this->const[9] = array("ACCOUNTINGEX_ACCOUNT_TRANSFER_CASH","chaine","580000");
     $this->const[10] = array("CHARTOFACCOUNTS","chaine","2");
     $this->const[11] = array("ACCOUNTINGEX_MODELCSV","chaine","0");
+    $this->const[12] = array("ACCOUNTINGEX_LENGTH_GACCOUNT","chaine","");
+		$this->const[13] = array("ACCOUNTINGEX_LENGTH_AACCOUNT","chaine","");
+		
     
     // Css
     $this->module_parts = array('css' => array('/accountingex/css/accountingex.css.php'));

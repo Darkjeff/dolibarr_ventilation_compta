@@ -125,5 +125,70 @@ if ($result) {
 	}
 }
 
+/**
+ *	Return general account with defined length
+ *
+ * 	@param $account   					
+ *
+ *	@return $account
+ */
+function length_accountg($account)
+{
+	global $conf,$langs;
+  
+  $g = $conf->global->ACCOUNTINGEX_LENGTH_GACCOUNT;
+  
+  if (! empty($g))
+  {
+    // Clean parameters
+  	$i = strlen($account);
+    
+    while ($i < $g)
+    {
+      $account .= '0';
+        
+      $i++;
+    }
+    
+    return $account;
+  }
+  else
+  { 
+	  return $account;
+  }
+}
+
+/**
+ *	Return auxiliary account with defined length
+ *
+ * 	@param $account   					
+ *
+ *	@return $account
+ */
+function length_accounta($accounta)
+{
+	global $conf,$langs;
+  
+  $a = $conf->global->ACCOUNTINGEX_LENGTH_AACCOUNT;
+  
+  if (! empty($a))
+  {
+    // Clean parameters
+  	$i = strlen($accounta);
+    
+    while ($i < $a)
+    {
+      $accounta .= '0';
+        
+      $i++;
+    }
+    
+    return $accounta;
+  }
+  else
+  { 
+	  return $accounta;
+  }
+}
 
 ?>
