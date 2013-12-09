@@ -77,11 +77,11 @@ if($_POST["action"] == 'ventil')
 
       if($db->query($sql))
       {
-            print '<div><font color="green"> Ligne de facture '.$monId.' ventilee <b>avec succes</b> dans le compte : '.$monCompte.'</font></div>';
+            print '<div><font color="green">'.$langs->trans("Lineofinvoice").' '.$monId.' '.$langs->trans("VentilatedinAccount").' : '.$monCompte.'</font></div>';
       }
       else 
       {
-           print '<div><font color="red">Erreur BD : Ligne de facture '.$monId.' nom ventilee dans le compte : '.$monCompte.'<br/> <pre>'.$sql.'</pre></font></div>';
+           print '<div><font color="red">'.$langs->trans("ErrorDB").' : '.$langs->trans("Lineofinvoice").' '.$monId.' '.$langs->trans("NotVentilatedinAccount").' : '.$monCompte.'<br/> <pre>'.$sql.'</pre></font></div>';
       }
   
       $cpt++; 
@@ -90,9 +90,9 @@ if($_POST["action"] == 'ventil')
     }
     else
     {
-      print '<div><font color="red">Aucune ligne à ventiler</font></div>';
+      print '<div><font color="red">'.$langs->trans("AnyLineVentilate").'</font></div>';
     }
-    print '<div><font color="red">Traitement terminé</font></div>';
+    print '<div><font color="red">'.$langs->trans("EndProcessing").'</font></div>';
   }
 /* Liste des comptes
 */
