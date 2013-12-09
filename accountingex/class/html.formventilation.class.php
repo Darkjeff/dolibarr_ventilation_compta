@@ -99,6 +99,7 @@ class FormVentilation extends Form {
 		$sql .= " FROM " . MAIN_DB_PREFIX . "accountingaccount as aa";
 		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "accounting_system as asy ON aa.fk_pcg_version = asy.pcg_version";
 		$sql .= " AND asy.rowid = ".$conf->global->CHARTOFACCOUNTS;
+    $sql .= " AND aa.active = 1";
 		$sql .= " ORDER BY aa.account_number";
 	
 		dol_syslog ( get_class ( $this ) . "::select_account_parent sql=" . $sql, LOG_DEBUG );
@@ -119,9 +120,9 @@ class FormVentilation extends Form {
 					$label = $obj->account_number.'-'.$obj->label;
 	
 					if (($selectid != '') && $selectid == $obj->account_number) {
-						$out .= '<option value="' . $obj->rowid . '" selected="selected">' . $label . '</option>';
+						$out .= '<option value="' . $obj->account_number . '" selected="selected">' . $label . '</option>';
 					} else {
-						$out .= '<option value="' . $obj->rowid . '">' . $label . '</option>';
+						$out .= '<option value="' . $obj->account_number . '">' . $label . '</option>';
 					}
 					$i ++;
 				}

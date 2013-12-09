@@ -58,11 +58,11 @@ $sql = 'SELECT pcg_version FROM ' . MAIN_DB_PREFIX . 'accounting_system WHERE ro
 		$cpt = 0;
 		
 	$accounting->fk_pcg_version = $obj->pcg_version;
-	$accounting->pcg_type = GETPOST ( "pcgType" );
-	$accounting->pcg_subtype = GETPOST ( "pcgSubType" );
-	$accounting->account_number = GETPOST ( "AccountNumber" );
-	$accounting->account_parent = GETPOST ( "AccountParent" );
-	$accounting->label = GETPOST ( "Label" );
+	$accounting->pcg_type = GETPOST ( 'pcgType' );
+	$accounting->pcg_subtype = GETPOST ( 'pcgSubType' );
+	$accounting->account_number = GETPOST ( 'AccountNumber', 'int' );
+	$accounting->account_parent = GETPOST ( 'AccountParent', 'int' );
+	$accounting->label = GETPOST ( 'Label', 'alpha' );
 	$accounting->active = 1;
 	
 	$e_accounting = $accounting;
