@@ -265,17 +265,17 @@ if (GETPOST('action') == 'export_csv')
         
         $date = dol_print_date($db->jdate($val["date"]),'%d%m%Y');
     		
-        print '"'.$date.'"'.$sep;
-    		print '"'.$conf->global->ACCOUNTINGEX_SELL_JOURNAL.'"'.$sep;
-        print '"'.length_accountg($conf->global->COMPTA_ACCOUNT_CUSTOMER).'"'.$sep;
+        print $date.$sep;
+    		print $conf->global->ACCOUNTINGEX_SELL_JOURNAL.$sep;
+        print length_accountg($conf->global->COMPTA_ACCOUNT_CUSTOMER).$sep;
         foreach ($tabttc[$key] as $k => $mt)
     		{
-    			print '"'.length_accounta(html_entity_decode($k)).'"'.$sep;
-          print '"'.($mt < 0?'D':'C').'"'.$sep;
-          print '"'.price($mt).'"'.$sep;
-          print '"'.$companystatic->name.'"'.$sep;
+    			print length_accounta(html_entity_decode($k)).$sep;
+          print ($mt < 0?'D':'C').$sep;
+          print price($mt).$sep;
+          print $companystatic->name.$sep;
     		}
-        print '"'.$val["ref"].'"';
+        print $val["ref"];
     		print "\n";
     		
         // Production
@@ -283,14 +283,14 @@ if (GETPOST('action') == 'export_csv')
     		{
     			if ($mt)
     			{
-    				print '"'.$date.'"'.$sep;
-    				print '"'.$conf->global->ACCOUNTINGEX_SELL_JOURNAL.'"'.$sep;
-            print '"'.length_accountg(html_entity_decode($k)).'"'.$sep;
-            print '""'.$sep;
-            print '"'.($mt < 0?'C':'D').'"'.$sep;
-            print '"'.price($mt).'"'.$sep;
-    				print '"'.$langs->trans("Products").'"'.$sep;
-            print '"'.$val["ref"].'"';
+    				print $date.$sep;
+    				print $conf->global->ACCOUNTINGEX_SELL_JOURNAL.$sep;
+            print length_accountg(html_entity_decode($k)).$sep;
+            print $sep;
+            print ($mt < 0?'C':'D').$sep;
+            print price($mt).$sep;
+    				print $langs->trans("Products").$sep;
+            print $val["ref"];
     				print "\n";
     			}
     		}
@@ -299,14 +299,14 @@ if (GETPOST('action') == 'export_csv')
     		{
     		  if ($mt)
     		  {
-      			print '"'.$date.'"'.$sep;
-      			print '"'.$conf->global->ACCOUNTINGEX_SELL_JOURNAL.'"'.$sep;
-            print '"'.length_accountg(html_entity_decode($k)).'"'.$sep;
-            print '""'.$sep;
-            print '"'.($mt < 0?'C':'D').'"'.$sep;
-            print '"'.price($mt).'"'.$sep;
-      			print '"'.$langs->trans("VAT").'"'.$sep;
-            print '"'.$val["ref"].'"';
+      			print $date.$sep;
+      			print $conf->global->ACCOUNTINGEX_SELL_JOURNAL.$sep;
+            print length_accountg(html_entity_decode($k)).$sep;
+            print $sep;
+            print ($mt < 0?'C':'D').$sep;
+            print price($mt).$sep;
+      			print $langs->trans("VAT").$sep;
+            print $val["ref"];
       			print "\n";
     		  }
     		}
