@@ -260,14 +260,14 @@ if (GETPOST('action') == 'export_csv')
   		{
   			if ($mt)
   			{
-  				print '"'.$date.'"'.$sep;
-  				print '"'.$conf->global->ACCOUNTINGEX_SELL_JOURNAL.'"'.$sep;
-          print '"'.length_accountg(html_entity_decode($k)).'"'.$sep;
-          print '""'.$sep;
-          print '"'.($mt < 0?'C':'D').'"'.$sep;
-          print '"'.price($mt).'"'.$sep;
-          print '"'.$langs->trans("Products").'"'.$sep;
-          print '"'.$val["ref"].'"';
+  				print $date.$sep;
+  				print $conf->global->ACCOUNTINGEX_SELL_JOURNAL.$sep;
+          print length_accountg(html_entity_decode($k)).$sep;
+          print $sep;
+          print ($mt < 0?'C':'D').$sep;
+          print price($mt).$sep;
+          print $langs->trans("Products").$sep;
+          print $val["ref"];
   				print "\n";
   			}
   		}
@@ -278,27 +278,27 @@ if (GETPOST('action') == 'export_csv')
   		{
   		    if ($mt)
   		    {
-  				print '"'.$date.'"'.$sep;
-  				print '"'.$conf->global->ACCOUNTINGEX_SELL_JOURNAL.'"'.$sep;
-          print '"'.length_accountg(html_entity_decode($k)).'"'.$sep;
-          print '""'.$sep;
-          print '"'.($mt < 0?'C':'D').'"'.$sep;
-          print '"'.price($mt).'"'.$sep;
-          print '"'.$langs->trans("VAT").'"'.$sep;
-          print '"'.$val["ref"].'"';
+  				print $date.$sep;
+  				print $conf->global->ACCOUNTINGEX_SELL_JOURNAL.$sep;
+          print length_accountg(html_entity_decode($k)).$sep;
+          print $sep;
+          print ($mt < 0?'C':'D').$sep;
+          print price($mt).$sep;
+          print $langs->trans("VAT").$sep;
+          print $val["ref"];
   				print "\n";
   			}
   		}
-  		print '"'.$date.'"'.$sep;
-  		print '"'.$conf->global->ACCOUNTINGEX_SELL_JOURNAL.'"'.$sep;
-      print '"'.length_accountg($conf->global->COMPTA_ACCOUNT_SUPPLIER).'"'.$sep;
+  		print $date.$sep;
+  		print $conf->global->ACCOUNTINGEX_SELL_JOURNAL.$sep;
+      print length_accountg($conf->global->COMPTA_ACCOUNT_SUPPLIER).$sep;
       foreach ($tabttc[$key] as $k => $mt)
   		{
-  			print '"'.length_accounta(html_entity_decode($k)).'"'.$sep;
-        print '"'.($mt < 0?'D':'C').'"'.$sep;
-        print '"'.price($mt).'"'.$sep;
-        print '"'.$langs->trans("ThirdParty").'"'.$sep;
-        print '"'.$val["ref"].'"';
+  			print length_accounta(html_entity_decode($k)).$sep;
+        print ($mt < 0?'D':'C').$sep;
+        print price($mt).$sep;
+        print $langs->trans("ThirdParty").$sep;
+        print $val["ref"];
   		}
   		print "\n";
   	}
