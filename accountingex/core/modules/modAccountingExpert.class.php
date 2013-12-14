@@ -74,14 +74,14 @@ class modAccountingExpert extends DolibarrModules
 		// Constantes
 		$this->const = array();
 		$this->const[1] = array("ACCOUNTINGEX_SEPARATORCSV","string",",");
-		$this->const[2] = array("ACCOUNTINGEX_ACCOUNT_SUSPENSE","chaine","471000");
+		$this->const[2] = array("ACCOUNTINGEX_ACCOUNT_SUSPENSE","chaine","471");
 		$this->const[3] = array("ACCOUNTINGEX_SELL_JOURNAL","chaine","VTE");
 		$this->const[4] = array("ACCOUNTINGEX_PURCHASE_JOURNAL","chaine","ACH");
 		$this->const[5] = array("ACCOUNTINGEX_BANK_JOURNAL","chaine","BQ");
 		$this->const[6] = array("ACCOUNTINGEX_SOCIAL_JOURNAL","chaine","SOC");    
 		$this->const[7] = array("ACCOUNTINGEX_CASH_JOURNAL","chaine","CAI");    
 		$this->const[8] = array("ACCOUNTINGEX_MISCELLANEOUS_JOURNAL","chaine","OD");
-    $this->const[9] = array("ACCOUNTINGEX_ACCOUNT_TRANSFER_CASH","chaine","580000");
+    $this->const[9] = array("ACCOUNTINGEX_ACCOUNT_TRANSFER_CASH","chaine","58");
     $this->const[10] = array("CHARTOFACCOUNTS","chaine","2");
     $this->const[11] = array("ACCOUNTINGEX_MODELCSV","chaine","0");
     $this->const[12] = array("ACCOUNTINGEX_LENGTH_GACCOUNT","chaine","");
@@ -270,7 +270,6 @@ class modAccountingExpert extends DolibarrModules
 		            'user'=>0);
     $r++;
     
-    /*
     $this->menu[$r]=array(  'fk_menu'=>'r=7',
 		            'type'=>'left',
 		            'titre'=>'CashJournal',
@@ -283,7 +282,6 @@ class modAccountingExpert extends DolibarrModules
 		            'target'=>'',
 		            'user'=>0);
     $r++;
-    */
 				
 		$this->menu[$r]=array(	'fk_menu'=>'r=0',
 								'type'=>'left',
@@ -298,7 +296,7 @@ class modAccountingExpert extends DolibarrModules
 								'user'=>0);
 		$r++;
       
-		$this->menu[$r]=array(  'fk_menu'=>'r=11',
+		$this->menu[$r]=array(  'fk_menu'=>'r=12',
 								'type'=>'left',
 								'titre'=>'ByYear',
 								'mainmenu'=>'accounting',
@@ -311,7 +309,7 @@ class modAccountingExpert extends DolibarrModules
 		            'user'=>0);
 		$r++;
       
-    $this->menu[$r]=array(  'fk_menu'=>'r=11',
+    $this->menu[$r]=array(  'fk_menu'=>'r=12',
 		            'type'=>'left',
 		            'titre'=>'Balance mensuelle',
 		            'mainmenu'=>'accounting',
@@ -338,7 +336,7 @@ class modAccountingExpert extends DolibarrModules
 								'user'=>0);
 		 $r++;
       
-		 $this->menu[$r]=array(  'fk_menu'=>'r=14',
+		 $this->menu[$r]=array(  'fk_menu'=>'r=15',
 								'type'=>'left',
 								'titre'=>'Globalparameters',
 								'mainmenu'=>'accounting',
@@ -351,7 +349,7 @@ class modAccountingExpert extends DolibarrModules
 		            'user'=>0);
 		 $r++;
       
-     $this->menu[$r]=array(  'fk_menu'=>'r=14',
+     $this->menu[$r]=array(  'fk_menu'=>'r=15',
 		            'type'=>'left',
 		            'titre'=>'Chartofaccounts',
 		            'mainmenu'=>'accounting',
@@ -364,7 +362,7 @@ class modAccountingExpert extends DolibarrModules
 		            'user'=>0);
      $r++;
      
-     $this->menu[$r]=array(  'fk_menu'=>'r=16',
+     $this->menu[$r]=array(  'fk_menu'=>'r=17',
 		            'type'=>'left',
 		            'titre'=>'Menuaccount',
 		            'mainmenu'=>'accounting',
@@ -377,7 +375,7 @@ class modAccountingExpert extends DolibarrModules
 		            'user'=>0);
      $r++;
      
-     $this->menu[$r]=array(  'fk_menu'=>'r=16',
+     $this->menu[$r]=array(  'fk_menu'=>'r=17',
 		            'type'=>'left',
 		            'titre'=>'Menuthirdpartyaccount',
 		            'mainmenu'=>'accounting',

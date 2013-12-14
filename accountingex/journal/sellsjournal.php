@@ -273,7 +273,7 @@ if (GETPOST('action') == 'export_csv')
     			print length_accounta(html_entity_decode($k)).$sep;
           print ($mt < 0?'D':'C').$sep;
           print price($mt).$sep;
-          print $companystatic->name.$sep;
+          print utf8_decode($companystatic->name).$sep;
     		}
         print $val["ref"];
     		print "\n";

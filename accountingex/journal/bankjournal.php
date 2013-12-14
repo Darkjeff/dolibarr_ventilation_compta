@@ -39,6 +39,7 @@ if (! $res) die ( "Include of main fails" );
 dol_include_once ( "/core/lib/report.lib.php");
 dol_include_once ( "/core/lib/date.lib.php");
 dol_include_once ( "/core/lib/bank.lib.php");
+dol_include_once ( "/accountingex/core/lib/account.lib.php" );
 dol_include_once ( "/societe/class/societe.class.php");
 dol_include_once ( "/adherents/class/adherent.class.php");
 dol_include_once ( "/compta/sociales/class/chargesociales.class.php");
@@ -53,6 +54,7 @@ dol_include_once ( "/accountingex/class/bookkeeping.class.php");
 $langs->load("companies");
 $langs->load("other");
 $langs->load("compta");
+$langs->load("bank");
 $langs->load("accountingex@accountingex");
 
 $date_startmonth = GETPOST ( 'date_startmonth' );
@@ -95,13 +97,14 @@ if (empty ( $date_start ) || empty ( $date_end )) // We define date_start and da
 $p = explode ( ":", $conf->global->MAIN_INFO_SOCIETE_COUNTRY );
 $idpays = $p [0];
 
-$sql = "SELECT b.rowid , b.dateo as do, b.datev as dv, b.amount, b.label, b.rappro, b.num_releve, b.num_chq, b.fk_type,soc.code_compta,";
-$sql .= " soc.code_compta_fournisseur,soc.rowid as socid,soc.nom as name,ba.account_number";
+$sql = "SELECT b.rowid , b.dateo as do, b.datev as dv, b.amount, b.label, b.rappro, b.num_releve, b.num_chq, b.fk_type, soc.code_compta, ba.courant,";
+$sql .= " soc.code_compta_fournisseur, soc.rowid as socid, soc.nom as name, ba.account_number, bu1.type as typeop";
 $sql .= " FROM " . MAIN_DB_PREFIX . "bank b";
 $sql .= " JOIN " . MAIN_DB_PREFIX . "bank_account ba on b.fk_account=ba.rowid";
 $sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "bank_url bu1 ON bu1.fk_bank = b.rowid AND bu1.type='company'";
 $sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "societe soc on bu1.url_id=soc.rowid";
 $sql .= " WHERE ba.entity = " . $conf->entity;
+$sql .= " AND ba.courant <> 2"; // Pour isoler la caisse des autres comptes
 if ($date_start && $date_end) $sql .= " AND b.dateo >= '" . $db->idate ( $date_start ) . "' AND b.dateo <= '" . $db->idate ( $date_end ) . "'";
 $sql .= " ORDER BY b.datev";
 
@@ -138,6 +141,7 @@ if ($result) {
 		$compta_bank = $obj->account_number;
 		if ($obj->label == '(SupplierInvoicePayment)') $compta_soc = (! empty ( $obj->code_compta_fournisseur ) ? $obj->code_compta_fournisseur : $cptfour);
 		if ($obj->label == '(CustomerInvoicePayment)') $compta_soc = (! empty ( $obj->code_compta ) ? $obj->code_compta : $cptcli);
+		if ($obj->typeop == '(BankTransfert)') $compta_soc = $conf->global->ACCOUNTINGEX_ACCOUNT_TRANSFER_CASH;
 		
 		// variable bookkeeping
 		
@@ -228,7 +232,7 @@ if (GETPOST ( 'action' ) == 'writeBookKeeping') {
 			$bookkeeping = new BookKeeping ( $db );
 			$bookkeeping->doc_date = $val ["date"];
 			$bookkeeping->doc_ref = $val ["ref"];
-			$bookkeeping->doc_type = 'banque';
+			$bookkeeping->doc_type = 'bank';
 			$bookkeeping->fk_doc = $key;
 			$bookkeeping->fk_docdet = $val ["fk_bank"];
 			$bookkeeping->code_tiers = $tabcompany [$key] ['code_client'];

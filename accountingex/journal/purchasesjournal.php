@@ -262,7 +262,7 @@ if (GETPOST('action') == 'export_csv')
   			{
   				print $date.$sep;
   				print $conf->global->ACCOUNTINGEX_SELL_JOURNAL.$sep;
-          print length_accountg(html_entity_decode($k)).$sep;
+          print length_accountg(utf8_decode($k)).$sep;
           print $sep;
           print ($mt < 0?'C':'D').$sep;
           print price($mt).$sep;
