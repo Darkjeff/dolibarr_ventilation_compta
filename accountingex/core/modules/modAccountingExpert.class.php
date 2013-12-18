@@ -252,7 +252,7 @@ class modAccountingExpert extends DolibarrModules
 		            'langs'=>'accountingex@accountingex',
 		            'position'=>122,
 		            'enabled'=>1,
-		            'perms'=>1,
+		            'perms'=>'$conf->fournisseur->enabled',
 		            'target'=>'',
 		            'user'=>0);
     $r++;
