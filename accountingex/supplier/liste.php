@@ -35,6 +35,8 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 
 // Class
+require_once(DOL_DOCUMENT_ROOT."/fourn/class/fournisseur.facture.class.php");
+require_once(DOL_DOCUMENT_ROOT."/fourn/class/fournisseur.product.class.php");
 
 // Langs
 $langs->load("compta");
@@ -134,7 +136,7 @@ if ($page < 0) $page = 0;
 $limit = $conf->liste_limit;
 $offset = $limit * $page ;
 
-$sql = "SELECT f.ref, f.rowid as facid, l.fk_product, l.description, l.total_ht as price, l.rowid, l.fk_code_ventilation, ";
+$sql = "SELECT f.ref, f.rowid as facid, f.ref_supplier, l.fk_product, l.description, l.total_ht as price, l.rowid, l.fk_code_ventilation, ";
 $sql.= " p.rowid as product_id, p.ref as product_ref, p.label as product_label, p.fk_product_type as type, p.accountancy_code_buy as code_buy";
 $sql .= " FROM ".MAIN_DB_PREFIX."facture_fourn as f";
 $sql .= " , ".MAIN_DB_PREFIX."facture_fourn_det as l";
@@ -150,7 +152,7 @@ if ($result)
   
   print_barre_liste("Lignes de facture fournisseurs à ventiler",$page,"liste.php","",$sortfield,$sortorder,'',$num_lignes);
 
- print '<td align="left"><br><b>'.$langs->trans("DescVentilTodoSupplier").'</b></br></td>';
+  print '<td align="left"><br><b>'.$langs->trans("DescVentilTodoSupplier").'</b></br></td>';
 
 	print '<form action="liste.php" method="post">'."\n";
 	print '<input type="hidden" name="action" value="ventil">';
@@ -166,9 +168,9 @@ if ($result)
   print '<td align="center">'.$langs->trans("Ventilate").'</td>';
   print "</tr>\n";
   
-
-	$form = new Form($db);
-
+  $facturefourn_static=new FactureFournisseur($db);
+	$productfourn_static=new ProductFournisseur($db);
+	$form = new Form($db);           
 
   $var=True;
   while ($i < min($num_lignes, $limit))
@@ -177,9 +179,24 @@ if ($result)
       $var=!$var;
       print "<tr $bc[$var]>";
       
-      print '<td><a href="'.DOL_URL_ROOT.'/fourn/facture/fiche.php?facid='.$objp->facid.'">'.$objp->facnumber.'</a></td>';
+      // Ref facture
+  		$facturefourn_static->ref=$objp->ref;
+  		$facturefourn_static->id=$objp->facid;
+  		print '<td>'.$facturefourn_static->getNomUrl(1).'</td>';
 
-      print '<td><a href="'.DOL_URL_ROOT.'/product/fiche.php?id='.$objp->product_id.'">'.$objp->product_ref.'</a></td>';
+  		// Ref facture supplier
+  		$productfourn_static->ref=$objp->product_ref;
+  		$productfourn_static->id=$objp->product_id;
+  		$productfourn_static->type=$objp->type;
+  		print '<td>';
+  		if ($productfourn_static->id) print $productfourn_static->getNomUrl(1);
+  		else print '&nbsp;';
+  		print '</td>';
+    
+      // print '<td><a href="'.DOL_URL_ROOT.'/fourn/facture/fiche.php?facid='.$objp->facid.'">'.$objp->ref.'</a></td>';
+
+      // print '<td><a href="'.DOL_URL_ROOT.'/fourn/facture/fiche.php?facid='.$objp->facid.'">'.$objp->ref_supplier.'</a></td>';
+      
       print '<td>'.dol_trunc($objp->product_label,24).'</td>';
 
       print '<td>'.stripslashes(nl2br($objp->description)).'</td>';                       
