@@ -264,7 +264,7 @@ if (GETPOST('action') == 'export_csv')
   				print $conf->global->ACCOUNTINGEX_SELL_JOURNAL.$sep;
           print length_accountg(html_entity_decode($k)).$sep;
           print $sep;
-          print ($mt < 0?'C':'D').$sep;
+          print ($mt < 0?'D':'C').$sep;
           print price($mt).$sep;
           print $langs->trans("Products").$sep;
           print $val["ref"];
@@ -282,7 +282,7 @@ if (GETPOST('action') == 'export_csv')
   				print $conf->global->ACCOUNTINGEX_SELL_JOURNAL.$sep;
           print length_accountg(html_entity_decode($k)).$sep;
           print $sep;
-          print ($mt < 0?'C':'D').$sep;
+          print ($mt < 0?'D':'C').$sep;
           print price($mt).$sep;
           print $langs->trans("VAT").$sep;
           print $val["ref"];
@@ -295,7 +295,7 @@ if (GETPOST('action') == 'export_csv')
       foreach ($tabttc[$key] as $k => $mt)
   		{
   			print length_accounta(html_entity_decode($k)).$sep;
-        print ($mt < 0?'D':'C').$sep;
+        print ($mt < 0?'C':'D').$sep;
         print price($mt).$sep;
         print $langs->trans("ThirdParty").$sep;
         print $val["ref"];
