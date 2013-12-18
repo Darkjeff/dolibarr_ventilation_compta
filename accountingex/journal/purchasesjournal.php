@@ -261,7 +261,7 @@ if (GETPOST('action') == 'export_csv')
   			if ($mt)
   			{
   				print $date.$sep;
-  				print $conf->global->ACCOUNTINGEX_SELL_JOURNAL.$sep;
+  				print $conf->global->ACCOUNTINGEX_PURCHASE_JOURNAL.$sep;
           print length_accountg(html_entity_decode($k)).$sep;
           print $sep;
           print ($mt < 0?'D':'C').$sep;
@@ -279,7 +279,7 @@ if (GETPOST('action') == 'export_csv')
   		    if ($mt)
   		    {
   				print $date.$sep;
-  				print $conf->global->ACCOUNTINGEX_SELL_JOURNAL.$sep;
+  				print $conf->global->ACCOUNTINGEX_PURCHASE_JOURNAL.$sep;
           print length_accountg(html_entity_decode($k)).$sep;
           print $sep;
           print ($mt < 0?'D':'C').$sep;
@@ -290,7 +290,7 @@ if (GETPOST('action') == 'export_csv')
   			}
   		}
   		print $date.$sep;
-  		print $conf->global->ACCOUNTINGEX_SELL_JOURNAL.$sep;
+  		print $conf->global->ACCOUNTINGEX_PURCHASE_JOURNAL.$sep;
       print length_accountg($conf->global->COMPTA_ACCOUNT_SUPPLIER).$sep;
       foreach ($tabttc[$key] as $k => $mt)
   		{
