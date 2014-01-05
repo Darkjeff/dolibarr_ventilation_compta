@@ -165,7 +165,7 @@ $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=11,fd.total_ht,0)),2) AS 'Novembre',";
 $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=12,fd.total_ht,0)),2) AS 'Decembre',";
 $sql .= "  ROUND(SUM(fd.total_ht),2) as 'Total'";
 $sql .= " FROM llx_facturedet as fd";
-$sql .= "  LEFT JOIN llx_facture as f ON f.rowid = fd.fk_facture";
+$sql .= "  LEFT JOIN ".MAIN_DB_PREFIX."facture as f ON f.rowid = fd.fk_facture";
 $sql .= " WHERE f.datef >= '".$db->idate(dol_get_first_day($y,1,false))."'";
 $sql .= "  AND f.datef <= '".$db->idate(dol_get_last_day($y,12,false))."'";
 

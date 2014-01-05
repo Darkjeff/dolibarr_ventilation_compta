@@ -1,12 +1,12 @@
 ===================================================
-*		Accounting Expert MODULE
-*		by Olivier Geffroy (Jeffinfo)
-*		And Alexandre Spangaro
+*	Accounting Expert MODULE
+*	by Olivier Geffroy (Jeffinfo)
+*	And Alexandre Spangaro
 *		
-*   Version	3.4 - Revision 1.0.0
-*	    for Dolibarr >= 3.4.x
-*			release date 2013/11/28
-*			last update (see on github)
+* Version	3.5 alpha - Revision 1.0.0
+*	for Dolibarr >= 3.5.x
+*	release date ____/__/__
+*	last update (see on github)
 ===================================================
 
 ===== DESCRIPTION =====
@@ -33,15 +33,15 @@ http://www.jeffinfo.com
 To download the latest Accounting Expert Free edition, please check the github:
 
 
-For Dolibarr 3.4.x and above:
+For Dolibarr 3.5.x and above:
 
-https://github.com/Darkjeff/dolibarr_ventilation_compta/tree/3.4
+https://github.com/Darkjeff/dolibarr_ventilation_compta/tree/3.5
 
 ===== CONTACT =====
 
-This module was created by Olivier Geffroy for the Dolibarr project.
+This module was created by Olivier Geffroy & Alexandre Spangaro for the Dolibarr project.
 
-You can either contact the author by mail <jeff at jeffinfo dot com> or on the github above or on the Dolibarr's forum : Darkjeff (french or english).
+You can either contact authors by mail <jeff at jeffinfo dot com> or <alexandre dot spangaro at gmail dot com> or on the github above or on the Dolibarr's forum : Darkjeff (french or english) or Aspangaro (french or english).
 
 However please note that there is no guaranteed support for the Free edition of Accounting Export
 
