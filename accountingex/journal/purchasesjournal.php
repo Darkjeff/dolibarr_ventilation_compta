@@ -141,7 +141,7 @@ if ($result)
 		$compta_tva = (! empty($obj->account_tva)?$obj->account_tva:$cpttva);
 
 		$tabfac[$obj->rowid]["date"] = $obj->df;
-		$tabfac[$obj->rowid]["ref"] = $obj->facnumber;
+		$tabfac[$obj->rowid]["ref"] = $obj->ref;
 		$tabfac[$obj->rowid]["type"] = $obj->type;
 		$tabfac[$obj->rowid]["fk_facturefourndet"] = $obj->fdid;
 		$tabttc[$obj->rowid][$compta_soc] += $obj->total_ttc;
@@ -258,6 +258,10 @@ if (GETPOST('action') == 'export_csv')
       // product
   		foreach ($tabht[$key] as $k => $mt)
   		{
+        $companystatic->id=$tabcompany[$key]['id'];
+	    	$companystatic->name=$tabcompany[$key]['name'];
+	    	$companystatic->client=$tabcompany[$key]['code_client'];
+        
   			if ($mt)
   			{
   				print $date.$sep;
@@ -265,7 +269,7 @@ if (GETPOST('action') == 'export_csv')
           print length_accountg(html_entity_decode($k)).$sep;
           print $sep;
           print ($mt < 0?'D':'C').$sep;
-          print price($mt).$sep;
+          print ($mt<=0?price(-$mt):$mt).$sep;
           print $langs->trans("Products").$sep;
           print $val["ref"];
   				print "\n";
@@ -283,7 +287,7 @@ if (GETPOST('action') == 'export_csv')
           print length_accountg(html_entity_decode($k)).$sep;
           print $sep;
           print ($mt < 0?'D':'C').$sep;
-          print price($mt).$sep;
+          print ($mt<=0?price(-$mt):$mt).$sep;
           print $langs->trans("VAT").$sep;
           print $val["ref"];
   				print "\n";
@@ -296,8 +300,8 @@ if (GETPOST('action') == 'export_csv')
   		{
   			print length_accounta(html_entity_decode($k)).$sep;
         print ($mt < 0?'C':'D').$sep;
-        print price($mt).$sep;
-        print $langs->trans("ThirdParty").$sep;
+        print ($mt<=0?price(-$mt):$mt).$sep;
+        print utf8_decode($companystatic->name).$sep;
         print $val["ref"];
   		}
   		print "\n";

@@ -272,7 +272,7 @@ if (GETPOST('action') == 'export_csv')
     		{
     			print length_accounta(html_entity_decode($k)).$sep;
           print ($mt < 0?'C':'D').$sep;
-          print price($mt).$sep;
+          print ($mt<=0?price(-$mt):$mt).$sep;
           print utf8_decode($companystatic->name).$sep;
     		}
         print $val["ref"];
@@ -288,7 +288,7 @@ if (GETPOST('action') == 'export_csv')
             print length_accountg(html_entity_decode($k)).$sep;
             print $sep;
             print ($mt < 0?'D':'C').$sep;
-            print price($mt).$sep;
+            print ($mt<=0?price(-$mt):$mt).$sep;
     				print $langs->trans("Products").$sep;
             print $val["ref"];
     				print "\n";
@@ -304,7 +304,7 @@ if (GETPOST('action') == 'export_csv')
             print length_accountg(html_entity_decode($k)).$sep;
             print $sep;
             print ($mt < 0?'D':'C').$sep;
-            print price($mt).$sep;
+            print ($mt<=0?price(-$mt):$mt).$sep;
       			print $langs->trans("VAT").$sep;
             print $val["ref"];
       			print "\n";
