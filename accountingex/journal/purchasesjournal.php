@@ -3,8 +3,8 @@
  * Copyright (C) 2007-2010	Jean Heimburger		  <jean@tiaris.info>
  * Copyright (C) 2011		    Juanjo Menent		    <jmenent@2byte.es>
  * Copyright (C) 2012		    Regis Houssin		    <regis@dolibarr.fr>
- * Copyright (C) 2013       Alexandre Spangaro  <alexandre.spangaro@gmail.com> 
- * Copyright (C) 2013       Olivier Geffroy     <jeff@jeffinfo.com>
+ * Copyright (C) 2013-2014  Alexandre Spangaro  <alexandre.spangaro@gmail.com> 
+ * Copyright (C) 2013-2014  Olivier Geffroy     <jeff@jeffinfo.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -268,7 +268,7 @@ if (GETPOST('action') == 'export_csv')
   				print $conf->global->ACCOUNTINGEX_PURCHASE_JOURNAL.$sep;
           print length_accountg(html_entity_decode($k)).$sep;
           print $sep;
-          print ($mt < 0?'D':'C').$sep;
+          print ($mt < 0?'C':'D').$sep;
           print ($mt<=0?price(-$mt):$mt).$sep;
           print $langs->trans("Products").$sep;
           print $val["ref"];
@@ -286,7 +286,7 @@ if (GETPOST('action') == 'export_csv')
   				print $conf->global->ACCOUNTINGEX_PURCHASE_JOURNAL.$sep;
           print length_accountg(html_entity_decode($k)).$sep;
           print $sep;
-          print ($mt < 0?'D':'C').$sep;
+          print ($mt < 0?'C':'D').$sep;
           print ($mt<=0?price(-$mt):$mt).$sep;
           print $langs->trans("VAT").$sep;
           print $val["ref"];
@@ -299,7 +299,7 @@ if (GETPOST('action') == 'export_csv')
       foreach ($tabttc[$key] as $k => $mt)
   		{
   			print length_accounta(html_entity_decode($k)).$sep;
-        print ($mt < 0?'C':'D').$sep;
+        print ($mt < 0?'D':'C').$sep;
         print ($mt<=0?price(-$mt):$mt).$sep;
         print utf8_decode($companystatic->name).$sep;
         print $val["ref"];
