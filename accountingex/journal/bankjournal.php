@@ -4,7 +4,7 @@
  * Copyright (C) 2011		    Juanjo Menent		    <jmenent@2byte.es>
  * Copyright (C) 2012		    Regis Houssin		    <regis@dolibarr.fr>
  * Copyright (C) 2013		    Christophe Battarel	<christophe.battarel@altairis.fr>
- * Copyright (C) 2013       Alexandre Spangaro	<alexandre.spangaro@gmail.com>
+ * Copyright (C) 2013-2014  Alexandre Spangaro	<alexandre.spangaro@gmail.com>
  * Copyright (C) 2013       Florian Henry	      <florian.henry@open-concept.pro>
  * Copyright (C) 2013       Olivier Geffroy     <jeff@jeffinfo.com>
  *
@@ -440,6 +440,7 @@ if (GETPOST ( 'action' ) == 'export_csv')
 	print "<td>" . $langs->trans ( "Date" ) . "</td>";
 	print "<td>" . $langs->trans ( "Piece" ) . ' (' . $langs->trans ( "InvoiceRef" ) . ")</td>";
 	print "<td>" . $langs->trans ( "Account" ) . "</td>";
+  print "<td>" . $langs->trans("Type") . "</td>";
 	print "<td align='right'>" . $langs->trans ( "Debit" ) . "</td><td align='right'>" . $langs->trans ( "Credit" ) . "</td>";
 	print "</tr>\n";
 	
@@ -452,12 +453,13 @@ if (GETPOST ( 'action' ) == 'export_csv')
 		// Bank
 		foreach ( $tabbq[$key] as $k => $mt ) {
 			if (1) {
-				print "<tr " . $bc [$var] . " >";
-				print "<td>" .$date. "</td>";
-				print "<td>" . $val ["lib"] . "</td>";
-				print "<td>" . $k . "</td>";
-				print '<td align="right">' . ($mt >= 0 ? price ( $mt ) : '') . "</td>";
-				print '<td align="right">' . ($mt < 0 ? price ( - $mt ) : '') . "</td>";
+				print "<tr ".$bc[$var].">";
+				print "<td>".$date."</td>";
+				print "<td>".$val["lib"]."</td>";
+				print "<td>".$k."</td>";
+				print "<td>".$langs->trans('Bank')."</td>";
+        print "<td align='right'>".($mt >= 0 ? price ( $mt ) : '')."</td>";
+				print "<td align='right'>".($mt < 0 ? price ( - $mt ) : '')."</td>";
 				print "</tr>";
 			}
 		}
@@ -465,15 +467,14 @@ if (GETPOST ( 'action' ) == 'export_csv')
 		// third party
 		foreach ( $tabtp[$key] as $k => $mt ) {
 			if ($k!='type') {
-				print "<tr " . $bc [$var] . ">";
-				
-				print "<td>" .$date. "</td>";
-				print "<td>" . $val ["soclib"] . "</td>";
-				
-				print "<td>" . $k;
-				print "</td>";
-				print '<td align="right">' . ($mt < 0 ? price ( - $mt ) : '') . "</td>";
-				print '<td align="right">' . ($mt >= 0 ? price ( $mt ) : '') . "</td>";
+				print "<tr ".$bc[$var].">";
+				print "<td>".$date."</td>";
+				print "<td>".$val["soclib"]."</td>";
+				print "<td>".$k."</td>";
+				print "<td>".$langs->trans('ThirdParty')." (".$val['soclib'].")</td>";
+        print "<td align='right'>".($mt < 0 ? price ( - $mt ) : '')."</td>";
+				print "<td align='right'>".($mt >= 0 ? price ( $mt ) : '')."</td>";
+        print "</tr>";
 			}
 		}
 		

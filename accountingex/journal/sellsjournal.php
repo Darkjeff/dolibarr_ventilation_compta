@@ -4,7 +4,7 @@
  * Copyright (C) 2011		   Juanjo Menent		    <jmenent@2byte.es>
  * Copyright (C) 2012		   Regis Houssin		    <regis@dolibarr.fr>
  * Copyright (C) 2013		   Christophe Battarel	<christophe.battarel@altairis.fr>
- * Copyright (C) 2013      Alexandre Spangaro	  <alexandre.spangaro@gmail.com>
+ * Copyright (C) 2013-2014 Alexandre Spangaro	  <alexandre.spangaro@gmail.com>
  * Copyright (C) 2013      Florian Henry	      <florian.henry@open-concept.pro>
  * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
  *
@@ -321,7 +321,7 @@ if (GETPOST('action') == 'export_csv')
     		print '"'.$val["ref"].'"'.$sep;
     		foreach ($tabttc[$key] as $k => $mt)
     		{
-    			print '"'.length_accounta(html_entity_decode($k)).'"'.$sep.'"'.$langs->trans("ThirdParty").'"'.$sep.'"'.($mt>=0?price($mt):'').'"'.$sep.'"'.($mt<0?price(-$mt):'').'"';
+    			print '"'.length_accounta(html_entity_decode($k)).'"'.$sep.'"'.$langs->trans("ThirdParty").' ('.utf8_decode($companystatic->name).')"'.$sep.'"'.($mt>=0?price($mt):'').'"'.$sep.'"'.($mt<0?price(-$mt):'').'"';
     		}
     		print "\n";
     		// product
@@ -441,7 +441,7 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
 				//print "<td>".$conf->global->COMPTA_JOURNAL_SELL."</td>";
 				print "<td>".$date."</td>";
 				print "<td>".$invoicestatic->getNomUrl(1)."</td>";
-				print "<td>".length_accountg($k)."</td><td>".$val["compte"]."</td><td align='right'>".($mt<0?price(-$mt):'')."</td><td align='right'>".($mt>=0?price($mt):'')."</td></tr>";
+				print "<td>".length_accountg($k)."</td><td>".$langs->trans("Products")."</td><td align='right'>".($mt<0?price(-$mt):'')."</td><td align='right'>".($mt>=0?price($mt):'')."</td></tr>";
 			}
 		}
 		// vat
