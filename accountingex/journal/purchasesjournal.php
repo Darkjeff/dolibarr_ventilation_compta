@@ -311,8 +311,13 @@ if (GETPOST('action') == 'export_csv')
   {
     foreach ($tabfac as $key => $val)
   	{
-  	$date = dol_print_date($db->jdate($val["date"]),'day');
-  		// product
+  	  $date = dol_print_date($db->jdate($val["date"]),'day');
+  		
+      $companystatic->id=$tabcompany[$key]['id'];
+	    $companystatic->name=$tabcompany[$key]['name'];
+	    $companystatic->client=$tabcompany[$key]['code_client'];
+      
+      // product
   		foreach ($tabht[$key] as $k => $mt)
   		{
   			if ($mt)
@@ -339,7 +344,7 @@ if (GETPOST('action') == 'export_csv')
   		print '"'.$val["ref"].'"'.$sep;
   		foreach ($tabttc[$key] as $k => $mt)
   		{
-  			print '"'.html_entity_decode($k).'"'.$sep.'"'.$langs->trans("ThirdParty").'"'.$sep.'"'.($mt<0?price(-$mt):'').'"'.$sep.'"'.($mt>=0?price($mt):'').'"';
+  			print '"'.html_entity_decode($k).'"'.$sep.'"'.utf8_decode($companystatic->name).'"'.$sep.'"'.($mt<0?price(-$mt):'').'"'.$sep.'"'.($mt>=0?price($mt):'').'"';
   		}
   		print "\n";
   	}
@@ -441,7 +446,7 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
 				//print "<td>".$conf->global->COMPTA_JOURNAL_BUY."</td>";
 				print "<td>".$date."</td>";
 				print "<td>".$invoicestatic->getNomUrl(1)."</td>";
-				print "<td>".length_accountg($k)."</td><td>".$langs->trans("VAT")." ".$key."</td>";
+				print "<td>".length_accountg($k)."</td><td>".$langs->trans("VAT")."</td>";
 				print '<td align="right">'.($mt>=0?price($mt):'')."</td>";
 				print '<td align="right">'.($mt<0?price(-$mt):'')."</td>";
 				print "</tr>";
