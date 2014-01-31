@@ -92,6 +92,9 @@ DescBankJournal=Journal de banque description
 CashJournal=Journal de caisse
 DescCashJournal=Journal de caisse description
 
+SupplierInvoicePayment=Règlement de facture fournisseur
+CustomerInvoicePayment=Règlement de facture client
+
 ThirdPartyAccount=Compte tiers
 
 NumMvts = Numero de mouvement 
