@@ -311,8 +311,13 @@ if (GETPOST('action') == 'export_csv')
   {
     foreach ($tabfac as $key => $val)
   	{
-  	$date = dol_print_date($db->jdate($val["date"]),'day');
-  		// product
+  	  $date = dol_print_date($db->jdate($val["date"]),'day');
+  		
+      $companystatic->id=$tabcompany[$key]['id'];
+	    $companystatic->name=$tabcompany[$key]['name'];
+	    $companystatic->client=$tabcompany[$key]['code_client'];
+      
+      // product
   		foreach ($tabht[$key] as $k => $mt)
   		{
   			if ($mt)
@@ -339,7 +344,7 @@ if (GETPOST('action') == 'export_csv')
   		print '"'.$val["ref"].'"'.$sep;
   		foreach ($tabttc[$key] as $k => $mt)
   		{
-  			print '"'.html_entity_decode($k).'"'.$sep.'"'.$langs->trans("ThirdParty").' ('.utf8_decode($companystatic->name).')"'.$sep.'"'.($mt<0?price(-$mt):'').'"'.$sep.'"'.($mt>=0?price($mt):'').'"';
+  			print '"'.html_entity_decode($k).'"'.$sep.'"'.utf8_decode($companystatic->name).'"'.$sep.'"'.($mt<0?price(-$mt):'').'"'.$sep.'"'.($mt>=0?price($mt):'').'"';
   		}
   		print "\n";
   	}
