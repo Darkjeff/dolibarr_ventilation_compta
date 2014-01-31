@@ -49,6 +49,7 @@ dol_include_once ( "/fourn/class/paiementfourn.class.php");
 dol_include_once ( "/fourn/class/fournisseur.facture.class.php");
 dol_include_once ( "/fourn/class/fournisseur.class.php");
 dol_include_once ( "/accountingex/class/bookkeeping.class.php");
+dol_include_once ( "/societe/class/client.class.php");
 
 // Langs
 $langs->load("companies");
@@ -130,21 +131,20 @@ if ($result) {
 	$tabpay = array ();
 	$tabbq = array ();
 	$tabtp = array ();
-	$tabcompany = array ();
+	$tabcompany[$obj->rowid]=array('id'=>$obj->socid, 'name'=>$obj->name, 'code_client'=>$obj->code_compta);
 	$tabtype = array ();
 	
 	$i = 0;
 	while ( $i < $num ) {
 		$obj = $db->fetch_object ( $result );
-		// contr�les
 		
+    // contrôles
 		$compta_bank = $obj->account_number;
 		if ($obj->label == '(SupplierInvoicePayment)') $compta_soc = (! empty ( $obj->code_compta_fournisseur ) ? $obj->code_compta_fournisseur : $cptfour);
 		if ($obj->label == '(CustomerInvoicePayment)') $compta_soc = (! empty ( $obj->code_compta ) ? $obj->code_compta : $cptcli);
 		if ($obj->typeop == '(BankTransfert)') $compta_soc = $conf->global->ACCOUNTINGEX_ACCOUNT_TRANSFER_CASH;
 		
 		// variable bookkeeping
-		
 		$tabpay [$obj->rowid] ["date"] = $obj->do;
 		$tabpay [$obj->rowid] ["ref"] = $obj->label;
 		$tabpay [$obj->rowid] ["fk_bank"] = $obj->rowid;
@@ -206,8 +206,10 @@ if ($result) {
 				$paymentvatstatic->ref = $links [$key] ['url_id'];
 				$tabpay [$obj->rowid] ["lib"] .= ' ' . $paymentvatstatic->getNomUrl ( 2 );
 				$tabtp [$obj->rowid] [$cpttva] += $obj->amount;
-			} else if ($links [$key] ['type'] == 'banktransfert') {
-				$tabpay [$obj->rowid] ["lib"] .= ' ' . $paymentvatstatic->getNomUrl ( 2 );
+			
+      } else if ($links [$key] ['type'] == 'banktransfert') {
+				
+        $tabpay [$obj->rowid] ["lib"] .= ' ' . $paymentvatstatic->getNomUrl ( 2 );
 				$tabtp [$obj->rowid] [$cpttva] += $obj->amount;
 			} 
 			/*else {
@@ -369,31 +371,89 @@ if (GETPOST ( 'action' ) == 'export_csv')
   
     header ( 'Content-Type: text/csv' );
 	  header ( 'Content-Disposition: attachment;filename=journal_banque.csv' );
-	  foreach ( $tabpay as $key => $val )
+	  
+    $companystatic=new Client($db);
+    
+    if ($conf->global->ACCOUNTINGEX_MODELCSV == 1) // Modèle Cegid Expert
     {
-		  $date = dol_print_date ( $db->jdate ( $val ["date"] ), 'day' );
-		  print '"' . $date . '"'.$sep;
-		  print '"' . $val ["ref"] . '"'.$sep;
-		
-		  // bank
-		  foreach ( $tabbq [$key] as $k => $mt ) 
+      foreach ( $tabpay as $key => $val )
       {
-			   print '"' . html_entity_decode ( $k ) . '"'.$sep.'"' . $langs->trans ( "Bank" ) . '"'.$sep.'"' . ($mt >= 0 ? price ( $mt ) : '') . '"'.$sep.'"' . ($mt < 0 ? price ( - $mt ) : '') . '"';
-		  }
-		  print "\n";
-		
-      // third party
-		  foreach ( $tabtp [$key] as $k => $mt ) 
+  		  $date = dol_print_date ( $db->jdate ( $val ["date"] ), '%d%m%Y' );
+  		  
+        $companystatic->id=$tabcompany[$key]['id'];
+	      $companystatic->name=$tabcompany[$key]['name'];
+      
+        // bank
+  		  print $date.$sep;
+  		  print $conf->global->ACCOUNTINGEX_BANK_JOURNAL.$sep;
+        foreach ( $tabbq [$key] as $k => $mt ) 
+        {
+           print length_accountg(html_entity_decode($k)).$sep;
+           print $sep;
+           print $langs->trans("Bank").$sep;
+           print ($mt < 0?'C':'D').$sep;
+           print ($mt<=0?price(-$mt):$mt).$sep;
+           print $val["ref"].$sep;
+  		  }
+  		  print "\n";
+  		
+        // third party
+  		  foreach ( $tabtp [$key] as $k => $mt ) 
+        {
+  			   if ($mt)
+           {
+  				    print $date.$sep;
+              print $conf->global->ACCOUNTINGEX_BANK_JOURNAL.$sep;
+              if ($val["lib"] == '(SupplierInvoicePayment)') 
+              {
+                print length_accountg($conf->global->COMPTA_ACCOUNT_SUPPLIER).$sep;
+              }
+              else {
+                print length_accountg($conf->global->COMPTA_ACCOUNT_CUSTOMER).$sep;
+              }  
+              print length_accounta(html_entity_decode($k)).$sep;
+              print $companystatic->name.$sep;
+              print ($mt < 0?'D':'C').$sep;
+              print ($mt<=0?price(-$mt):$mt).$sep;
+  				    print $val["ref"].$sep;
+  				    print "\n";
+  			   }
+  		  }
+  	  }
+    }
+    else
+    {
+      foreach ( $tabpay as $key => $val )
       {
-			   if ($mt)
-         {
-				    print '"' . $date . '"'.$sep;
-				    print '"' . $val ["ref"] . '"'.$sep;
-				    print '"' . html_entity_decode ( $k ) . '"'.$sep.'"' . $langs->trans ( "ThirdParty" ) . '"'.$sep.'"' . ($mt < 0 ? price ( - $mt ) : '') . '"'.$sep.'"' . ($mt >= 0 ? price ( $mt ) : '') . '"';
-				    print "\n";
-			   }
-		  }
-	  }
+  		  $date = dol_print_date ( $db->jdate ( $val ["date"] ), 'day' );
+  		  
+        $companystatic->id=$tabcompany[$key]['id'];
+	    	$companystatic->name=$tabcompany[$key]['name'];
+                
+        print '"' . $date . '"'.$sep;
+  		  print '"' . $val ["ref"] . '"'.$sep;
+  		
+  		  // bank
+  		  foreach ( $tabbq [$key] as $k => $mt ) 
+        {
+  			   print '"' . length_accountg(html_entity_decode ( $k )) . '"'.$sep.'"' . $langs->trans ( "Bank" ) . '"'.$sep.'"' . ($mt >= 0 ? price ( $mt ) : '') . '"'.$sep.'"' . ($mt < 0 ? price ( - $mt ) : '') . '"';
+  		  }
+  		  print "\n";
+  		
+        // third party
+  		  foreach ( $tabtp [$key] as $k => $mt ) 
+        {
+  			   if ($mt)
+           {
+  				    print '"' . $date . '"'.$sep;
+  				    print '"' . $val ["ref"] . '"'.$sep;
+              
+  				    print '"' . length_accounta(html_entity_decode ( $k )) . '"'.$sep.'"' . $companystatic->name . '"'.$sep.'"' . ($mt < 0 ? price ( - $mt ) : '') . '"'.$sep.'"' . ($mt >= 0 ? price ( $mt ) : '') . '"';
+  				    print "\n";
+  			   }
+  		  }
+  	  }
+    }  
 } else {
 	
 	$form = new Form ( $db );
@@ -449,14 +509,17 @@ if (GETPOST ( 'action' ) == 'export_csv')
 	
 	foreach ( $tabpay as $key => $val ) {
 	$date = dol_print_date($db->jdate($val["date"]),'day');
+  
+  if ($val["lib"] == '(SupplierInvoicePayment)') $reflabel = $langs->trans('SupplierInvoicePayment');
+	if ($val["lib"] == '(CustomerInvoicePayment)') $reflabel = $langs->trans('CustomerInvoicePayment');
 		
 		// Bank
 		foreach ( $tabbq[$key] as $k => $mt ) {
 			if (1) {
 				print "<tr ".$bc[$var].">";
 				print "<td>".$date."</td>";
-				print "<td>".$val["lib"]."</td>";
-				print "<td>".$k."</td>";
+				print "<td>".$reflabel."</td>";
+				print "<td>".length_accountg($k)."</td>";
 				print "<td>".$langs->trans('Bank')."</td>";
         print "<td align='right'>".($mt >= 0 ? price ( $mt ) : '')."</td>";
 				print "<td align='right'>".($mt < 0 ? price ( - $mt ) : '')."</td>";
@@ -470,7 +533,7 @@ if (GETPOST ( 'action' ) == 'export_csv')
 				print "<tr ".$bc[$var].">";
 				print "<td>".$date."</td>";
 				print "<td>".$val["soclib"]."</td>";
-				print "<td>".$k."</td>";
+				print "<td>".length_accounta($k)."</td>";
 				print "<td>".$langs->trans('ThirdParty')." (".$val['soclib'].")</td>";
         print "<td align='right'>".($mt < 0 ? price ( - $mt ) : '')."</td>";
 				print "<td align='right'>".($mt >= 0 ? price ( $mt ) : '')."</td>";
