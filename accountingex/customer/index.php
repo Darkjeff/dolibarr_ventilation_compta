@@ -77,7 +77,6 @@ $sql = "SELECT count(*) FROM ".MAIN_DB_PREFIX."facturedet as fd";
 $sql.= " , ".MAIN_DB_PREFIX."facture as f";
 $sql.= " WHERE fd.fk_code_ventilation = 0";
 $sql.= " AND f.rowid = fd.fk_facture AND f.fk_statut = 1;";
-$sql.= " AND f.entity = ".$conf->entity;
 
 $result = $db->query($sql);
 if ($result)
@@ -128,7 +127,6 @@ $sql .= "  LEFT JOIN ".MAIN_DB_PREFIX."facture as f ON f.rowid = fd.fk_facture";
 $sql .= "  LEFT JOIN ".MAIN_DB_PREFIX."accountingaccount as aa ON aa.rowid = fd.fk_code_ventilation";
 $sql .= " WHERE f.datef >= '".$db->idate(dol_get_first_day($y,1,false))."'";
 $sql .= "  AND f.datef <= '".$db->idate(dol_get_last_day($y,12,false))."'";
-$sql.= " AND f.entity = ".$conf->entity;
 $sql .= " GROUP BY fd.fk_code_ventilation";
 
 $resql = $db->query($sql);
@@ -203,7 +201,6 @@ $sql .= " FROM ".MAIN_DB_PREFIX."facturedet as fd";
 $sql .= "  LEFT JOIN ".MAIN_DB_PREFIX."facture as f ON f.rowid = fd.fk_facture";
 $sql .= " WHERE f.datef >= '".$db->idate(dol_get_first_day($y,1,false))."'";
 $sql .= "  AND f.datef <= '".$db->idate(dol_get_last_day($y,12,false))."'";
-$sql.= " AND f.entity = ".$conf->entity;
 
 
 $resql = $db->query($sql);
@@ -279,7 +276,6 @@ $sql .= " FROM ".MAIN_DB_PREFIX."facturedet as fd";
 $sql .= "  LEFT JOIN ".MAIN_DB_PREFIX."facture as f ON f.rowid = fd.fk_facture";
 $sql .= " WHERE f.datef >= '".$db->idate(dol_get_first_day($y,1,false))."'";
 $sql .= "  AND f.datef <= '".$db->idate(dol_get_last_day($y,12,false))."'";
-$sql.= " AND f.entity = ".$conf->entity;
 
 
 $resql = $db->query($sql);
