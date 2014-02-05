@@ -28,6 +28,7 @@ Dispatched=Effectuée
 CustomersVentilation=Ventilation clients
 SuppliersVentilation=Ventilation fournisseurs
 TradeMargin=Marge commerciale
+Reports=Rapports
 ByCustomerInvoice=Par factures clients
 ByMonth=Par mois
 Account=Compte comptable
@@ -39,6 +40,7 @@ UpdateAccount=Modification d'un compte
 UpdateMvts=Modification d'un mouvement
 WriteBookKeeping=Comptabiliser les écritures dans le grand livre
 Bookkeeping=Grand livre
+AccountBalanceByMonth=Balance mensuelle
 
 VentilationComptable=Ventilation comptable
 VentilationComptableSupplier=Ventilation comptable fournisseur

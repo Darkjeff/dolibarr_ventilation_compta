@@ -27,8 +27,7 @@
  *		\ingroup    Accounting Expert
  *		\brief      Page with sells journal
  */
-
-
+ 
 // Dolibarr environment
 $res=@include("../main.inc.php");
 if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
@@ -43,7 +42,7 @@ dol_include_once ( "/accountingex/core/lib/account.lib.php" );
 dol_include_once ( "/compta/facture/class/facture.class.php");
 dol_include_once ( "/societe/class/client.class.php");
 dol_include_once ( "/accountingex/class/bookkeeping.class.php");
-dol_include_once ( "/accountingex/class/comptacompte.class.php");
+dol_include_once ( "/accountingex/class/accountingaccount.class.php" );
 
 // Langs
 $langs->load("compta");
@@ -178,7 +177,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 		    $bookkeeping = new BookKeeping($db);
 		    $bookkeeping->doc_date = $val["date"];
 		    $bookkeeping->doc_ref = $val["ref"];
-		    $bookkeeping->doc_type = 'facture_client';
+		    $bookkeeping->doc_type = 'customer_invoice';
 		    $bookkeeping->fk_doc = $key;
 		    $bookkeeping->fk_docdet = $val["fk_facturedet"];
 		    $bookkeeping->code_tiers = $tabcompany[$key]['code_client'];
@@ -198,18 +197,18 @@ if (GETPOST('action') == 'writeBookKeeping')
 			if ($mt)
 			{
 			    // get compte id and label
-			    $compte = new ComptaCompte($db);
+			    $compte = new AccountingAccount($db);
 			    if ($compte->fetch(null, $k))
 			    {
 				    $bookkeeping = new BookKeeping($db);
 				    $bookkeeping->doc_date = $val["date"];
 				    $bookkeeping->doc_ref = $val["ref"];
-				    $bookkeeping->doc_type = 'facture_client';
+				    $bookkeeping->doc_type = 'customer_invoice';
 				    $bookkeeping->fk_doc = $key;
 				    $bookkeeping->fk_docdet = $val["fk_facturedet"];
 		    		$bookkeeping->code_tiers = '';
 				    $bookkeeping->numero_compte = $k;
-				    $bookkeeping->label_compte = $compte->intitule;
+				    $bookkeeping->label_compte = $compte->label;
 				    $bookkeeping->montant = $mt;
 				    $bookkeeping->sens = ($mt < 0)?'D':'C';
 				    $bookkeeping->debit = ($mt < 0)?$mt:0;
@@ -229,7 +228,7 @@ if (GETPOST('action') == 'writeBookKeeping')
 			    $bookkeeping = new BookKeeping($db);
 			    $bookkeeping->doc_date = $val["date"];
 			    $bookkeeping->doc_ref = $val["ref"];
-			    $bookkeeping->doc_type = 'facture_client';
+			    $bookkeeping->doc_type = 'customer_invoice';
 			    $bookkeeping->fk_doc = $key;
 			    $bookkeeping->fk_docdet = $val["fk_facturedet"];
 			    $bookkeeping->fk_compte = $compte->id;
