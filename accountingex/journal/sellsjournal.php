@@ -28,6 +28,12 @@
  *		\brief      Page with sells journal
  */
  
+
+error_reporting(E_ALL);
+ini_set('display_errors', true);
+ini_set('html_errors', false);
+
+
 // Dolibarr environment
 $res=@include("../main.inc.php");
 if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
