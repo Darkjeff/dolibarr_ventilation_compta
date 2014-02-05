@@ -3,7 +3,7 @@
  * Copyright (C) 2005      Laurent Destailleur  <eldy@users.sourceforge.net>
  * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
  * Copyright (C) 2013      Florian Henry	      <florian.henry@open-concept.pro>
- * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
+ * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,17 +27,15 @@
  */
 
 // Dolibarr environment
-$res = @include ("../main.inc.php");
-if (! $res && file_exists ( "../main.inc.php" )) $res = @include ("../main.inc.php");
-if (! $res && file_exists ( "../../main.inc.php" )) $res = @include ("../../main.inc.php");
-if (! $res && file_exists ( "../../../main.inc.php" )) $res = @include ("../../../main.inc.php");
+$res=@include("../main.inc.php");
+if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
+if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.php");
+if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
+if (! $res) die("Include of main fails");
 
 dol_include_once ( "/accountingex/class/html.formventilation.class.php");
 dol_include_once ( "/accountingex/class/bookkeeping.class.php");
-
-if (! $res) die ( "Include of main fails" );
-
-
+dol_include_once ( "/accountingex/core/lib/account.lib.php" );
 
 $page = GETPOST ( "page" );
 $sortorder = GETPOST ( "sortorder" );
@@ -96,7 +94,7 @@ else if ($action == 'export_csv') {
 
 else {
 
-llxHeader ( '', 'Compta - Grand Livre' );
+llxHeader ( '', $langs->trans("Accounting").' - '.$langs->trans("Bookkeeping") );
 	
 /*
  * Mode Liste
@@ -203,8 +201,8 @@ llxHeader ( '', 'Compta - Grand Livre' );
 			print '</a>&nbsp;' . $obj->doc_type . '</td>' . "\n";
 			print '<td>' . dol_print_date ( $db->jdate ( $obj->doc_date ), 'day' ) . '</td>';
 			print '<td>' . $obj->doc_ref . '</td>';
-			print '<td>' . $obj->numero_compte . '</td>';
-			print '<td>' . $obj->code_tiers . '</td>';
+			print '<td>' . length_accountg($obj->numero_compte) . '</td>';
+			print '<td>' . length_accounta($obj->code_tiers) . '</td>';
 			print '<td>' . $obj->label_compte . '</td>';
 			print '<td>' . $obj->debit . '</td>';
 			print '<td>' . $obj->credit . '</td>';
