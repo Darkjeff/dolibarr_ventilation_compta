@@ -27,7 +27,8 @@
  *		\ingroup    Accounting Expert
  *		\brief      Page with sells journal
  */
- 
+
+
 // Dolibarr environment
 $res=@include("../main.inc.php");
 if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
@@ -42,6 +43,7 @@ dol_include_once ( "/accountingex/core/lib/account.lib.php" );
 dol_include_once ( "/compta/facture/class/facture.class.php");
 dol_include_once ( "/societe/class/client.class.php");
 dol_include_once ( "/accountingex/class/bookkeeping.class.php");
+dol_include_once ( "/accountingex/class/comptacompte.class.php");
 
 // Langs
 $langs->load("compta");
