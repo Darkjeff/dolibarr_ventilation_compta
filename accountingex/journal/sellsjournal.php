@@ -48,6 +48,7 @@ dol_include_once ( "/accountingex/core/lib/account.lib.php" );
 dol_include_once ( "/compta/facture/class/facture.class.php");
 dol_include_once ( "/societe/class/client.class.php");
 dol_include_once ( "/accountingex/class/bookkeeping.class.php");
+dol_include_once ( "/accountingex/class/comptacompte.class.php");
 
 // Langs
 $langs->load("compta");
