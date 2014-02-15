@@ -115,7 +115,7 @@ class AccountingAccount {
 		if (isset ( $this->account_parent ))
 			$this->account_parent = trim ( $this->account_parent );
 		if (isset ( $this->label ))
-			$this->account_parent = trim ( $this->label );
+			$this->label = trim ( $this->label );
 		if (isset ( $this->fk_user_author ))
 			$this->fk_user_author = trim ( $this->fk_user_author );
 		if (isset ( $this->active ))
