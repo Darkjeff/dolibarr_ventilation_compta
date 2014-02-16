@@ -53,8 +53,10 @@ $accounting = new AccountingAccount ( $db );
 
 // action
 if ($action == 'add') {
-
-$sql = 'SELECT pcg_version FROM ' . MAIN_DB_PREFIX . 'accounting_system WHERE rowid=' . $conf->global->CHARTOFACCOUNTS;
+    if(GETPOST('cancel') != '')
+        Header ( "Location: account.php" );
+    else{
+	$sql = 'SELECT pcg_version FROM ' . MAIN_DB_PREFIX . 'accounting_system WHERE rowid=' . $conf->global->CHARTOFACCOUNTS;
 		$result = $db->query ( $sql );
 		$obj = $db->fetch_object ( $result );
 		$cpt = 0;
@@ -82,6 +84,7 @@ $sql = 'SELECT pcg_version FROM ' . MAIN_DB_PREFIX . 'accounting_system WHERE ro
 		}
 	}
 	Header ( "Location: account.php" );
+    }
 } // Update record
 else if ($action == 'edit') {
 	if (! GETPOST ( 'cancel', 'alpha' )) {
