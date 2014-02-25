@@ -2,9 +2,9 @@
 /* Copyright (C) 2001-2004 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2004      Laurent Destailleur  <eldy@users.sourceforge.net>
  * Copyright (C) 2005      Simon TOSSER         <simon@kornog-computing.com>
- * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
  * Copyright (C) 2013      Florian Henry	      <florian.henry@open-concept.pro>
- * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
+ * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -83,21 +83,21 @@ $y = $year_current ;
 $var=true;
 
 print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre"><td align="left">'.$langs->trans("Account").'</td>';
-print '<td align="left">'.$langs->trans("Intitule").'</td>';
-print '<td align="center">'.$langs->trans("January").'</td>';
-print '<td align="center">'.$langs->trans("February").'</td>';
-print '<td align="center">'.$langs->trans("March").'</td>';
-print '<td align="center">'.$langs->trans("April").'</td>';
-print '<td align="center">'.$langs->trans("May").'</td>';
-print '<td align="center">'.$langs->trans("June").'</td>';
-print '<td align="center">'.$langs->trans("July").'</td>';
-print '<td align="center">'.$langs->trans("August").'</td>';
-print '<td align="center">'.$langs->trans("September").'</td>';
-print '<td align="center">'.$langs->trans("October").'</td>';
-print '<td align="center">'.$langs->trans("November").'</td>';
-print '<td align="center">'.$langs->trans("December").'</td>';
-print '<td align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
+print '<tr class="liste_titre"><td align="left" width="200">'.$langs->trans("Account").'</td>';
+print '<td align="left" width="200">'.$langs->trans("Intitule").'</td>';
+print '<td align="center" width="60">'.$langs->trans("JanuaryMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("FebruaryMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("MarchMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("AprilMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("MayMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("JuneMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("JulyMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("AugustMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("SeptemberMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("OctoberMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("NovemberMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("DecemberMin").'</td>';
+print '<td align="center" width="60"><b>'.$langs->trans("Total").'</b></td></tr>';
 
 $sql = "SELECT IF(aa.account_number IS NULL, 'Non pointe', aa.account_number) AS 'code comptable',";
 $sql .= "  IF(aa.label IS NULL, 'Non pointe', aa.label) AS 'Intitulé',";
@@ -161,20 +161,20 @@ print '</td><td valign="top" width="70%" class="notopnoleftnoright"></td>';
 print '</tr><tr><td colspan=2>';
 print "\n<br>\n";
 print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre"><td width=150>'.$langs->trans("Total").'</td>';
-print '<td align="center">'.$langs->trans("January").'</td>';
-print '<td align="center">'.$langs->trans("February").'</td>';
-print '<td align="center">'.$langs->trans("March").'</td>';
-print '<td align="center">'.$langs->trans("April").'</td>';
-print '<td align="center">'.$langs->trans("May").'</td>';
-print '<td align="center">'.$langs->trans("June").'</td>';
-print '<td align="center">'.$langs->trans("July").'</td>';
-print '<td align="center">'.$langs->trans("August").'</td>';
-print '<td align="center">'.$langs->trans("September").'</td>';
-print '<td align="center">'.$langs->trans("October").'</td>';
-print '<td align="center">'.$langs->trans("November").'</td>';
-print '<td align="center">'.$langs->trans("December").'</td>';
-print '<td align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
+print '<tr class="liste_titre"><td width="400">'.$langs->trans("Total").'</td>';
+print '<td align="center" width="60">'.$langs->trans("JanuaryMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("FebruaryMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("MarchMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("AprilMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("MayMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("JuneMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("JulyMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("AugustMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("SeptemberMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("OctoberMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("NovemberMin").'</td>';
+print '<td align="center" width="60">'.$langs->trans("DecemberMin").'</td>';
+print '<td align="center" width="60"><b>'.$langs->trans("Total").'</b></td></tr>';
 
 $sql = "SELECT '".$langs->trans("CAHTF")."' AS 'Total',";
 $sql .= "  ROUND(SUM(IF(MONTH(ff.datef)=1,ffd.total_ht,0)),2) AS 'Janvier',";
