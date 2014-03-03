@@ -1,4 +1,4 @@
-# Dolibarr language file - fr_FR - Accounting Expert
+﻿# Dolibarr language file - fr_FR - Accounting Expert
 CHARSET=UTF-8
 
 Module150000Name= Comptabilité Expert
@@ -126,3 +126,5 @@ Vide=-
 DescVentilSupplier=Consultez ici la ventilation comptable annuelle de vos factures fournisseurs
 DescVentilTodoSupplier=Ventilez vos lignes de facture fournisseur avec un compte comptable
 DescVentilDoneSupplier=Consultez ici la liste des lignes de factures fournisseur et leur compte comptable
+
+ValidateHistory=Valider Automatiquement 
