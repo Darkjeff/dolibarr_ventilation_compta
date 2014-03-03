@@ -61,29 +61,35 @@ else
 }
 
 //ValidateHistory
-
+$action=GETPOST('action');
 if ($action == 'validatehistory') {
 	
 	$error = 0;
+	$db->begin();
+
+	if ($db->type == 'pgsql') {
+		$sql1 = "UPDATE " . MAIN_DB_PREFIX . "facturedet as fd";
+		$sql1 .= " SET fd.fk_code_ventilation = p.accountancy_code_sell";
+		$sql1 .= " FROM " . MAIN_DB_PREFIX . "product as p";
+		$sql1 .= " WHERE fd.fk_product = p.rowid";
+		$sql1 .= " AND fd.fk_code_ventilation = 0";
+	} else {	
+		$sql1 = "UPDATE " . MAIN_DB_PREFIX . "facturedet as fd, " . MAIN_DB_PREFIX . "product as p";
+		$sql1 .= " SET fd.fk_code_ventilation = p.accountancy_code_sell";
+		$sql1 .= " WHERE fd.fk_product = p.rowid";
+		$sql1 .= " AND fd.fk_code_ventilation = 0";
+	}
 	
-	$db->begin ();
-
-$sql1 = "UPDATE " . MAIN_DB_PREFIX . "facturedet as fd";
-$sql1 .= " SET fd.fk_code_ventilation = ";
-$sql1 .= "p.accountancy_code_sell";
-$sql1 .= " FROM " . MAIN_DB_PREFIX . "product as p";
-$sql1 .= " WHERE fd.fk_product = p.rowid";
-$sql1 .= " AND fd.fk_code_ventilation = 0";
-
-$resql1 = $db->query ( $sql1 );
+	$resql1 = $db->query($sql1);
 	if (! $resql1) {
 		$error ++;
-		setEventMessage ( $db->lasterror (), 'errors' );
+		$db->rollback();
+		setEventMessage($db->lasterror(), 'errors');
 	} else {
-			$db->rollback ();
-			setEventMessage ( $db->lasterror (), 'errors' );
-		}
-		}
+		$db->commit();
+		setEventMessage($langs->trans('Dispatched'), 'mesgs');
+	}
+}
 
 
 /*
@@ -96,8 +102,8 @@ $textnextyear=" <a href=\"index.php?year=" . ($year_current+1) . "\">".img_next(
 
 print_fiche_titre($langs->trans("CustomersVentilation")." ".$textprevyear." ".$langs->trans("Year")." ".$year_start." ".$textnextyear);
 
-print '<td align="left"><br><b>'.$langs->trans("DescVentilCustomer").'</b></br></td>';
-print '<tr><a class="butAction" href="' . $_SERVER ['PHP_SELF'] . '?action=validatehistory">' . $langs->trans ( "ValidateHistory" ) . '</a></tr>';
+print '<b>'.$langs->trans("DescVentilCustomer").'</b>';
+print '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER ['PHP_SELF'] . '?action=validatehistory">' . $langs->trans ( "ValidateHistory" ) . '</a></div>';
 
 $sql = "SELECT count(*) FROM ".MAIN_DB_PREFIX."facturedet as fd";
 $sql.= " , ".MAIN_DB_PREFIX."facture as f";
