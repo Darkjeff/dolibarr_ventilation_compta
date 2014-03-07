@@ -388,6 +388,19 @@ class modAccountingExpert extends DolibarrModules
 		            'user'=>0);
      $r++;
      
+     $this->menu[$r]=array(  'fk_menu'=>'r=17',
+		            'type'=>'left',
+		            'titre'=>'MenuProductaccount',
+		            'mainmenu'=>'accounting',
+		            'url'=>'/accountingex/admin/productaccount.php',
+		            'langs'=>'accountingex@accountingex',
+		            'position'=>145,
+		            'enabled'=>1,
+		            'perms'=>'$user->rights->accountingex->admin',
+		            'target'=>'',
+		            'user'=>0);
+     $r++;
+     
      /*
      $this->menu[$r]=array(  'fk_menu'=>'r=14',
 		            'type'=>'left',
