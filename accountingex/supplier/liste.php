@@ -2,8 +2,8 @@
 /* Copyright (C) 2002-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2004      Eric Seigne          <eric.seigne@ryxeo.com>
  * Copyright (C) 2004      Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@fidurex.fr>  
+ * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@fidurex.fr>  
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,8 +35,8 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 
 // Class
-require_once(DOL_DOCUMENT_ROOT."/fourn/class/fournisseur.facture.class.php");
-require_once(DOL_DOCUMENT_ROOT."/fourn/class/fournisseur.product.class.php");
+dol_include_once("/fourn/class/fournisseur.facture.class.php");
+dol_include_once("/fourn/class/fournisseur.product.class.php");
 
 // Langs
 $langs->load("compta");
@@ -209,15 +209,14 @@ if ($result)
       print $objp->code_buy;
       print '</td>';
 
-		//Colonne choix du compte
-		print '<td align="center">';
-		print $form->selectarray("codeventil[]",$cgs, $cgn[$objp->code_buy]);
-		print '</td>';
-		//Colonne choix ligne a ventiler
-		print '<td align="center">';
-		print '<input type="checkbox" name="mesCasesCochees[]" value="'.$objp->rowid."_".$i.'"'.($objp->code_buy?"checked":"").'/>';
-		print '</td>';
-
+  		//Colonne choix du compte
+  		print '<td align="center">';
+  		print $form->selectarray("codeventil[]",$cgs, $cgn[$objp->code_buy]);
+  		print '</td>';
+  		//Colonne choix ligne a ventiler
+  		print '<td align="center">';
+  		print '<input type="checkbox" name="mesCasesCochees[]" value="'.$objp->rowid."_".$i.'"'.($objp->code_buy?"checked":"").'/>';
+  		print '</td>';
 
       print "</tr>";
       $i++;

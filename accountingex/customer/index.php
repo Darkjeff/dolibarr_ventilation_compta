@@ -2,8 +2,8 @@
 /* Copyright (C) 2001-2006 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2004-2005 Laurent Destailleur  <eldy@users.sourceforge.net>
  * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013      Florian Henry	      <florian.henry@open-concept.pro>
- * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
+ * Copyright (C) 2013-2014 Florian Henry	      <florian.henry@open-concept.pro>
+ * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 
 // Class
-require_once(DOL_DOCUMENT_ROOT."/core/lib/date.lib.php");
+dol_include_once("/core/lib/date.lib.php");
 
 // Langs
 $langs->load("compta");
@@ -60,7 +60,7 @@ else
 	$year_start = $year;
 }
 
-//ValidateHistory
+// Validate History
 $action=GETPOST('action');
 if ($action == 'validatehistory') {
 	

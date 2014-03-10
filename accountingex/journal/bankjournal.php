@@ -6,7 +6,7 @@
  * Copyright (C) 2013		    Christophe Battarel	<christophe.battarel@altairis.fr>
  * Copyright (C) 2013-2014  Alexandre Spangaro	<alexandre.spangaro@gmail.com>
  * Copyright (C) 2013       Florian Henry	      <florian.henry@open-concept.pro>
- * Copyright (C) 2013       Olivier Geffroy     <jeff@jeffinfo.com>
+ * Copyright (C) 2013-2014  Olivier Geffroy     <jeff@jeffinfo.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,21 +35,21 @@ if (! $res && file_exists ( "../../main.inc.php" )) $res = @include ("../../main
 if (! $res && file_exists ( "../../../main.inc.php" )) $res = @include ("../../../main.inc.php");
 if (! $res) die ( "Include of main fails" );
 
-
-dol_include_once ( "/core/lib/report.lib.php");
-dol_include_once ( "/core/lib/date.lib.php");
-dol_include_once ( "/core/lib/bank.lib.php");
-dol_include_once ( "/accountingex/core/lib/account.lib.php" );
-dol_include_once ( "/societe/class/societe.class.php");
-dol_include_once ( "/adherents/class/adherent.class.php");
-dol_include_once ( "/compta/sociales/class/chargesociales.class.php");
-dol_include_once ( "/compta/paiement/class/paiement.class.php");
-dol_include_once ( "/compta/tva/class/tva.class.php");
-dol_include_once ( "/fourn/class/paiementfourn.class.php");
-dol_include_once ( "/fourn/class/fournisseur.facture.class.php");
-dol_include_once ( "/fourn/class/fournisseur.class.php");
-dol_include_once ( "/accountingex/class/bookkeeping.class.php");
-dol_include_once ( "/societe/class/client.class.php");
+// Class
+dol_include_once("/core/lib/report.lib.php");
+dol_include_once("/core/lib/date.lib.php");
+dol_include_once("/core/lib/bank.lib.php");
+dol_include_once("/accountingex/core/lib/account.lib.php");
+dol_include_once("/societe/class/societe.class.php");
+dol_include_once("/adherents/class/adherent.class.php");
+dol_include_once("/compta/sociales/class/chargesociales.class.php");
+dol_include_once("/compta/paiement/class/paiement.class.php");
+dol_include_once("/compta/tva/class/tva.class.php");
+dol_include_once("/fourn/class/paiementfourn.class.php");
+dol_include_once("/fourn/class/fournisseur.facture.class.php");
+dol_include_once("/fourn/class/fournisseur.class.php");
+dol_include_once("/accountingex/class/bookkeeping.class.php");
+dol_include_once("/societe/class/client.class.php");
 
 // Langs
 $langs->load("companies");

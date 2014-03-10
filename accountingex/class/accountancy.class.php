@@ -1,7 +1,8 @@
 <?php
 /* Copyright (C) 2005-2012 Christophe Battarel  <christophe.battarel@altairis.fr>
  * Copyright (C) 2005-2012 Agnes Rambaud        <agnes.rambaud@altairis.fr>
- * Copyright (C) 2011-2012 Alexandre Spangaro   <alexandre.spangaro@gmail.com>
+ * Copyright (C) 2011-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com>
+ * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +23,7 @@
  * 	\ingroup    Accounting Expert
  * 	\brief      Fichier de la classe comptabilité expert
  */
-require_once DOL_DOCUMENT_ROOT .'/core/class/commonobject.class.php';
+dol_include_once("/core/class/commonobject.class.php");
 
 /**
  * \class 		Accountancy

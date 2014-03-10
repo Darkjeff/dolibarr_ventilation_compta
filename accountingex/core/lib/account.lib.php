@@ -1,6 +1,6 @@
 <?php
-/* Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
+/* Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -143,14 +143,21 @@ function length_accountg($account)
     // Clean parameters
   	$i = strlen($account);
     
-    while ($i < $g)
+    if ($i >= 2)
     {
-      $account .= '0';
+        while ($i < $g)
+        {
+          $account .= '0';
+            
+          $i++;
+        }
         
-      $i++;
+        return $account;
     }
-    
-    return $account;
+    else
+    {
+      return $account;
+    }
   }
   else
   { 
@@ -176,14 +183,22 @@ function length_accounta($accounta)
     // Clean parameters
   	$i = strlen($accounta);
     
-    while ($i < $a)
+    if ($i >= 2)
     {
-      $accounta .= '0';
-        
-      $i++;
-    }
+      while ($i < $a)
+      {
+        $accounta .= '0';
+          
+        $i++;
+      }
+      
+      return $accounta;
     
-    return $accounta;
+    }
+    else
+    {
+      return $accounta;
+    }
   }
   else
   { 
