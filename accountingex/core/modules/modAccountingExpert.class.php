@@ -388,7 +388,7 @@ class modAccountingExpert extends DolibarrModules
 		            'user'=>0);
      $r++;
      
-     $this->menu[$r]=array(  'fk_menu'=>'r=19',
+     $this->menu[$r]=array(  'fk_menu'=>'r=15',
 		            'type'=>'left',
 		            'titre'=>'MenuTools',
 		            'mainmenu'=>'accounting',

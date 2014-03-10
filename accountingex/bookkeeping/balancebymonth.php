@@ -62,7 +62,7 @@ llxHeader('',$langs->trans("CustomersVentilation"));
 $textprevyear="<a href=\"balancebymonth.php?year=" . ($year_current-1) . "\">".img_previous()."</a>";
 $textnextyear=" <a href=\"balancebymonth.php?year=" . ($year_current+1) . "\">".img_next()."</a>";
 
-print_fiche_titre($langs->trans("AccountBalance").' '.$textprevyear.' '.$langs->trans("Year").' '.$year_start.' '.$textnextyear);
+print_fiche_titre($langs->trans("AccountBalanceByMonth").' '.$textprevyear.' '.$langs->trans("Year").' '.$year_start.' '.$textnextyear);
 
 $sql = "SELECT count(*) FROM ".MAIN_DB_PREFIX."facturedet as fd";
 $sql.= " , ".MAIN_DB_PREFIX."facture as f";

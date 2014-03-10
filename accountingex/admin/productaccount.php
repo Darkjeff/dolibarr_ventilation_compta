@@ -47,8 +47,6 @@ if (!$user->rights->accountingex->admin) accessforbidden();
 
 llxHeader ( '', $langs->trans ( "Accounts" ) );
 
-
-
 $form=new Form($db);
 
 // Cas des autres parametres COMPTA_*
@@ -132,17 +130,13 @@ if ($resql)
 print '<br><br>';
 
 print '<table class="noborder" width="100%">';
-print "</table>\n";
-print '</td><td valign="top" width="70%" class="notopnoleftnoright"></td>';
-print '</tr><tr><td colspan=2>';
-print '<table class="noborder" width="100%">';
 print '<td align="left">'.$langs->trans("Ref").'</td>';
 print '<td align="left">'.$langs->trans("Label").'</td>';
 print '<td align="left">'.$langs->trans("Description").'</td>';
 print '<td align="left">'.$langs->trans("Accountancy_code_buy").'</td>';
-print '<td align="left">'.$langs->trans("Accountancy_code_buy_sugest").'</td>';
+print '<td align="left">'.$langs->trans("Accountancy_code_buy_suggest").'</td>';
 print '<td align="left">'.$langs->trans("Accountancy_code_sell").'</td>';
-print '<td align="left">'.$langs->trans("Accountancy_code_sell_sugest").'</td>';
+print '<td align="left">'.$langs->trans("Accountancy_code_sell_suggest").'</td>';
 
 
 
@@ -171,10 +165,12 @@ print '<td align="left">'.$langs->trans("Accountancy_code_sell_sugest").'</td>';
  print '<td align="left">'.$obj->ref.'</td>'."\n";
  print '<td align="left">'.$obj->label.'</td>';
  print '<td align="left">'.$obj->description.'</td>';
-  print '<td align="left">'.$obj->accountancy_code_buy.'</td>';
-    print '<td align="left">'.$compta_prodbuy.'</td>';
+ 
+ print '<td align="left">'.$obj->accountancy_code_buy.'</td>';
+ print '<td align="left">'.$compta_prodbuy.'</td>';
+ 
  print '<td align="left">'.$obj->accountancy_code_sell.'</td>';
-  print '<td align="left">'.$compta_prodsell.'</td>';
+ print '<td align="left">'.$compta_prodsell.'</td>';
 
    
 
