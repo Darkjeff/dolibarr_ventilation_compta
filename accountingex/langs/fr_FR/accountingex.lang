@@ -1,4 +1,4 @@
-﻿# Dolibarr language file - fr_FR - Accounting Expert
+# Dolibarr language file - fr_FR - Accounting Expert
 CHARSET=UTF-8
 
 Module150000Name= Comptabilité Expert
@@ -10,6 +10,7 @@ Chartofaccounts=Plan comptable
 Fiscalyear=Exercices fiscaux
 Menuaccount=Comptes comptables
 Menuthirdpartyaccount=Comptes tiers
+MenuTools=Outils
 
 Modelcsv=Modèle d'export
 Selectmodelcsv=Sélectionnez un modèle d'export
@@ -31,7 +32,6 @@ TradeMargin=Marge commerciale
 Reports=Rapports
 ByCustomerInvoice=Par factures clients
 ByMonth=Par mois
-Account=Compte comptable
 NewAccount=Nouveau compte comptable
 Update=Mettre à jour
 List=Liste
@@ -60,8 +60,8 @@ EndProcessing=Fin de traitement
 AnyLineVentilate=Aucune ligne à ventiler
 SelectedLines=Lignes sélectionnées
 Lineofinvoice=Ligne de facture
-VentilatedinAccount=ventilée avec succès dans le compte
-NotVentilatedinAccount=non ventilée dans le compte
+VentilatedinAccount=Ventilée avec succès dans le compte
+NotVentilatedinAccount=Non ventilée dans le compte
 
 ACCOUNTINGEX_SEPARATORCSV=Séparateur CSV
 ACCOUNTINGEX_LENGTH_GACCOUNT=Longueur des comptes généraux (Si nécessaire)

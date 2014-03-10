@@ -6,7 +6,7 @@
  * Copyright (C) 2013		   Christophe Battarel	<christophe.battarel@altairis.fr>
  * Copyright (C) 2013-2014 Alexandre Spangaro	  <alexandre.spangaro@gmail.com>
  * Copyright (C) 2013      Florian Henry	      <florian.henry@open-concept.pro>
- * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,13 +36,13 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 
 // Class				
-dol_include_once ( "/core/lib/report.lib.php");
-dol_include_once ( "/core/lib/date.lib.php");
-dol_include_once ( "/accountingex/core/lib/account.lib.php" );
-dol_include_once ( "/compta/facture/class/facture.class.php");
-dol_include_once ( "/societe/class/client.class.php");
-dol_include_once ( "/accountingex/class/bookkeeping.class.php");
-dol_include_once ( "/accountingex/class/accountingaccount.class.php" );
+dol_include_once("/core/lib/report.lib.php");
+dol_include_once("/core/lib/date.lib.php");
+dol_include_once("/accountingex/core/lib/account.lib.php");
+dol_include_once("/compta/facture/class/facture.class.php");
+dol_include_once("/societe/class/client.class.php");
+dol_include_once("/accountingex/class/bookkeeping.class.php");
+dol_include_once("/accountingex/class/accountingaccount.class.php");
 
 // Langs
 $langs->load("compta");

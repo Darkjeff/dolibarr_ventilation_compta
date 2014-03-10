@@ -1,8 +1,8 @@
 <?php
 /* Copyright (C) 2002-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2006      Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com>  
+ * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com>  
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,9 +33,9 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 
 // Class
-dol_include_once ( "/accountingex/class/html.formventilation.class.php" );
-require_once (DOL_DOCUMENT_ROOT . "/compta/facture/class/facture.class.php");
-require_once (DOL_DOCUMENT_ROOT . "/product/class/product.class.php");
+dol_include_once("/accountingex/class/html.formventilation.class.php" );
+dol_include_once("/compta/facture/class/facture.class.php");
+dol_include_once("/product/class/product.class.php");
 
 // langs
 $langs->load ( "bills" );

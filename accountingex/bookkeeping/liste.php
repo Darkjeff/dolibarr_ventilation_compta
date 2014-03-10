@@ -1,7 +1,7 @@
 <?php
 /* Copyright (C) 2004-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2005      Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
  * Copyright (C) 2013      Florian Henry	      <florian.henry@open-concept.pro>
  * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
  *
@@ -33,9 +33,10 @@ if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.p
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 
-dol_include_once ( "/accountingex/class/html.formventilation.class.php");
-dol_include_once ( "/accountingex/class/bookkeeping.class.php");
-dol_include_once ( "/accountingex/core/lib/account.lib.php" );
+// Class
+dol_include_once("/accountingex/class/html.formventilation.class.php");
+dol_include_once("/accountingex/class/bookkeeping.class.php");
+dol_include_once("/accountingex/core/lib/account.lib.php");
 
 $page = GETPOST ( "page" );
 $sortorder = GETPOST ( "sortorder" );

@@ -25,14 +25,16 @@
  *      \ingroup    Accounting Expert
  *      \brief      Page fiche ventilation
  */
+ 
+// Dolibarr environment
 $res=@include("../main.inc.php");
 if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
 if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.php");
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 
-
-require_once(DOL_DOCUMENT_ROOT."/compta/facture/class/facture.class.php");
+// Class
+dol_include_once("/compta/facture/class/facture.class.php");
 
 $langs->load("bills");
 $langs->load("accountingex@accountingex");

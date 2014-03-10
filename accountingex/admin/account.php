@@ -1,7 +1,7 @@
 <?php
 /* Copyright (C) 2002-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
- * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
+ * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,13 +31,13 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 	
 // Class
-dol_include_once ( "/accountingex/core/lib/account.lib.php" );
-dol_include_once ( "/accountingex/class/accountingaccount.class.php" );
-dol_include_once ( "/accountingex/class/html.formventilation.class.php" );
+dol_include_once("/accountingex/core/lib/account.lib.php");
+dol_include_once("/accountingex/class/accountingaccount.class.php");
+dol_include_once("/accountingex/class/html.formventilation.class.php");
 
 // Langs
-$langs->load ( "compta" );
-$langs->load ( "accountingex@accountingex" );
+$langs->load ("compta");
+$langs->load ("accountingex@accountingex");
 
 $mesg = '';
 $action = GETPOST ( 'action' );
