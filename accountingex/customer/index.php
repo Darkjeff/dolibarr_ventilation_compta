@@ -162,7 +162,7 @@ $sql .= "  LEFT JOIN ".MAIN_DB_PREFIX."accountingaccount as aa ON aa.rowid = fd.
 $sql .= " WHERE f.datef >= '".$db->idate(dol_get_first_day($y,1,false))."'";
 $sql .= "  AND f.datef <= '".$db->idate(dol_get_last_day($y,12,false))."'";
 
-if (! empty($conf->multicompany->enabled) 
+if (! empty($conf->multicompany->enabled)) 
 {
   $sql .=" AND f.entity = '".$conf->entity."'";
 }
@@ -203,6 +203,7 @@ else
 {
 	print $db->lasterror(); // affiche la derniere erreur sql
 }
+print "</table>\n";
 
 print "<br>\n";
 print '<table class="noborder" width="100%">';
@@ -241,7 +242,7 @@ $sql .= "  LEFT JOIN ".MAIN_DB_PREFIX."facture as f ON f.rowid = fd.fk_facture";
 $sql .= " WHERE f.datef >= '".$db->idate(dol_get_first_day($y,1,false))."'";
 $sql .= "  AND f.datef <= '".$db->idate(dol_get_last_day($y,12,false))."'";
 
-if (! empty($conf->multicompany->enabled) 
+if (! empty($conf->multicompany->enabled)) 
 {
   $sql .=" AND f.entity = '".$conf->entity."'";
 }
@@ -318,7 +319,7 @@ $sql .= "  LEFT JOIN ".MAIN_DB_PREFIX."facture as f ON f.rowid = fd.fk_facture";
 $sql .= " WHERE f.datef >= '".$db->idate(dol_get_first_day($y,1,false))."'";
 $sql .= "  AND f.datef <= '".$db->idate(dol_get_last_day($y,12,false))."'";
 
-if (! empty($conf->multicompany->enabled) 
+if (! empty($conf->multicompany->enabled)) 
 {
   $sql .=" AND f.entity = '".$conf->entity."'";
 }
