@@ -162,11 +162,10 @@ $sql .= "  LEFT JOIN ".MAIN_DB_PREFIX."accountingaccount as aa ON aa.rowid = fd.
 $sql .= " WHERE f.datef >= '".$db->idate(dol_get_first_day($y,1,false))."'";
 $sql .= "  AND f.datef <= '".$db->idate(dol_get_last_day($y,12,false))."'";
 
-//Code multi company
-if ($conf->global->MAIN_MODULE_MULTICOMPANY = 1) {
-$sql .=" AND f.entity = '".$conf->entity."'";
+if (! empty($conf->multicompany->enabled) 
+{
+  $sql .=" AND f.entity = '".$conf->entity."'";
 }
-
 
 $sql .= " GROUP BY fd.fk_code_ventilation";
 
@@ -241,12 +240,11 @@ $sql .= " FROM ".MAIN_DB_PREFIX."facturedet as fd";
 $sql .= "  LEFT JOIN ".MAIN_DB_PREFIX."facture as f ON f.rowid = fd.fk_facture";
 $sql .= " WHERE f.datef >= '".$db->idate(dol_get_first_day($y,1,false))."'";
 $sql .= "  AND f.datef <= '".$db->idate(dol_get_last_day($y,12,false))."'";
-//Code multi company
-if ($conf->global->MAIN_MODULE_MULTICOMPANY = 1) {
-$sql .=" AND f.entity = '".$conf->entity."'";
+
+if (! empty($conf->multicompany->enabled) 
+{
+  $sql .=" AND f.entity = '".$conf->entity."'";
 }
-
-
 
 $resql = $db->query($sql);
 if ($resql)
@@ -320,11 +318,10 @@ $sql .= "  LEFT JOIN ".MAIN_DB_PREFIX."facture as f ON f.rowid = fd.fk_facture";
 $sql .= " WHERE f.datef >= '".$db->idate(dol_get_first_day($y,1,false))."'";
 $sql .= "  AND f.datef <= '".$db->idate(dol_get_last_day($y,12,false))."'";
 
-//Code multi company
-if ($conf->global->MAIN_MODULE_MULTICOMPANY = 1) {
-$sql .=" AND f.entity = '".$conf->entity."'";
+if (! empty($conf->multicompany->enabled) 
+{
+  $sql .=" AND f.entity = '".$conf->entity."'";
 }
-
 
 $resql = $db->query($sql);
 if ($resql)
