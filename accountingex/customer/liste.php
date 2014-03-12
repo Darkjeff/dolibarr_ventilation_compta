@@ -171,6 +171,28 @@ if ($result)
 	{
 		$objp = $db->fetch_object($result);
 		$var=!$var;
+		
+			//define account numbercode comptable si pas defini dans la fiche produit a partire des lignes de facturation
+		// product_type: 0=Service ? 1=products
+		// if product soes not exist we use the value of product_type provided in facturedet to define if this is a product or service
+		// issue : if we change product_type value in product DB it should differ from the value stored in facturedet DB !
+		//a tester
+		
+		/*
+                $code_sell_notset = '';
+		if (empty($objp->code_sell)) {
+                        $code_sell_notset = 'color:red';
+			if (!empty($objp->type)) {
+				if($obj->type == 1) $objp->code_sell = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT)?$conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT:$langs->trans("CodeNotDef"));
+				else $objp->code_sell = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT)?$conf->global->COMPTA_SERVICE_SOLD_ACCOUNT:$langs->trans("CodeNotDef"));
+			} else {
+                                $code_sell_notset = 'color:blue';
+				if($obj->type_l == 1) $objp->code_sell = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT)?$conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT:$langs->trans("CodeNotDef"));
+				else $objp->code_sell = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT)?$conf->global->COMPTA_SERVICE_SOLD_ACCOUNT:$langs->trans("CodeNotDef"));
+			}
+		}
+
+	*/
 		print "<tr $bc[$var]>";
 
 		// Ref facture
@@ -194,7 +216,9 @@ if ($result)
 		print price($objp->total_ht);
 		print '</td>';
 		
-		print '<td align="right">';
+		// a test
+	//	print '<td align="right" style="'. $code_sell_notset .'">';
+	  print '<td align="center">';
 		print $objp->code_sell;
 		print '</td>';	
 		
