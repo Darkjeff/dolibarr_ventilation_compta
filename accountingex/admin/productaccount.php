@@ -34,6 +34,7 @@ if (! $res) die("Include of main fails");
 // Class
 dol_include_once("/core/lib/report.lib.php");
 dol_include_once("/core/lib/date.lib.php");
+dol_include_once("/product/class/product.class.php");
 
 $langs->load("companies");
 $langs->load("compta");
@@ -49,51 +50,7 @@ llxHeader ( '', $langs->trans ( "Accounts" ) );
 
 $form=new Form($db);
 
-// Cas des autres parametres COMPTA_*
-$list=array('COMPTA_PRODUCT_BUY_ACCOUNT','COMPTA_PRODUCT_SOLD_ACCOUNT','COMPTA_SERVICE_BUY_ACCOUNT','COMPTA_SERVICE_SOLD_ACCOUNT');
 
-$num=count($list);
-if ($num)
-{
-	print '<table class="noborder" width="100%">';
-	print '<tr class="liste_titre">';
-	print '<td colspan="3">'.$langs->trans('OtherOptions').'</td>';
-	print "</tr>\n";
-}
-
-foreach ($list as $key)
-{
-	$var=!$var;
-
-	print '<form action="compta.php" method="POST">';
-	print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
-	print '<input type="hidden" name="action" value="update">';
-	print '<input type="hidden" name="consttype" value="string">';
-	print '<input type="hidden" name="constname" value="'.$key.'">';
-	
-	print '<tr '.$bc[$var].' class="value">';
-
-	// Param
-	$libelle = $langs->trans($key); 
-	print '<td>'.$libelle;
-	//print ' ('.$key.')';
-	print "</td>\n";
-
-	// Value
-	print '<td>';
-	print '<input type="text" size="20" name="constvalue" value="'.$conf->global->$key.'">';
-	print '</td><td>';
-	print '<input type="submit" class="button" value="'.$langs->trans('Modify').'" name="button"> &nbsp; ';
-	print "</td></tr>\n";
-	print '</form>';
-	
-	$i++;
-}
-
-if ($num)
-{
-	print "</table>\n";
-}
 
  
 print '<input type="button" class="button" style="float: right;" value="Renseigner les comptes comptables produits manquant" onclick="launch_export();" />';
@@ -107,9 +64,9 @@ print '
 		}
 </script>';
 
-$sql = "SELECT p.rowid, p.ref , p.label, p.description , p.accountancy_code_sell as codesell, p.accountancy_code_buy, p.tms, p.fk_product_type ";
+$sql = "SELECT p.rowid, p.ref , p.label, p.description , p.accountancy_code_sell as codesell, p.accountancy_code_buy, p.tms, p.fk_product_type as product_type , p.tosell , p.tobuy ";
 $sql.= " FROM ".MAIN_DB_PREFIX."product as p";
-$sqm.= "WHERE codesell =  'NULL'";
+$sql.=  " WHERE p.accountancy_code_sell IS NULL  AND p.tosell = 1  OR p.accountancy_code_buy IS NULL AND p.tobuy = 1" ;
 
     
 $resql = $db->query($sql);
@@ -160,9 +117,21 @@ print '<td align="left">'.$langs->trans("Accountancy_code_sell_suggest").'</td>'
 			if($obj->product_type == 0) $compta_prodbuy = (! empty($conf->global->COMPTA_PRODUCT_BUY_ACCOUNT)?$conf->global->COMPTA_PRODUCT_BUY_ACCOUNT:$langs->trans("CodeNotDef"));
 			else $compta_prodbuy = (! empty($conf->global->COMPTA_SERVICE_BUY_ACCOUNT)?$conf->global->COMPTA_SERVICE_BUY_ACCOUNT:$langs->trans("CodeNotDef"));
 		}
+		
+		$product_static = new Product ( $db );
 
  print "<tr $bc[$var]>";
- print '<td align="left">'.$obj->ref.'</td>'."\n";
+// Ref produit
+		$product_static->ref = $objp->p.ref;
+		$product_static->id = $objp->rowid;
+		$product_static->type = $objp->type;
+		print '<td>';
+		if ($product_static->id)
+			print $product_static->getNomUrl ( 1 );
+		else
+			print '&nbsp;';
+		print '</td>';
+		 print '<td align="left">'.$obj->ref.'</td>';
  print '<td align="left">'.$obj->label.'</td>';
  print '<td align="left">'.$obj->description.'</td>';
  
