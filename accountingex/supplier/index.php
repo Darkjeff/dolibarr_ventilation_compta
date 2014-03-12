@@ -122,18 +122,18 @@ $var=true;
 print '<table class="noborder" width="100%">';
 print '<tr class="liste_titre"><td align="left">'.$langs->trans("Account").'</td>';
 print '<td align="left">'.$langs->trans("Intitule").'</td>';
-print '<td align="center">'.$langs->trans("January").'</td>';
-print '<td align="center">'.$langs->trans("February").'</td>';
-print '<td align="center">'.$langs->trans("March").'</td>';
-print '<td align="center">'.$langs->trans("April").'</td>';
-print '<td align="center">'.$langs->trans("May").'</td>';
-print '<td align="center">'.$langs->trans("June").'</td>';
-print '<td align="center">'.$langs->trans("July").'</td>';
-print '<td align="center">'.$langs->trans("August").'</td>';
-print '<td align="center">'.$langs->trans("September").'</td>';
-print '<td align="center">'.$langs->trans("October").'</td>';
-print '<td align="center">'.$langs->trans("November").'</td>';
-print '<td align="center">'.$langs->trans("December").'</td>';
+print '<td align="center">'.$langs->trans("JanuaryMin").'</td>';
+print '<td align="center">'.$langs->trans("FebruaryMin").'</td>';
+print '<td align="center">'.$langs->trans("MarchMin").'</td>';
+print '<td align="center">'.$langs->trans("AprilMin").'</td>';
+print '<td align="center">'.$langs->trans("MayMin").'</td>';
+print '<td align="center">'.$langs->trans("JuneMin").'</td>';
+print '<td align="center">'.$langs->trans("JulyMin").'</td>';
+print '<td align="center">'.$langs->trans("AugustMin").'</td>';
+print '<td align="center">'.$langs->trans("SeptemberMin").'</td>';
+print '<td align="center">'.$langs->trans("OctoberMin").'</td>';
+print '<td align="center">'.$langs->trans("NovemberMin").'</td>';
+print '<td align="center">'.$langs->trans("DecemberMin").'</td>';
 print '<td align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
 
 $sql = "SELECT IF(aa.account_number IS NULL, 'Non pointe', aa.account_number) AS 'code comptable',";
@@ -156,6 +156,12 @@ $sql .= "  LEFT JOIN ".MAIN_DB_PREFIX."facture_fourn as ff ON ff.rowid = ffd.fk_
 $sql .= "  LEFT JOIN ".MAIN_DB_PREFIX."accountingaccount as aa ON aa.rowid = ffd.fk_code_ventilation";
 $sql .= " WHERE ff.datef >= '".$db->idate(dol_get_first_day($y,1,false))."'";
 $sql .= "  AND ff.datef <= '".$db->idate(dol_get_last_day($y,12,false))."'";
+
+if (! empty($conf->multicompany->enabled)) 
+{
+  $sql .=" AND ff.entity = '".$conf->entity."'";
+}
+
 $sql .= " GROUP BY ffd.fk_code_ventilation";
 
 $resql = $db->query($sql);
@@ -191,26 +197,23 @@ if ($resql)
 }else {
 	print $db->lasterror(); // affiche la derniere erreur sql
 }
-
 print "</table>\n";
-print '</td><td valign="top" width="70%" class="notopnoleftnoright">';
-print '</td><td valign="top" width="70%" class="notopnoleftnoright"></td>';
-print '</tr><tr><td colspan=2>';
-print "\n<br>\n";
+
+print "<br>\n";
 print '<table class="noborder" width="100%">';
 print '<tr class="liste_titre"><td width=150>'.$langs->trans("Total").'</td>';
-print '<td align="center">'.$langs->trans("January").'</td>';
-print '<td align="center">'.$langs->trans("February").'</td>';
-print '<td align="center">'.$langs->trans("March").'</td>';
-print '<td align="center">'.$langs->trans("April").'</td>';
-print '<td align="center">'.$langs->trans("May").'</td>';
-print '<td align="center">'.$langs->trans("June").'</td>';
-print '<td align="center">'.$langs->trans("July").'</td>';
-print '<td align="center">'.$langs->trans("August").'</td>';
-print '<td align="center">'.$langs->trans("September").'</td>';
-print '<td align="center">'.$langs->trans("October").'</td>';
-print '<td align="center">'.$langs->trans("November").'</td>';
-print '<td align="center">'.$langs->trans("December").'</td>';
+print '<td align="center">'.$langs->trans("JanuaryMin").'</td>';
+print '<td align="center">'.$langs->trans("FebruaryMin").'</td>';
+print '<td align="center">'.$langs->trans("MarchMin").'</td>';
+print '<td align="center">'.$langs->trans("AprilMin").'</td>';
+print '<td align="center">'.$langs->trans("MayMin").'</td>';
+print '<td align="center">'.$langs->trans("JuneMin").'</td>';
+print '<td align="center">'.$langs->trans("JulyMin").'</td>';
+print '<td align="center">'.$langs->trans("AugustMin").'</td>';
+print '<td align="center">'.$langs->trans("SeptemberMin").'</td>';
+print '<td align="center">'.$langs->trans("OctoberMin").'</td>';
+print '<td align="center">'.$langs->trans("NovemberMin").'</td>';
+print '<td align="center">'.$langs->trans("DecemberMin").'</td>';
 print '<td align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
 
 $sql = "SELECT '".$langs->trans("CAHTF")."' AS 'Total',";
@@ -232,6 +235,10 @@ $sql .= "  LEFT JOIN ".MAIN_DB_PREFIX."facture_fourn as ff ON ff.rowid = ffd.fk_
 $sql .= " WHERE ff.datef >= '".$db->idate(dol_get_first_day($y,1,false))."'";
 $sql .= "  AND ff.datef <= '".$db->idate(dol_get_last_day($y,12,false))."'";
 
+if (! empty($conf->multicompany->enabled)) 
+{
+  $sql .=" AND ff.entity = '".$conf->entity."'";
+}
 
 $resql = $db->query($sql);
 if ($resql)
