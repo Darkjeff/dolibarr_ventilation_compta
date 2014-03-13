@@ -28,6 +28,45 @@
  * @param   Object	$object		Object related to tabs
  * @return  array				Array of tabs to shoc
  */
+function admin_account_prepare_head($object)
+{
+	global $langs, $conf;
+
+	$h = 0;
+	$head = array();
+
+	$head[$h][0] = dol_buildpath('/accountingex/admin/index.php',1);
+	$head[$h][1] = $langs->trans("Configuration");
+	$head[$h][2] = 'configuration';
+	$h++;
+
+	// Show more tabs from modules
+	// Entries must be declared in modules descriptor with line
+    // $this->tabs = array('entity:+tabname:Title:@mymodule:/mymodule/mypage.php?id=__ID__');   to add new tab
+    // $this->tabs = array('entity:-tabname);   												to remove a tab
+	complete_head_from_modules($conf,$langs,$object,$head,$h,'admin_accountingex');
+
+	$head[$h][0] = dol_buildpath('/accountingex/admin/export.php',1);
+	$head[$h][1] = $langs->trans("Export");
+	$head[$h][2] = 'export';
+	$h++;
+  
+  $head[$h][0] = dol_buildpath('/accountingex/admin/about.php',1);
+	$head[$h][1] = $langs->trans("About");
+	$head[$h][2] = 'about';
+	$h++;
+	
+	complete_head_from_modules($conf,$langs,$object,$head,$h,'admin_accounting','remove');
+
+	return $head;
+}
+
+/**
+ * Prepare array with list of tabs
+ *
+ * @param   Object	$object		Object related to tabs
+ * @return  array				Array of tabs to shoc
+ */
 function account_prepare_head($object)
 {
 	global $langs, $conf;
@@ -44,7 +83,7 @@ function account_prepare_head($object)
 	// Entries must be declared in modules descriptor with line
     // $this->tabs = array('entity:+tabname:Title:@mymodule:/mymodule/mypage.php?id=__ID__');   to add new tab
     // $this->tabs = array('entity:-tabname);   												to remove a tab
-	complete_head_from_modules($conf,$langs,$object,$head,$h,'accounting');
+	complete_head_from_modules($conf,$langs,$object,$head,$h,'accountingex');
 
 	/*
   $head[$h][0] = DOL_URL_ROOT.'/accountingex/admin/document.php?id='.$object->id;
@@ -57,7 +96,7 @@ function account_prepare_head($object)
 	$head[$h][2] = 'info';
 	$h++;
 	
-	complete_head_from_modules($conf,$langs,$object,$head,$h,'accounting','remove');
+	complete_head_from_modules($conf,$langs,$object,$head,$h,'accountingex','remove');
 
 	return $head;
 }
