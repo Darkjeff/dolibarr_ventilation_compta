@@ -20,7 +20,7 @@
  */
 
 /**
-    \file       htdocs/accountingex/admin/index.php
+    \file       htdocs/accountingex/admin/export.php
     \ingroup    Accounting Expert
 		\brief      Page administration du module
 */
@@ -51,34 +51,11 @@ $action=GETPOST('action','alpha');
  * Affichage page
  *
  */
- 
-$compta_mode = defined('COMPTA_MODE')?COMPTA_MODE:'RECETTES-DEPENSES';
- 
- 
-if ($action == 'setcomptamode')
+if ($action == 'setmodelcsv')
 {
-	$compta_mode = GETPOST('compta_mode','alpha');
+	$modelcsv = GETPOST('modelcsv','int');
 
-	$res = dolibarr_set_const($db, 'COMPTA_MODE', $compta_mode,'chaine',0,'',$conf->entity);
-
-	if (! $res > 0) $error++;
-
- 	if (! $error)
-    {
-        $mesg = "<font class=\"ok\">".$langs->trans("SetupSaved")."</font>";
-    }
-    else
-    {
-        $mesg = "<font class=\"error\">".$langs->trans("Error")."</font>";
-    }
-
-}
- 
-if ($action == 'setchart')
-{
-	$chartofaccounts = GETPOST('chartofaccounts','alpha');
-
-	$res = dolibarr_set_const($db, 'CHARTOFACCOUNTS', $chartofaccounts,'string',0,'',$conf->entity);
+	$res = dolibarr_set_const($db, 'ACCOUNTINGEX_MODELCSV', $modelcsv,'chaine',0,'',$conf->entity);
 
 	if (! $res > 0) $error++;
 
@@ -120,6 +97,7 @@ if ($action == 'update' || $action == 'add')
         $mesg = "<font class=\"error\">".$langs->trans("Error")."</font>";
     }
 }
+
 /*
  * Affichage page
  */
@@ -132,85 +110,44 @@ print_fiche_titre($langs->trans('ConfigAccountingExpert'));
 
 $head = admin_account_prepare_head ( $accounting );
 		
-dol_fiche_head ( $head, 'card', $langs->trans ( "Configuration" ), 0, 'cron' );
+dol_fiche_head ( $head, 'card', $langs->trans ( "Export" ), 0, 'cron' );
 
 print '<table class="noborder" width="100%">';
 
-// Cas du parametre COMPTA_MODE
-print '<form action="'.$_SERVER["PHP_SELF"].'" method="post">';
-print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
-print '<input type="hidden" name="action" value="setcomptamode">';
-print '<tr class="liste_titre">';
-print '<td>'.$langs->trans('OptionMode').'</td><td>'.$langs->trans('Description').'</td>';
-print '<td align="right"><input class="button" type="submit" value="'.$langs->trans('Modify').'"></td>';
-print "</tr>\n";
-print '<tr '.$bc[false].'><td width="200"><input type="radio" name="compta_mode" value="RECETTES-DEPENSES"'.($compta_mode != 'CREANCES-DETTES' ? ' checked' : '').'> '.$langs->trans('OptionModeTrue').'</td>';
-print '<td colspan="2">'.nl2br($langs->trans('OptionModeTrueDesc'));
-// Write info on way to count VAT
-if (! empty($conf->global->MAIN_MODULE_COMPTABILITE))
-{
-		print "<br>\n";
-		print nl2br($langs->trans('OptionModeTrueInfoModuleComptabilite'));
-}
-else
-{
-		print "<br>\n";
-		print nl2br($langs->trans('OptionModeTrueInfoExpert'));
-}
-print "</td></tr>\n";
-print '<tr '.$bc[true].'><td width="200"><input type="radio" name="compta_mode" value="CREANCES-DETTES"'.($compta_mode == 'CREANCES-DETTES' ? ' checked' : '').'> '.$langs->trans('OptionModeVirtual').'</td>';
-print '<td colspan="2">'.nl2br($langs->trans('OptionModeVirtualDesc'))."</td></tr>\n";
-print '</form>';
-
-print "</table>\n";
-
 /*
- *  Define Chart of accounts
- *
+ *  Select Export Model CSV
+ *  
  */
-print '<br>';
-  
 print '<form action="'.$_SERVER["PHP_SELF"].'" method="POST">';
 print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'" />';
+print '<input type="hidden" name="action" value="setmodelcsv">';
 
 print '<table class="noborder" width="100%">';
 $var=True;
 
 print '<tr class="liste_titre">';
 print '<td>';
-print '<input type="hidden" name="action" value="setchart">';
-print $langs->trans("Chartofaccounts").'</td>';
+
+print $langs->trans("Modelcsv").'</td>';
 print '<td align="right"><input type="submit" class="button" value="'.$langs->trans("Modify").'"></td>';
 print "</tr>\n";
 $var=!$var;
 print '<tr '.$bc[$var].'>';
-print "<td>".$langs->trans("Selectchartofaccounts")."</td>";
+print "<td>".$langs->trans("Selectmodelcsv")."</td>";
 print "<td>";
-print '<select class="flat" name="chartofaccounts" id="chartofaccounts">';
-// print '<option value="0">'.$langs->trans("DoNotSuggestChart").'</option>';
-
-$sql = "SELECT rowid, pcg_version, fk_pays, label, active";
-$sql.= " FROM ".MAIN_DB_PREFIX."accounting_system";
-$sql.= " WHERE active = 1";
-$sql.= " AND fk_pays = ".$mysoc->country_id;
-$var=True;
-$resql=$db->query($sql);
-if ($resql)
-{
-    $num = $db->num_rows($resql);
-    $i = 0;
-    while ($i < $num)
-    {
-        $var=!$var;
-        $row = $db->fetch_row($resql);
-
-        print '<option value="'.$row[0].'"';
-        print $conf->global->CHARTOFACCOUNTS == $row[0] ? ' selected="selected"':'';
-        print '>'.$row[1].' - '.$row[3].'</option>';
-
-        $i++;
-    }
-}
+print '<select class="flat" name="modelcsv" id="modelcsv">';
+print '<option value="0"';
+      if($conf->global->ACCOUNTINGEX_MODELCSV == 0)
+      {
+        print ' selected="selected"';
+      } 
+print '>'.$langs->trans("Modelcsv_normal").'</option>';
+print '<option value="1"';
+      if($conf->global->ACCOUNTINGEX_MODELCSV == 1)
+      {
+        print ' selected="selected"';
+      } 
+print '>'.$langs->trans("Modelcsv_CEGID").'</option>';
 print "</select>";
 print "</td></tr>";
 print "</table>";
@@ -222,23 +159,7 @@ print "<br>\n";
  *  Params
  *
  */
-$list=array('ACCOUNTINGEX_LENGTH_GACCOUNT',
-            'ACCOUNTINGEX_LENGTH_AACCOUNT',
-            'COMPTA_ACCOUNT_CUSTOMER',            
-            'COMPTA_ACCOUNT_SUPPLIER',
-            'COMPTA_PRODUCT_BUY_ACCOUNT',
-            'COMPTA_PRODUCT_SOLD_ACCOUNT',
-            'COMPTA_SERVICE_BUY_ACCOUNT',
-            'COMPTA_SERVICE_SOLD_ACCOUNT',
-            'ACCOUNTINGEX_ACCOUNT_SUSPENSE',
-            'ACCOUNTINGEX_ACCOUNT_TRANSFER_CASH',
-            'ACCOUNTINGEX_SELL_JOURNAL',
-            'ACCOUNTINGEX_PURCHASE_JOURNAL',
-            'ACCOUNTINGEX_BANK_JOURNAL',
-            'ACCOUNTINGEX_SOCIAL_JOURNAL',
-            'ACCOUNTINGEX_CASH_JOURNAL',
-            'ACCOUNTINGEX_MISCELLANEOUS_JOURNAL'
-);
+$list=array('ACCOUNTINGEX_SEPARATORCSV');
 
 $num=count($list);
 if ($num)
