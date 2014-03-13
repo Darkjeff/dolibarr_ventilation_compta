@@ -56,7 +56,7 @@ function admin_account_prepare_head($object)
 	$head[$h][2] = 'about';
 	$h++;
 	
-	complete_head_from_modules($conf,$langs,$object,$head,$h,'accounting','remove');
+	complete_head_from_modules($conf,$langs,$object,$head,$h,'admin_accounting','remove');
 
 	return $head;
 }
