@@ -24,7 +24,7 @@ Definechartofaccounts=Définir un plan comptable
 Selectchartofaccounts=Sélectionnez un plan comptable
 Validate=Valider
 Addanaccount=Ajouter un compte comptable
-
+AccountAccounting=Compte comptable
 Ventilation=Ventilation
 ToDispatch=A effectuer
 Dispatched=Effectuée
@@ -63,8 +63,8 @@ EndProcessing=Fin de traitement
 AnyLineVentilate=Aucune ligne à ventiler
 SelectedLines=Lignes sélectionnées
 Lineofinvoice=Ligne de facture
-VentilatedinAccount=Ventilée avec succès dans le compte
-NotVentilatedinAccount=Non ventilée dans le compte
+VentilatedinAccount=Ventilée avec succès dans le compte comptable
+NotVentilatedinAccount=Non ventilée dans le compte comptable
 
 ACCOUNTINGEX_SEPARATORCSV=Séparateur CSV
 

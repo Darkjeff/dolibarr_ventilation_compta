@@ -116,7 +116,7 @@ if ($resultCompte)
 	while ($iCompte < $numCompte)
 	{
 		$rowCompte = $db->fetch_row($resultCompte);
-		$cgs[$rowCompte[0]] = $rowCompte[1] . ' ' . $rowCompte[2];
+		$cgs[$rowCompte[0]] = $rowCompte[1].' '.dol_trunc($rowCompte[2],64);
 		$cgn[$rowCompte[1]] = $rowCompte[0];
 		$iCompte++;
 	}
@@ -154,14 +154,14 @@ if ($result)
 	print '<td>'.$langs->trans("Label").'</td>';
 	print '<td>'.$langs->trans("Description").'</td>';
 	print '<td align="right">'.$langs->trans("Amount").'</td>';
-	print '<td align="right">'.$langs->trans("Account").'</td>';
+	print '<td align="right">'.$langs->trans("AccountAccounting").'</td>';
 	print '<td align="center">'.$langs->trans("IntoAccount").'</td>';
   print '<td align="center">'.$langs->trans("Ventilate").'</td>';
 	print '</tr>';
 
 	$facture_static=new Facture($db);
 	$product_static=new Product($db);
-  	$form = new Form($db);
+  $form = new Form($db);
 
 	print '<form action="liste.php" method="post">'."\n";
 	print '<input type="hidden" name="action" value="ventil">';
@@ -172,27 +172,40 @@ if ($result)
 		$objp = $db->fetch_object($result);
 		$var=!$var;
 		
-			//define account numbercode comptable si pas defini dans la fiche produit a partire des lignes de facturation
-		// product_type: 0=Service ? 1=products
-		// if product soes not exist we use the value of product_type provided in facturedet to define if this is a product or service
+		// product_type: 0 = service ? 1 = product
+		// if product does not exist we use the value of product_type provided in facturedet to define if this is a product or service
 		// issue : if we change product_type value in product DB it should differ from the value stored in facturedet DB !
-		//a tester
+		$code_sell_notset = '';
 		
-		/*
-                $code_sell_notset = '';
-		if (empty($objp->code_sell)) {
-                        $code_sell_notset = 'color:red';
-			if (!empty($objp->type)) {
-				if($obj->type == 1) $objp->code_sell = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT)?$conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT:$langs->trans("CodeNotDef"));
-				else $objp->code_sell = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT)?$conf->global->COMPTA_SERVICE_SOLD_ACCOUNT:$langs->trans("CodeNotDef"));
-			} else {
-                                $code_sell_notset = 'color:blue';
-				if($obj->type_l == 1) $objp->code_sell = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT)?$conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT:$langs->trans("CodeNotDef"));
-				else $objp->code_sell = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT)?$conf->global->COMPTA_SERVICE_SOLD_ACCOUNT:$langs->trans("CodeNotDef"));
-			}
+    if (empty($objp->code_sell)) {
+      $code_sell_notset = 'color:red';
+			
+      if (! empty($objp->type))
+      {
+				if($objp->type == 1) 
+        {
+          $objp->code_sell = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT)?$conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT:$langs->trans("CodeNotDef"));
+				}
+        else 
+        {
+          $objp->code_sell = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT)?$conf->global->COMPTA_SERVICE_SOLD_ACCOUNT:$langs->trans("CodeNotDef"));
+			  }
+      } 
+      else 
+      {
+        $code_sell_notset = 'color:blue';
+				
+        if($objp->type == 1)
+        { 
+          $objp->code_sell = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT)?$conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT:$langs->trans("CodeNotDef"));
+				}
+        else 
+        {
+          $objp->code_sell = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT)?$conf->global->COMPTA_SERVICE_SOLD_ACCOUNT:$langs->trans("CodeNotDef"));
+			  }
+      }
 		}
 
-	*/
 		print "<tr $bc[$var]>";
 
 		// Ref facture
@@ -216,19 +229,17 @@ if ($result)
 		print price($objp->total_ht);
 		print '</td>';
 		
-		// a test
-	//	print '<td align="right" style="'. $code_sell_notset .'">';
-	  print '<td align="center">';
-		print $objp->code_sell;
+		print '<td align="center" style="'.$code_sell_notset.'">';
+	  print $objp->code_sell;
 		print '</td>';	
 		
 
-		//Colonne choix du compte
+		// Colonne choix du compte
 		print '<td align="center">';
 		print $form->selectarray("codeventil[]",$cgs, $cgn[$objp->code_sell]);
 		print '</td>';
         
-		//Colonne choix ligne a ventiler
+		// Colonne choix ligne a ventiler
 		print '<td align="center">';
 		print '<input type="checkbox" name="mesCasesCochees[]" value="'.$objp->rowid."_".$i.'"'.($objp->code_sell?"checked":"").'/>';
 		print '</td>';
