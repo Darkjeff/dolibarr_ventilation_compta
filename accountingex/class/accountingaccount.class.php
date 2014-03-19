@@ -250,7 +250,7 @@ class AccountingAccount {
 		if ($resql) {
 			$num = $this->db->num_rows ( $resql );
 			if ($num > 0) {
-				$this->error = $langs->trans ( 'AccountancyCodeIsAlreadyUse' );
+				$this->error = $langs->trans('ErrorAccountancyCodeIsAlreadyUse');
 				return 0;
 			} else {
 				return 1;
