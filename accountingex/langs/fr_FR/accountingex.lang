@@ -19,6 +19,7 @@ Modelcsv=Modèle d'export
 Selectmodelcsv=Sélectionnez un modèle d'export
 Modelcsv_normal=Export classique
 Modelcsv_CEGID=Export vers CEGID Expert
+BackToChartofaccounts=Retour plan comptable
 
 Definechartofaccounts=Définir un plan comptable
 Selectchartofaccounts=Sélectionnez un plan comptable
@@ -125,8 +126,6 @@ Pcgsubtype=Sous classe de compte
 Accountparent=Racine du compte
 Active=État
 
-AccountCard=Fiche compte comptable
-
 NewFiscalYear=Nouvel exercice fiscal
 
 DescVentilCustomer=Consultez ici la ventilation comptable annuelle de vos factures clients
@@ -141,3 +140,5 @@ DescVentilTodoSupplier=Ventilez vos lignes de facture fournisseur avec un compte
 DescVentilDoneSupplier=Consultez ici la liste des lignes de factures fournisseur et leur compte comptable
 
 ValidateHistory=Valider Automatiquement 
+
+ErrorAccountancyCodeIsAlreadyUse=Erreur, vous ne pouvez pas supprimer ce compte comptable car il est utilisé 

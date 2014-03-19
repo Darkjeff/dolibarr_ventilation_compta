@@ -196,7 +196,7 @@ print "</table>\n";
 print '</td><td valign="top" width="70%" class="notopnoleftnoright"></td>';
 print '</tr><tr><td colspan=2>';
 print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre"><td align="left">'.$langs->trans("Company").'</td>';
+print '<tr class="liste_titre"><td align="left">'.$langs->trans("ThirdParties").'</td>';
 print '<td align="left">'.$langs->trans("AccountNumber").'</td>';
 print '<td align="left">'.$langs->trans("RaisonSociale").'</td>';
 print '<td align="left">'.$langs->trans("Address").'</td>';
@@ -204,7 +204,7 @@ print '<td align="left">'.$langs->trans("Zip").'</td>';
 print '<td align="left">'.$langs->trans("Town").'</td>';
 print '<td align="left">'.$langs->trans("Country").'</td>';
 print '<td align="left">'.$langs->trans("Contact").'</td>';
-print '<td align="left">'.$langs->trans("tel").'</td>';
+print '<td align="left">'.$langs->trans("Phone").'</td>';
 print '<td align="left">'.$langs->trans("Fax").'</td></tr>';
 
   $var=True;
