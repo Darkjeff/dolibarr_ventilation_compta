@@ -86,6 +86,8 @@ class modAccountingExpert extends DolibarrModules
     $this->const[11] = array("ACCOUNTINGEX_MODELCSV","chaine","0");
     $this->const[12] = array("ACCOUNTINGEX_LENGTH_GACCOUNT","chaine","");
 		$this->const[13] = array("ACCOUNTINGEX_LENGTH_AACCOUNT","chaine","");
+    $this->const[14] = array("LIMIT_LIST_VENTILATION","chaine","50");
+		$this->const[15] = array("LIST_SORT_VENTILATION","chaine","DESC");
 		
     
     // Css

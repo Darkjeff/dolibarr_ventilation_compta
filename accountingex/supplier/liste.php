@@ -133,16 +133,18 @@ if ($resultCompte)
  */
 $page = $_GET["page"];
 if ($page < 0) $page = 0;
-$limit = $conf->liste_limit;
+$limit = $conf->global->LIMIT_LIST_VENTILATION;
 $offset = $limit * $page ;
 
 $sql = "SELECT f.ref, f.rowid as facid, f.ref_supplier, l.fk_product, l.description, l.total_ht as price, l.rowid, l.fk_code_ventilation, ";
 $sql.= " p.rowid as product_id, p.ref as product_ref, p.label as product_label, p.fk_product_type as type, p.accountancy_code_buy as code_buy";
-$sql .= " FROM ".MAIN_DB_PREFIX."facture_fourn as f";
-$sql .= " , ".MAIN_DB_PREFIX."facture_fourn_det as l";
+$sql.= " FROM ".MAIN_DB_PREFIX."facture_fourn as f";
+$sql.= " , ".MAIN_DB_PREFIX."facture_fourn_det as l";
 $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = l.fk_product";
-$sql .= " WHERE f.rowid = l.fk_facture_fourn AND f.fk_statut > 0 AND fk_code_ventilation = 0";
-$sql .= " ORDER BY l.rowid DESC ".$db->plimit($limit+1,$offset);
+$sql.= " WHERE f.rowid = l.fk_facture_fourn AND f.fk_statut > 0 AND fk_code_ventilation = 0";
+$sql.= " ORDER BY l.rowid";
+if (! empty($conf->global->LIST_SORT_VENTILATION)) { $sql.= " DESC "; }
+$sql.= $db->plimit($limit+1,$offset);
 
 $result = $db->query($sql);
 if ($result)
