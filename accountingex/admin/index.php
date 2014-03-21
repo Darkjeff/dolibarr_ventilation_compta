@@ -222,7 +222,9 @@ print "<br>\n";
  *  Params
  *
  */
-$list=array('ACCOUNTINGEX_LENGTH_GACCOUNT',
+$list=array('LIMIT_LIST_VENTILATION',
+            'LIST_SORT',
+            'ACCOUNTINGEX_LENGTH_GACCOUNT',
             'ACCOUNTINGEX_LENGTH_AACCOUNT',
             'COMPTA_ACCOUNT_CUSTOMER',            
             'COMPTA_ACCOUNT_SUPPLIER',
