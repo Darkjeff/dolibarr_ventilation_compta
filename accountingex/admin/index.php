@@ -297,13 +297,13 @@ print "<tr ".$bc[$var].">";
 print '<td width="80%">'.$langs->trans("ACCOUNTINGEX_LIST_SORT_VENTILATION").'</td>';
 if (! empty($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION))
 {
-	print '<td align="center" colspan="2"><a href="'.$_SERVER['PHP_SELF'].'?action=setlistsort&value=1">';
+	print '<td align="center" colspan="2"><a href="'.$_SERVER['PHP_SELF'].'?action=setlistsort&value=0">';
 	print img_picto($langs->trans("Activated"),'switch_on');
 	print '</a></td>';
 }
 else
 {
-	print '<td align="center" colspan="2"><a href="'.$_SERVER['PHP_SELF'].'?action=setlistsort&value=0">';
+	print '<td align="center" colspan="2"><a href="'.$_SERVER['PHP_SELF'].'?action=setlistsort&value=1">';
 	print img_picto($langs->trans("Disabled"),'switch_off');
 	print '</a></td>';
 }
