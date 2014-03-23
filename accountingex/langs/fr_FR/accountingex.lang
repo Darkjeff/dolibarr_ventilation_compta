@@ -112,6 +112,8 @@ DescBankJournal=Journal de banque description
 CashJournal=Journal de caisse
 DescCashJournal=Journal de caisse description
 
+CashPayment=Reglement espece
+
 SupplierInvoicePayment=Règlement de facture fournisseur
 CustomerInvoicePayment=Règlement de facture client
 

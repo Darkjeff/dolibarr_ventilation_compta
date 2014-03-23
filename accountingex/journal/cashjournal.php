@@ -136,8 +136,8 @@ if ($result) {
 	$i = 0;
 	while ( $i < $num ) {
 		$obj = $db->fetch_object ( $result );
-		// contr�les
 		
+    // controls
 		$compta_bank = $obj->account_number;
 		if ($obj->label == '(SupplierInvoicePayment)') $compta_soc = (! empty ( $obj->code_compta_fournisseur ) ? $obj->code_compta_fournisseur : $cptfour);
 		if ($obj->label == '(CustomerInvoicePayment)') $compta_soc = (! empty ( $obj->code_compta ) ? $obj->code_compta : $cptcli);
@@ -367,8 +367,8 @@ if (GETPOST ( 'action' ) == 'export_csv')
 {
     $sep = $conf->global->ACCOUNTINGEX_SEPARATORCSV;
   
-    header ( 'Content-Type: text/csv' );
-	  header ( 'Content-Disposition: attachment;filename=journal_caisse.csv' );
+    header('Content-Type: text/csv');
+	  header('Content-Disposition:attachment;filename=journal_caisse.csv');
     
     if ($conf->global->ACCOUNTINGEX_MODELCSV == 1) // Modèle Cegid Expert
     {
@@ -387,8 +387,8 @@ if (GETPOST ( 'action' ) == 'export_csv')
            print ($mt < 0?'C':'D').$sep;
            print price($mt).$sep;	  
   		  }
-  		  print $langs->trans ( "Cash" ) . $sep;
-        print $val ["ref"] . $sep;
+  		  print utf8_decode($langs->trans("CashPayment")). $sep;
+        print $val["ref"].$sep;
   		  print "\n";
   		
         // third party
@@ -398,12 +398,18 @@ if (GETPOST ( 'action' ) == 'export_csv')
            {
   				    print $date . $sep;
   				    print $conf->global->ACCOUNTINGEX_CASH_JOURNAL.$sep;
-              print $sep;
+              if ($obj->label == '(SupplierInvoicePayment)') 
+              {
+                print length_accountg($conf->global->COMPTA_ACCOUNT_SUPPLIER).$sep;
+              }
+              else {
+                print length_accountg($conf->global->COMPTA_ACCOUNT_CUSTOMER).$sep;
+              }
               print length_accounta ( html_entity_decode ( $k ) ) . $sep;
-              print ($mt < 0?'C':'D').$sep;
+              print ($mt < 0?'D':'C').$sep;
               print price($mt).$sep;
-    				  print $langs->trans ( "ThirdParty" ) . $sep;
-              print $val ["ref"] . $sep;
+    				  print $langs->trans ("ThirdParty").$sep;
+              print $val["ref"].$sep;
   				    print "\n";
   			   }
   		  }
