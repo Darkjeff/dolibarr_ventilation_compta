@@ -92,6 +92,20 @@ if ($action == 'setchart')
     }
 }
 
+if ($action == 'setlistsort') {
+	$setlistsort = GETPOST('value','int');
+	$res = dolibarr_set_const($db, "ACCOUNTINGEX_LIST_SORT_VENTILATION", $setlistsort,'yesno',0,'',$conf->entity);
+	if (! $res > 0) $error++;
+	if (! $error)
+	{
+		$mesg = "<font class=\"ok\">".$langs->trans("SetupSaved")."</font>";
+	}
+	else
+	{
+		$mesg = "<font class=\"error\">".$langs->trans("Error")."</font>";
+	}
+}
+
 if ($action == 'delete')
 {
 	if (! dolibarr_del_const($db, $_GET['constname'],$conf->entity));
@@ -222,8 +236,7 @@ print "<br>\n";
  *  Params
  *
  */
-$list=array('LIMIT_LIST_VENTILATION',
-            'LIST_SORT',
+$list=array('ACCOUNTINGEX_LIMIT_LIST_VENTILATION',
             'ACCOUNTINGEX_LENGTH_GACCOUNT',
             'ACCOUNTINGEX_LENGTH_AACCOUNT',
             'COMPTA_ACCOUNT_CUSTOMER',            
@@ -233,13 +246,7 @@ $list=array('LIMIT_LIST_VENTILATION',
             'COMPTA_SERVICE_BUY_ACCOUNT',
             'COMPTA_SERVICE_SOLD_ACCOUNT',
             'ACCOUNTINGEX_ACCOUNT_SUSPENSE',
-            'ACCOUNTINGEX_ACCOUNT_TRANSFER_CASH',
-            'ACCOUNTINGEX_SELL_JOURNAL',
-            'ACCOUNTINGEX_PURCHASE_JOURNAL',
-            'ACCOUNTINGEX_BANK_JOURNAL',
-            'ACCOUNTINGEX_SOCIAL_JOURNAL',
-            'ACCOUNTINGEX_CASH_JOURNAL',
-            'ACCOUNTINGEX_MISCELLANEOUS_JOURNAL'
+            'ACCOUNTINGEX_ACCOUNT_TRANSFER_CASH'
 );
 
 $num=count($list);
@@ -265,8 +272,8 @@ foreach ($list as $key)
 	print '<tr '.$bc[$var].' class="value">';
 
 	// Param
-	$libelle = $langs->trans($key); 
-	print '<td>'.$libelle;
+	$label = $langs->trans($key); 
+	print '<td>'.$label;
 	//print ' ('.$key.')';
 	print "</td>\n";
 
@@ -281,10 +288,33 @@ foreach ($list as $key)
 	$i++;
 }
 
+print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
+print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+print '<input type="hidden" name="action" value="updateoptions">';
+
+$var=!$var;
+print "<tr ".$bc[$var].">";
+print '<td width="80%">'.$langs->trans("ACCOUNTINGEX_LIST_SORT_VENTILATION").'</td>';
+if (! empty($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION))
+{
+	print '<td align="center" colspan="2"><a href="'.$_SERVER['PHP_SELF'].'?action=setlistsort&value=1">';
+	print img_picto($langs->trans("Activated"),'switch_on');
+	print '</a></td>';
+}
+else
+{
+	print '<td align="center" colspan="2"><a href="'.$_SERVER['PHP_SELF'].'?action=setlistsort&value=0">';
+	print img_picto($langs->trans("Disabled"),'switch_off');
+	print '</a></td>';
+}
+print '</tr>';
+
 if ($num)
 {
 	print "</table>\n";
 }
+
+print '</form>';
 
 dol_htmloutput_mesg($mesg);
 

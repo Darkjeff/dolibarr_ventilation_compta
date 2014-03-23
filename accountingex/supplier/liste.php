@@ -143,7 +143,7 @@ $sql.= " , ".MAIN_DB_PREFIX."facture_fourn_det as l";
 $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = l.fk_product";
 $sql.= " WHERE f.rowid = l.fk_facture_fourn AND f.fk_statut > 0 AND fk_code_ventilation = 0";
 $sql.= " ORDER BY l.rowid";
-if (! empty($conf->global->LIST_SORT_VENTILATION)) { $sql.= " DESC "; }
+if ($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION > 0) { $sql.= " DESC "; }
 $sql.= $db->plimit($limit+1,$offset);
 
 $result = $db->query($sql);
