@@ -110,7 +110,7 @@ print_fiche_titre($langs->trans('ConfigAccountingExpert'));
 
 $head = admin_account_prepare_head(null);
 		
-dol_fiche_head($head,'export',$langs->trans("Export"),0,'cron' );
+dol_fiche_head($head,'export',$langs->trans("Configuration"),0,'cron' );
 
 print '<table class="noborder" width="100%">';
 
