@@ -145,8 +145,8 @@ $form=new Form($db);
 print_fiche_titre($langs->trans('ConfigAccountingExpert'));
 
 $head = admin_account_prepare_head ( $accounting );
-		
-dol_fiche_head ( $head, 'card', $langs->trans ( "Configuration" ), 0, 'cron' );
+
+dol_fiche_head($head,'general',$langs->trans("Configuration"),0,'cron');		
 
 print '<table class="noborder" width="100%">';
 

@@ -48,13 +48,13 @@ $action=GETPOST('action','alpha');
 
 llxHeader();
 
-$form=new Form($db);
+$form = new Form($db);
 
 print_fiche_titre($langs->trans('ConfigAccountingExpert'));
 
-$head = admin_account_prepare_head($accounting);
+$head = admin_account_prepare_head(null);
 		
-dol_fiche_head($head,'card',$langs->trans("About"),0,'cron');
+dol_fiche_head($head,'about',$langs->trans("About"),0,'cron');
 
 
 

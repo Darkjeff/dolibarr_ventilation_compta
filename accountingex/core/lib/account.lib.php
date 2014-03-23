@@ -37,7 +37,7 @@ function admin_account_prepare_head($object)
 
 	$head[$h][0] = dol_buildpath('/accountingex/admin/index.php',1);
 	$head[$h][1] = $langs->trans("Configuration");
-	$head[$h][2] = 'configuration';
+	$head[$h][2] = 'general';
 	$h++;
 
 	// Show more tabs from modules
@@ -48,7 +48,7 @@ function admin_account_prepare_head($object)
 
   $head[$h][0] = dol_buildpath('/accountingex/admin/journaux.php',1);
 	$head[$h][1] = $langs->trans("Journaux");
-	$head[$h][2] = 'journaux';
+	$head[$h][2] = 'journal';
 	$h++;
   
 	$head[$h][0] = dol_buildpath('/accountingex/admin/export.php',1);
