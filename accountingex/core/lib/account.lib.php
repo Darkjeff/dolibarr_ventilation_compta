@@ -46,6 +46,11 @@ function admin_account_prepare_head($object)
     // $this->tabs = array('entity:-tabname);   												to remove a tab
 	complete_head_from_modules($conf,$langs,$object,$head,$h,'accountingex_admin');
 
+  $head[$h][0] = dol_buildpath('/accountingex/admin/journaux.php',1);
+	$head[$h][1] = $langs->trans("Journaux");
+	$head[$h][2] = 'journaux';
+	$h++;
+  
 	$head[$h][0] = dol_buildpath('/accountingex/admin/export.php',1);
 	$head[$h][1] = $langs->trans("Export");
 	$head[$h][2] = 'export';
