@@ -128,7 +128,7 @@ if ($resultCompte)
 */
 $page = $_GET["page"];
 if ($page < 0) $page = 0;
-$limit = $conf->global->LIMIT_LIST_VENTILATION;
+$limit = $conf->global->ACCOUNTINGEX_LIMIT_LIST_VENTILATION;
 $offset = $limit * $page ;
 
 $sql = "SELECT f.facnumber, f.rowid as facid, l.fk_product, l.description, l.total_ht, l.rowid, l.fk_code_ventilation,";
