@@ -239,4 +239,34 @@ function length_accounta($accounta)
   }
 }
 
+function length_exportsage($txt, $len, $end)
+//$txt = utf8_decode($txt);
+// problem with this function, but we need to have the number of letter
+{ if (strlen($txt)==$len){
+  	$res=$txt;
+  }
+  
+  elseif (strlen($txt)>$len){
+  	$res=substr($txt,0,$len);
+  }
+  
+  else{
+  	if($end == 1){
+		$res = $txt;
+	}
+	else{
+		$res ="";
+	}
+  	for ($i=strlen($txt);$i<=($len-1);$i++){
+		$res.=" ";
+	}
+	if ($end == 0){
+		$res.=$txt;
+	}
+  }
+  return $res;
+	  
+  }
+
+
 ?>
