@@ -119,9 +119,9 @@ class FormVentilation extends Form {
 					$label = $obj->account_number.'-'.$obj->label;
 	
 					if (($selectid != '') && $selectid == $obj->account_number) {
-						$out .= '<option value="' . $obj->account_number . '" selected="selected">' . $label . '</option>';
+						$out .= '<option value="' . $obj->rowid . '" selected="selected">' . $label . '</option>';
 					} else {
-						$out .= '<option value="' . $obj->account_number . '">' . $label . '</option>';
+						$out .= '<option value="' . $obj->rowid . '">' . $label . '</option>';
 					}
 					$i ++;
 				}

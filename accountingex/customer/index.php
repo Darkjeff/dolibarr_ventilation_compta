@@ -60,7 +60,7 @@ else
 	$year_start = $year;
 }
 
-// Validate History
+//ValidateHistory
 $action=GETPOST('action');
 if ($action == 'validatehistory') {
 	
