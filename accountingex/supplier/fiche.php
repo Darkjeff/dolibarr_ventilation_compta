@@ -1,8 +1,8 @@
 <?php
 /* Copyright (C) 2004       Rodolphe Quiedeville  <rodolphe@quiedeville.org>
  * Copyright (C) 2005       Simon TOSSER          <simon@kornog-computing.com>
- * Copyright (C) 2013       Alexandre Spangaro    <alexandre.spangaro@gmail.com> 
- * Copyright (C) 2013       Olivier Geffroy       <jeff@jeffinfo.com> 
+ * Copyright (C) 2013-2014  Alexandre Spangaro    <alexandre.spangaro@gmail.com> 
+ * Copyright (C) 2013-2014  Olivier Geffroy       <jeff@jeffinfo.com> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 
 // Class
-require_once(DOL_DOCUMENT_ROOT."/fourn/class/fournisseur.facture.class.php");
+dol_include_once("/fourn/class/fournisseur.facture.class.php");
 
 // Langs
 $langs->load("compta");

@@ -1,8 +1,8 @@
 <?php
 /* Copyright (C) 2001-2006 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2004-2005 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
+ * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,8 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 
 // Class
-require_once(DOL_DOCUMENT_ROOT."/core/lib/date.lib.php");
+dol_include_once("/core/lib/date.lib.php");
+dol_include_once("accountingex/core/lib/account.lib.php");
 
 // Langs
 $langs->load("main");
@@ -61,7 +62,7 @@ llxHeader('',$langs->trans("CustomersVentilation"));
 $textprevyear="<a href=\"balancebymonth.php?year=" . ($year_current-1) . "\">".img_previous()."</a>";
 $textnextyear=" <a href=\"balancebymonth.php?year=" . ($year_current+1) . "\">".img_next()."</a>";
 
-print_fiche_titre("Balance $textprevyear ".$langs->trans("Year")." $year_start $textnextyear");
+print_fiche_titre($langs->trans("AccountBalanceByMonth").' '.$textprevyear.' '.$langs->trans("Year").' '.$year_start.' '.$textnextyear);
 
 $sql = "SELECT count(*) FROM ".MAIN_DB_PREFIX."facturedet as fd";
 $sql.= " , ".MAIN_DB_PREFIX."facture as f";
@@ -115,7 +116,7 @@ if ($resql)
       
       $row = $db->fetch_row($resql);
 
-      print '<tr><td width="14%">'.$row[0].'</td>';
+      print '<tr><td width="14%">'.length_accountg($row[0]).'</td>';
 	    print '<td align="right" width="6.5%">'.$row[1].'</td>';
 	    print '<td align="right" width="6.5%">'.$row[2].'</td>';
 	    print '<td align="right" width="6.5%">'.$row[3].'</td>';
@@ -181,7 +182,7 @@ if ($resql)
 
       $row = $db->fetch_row($resql);
 
-      print '<tr><td width="14%">'.$row[0].'</td>';
+      print '<tr><td width="14%">'.length_accountg($row[0]).'</td>';
 	    print '<td align="right" width="6.5%">'.$row[1].'</td>';
 	    print '<td align="right" width="6.5%">'.$row[2].'</td>';
 	    print '<td align="right" width="6.5%">'.$row[3].'</td>';

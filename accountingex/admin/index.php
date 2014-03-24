@@ -1,12 +1,12 @@
 <?php
 /* Copyright (C) 2001-2004 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2004-2005 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2013      Florian Henry	      <florian.henry@open-concept.pro>
- * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com>
+ * Copyright (C) 2013-2014 Florian Henry	      <florian.henry@open-concept.pro>
+ * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -32,7 +32,9 @@ if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.p
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 
-require_once DOL_DOCUMENT_ROOT.'/core/lib/admin.lib.php';
+// Class
+dol_include_once("/core/lib/admin.lib.php");
+dol_include_once("/accountingex/core/lib/account.lib.php");
 
 $langs->load("compta");
 $langs->load("bills");
@@ -90,22 +92,18 @@ if ($action == 'setchart')
     }
 }
 
-if ($action == 'setmodelcsv')
-{
-	$modelcsv = GETPOST('modelcsv','int');
-
-	$res = dolibarr_set_const($db, 'ACCOUNTINGEX_MODELCSV', $modelcsv,'chaine',0,'',$conf->entity);
-
+if ($action == 'setlistsort') {
+	$setlistsort = GETPOST('value','int');
+	$res = dolibarr_set_const($db, "ACCOUNTINGEX_LIST_SORT_VENTILATION", $setlistsort,'yesno',0,'',$conf->entity);
 	if (! $res > 0) $error++;
-
- 	if (! $error)
-    {
-        $mesg = "<font class=\"ok\">".$langs->trans("SetupSaved")."</font>";
-    }
-    else
-    {
-        $mesg = "<font class=\"error\">".$langs->trans("Error")."</font>";
-    }
+	if (! $error)
+	{
+		$mesg = "<font class=\"ok\">".$langs->trans("SetupSaved")."</font>";
+	}
+	else
+	{
+		$mesg = "<font class=\"error\">".$langs->trans("Error")."</font>";
+	}
 }
 
 if ($action == 'delete')
@@ -144,7 +142,11 @@ llxHeader();
 
 $form=new Form($db);
 
-print_fiche_titre($langs->trans('Globalparameters'));
+print_fiche_titre($langs->trans('ConfigAccountingExpert'));
+
+$head = admin_account_prepare_head ( $accounting );
+
+dol_fiche_head($head,'general',$langs->trans("Configuration"),0,'cron');		
 
 print '<table class="noborder" width="100%">';
 
@@ -231,51 +233,20 @@ print "</form>";
 print "<br>\n";
 
 /*
- *  Select Export Model CSV
- *  
- */
-print '<form action="'.$_SERVER["PHP_SELF"].'" method="POST">';
-print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'" />';
-print '<input type="hidden" name="action" value="setmodelcsv">';
-
-print '<table class="noborder" width="100%">';
-$var=True;
-
-print '<tr class="liste_titre">';
-print '<td>';
-
-print $langs->trans("Modelcsv").'</td>';
-print '<td align="right"><input type="submit" class="button" value="'.$langs->trans("Modify").'"></td>';
-print "</tr>\n";
-$var=!$var;
-print '<tr '.$bc[$var].'>';
-print "<td>".$langs->trans("Selectmodelcsv")."</td>";
-print "<td>";
-print '<select class="flat" name="modelcsv" id="modelcsv">';
-print '<option value="0"';
-      if($conf->global->ACCOUNTINGEX_MODELCSV == 0)
-      {
-        print ' selected="selected"';
-      } 
-print '>'.$langs->trans("Modelcsv_normal").'</option>';
-print '<option value="1"';
-      if($conf->global->ACCOUNTINGEX_MODELCSV == 1)
-      {
-        print ' selected="selected"';
-      } 
-print '>'.$langs->trans("Modelcsv_CEGID").'</option>';
-print "</select>";
-print "</td></tr>";
-print "</table>";
-print "</form>";
-
-print "<br>\n";
-
-/*
  *  Params
  *
  */
-$list=array('ACCOUNTINGEX_SEPARATORCSV','ACCOUNTINGEX_LENGTH_GACCOUNT','ACCOUNTINGEX_LENGTH_AACCOUNT','COMPTA_ACCOUNT_CUSTOMER','COMPTA_ACCOUNT_SUPPLIER','ACCOUNTINGEX_ACCOUNT_SUSPENSE','ACCOUNTINGEX_ACCOUNT_TRANSFER_CASH','ACCOUNTINGEX_SELL_JOURNAL','ACCOUNTINGEX_PURCHASE_JOURNAL','ACCOUNTINGEX_BANK_JOURNAL','ACCOUNTINGEX_SOCIAL_JOURNAL','ACCOUNTINGEX_CASH_JOURNAL','ACCOUNTINGEX_MISCELLANEOUS_JOURNAL'
+$list=array('ACCOUNTINGEX_LIMIT_LIST_VENTILATION',
+            'ACCOUNTINGEX_LENGTH_GACCOUNT',
+            'ACCOUNTINGEX_LENGTH_AACCOUNT',
+            'COMPTA_ACCOUNT_CUSTOMER',            
+            'COMPTA_ACCOUNT_SUPPLIER',
+            'COMPTA_PRODUCT_BUY_ACCOUNT',
+            'COMPTA_PRODUCT_SOLD_ACCOUNT',
+            'COMPTA_SERVICE_BUY_ACCOUNT',
+            'COMPTA_SERVICE_SOLD_ACCOUNT',
+            'ACCOUNTINGEX_ACCOUNT_SUSPENSE',
+            'ACCOUNTINGEX_ACCOUNT_TRANSFER_CASH'
 );
 
 $num=count($list);
@@ -301,8 +272,8 @@ foreach ($list as $key)
 	print '<tr '.$bc[$var].' class="value">';
 
 	// Param
-	$libelle = $langs->trans($key); 
-	print '<td>'.$libelle;
+	$label = $langs->trans($key); 
+	print '<td>'.$label;
 	//print ' ('.$key.')';
 	print "</td>\n";
 
@@ -317,10 +288,33 @@ foreach ($list as $key)
 	$i++;
 }
 
+print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
+print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+print '<input type="hidden" name="action" value="updateoptions">';
+
+$var=!$var;
+print "<tr ".$bc[$var].">";
+print '<td width="80%">'.$langs->trans("ACCOUNTINGEX_LIST_SORT_VENTILATION").'</td>';
+if (! empty($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION))
+{
+	print '<td align="center" colspan="2"><a href="'.$_SERVER['PHP_SELF'].'?action=setlistsort&value=0">';
+	print img_picto($langs->trans("Activated"),'switch_on');
+	print '</a></td>';
+}
+else
+{
+	print '<td align="center" colspan="2"><a href="'.$_SERVER['PHP_SELF'].'?action=setlistsort&value=1">';
+	print img_picto($langs->trans("Disabled"),'switch_off');
+	print '</a></td>';
+}
+print '</tr>';
+
 if ($num)
 {
 	print "</table>\n";
 }
+
+print '</form>';
 
 dol_htmloutput_mesg($mesg);
 

@@ -21,7 +21,7 @@
  * 	\ingroup    Accounting Expert
  * 	\brief      Fichier de la classe comptabilité expert
  */
-require_once DOL_DOCUMENT_ROOT .'/core/class/commonobject.class.php';
+dol_include_once("/core/class/commonobject.class.php");
 
 /**
  * \class 		Accountancy

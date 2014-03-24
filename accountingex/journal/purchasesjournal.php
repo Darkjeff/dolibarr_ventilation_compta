@@ -33,14 +33,14 @@ if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.p
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 
-
-dol_include_once ( "/core/lib/report.lib.php");
-dol_include_once ( "/core/lib/date.lib.php");
-dol_include_once ( "/accountingex/core/lib/account.lib.php" );
-dol_include_once ( "/fourn/class/fournisseur.facture.class.php");
-dol_include_once ( "/fourn/class/fournisseur.class.php");
-dol_include_once ( "/accountingex/class/bookkeeping.class.php");
-dol_include_once ( "/accountingex/class/accountingaccount.class.php" );
+// Class
+dol_include_once("/core/lib/report.lib.php");
+dol_include_once("/core/lib/date.lib.php");
+dol_include_once("/accountingex/core/lib/account.lib.php");
+dol_include_once("/fourn/class/fournisseur.facture.class.php");
+dol_include_once("/fourn/class/fournisseur.class.php");
+dol_include_once("/accountingex/class/bookkeeping.class.php");
+dol_include_once("/accountingex/class/accountingaccount.class.php");
 
 // Langs
 $langs->load("compta");

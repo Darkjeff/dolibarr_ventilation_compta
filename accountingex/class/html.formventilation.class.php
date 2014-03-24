@@ -1,8 +1,7 @@
 <?php
-/*
- * Copyright (C) 2013  Florian Henry        <florian.henry@open-concept.pro>
- * Copyright (C) 2013  Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013  Alexandre Spangaro   <alexandre.spangaro@gmail.com>
+/* Copyright (C) 2013      Florian Henry        <florian.henry@open-concept.pro>
+ * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +18,7 @@
  */
 
 /**
- * \file    accountingex/class/html.formvenitlation.class.php
+ * \file    accountingex/class/html.formventilation.class.php
  * \brief   Class for HML form
  */
 class FormVentilation extends Form {

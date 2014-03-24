@@ -1,8 +1,8 @@
 <?PHP
 /* Copyright (C) 2004      Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2005-2006 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
+ * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,13 +31,13 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 	
 // Class
-dol_include_once ( "/accountingex/core/lib/account.lib.php" );
-dol_include_once ( "/accountingex/class/accountingaccount.class.php" );
-dol_include_once ( "/accountingex/class/html.formventilation.class.php" );
+dol_include_once("/accountingex/core/lib/account.lib.php");
+dol_include_once("/accountingex/class/accountingaccount.class.php");
+dol_include_once("/accountingex/class/html.formventilation.class.php");
 
 // Langs
-$langs->load ( "bills" );
-$langs->load ( "accountingex@accountingex" );
+$langs->load ("bills");
+$langs->load ("accountingex@accountingex");
 
 $mesg = '';
 $action = GETPOST ( 'action' );
@@ -154,14 +154,16 @@ else if ($action == 'edit') {
  * View
  *
  */
-llxheader ( '', $langs->trans ( "Account" ), '' );
+llxheader('',$langs->trans('AccountAccounting'));
 
 $form = new Form ( $db );
 $htmlacc = new FormVentilation ( $db );
 
+$linkback='<a href="'.DOL_URL_ROOT.'/accountingex/admin/account.php">'.$langs->trans("BackToChartofaccounts").'</a>';
+
 if ($action == 'create') {
 	
-	print_fiche_titre ( $langs->trans ( "NewAccount" ) );
+	print_fiche_titre($langs->trans('NewAccount'));
 	
 	print '<form name="add" action="' . $_SERVER ["PHP_SELF"] . '" method="POST">' . "\n";
 	print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '">';
@@ -192,18 +194,21 @@ if ($action == 'create') {
 	print '<input class="button" type="submit" name="cancel" value="' . $langs->trans ( "Cancel" ) . '"></center';
 	
 	print '</form>';
-} else if ($id) {
+} 
+else if ($id) 
+{
 	$rowid = $id;
 	$account = $accounting->fetch ( $rowid );
 	
 	if ($account > 0) {
 		dol_htmloutput_mesg ( $mesg );
 		
-		$head = account_prepare_head ( $accounting );
+		$head = account_prepare_head($accounting);
+    
+    dol_fiche_head($head,'card',$langs->trans('AccountAccounting'),0,'billr');
 		
-		dol_fiche_head ( $head, 'card', $langs->trans ( "AccountCard" ), 0, 'billr' );
-		
-		if ($action == 'update') {
+		if ($action == 'update') 
+    {
 			// WYSIWYG Editor
 			$htmlacc = new FormVentilation ( $db );
 			
@@ -241,11 +246,14 @@ if ($action == 'create') {
 			print '</td></tr>';
 			print '<tr><td>' . $langs->trans ( "Active" ) . '</td>';
 			print '<td>';
-			if (empty ( $accounting->active )) {
+			if (empty ( $accounting->active )) 
+      {
 				print '<a href="' . $_SERVER ["PHP_SELF"] . '?id=' . $accounting->id . '&action=enable">';
 				print img_picto ( $langs->trans ( "Disabled" ), 'switch_off' );
 				print '</a>';
-			} else {
+			} 
+      else 
+      {
 				print '<a href="' . $_SERVER ["PHP_SELF"] . '?id=' . $accounting->id . '&action=disable">';
 				print img_picto ( $langs->trans ( "Activated" ), 'switch_on' );
 				print '</a>';
@@ -260,10 +268,10 @@ if ($action == 'create') {
 			print '</form>';
 			
 			print '</div>';
-		} else {
+		} 
+    else 
+    {
 			print '<table class="border" width="100%">';
-			
-			$linkback = '<a href="' . DOL_URL_ROOT . '/compta/deplacement/list.php' . (! empty ( $socid ) ? '?socid=' . $socid : '') . '">' . $langs->trans ( "BackToList" ) . '</a>';
 			
 			print '<tr><td width="25%">' . $langs->trans ( "AccountNumber" ) . '</td>';
 			print '<td>' . $accounting->account_number . '</td></tr>';
@@ -278,11 +286,12 @@ if ($action == 'create') {
 			print '<tr><td>' . $langs->trans ( "Active" ) . '</td>';
 			print '<td>';
 			
-			if (empty ( $accounting->active )) {
-				
+			if (empty ( $accounting->active )) 
+      {
 				print img_picto ( $langs->trans ( "Disabled" ), 'switch_off' );
-			} else {
-				
+			} 
+      else 
+      {
 				print img_picto ( $langs->trans ( "Activated" ), 'switch_on' );
 			}
 			
@@ -293,19 +302,26 @@ if ($action == 'create') {
 			print '</div>';
 			
 			/*
-           * Barre d'actions
-           */
+       * Barre d'actions
+       */
 			
 			print '<div class="tabsAction">';
 			
-			if ($user->rights->accountingex->admin) {
+			if ($user->rights->accountingex->admin) 
+      {
 				print '<a class="butAction" href="' . $_SERVER ["PHP_SELF"] . '?action=update&id=' . $id . '">' . $langs->trans ( 'Modify' ) . '</a>';
-			} else {
+			} 
+      else 
+      {
 				print '<a class="butActionRefused" href="#" title="' . dol_escape_htmltag ( $langs->trans ( "NotAllowed" ) ) . '">' . $langs->trans ( 'Modify' ) . '</a>';
 			}
-			if ($user->rights->accountingex->admin) {
+			
+      if ($user->rights->accountingex->admin) 
+      {
 				print '<a class="butActionDelete" href="' . $_SERVER ["PHP_SELF"] . '?action=delete&id=' . $id . '">' . $langs->trans ( 'Delete' ) . '</a>';
-			} else {
+			} 
+      else 
+      {
 				print '<a class="butActionRefused" href="#" title="' . dol_escape_htmltag ( $langs->trans ( "NotAllowed" ) ) . '">' . $langs->trans ( 'Delete' ) . '</a>';
 			}
 			

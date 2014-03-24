@@ -1,6 +1,6 @@
 <?php
-/* Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
+/* Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,50 @@
  * @param   Object	$object		Object related to tabs
  * @return  array				Array of tabs to shoc
  */
+function admin_account_prepare_head($object)
+{
+	global $langs, $conf;
+
+	$h = 0;
+	$head = array();
+
+	$head[$h][0] = dol_buildpath('/accountingex/admin/index.php',1);
+	$head[$h][1] = $langs->trans("Configuration");
+	$head[$h][2] = 'general';
+	$h++;
+
+	// Show more tabs from modules
+	// Entries must be declared in modules descriptor with line
+    // $this->tabs = array('entity:+tabname:Title:@mymodule:/mymodule/mypage.php?id=__ID__');   to add new tab
+    // $this->tabs = array('entity:-tabname);   												to remove a tab
+	complete_head_from_modules($conf,$langs,$object,$head,$h,'accountingex_admin');
+
+  $head[$h][0] = dol_buildpath('/accountingex/admin/journaux.php',1);
+	$head[$h][1] = $langs->trans("Journaux");
+	$head[$h][2] = 'journal';
+	$h++;
+  
+	$head[$h][0] = dol_buildpath('/accountingex/admin/export.php',1);
+	$head[$h][1] = $langs->trans("Export");
+	$head[$h][2] = 'export';
+	$h++;
+  
+  $head[$h][0] = dol_buildpath('/accountingex/admin/about.php',1);
+	$head[$h][1] = $langs->trans("About");
+	$head[$h][2] = 'about';
+	$h++;
+	
+	complete_head_from_modules($conf,$langs,$object,$head,$h,'accountingex_admin','remove');
+
+	return $head;
+}
+
+/**
+ * Prepare array with list of tabs
+ *
+ * @param   Object	$object		Object related to tabs
+ * @return  array				Array of tabs to shoc
+ */
 function account_prepare_head($object)
 {
 	global $langs, $conf;
@@ -44,20 +88,9 @@ function account_prepare_head($object)
 	// Entries must be declared in modules descriptor with line
     // $this->tabs = array('entity:+tabname:Title:@mymodule:/mymodule/mypage.php?id=__ID__');   to add new tab
     // $this->tabs = array('entity:-tabname);   												to remove a tab
-	complete_head_from_modules($conf,$langs,$object,$head,$h,'accounting');
+	complete_head_from_modules($conf,$langs,$object,$head,$h,'accountingex_account');
 
-	/*
-  $head[$h][0] = DOL_URL_ROOT.'/accountingex/admin/document.php?id='.$object->id;
-	$head[$h][1] = $langs->trans("Documents");
-	$head[$h][2] = 'documents';
-	$h++;
-  */
-	$head[$h][0] = dol_buildpath('/accountingex/admin/info.php',1).'?id=' . $object->id;
-	$head[$h][1] = $langs->trans("Info");
-	$head[$h][2] = 'info';
-	$h++;
-	
-	complete_head_from_modules($conf,$langs,$object,$head,$h,'accounting','remove');
+	complete_head_from_modules($conf,$langs,$object,$head,$h,'accountingex_account','remove');
 
 	return $head;
 }
@@ -143,14 +176,21 @@ function length_accountg($account)
     // Clean parameters
   	$i = strlen($account);
     
-    while ($i < $g)
+    if ($i >= 2)
     {
-      $account .= '0';
+        while ($i < $g)
+        {
+          $account .= '0';
+            
+          $i++;
+        }
         
-      $i++;
+        return $account;
     }
-    
-    return $account;
+    else
+    {
+      return $account;
+    }
   }
   else
   { 
@@ -176,14 +216,22 @@ function length_accounta($accounta)
     // Clean parameters
   	$i = strlen($accounta);
     
-    while ($i < $a)
+    if ($i >= 2)
     {
-      $accounta .= '0';
-        
-      $i++;
-    }
+      while ($i < $a)
+      {
+        $accounta .= '0';
+          
+        $i++;
+      }
+      
+      return $accounta;
     
-    return $accounta;
+    }
+    else
+    {
+      return $accounta;
+    }
   }
   else
   { 

@@ -1,6 +1,6 @@
 <?php
 /* Copyright (C) 2004-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
- * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
  * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -250,7 +250,7 @@ class AccountingAccount {
 		if ($resql) {
 			$num = $this->db->num_rows ( $resql );
 			if ($num > 0) {
-				$this->error = $langs->trans ( 'AccountancyCodeIsAlreadyUse' );
+				$this->error = $langs->trans('ErrorAccountancyCodeIsAlreadyUse');
 				return 0;
 			} else {
 				return 1;

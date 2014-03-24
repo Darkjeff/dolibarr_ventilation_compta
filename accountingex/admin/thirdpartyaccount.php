@@ -1,12 +1,12 @@
 <?PHP
 /* Copyright (C) 2004-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2005      Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@fidurex.fr> 
+ * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@fidurex.fr> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -16,15 +16,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: liste.php,v 1.12 2011/07/31 22:23:31 eldy Exp $
  */
 
 /**
-        \file       accountingex/admin/thirdpartyaccount.php
-        \ingroup    compta
-        \brief      Onglet de gestion de parametrages des ventilations
-*/
+ *  \file       accountingex/admin/thirdpartyaccount.php
+ *  \ingroup    Accounting Expert
+ * 	\brief      Onglet de gestion de parametrages des ventilations
+ */
 
 // Dolibarr environment
 $res=@include("../main.inc.php");
@@ -33,8 +31,9 @@ if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.p
 if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
 if (! $res) die("Include of main fails");
 
-require_once DOL_DOCUMENT_ROOT.'/core/lib/report.lib.php';
-require_once (DOL_DOCUMENT_ROOT . "/core/lib/date.lib.php");
+// Class
+dol_include_once("/core/lib/report.lib.php");
+dol_include_once("/core/lib/date.lib.php");
 
 $langs->load("companies");
 $langs->load("compta");
@@ -197,7 +196,7 @@ print "</table>\n";
 print '</td><td valign="top" width="70%" class="notopnoleftnoright"></td>';
 print '</tr><tr><td colspan=2>';
 print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre"><td align="left">'.$langs->trans("Company").'</td>';
+print '<tr class="liste_titre"><td align="left">'.$langs->trans("ThirdParties").'</td>';
 print '<td align="left">'.$langs->trans("AccountNumber").'</td>';
 print '<td align="left">'.$langs->trans("RaisonSociale").'</td>';
 print '<td align="left">'.$langs->trans("Address").'</td>';
@@ -205,7 +204,7 @@ print '<td align="left">'.$langs->trans("Zip").'</td>';
 print '<td align="left">'.$langs->trans("Town").'</td>';
 print '<td align="left">'.$langs->trans("Country").'</td>';
 print '<td align="left">'.$langs->trans("Contact").'</td>';
-print '<td align="left">'.$langs->trans("tel").'</td>';
+print '<td align="left">'.$langs->trans("Phone").'</td>';
 print '<td align="left">'.$langs->trans("Fax").'</td></tr>';
 
   $var=True;

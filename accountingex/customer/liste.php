@@ -2,8 +2,8 @@
 /* Copyright (C) 2002-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2004      Eric Seigne          <eric.seigne@ryxeo.com>
  * Copyright (C) 2004-2006 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@fidurex.fr> 
+ * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
+ * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@fidurex.fr> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,8 +33,8 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 
 // Class
-require_once(DOL_DOCUMENT_ROOT."/compta/facture/class/facture.class.php");
-require_once(DOL_DOCUMENT_ROOT."/product/class/product.class.php");
+dol_include_once("/compta/facture/class/facture.class.php");
+dol_include_once("/product/class/product.class.php");
 
 // Langs
 $langs->load("compta");
@@ -116,7 +116,7 @@ if ($resultCompte)
 	while ($iCompte < $numCompte)
 	{
 		$rowCompte = $db->fetch_row($resultCompte);
-		$cgs[$rowCompte[0]] = $rowCompte[1] . ' ' . $rowCompte[2];
+		$cgs[$rowCompte[0]] = $rowCompte[1].' '.dol_trunc($rowCompte[2],64);
 		$cgn[$rowCompte[1]] = $rowCompte[0];
 		$iCompte++;
 	}
@@ -128,7 +128,7 @@ if ($resultCompte)
 */
 $page = $_GET["page"];
 if ($page < 0) $page = 0;
-$limit = $conf->liste_limit;
+$limit = $conf->global->LIMIT_LIST_VENTILATION;
 $offset = $limit * $page ;
 
 $sql = "SELECT f.facnumber, f.rowid as facid, l.fk_product, l.description, l.total_ht, l.rowid, l.fk_code_ventilation,";
@@ -137,7 +137,9 @@ $sql.= " FROM ".MAIN_DB_PREFIX."facture as f";
 $sql.= " , ".MAIN_DB_PREFIX."facturedet as l";
 $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = l.fk_product";
 $sql.= " WHERE f.rowid = l.fk_facture AND f.fk_statut > 0 AND fk_code_ventilation = 0";
-$sql.= " ORDER BY l.rowid DESC ".$db->plimit($limit+1,$offset);
+$sql.= " ORDER BY l.rowid";
+if ($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION > 0) { $sql.= " DESC "; }
+$sql.= $db->plimit($limit+1,$offset);
 
 $result = $db->query($sql);
 if ($result)
@@ -154,14 +156,14 @@ if ($result)
 	print '<td>'.$langs->trans("Label").'</td>';
 	print '<td>'.$langs->trans("Description").'</td>';
 	print '<td align="right">'.$langs->trans("Amount").'</td>';
-	print '<td align="right">'.$langs->trans("Account").'</td>';
+	print '<td align="right">'.$langs->trans("AccountAccounting").'</td>';
 	print '<td align="center">'.$langs->trans("IntoAccount").'</td>';
   print '<td align="center">'.$langs->trans("Ventilate").'</td>';
 	print '</tr>';
 
 	$facture_static=new Facture($db);
 	$product_static=new Product($db);
-  	$form = new Form($db);
+  $form = new Form($db);
 
 	print '<form action="liste.php" method="post">'."\n";
 	print '<input type="hidden" name="action" value="ventil">';
@@ -171,6 +173,41 @@ if ($result)
 	{
 		$objp = $db->fetch_object($result);
 		$var=!$var;
+		
+		// product_type: 0 = service ? 1 = product
+		// if product does not exist we use the value of product_type provided in facturedet to define if this is a product or service
+		// issue : if we change product_type value in product DB it should differ from the value stored in facturedet DB !
+		$code_sell_notset = '';
+		
+    if (empty($objp->code_sell)) {
+      $code_sell_notset = 'color:red';
+			
+      if (! empty($objp->type))
+      {
+				if($objp->type == 1) 
+        {
+          $objp->code_sell = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT)?$conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT:$langs->trans("CodeNotDef"));
+				}
+        else 
+        {
+          $objp->code_sell = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT)?$conf->global->COMPTA_SERVICE_SOLD_ACCOUNT:$langs->trans("CodeNotDef"));
+			  }
+      } 
+      else 
+      {
+        $code_sell_notset = 'color:blue';
+				
+        if($objp->type == 1)
+        { 
+          $objp->code_sell = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT)?$conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT:$langs->trans("CodeNotDef"));
+				}
+        else 
+        {
+          $objp->code_sell = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT)?$conf->global->COMPTA_SERVICE_SOLD_ACCOUNT:$langs->trans("CodeNotDef"));
+			  }
+      }
+		}
+
 		print "<tr $bc[$var]>";
 
 		// Ref facture
@@ -194,17 +231,17 @@ if ($result)
 		print price($objp->total_ht);
 		print '</td>';
 		
-		print '<td align="right">';
-		print $objp->code_sell;
+		print '<td align="center" style="'.$code_sell_notset.'">';
+	  print $objp->code_sell;
 		print '</td>';	
 		
 
-		//Colonne choix du compte
+		// Colonne choix du compte
 		print '<td align="center">';
 		print $form->selectarray("codeventil[]",$cgs, $cgn[$objp->code_sell]);
 		print '</td>';
         
-		//Colonne choix ligne a ventiler
+		// Colonne choix ligne a ventiler
 		print '<td align="center">';
 		print '<input type="checkbox" name="mesCasesCochees[]" value="'.$objp->rowid."_".$i.'"'.($objp->code_sell?"checked":"").'/>';
 		print '</td>';
