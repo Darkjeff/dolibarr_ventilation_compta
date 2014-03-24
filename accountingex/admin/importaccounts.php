@@ -111,7 +111,7 @@ if($_POST["action"] == 'import')
 */
 $page = $_GET["page"];
 if ($page < 0) $page = 0;
-$limit = $conf->liste_limit;
+$limit = $conf->global->ACCOUNTINGEX_LIMIT_LIST_VENTILATION;
 $offset = $limit * $page ;
 
 $sql = "(SELECT p.rowid as product_id, p.accountancy_code_sell as accounting ";

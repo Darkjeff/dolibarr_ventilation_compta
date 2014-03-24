@@ -104,7 +104,7 @@ llxHeader ( '',$langs->trans("SuppliersVentilation").' - '.$langs->trans("Dispat
  */
 $page = $_GET["page"];
 if ($page < 0) $page = 0;
-$limit = $conf->liste_limit;
+$limit = $conf->global->ACCOUNTINGEX_LIMIT_LIST_VENTILATION;
 $offset = $limit * $page ;
 
 $sql = "SELECT f.ref as facnumber, f.rowid as facid, l.fk_product, l.description, l.total_ht , l.qty, l.rowid, l.tva_tx, aa.label, aa.account_number, ";
