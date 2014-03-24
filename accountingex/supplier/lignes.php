@@ -145,6 +145,7 @@ if ($typeid) {
 $sql .= " ORDER BY l.rowid DESC";
 $sql .= $db->plimit($limit+1,$offset);
 
+dol_syslog ( 'accountingex/supplier/lignes.php::list sql= ' . $sql1 );
 $result = $db->query($sql);
 
 if ($result)
