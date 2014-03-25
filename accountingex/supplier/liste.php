@@ -58,10 +58,10 @@ llxHeader('',$langs->trans("Ventilation"));
 
 if($_POST["action"] == 'ventil')
   {
-  print '<div><font color="red">Debut du traitement... </font></div>';
+  print '<div><font color="red">'.$langs->trans("Processing").'...</font></div>';
   if($_POST['codeventil'] && $_POST["mesCasesCochees"])
   {
-    print '<div><font color="red">'.count($_POST["mesCasesCochees"])." Lignes selectionnees</font></div>";
+    print '<div><font color="red">'.count($_POST["mesCasesCochees"]).' '.$langs->trans("SelectedLines").'</font></div>';
     $mesLignesCochees=$_POST['mesCasesCochees'];
     $mesCodesVentilChoisis = $_POST['codeventil'];
     $cpt = 0;
@@ -152,7 +152,7 @@ if ($result)
   $num_lignes = $db->num_rows($result);
   $i = 0; 
   
-  print_barre_liste("Lignes de facture fournisseurs à ventiler",$page,"liste.php","",$sortfield,$sortorder,'',$num_lignes);
+  print_barre_liste($langs->trans("InvoiceLines"),$page,"liste.php","",$sortfield,$sortorder,'',$num_lignes);
 
   print '<td align="left"><br><b>'.$langs->trans("DescVentilTodoSupplier").'</b></br></td>';
 
