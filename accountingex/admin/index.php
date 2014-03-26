@@ -3,6 +3,7 @@
  * Copyright (C) 2004-2005 Laurent Destailleur  <eldy@users.sourceforge.net>
  * Copyright (C) 2013-2014 Florian Henry	      <florian.henry@open-concept.pro>
  * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com>
+ * Copyright (C) 2014      Ari Elbaz (elarifr)  <github@accedinfo.com>  
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -92,9 +93,23 @@ if ($action == 'setchart')
     }
 }
 
-if ($action == 'setlistsort') {
-	$setlistsort = GETPOST('value','int');
-	$res = dolibarr_set_const($db, "ACCOUNTINGEX_LIST_SORT_VENTILATION", $setlistsort,'yesno',0,'',$conf->entity);
+if ($action == 'setlistsorttodo') {
+	$setlistsorttodo = GETPOST('value','int');
+	$res = dolibarr_set_const($db, "ACCOUNTINGEX_LIST_SORT_VENTILATION_TODO", $setlistsorttodo,'yesno',0,'',$conf->entity);
+	if (! $res > 0) $error++;
+	if (! $error)
+	{
+		$mesg = "<font class=\"ok\">".$langs->trans("SetupSaved")."</font>";
+	}
+	else
+	{
+		$mesg = "<font class=\"error\">".$langs->trans("Error")."</font>";
+	}
+}
+
+if ($action == 'setlistsortdone') {
+	$setlistsortdone = GETPOST('value','int');
+	$res = dolibarr_set_const($db, "ACCOUNTINGEX_LIST_SORT_VENTILATION_DONE", $setlistsortdone,'yesno',0,'',$conf->entity);
 	if (! $res > 0) $error++;
 	if (! $error)
 	{
@@ -294,16 +309,32 @@ print '<input type="hidden" name="action" value="updateoptions">';
 
 $var=!$var;
 print "<tr ".$bc[$var].">";
-print '<td width="80%">'.$langs->trans("ACCOUNTINGEX_LIST_SORT_VENTILATION").'</td>';
-if (! empty($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION))
+print '<td width="80%">'.$langs->trans("ACCOUNTINGEX_LIST_SORT_VENTILATION_TODO").'</td>';
+if (! empty($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION_TODO))
 {
-	print '<td align="center" colspan="2"><a href="'.$_SERVER['PHP_SELF'].'?action=setlistsort&value=0">';
+	print '<td align="center" colspan="2"><a href="'.$_SERVER['PHP_SELF'].'?action=setlistsorttodo&value=0">';
 	print img_picto($langs->trans("Activated"),'switch_on');
 	print '</a></td>';
 }
 else
 {
-	print '<td align="center" colspan="2"><a href="'.$_SERVER['PHP_SELF'].'?action=setlistsort&value=1">';
+	print '<td align="center" colspan="2"><a href="'.$_SERVER['PHP_SELF'].'?action=setlistsorttodo&value=1">';
+	print img_picto($langs->trans("Disabled"),'switch_off');
+	print '</a></td>';
+}
+print '</tr>';
+
+print "<tr ".$bc[$var].">";
+print '<td width="80%">'.$langs->trans("ACCOUNTINGEX_LIST_SORT_VENTILATION_DONE").'</td>';
+if (! empty($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION_DONE))
+{
+	print '<td align="center" colspan="2"><a href="'.$_SERVER['PHP_SELF'].'?action=setlistsortdone&value=0">';
+	print img_picto($langs->trans("Activated"),'switch_on');
+	print '</a></td>';
+}
+else
+{
+	print '<td align="center" colspan="2"><a href="'.$_SERVER['PHP_SELF'].'?action=setlistsortdone&value=1">';
 	print img_picto($langs->trans("Disabled"),'switch_off');
 	print '</a></td>';
 }

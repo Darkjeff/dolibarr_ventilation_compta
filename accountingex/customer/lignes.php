@@ -2,7 +2,8 @@
 /* Copyright (C) 2002-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2006      Laurent Destailleur  <eldy@users.sourceforge.net>
  * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com>  
+ * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com>
+ * Copyright (C) 2014      Ari Elbaz (elarifr)  <github@accedinfo.com>   
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -131,7 +132,8 @@ if ($typeid) {
 	$sql .= " AND c.intitule=" . $typeid;
 }
 
-$sql .= " ORDER BY l.rowid DESC";
+$sql .= " ORDER BY l.rowid";
+if ($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION_DONE > 0) { $sql.= " DESC "; }  
 $sql .= $db->plimit ( $limit + 1, $offset );
 
 $result = $db->query ( $sql );
