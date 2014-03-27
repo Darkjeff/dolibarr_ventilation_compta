@@ -3,7 +3,8 @@
  * Copyright (C) 2004      Eric Seigne          <eric.seigne@ryxeo.com>
  * Copyright (C) 2004      Laurent Destailleur  <eldy@users.sourceforge.net>
  * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@fidurex.fr>  
+ * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com>
+ * Copyright (C) 2014      Ari Elbaz (elarifr)  <github@accedinfo.com>   
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -143,7 +144,7 @@ $sql.= " , ".MAIN_DB_PREFIX."facture_fourn_det as l";
 $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = l.fk_product";
 $sql.= " WHERE f.rowid = l.fk_facture_fourn AND f.fk_statut > 0 AND fk_code_ventilation = 0";
 $sql.= " ORDER BY l.rowid";
-if ($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION > 0) { $sql.= " DESC "; }
+if ($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION_TODO > 0) { $sql.= " DESC "; }
 $sql.= $db->plimit($limit+1,$offset);
 
 $result = $db->query($sql);
