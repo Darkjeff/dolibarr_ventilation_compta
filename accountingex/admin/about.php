@@ -46,7 +46,7 @@ if (!$user->rights->accountingex->admin) accessforbidden();
 
 llxHeader();
 
-global $langs, $conf;
+print_fiche_titre($langs->trans('ConfigAccountingExpert'));
 
 $head = admin_account_prepare_head(null);
 		
