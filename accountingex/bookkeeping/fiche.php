@@ -40,10 +40,15 @@ dol_include_once("accountingex/class/bookkeeping.class.php");
 // Langs
 $langs->load("accountingex@accountingex");
 
-$mesg = '';
+// Security check
+$id = GETPOST('id','int');
+if ($user->societe_id > 0) accessforbidden();
+if (!$user->rights->accountingex->access) accessforbidden();
+
 $action = GETPOST ( 'action' );
 $piece_num = GETPOST ( "piece_num" );
-$id = GETPOST ( "id" );
+
+$mesg = '';
 
 $numero_compte = GETPOST ( 'numero_compte' );
 $code_tiers = GETPOST ( 'code_tiers' );
@@ -180,7 +185,7 @@ else if ($action == "confirm_create") {
 	}
 }
 
-llxHeader ( "", "Modification compte" );
+llxHeader();
 
 $html = new Form ( $db );
 $nbligne = 0;
@@ -238,7 +243,7 @@ if ($action == 'create') {
 	print '</tr>';
 	print '</table>';
 	print '<BR>';
-	print '<input type="submit" class="butAction" value="' . $langs->trans ( "Record" ) . '">';
+	print '<input type="submit" class="butAction" value="'.$langs->trans("Save").'">';
 	
 	print '</form>';
 } else {
@@ -374,5 +379,6 @@ if ($action == 'create') {
 	}
 }
 
-$db->close ();
-llxFooter ( '' );
+$db->close();
+llxFooter();
+?>
