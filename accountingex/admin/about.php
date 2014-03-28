@@ -40,15 +40,11 @@ $langs->load('accountingex@accountingex');
 if ($user->societe_id > 0) accessforbidden();
 if (!$user->rights->accountingex->admin) accessforbidden();
 
-$action=GETPOST('action','alpha');
-
 /*
  * View
  */
 
 llxHeader();
-
-$form = new Form($db);
 
 print_fiche_titre($langs->trans('ConfigAccountingExpert'));
 
@@ -56,6 +52,15 @@ $head = admin_account_prepare_head(null);
 		
 dol_fiche_head($head,'about',$langs->trans("Configuration"),0,'cron');
 
+print '<table class="noborder" width="100%">';
+
+print '<tr class="liste_titre"><td colspan="2">Les auteurs</td>';
+print '</tr>';
+
+// Alexandre Spangaro
+print '<tr><td><img src="../img/fidurex.jpg" width="250"></td><td><b>Alexandre Spangaro</b><br>Comptable<br>Cabinet Fidurex - 29 Boulevard de la Rochelle - 55000 Bar le Duc<br>Tél : 03.29.79.04.42 - @ : aspangaro AT fidurex DOT fr';
+print '</td></tr>'; 
+  
 
 
 dol_htmloutput_mesg($mesg);

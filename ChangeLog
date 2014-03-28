@@ -1,7 +1,10 @@
 --------------------------------------------------------------
 English Accounting Expert ChangeLog
 --------------------------------------------------------------
-***** ChangeLog for 3.5.x compared to none *****
+***** ChangeLog for 3.5.x compared to 3.4.x *****
+New: Limit number of lines in ventilation to do
+New: Add option to sort out a list
+New: Add cash journal
 New: Possibility of defining the separator in the export csv
 New: Possibility of defining the length of account
 Add: CSV Export Model - CEGID Expert
