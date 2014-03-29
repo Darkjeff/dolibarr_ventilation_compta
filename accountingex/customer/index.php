@@ -282,86 +282,88 @@ else
 }
 print "</table>\n";
 
-print "<br>\n";
-print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre"><td width="400">'.$langs->trans("TotalMarge").'</td>';
-print '<td width="60" align="center">'.$langs->trans("JanuaryMin").'</td>';
-print '<td width="60" align="center">'.$langs->trans("FebruaryMin").'</td>';
-print '<td width="60" align="center">'.$langs->trans("MarchMin").'</td>';
-print '<td width="60" align="center">'.$langs->trans("AprilMin").'</td>';
-print '<td width="60" align="center">'.$langs->trans("MayMin").'</td>';
-print '<td width="60" align="center">'.$langs->trans("JuneMin").'</td>';
-print '<td width="60" align="center">'.$langs->trans("JulyMin").'</td>';
-print '<td width="60" align="center">'.$langs->trans("AugustMin").'</td>';
-print '<td width="60" align="center">'.$langs->trans("SeptemberMin").'</td>';
-print '<td width="60" align="center">'.$langs->trans("OctoberMin").'</td>';
-print '<td width="60" align="center">'.$langs->trans("NovemberMin").'</td>';
-print '<td width="60" align="center">'.$langs->trans("DecemberMin").'</td>';
-print '<td width="60" align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
-
-
-$sql = "SELECT '".$langs->trans("Vide")."' AS 'Marge',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=1,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Janvier',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=2,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Fevrier',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=3,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Mars',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=4,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Avril',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=5,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Mai',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=6,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Juin',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=7,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Juillet',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=8,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Aout',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=9,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Septembre',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=10,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Octobre',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=11,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Novembre',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=12,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Decembre',";
-$sql .= "  ROUND(SUM((fd.total_ht-(fd.qty * fd.buy_price_ht))),2) as 'Total'";
-$sql .= " FROM ".MAIN_DB_PREFIX."facturedet as fd";
-$sql .= "  LEFT JOIN ".MAIN_DB_PREFIX."facture as f ON f.rowid = fd.fk_facture";
-$sql .= " WHERE f.datef >= '".$db->idate(dol_get_first_day($y,1,false))."'";
-$sql .= "  AND f.datef <= '".$db->idate(dol_get_last_day($y,12,false))."'";
-
-if (! empty($conf->multicompany->enabled)) 
+if (! empty($conf->margin->enabled)) 
 {
-  $sql .=" AND f.entity = '".$conf->entity."'";
-}
-
-$resql = $db->query($sql);
-if ($resql)
-{
-	$i = 0;
-	$num = $db->num_rows($resql);
-
-	while ($i < $num)
+    print "<br>\n";
+    print '<table class="noborder" width="100%">';
+    print '<tr class="liste_titre"><td width="400">'.$langs->trans("TotalMarge").'</td>';
+    print '<td width="60" align="center">'.$langs->trans("JanuaryMin").'</td>';
+    print '<td width="60" align="center">'.$langs->trans("FebruaryMin").'</td>';
+    print '<td width="60" align="center">'.$langs->trans("MarchMin").'</td>';
+    print '<td width="60" align="center">'.$langs->trans("AprilMin").'</td>';
+    print '<td width="60" align="center">'.$langs->trans("MayMin").'</td>';
+    print '<td width="60" align="center">'.$langs->trans("JuneMin").'</td>';
+    print '<td width="60" align="center">'.$langs->trans("JulyMin").'</td>';
+    print '<td width="60" align="center">'.$langs->trans("AugustMin").'</td>';
+    print '<td width="60" align="center">'.$langs->trans("SeptemberMin").'</td>';
+    print '<td width="60" align="center">'.$langs->trans("OctoberMin").'</td>';
+    print '<td width="60" align="center">'.$langs->trans("NovemberMin").'</td>';
+    print '<td width="60" align="center">'.$langs->trans("DecemberMin").'</td>';
+    print '<td width="60" align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
+    
+    
+    $sql = "SELECT '".$langs->trans("Vide")."' AS 'Marge',";
+    $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=1,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Janvier',";
+    $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=2,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Fevrier',";
+    $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=3,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Mars',";
+    $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=4,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Avril',";
+    $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=5,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Mai',";
+    $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=6,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Juin',";
+    $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=7,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Juillet',";
+    $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=8,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Aout',";
+    $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=9,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Septembre',";
+    $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=10,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Octobre',";
+    $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=11,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Novembre',";
+    $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=12,(fd.total_ht-(fd.qty * fd.buy_price_ht)),0)),2) AS 'Decembre',";
+    $sql .= "  ROUND(SUM((fd.total_ht-(fd.qty * fd.buy_price_ht))),2) as 'Total'";
+    $sql .= " FROM ".MAIN_DB_PREFIX."facturedet as fd";
+    $sql .= "  LEFT JOIN ".MAIN_DB_PREFIX."facture as f ON f.rowid = fd.fk_facture";
+    $sql .= " WHERE f.datef >= '".$db->idate(dol_get_first_day($y,1,false))."'";
+    $sql .= "  AND f.datef <= '".$db->idate(dol_get_last_day($y,12,false))."'";
+    
+    if (! empty($conf->multicompany->enabled)) 
     {
-		$row = $db->fetch_row($resql);
-
-		print '<tr><td>'.$row[0].'</td>';
-		print '<td align="right">'.$row[1].'</td>';
-		print '<td align="right">'.$row[2].'</td>';
-		print '<td align="right">'.$row[3].'</td>';
-		print '<td align="right">'.$row[4].'</td>';
-		print '<td align="right">'.$row[5].'</td>';
-		print '<td align="right">'.$row[6].'</td>';
-		print '<td align="right">'.$row[7].'</td>';
-		print '<td align="right">'.$row[8].'</td>';
-		print '<td align="right">'.$row[9].'</td>';
-		print '<td align="right">'.$row[10].'</td>';
-		print '<td align="right">'.$row[11].'</td>';
-		print '<td align="right">'.$row[12].'</td>';
-		print '<td align="right"><b>'.$row[13].'</b></td>';
-		print '</tr>';
-      	$i++;
+      $sql .=" AND f.entity = '".$conf->entity."'";
     }
-	$db->free($resql);
-}
-else
-{
-	print $db->lasterror(); // affiche la derniere erreur sql
-}
-print "</table>\n";
+    
+    $resql = $db->query($sql);
+    if ($resql)
+    {
+    	$i = 0;
+    	$num = $db->num_rows($resql);
+    
+    	while ($i < $num)
+        {
+    		$row = $db->fetch_row($resql);
+    
+    		print '<tr><td>'.$row[0].'</td>';
+    		print '<td align="right">'.$row[1].'</td>';
+    		print '<td align="right">'.$row[2].'</td>';
+    		print '<td align="right">'.$row[3].'</td>';
+    		print '<td align="right">'.$row[4].'</td>';
+    		print '<td align="right">'.$row[5].'</td>';
+    		print '<td align="right">'.$row[6].'</td>';
+    		print '<td align="right">'.$row[7].'</td>';
+    		print '<td align="right">'.$row[8].'</td>';
+    		print '<td align="right">'.$row[9].'</td>';
+    		print '<td align="right">'.$row[10].'</td>';
+    		print '<td align="right">'.$row[11].'</td>';
+    		print '<td align="right">'.$row[12].'</td>';
+    		print '<td align="right"><b>'.$row[13].'</b></td>';
+    		print '</tr>';
+          	$i++;
+        }
+    	$db->free($resql);
+    }
+    else
+    {
+    	print $db->lasterror(); // affiche la derniere erreur sql
+    }
+    print "</table>\n";
+}    
 print "</table>\n";
 print '</td></tr></table>';
 
 llxFooter();
 $db->close();
-
 ?>
