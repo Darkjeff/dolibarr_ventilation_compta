@@ -100,7 +100,7 @@ $p = explode(":", $conf->global->MAIN_INFO_SOCIETE_COUNTRY);
 $idpays = $p[0];
 
 $sql = "SELECT f.rowid, f.facnumber, f.type, f.datef as df, f.ref_client,";
-$sql.= " fd.rowid as fdid, fd.product_type, fd.total_ht, fd.total_tva, fd.tva_tx, fd.total_ttc,";
+$sql.= " fd.rowid as fdid, fd.description, fd.product_type, fd.total_ht, fd.total_tva, fd.tva_tx, fd.total_ttc,";
 $sql.= " s.rowid as socid, s.nom as name, s.code_compta, s.code_client,";
 $sql.= " p.rowid as pid, p.ref as pref, p.accountancy_code_sell, aa.rowid as fk_compte, aa.account_number as compte, aa.label as label_compte, ";
 $sql.= " ct.accountancy_code_sell as account_tva";
@@ -119,6 +119,7 @@ $sql.= " AND fd.product_type IN (0,1)";
 if ($date_start && $date_end) $sql .= " AND f.datef >= '".$db->idate($date_start)."' AND f.datef <= '".$db->idate($date_end)."'";
 $sql.= " ORDER BY f.datef";
 
+dol_syslog('accountingex/journal/sellsjournal.php:: $sql='.$sql);
 $result = $db->query($sql);
 if ($result)
 {
@@ -152,6 +153,7 @@ if ($result)
    		$tabfac[$obj->rowid]["date"] = $obj->df;
    		$tabfac[$obj->rowid]["ref"] = $obj->facnumber;
    		$tabfac[$obj->rowid]["type"] = $obj->type;
+      $tabfac[$obj->rowid]["description"] = $obj->description;
    		$tabfac[$obj->rowid]["fk_facturedet"] = $obj->fdid;
    		if (! isset($tabttc[$obj->rowid][$compta_soc])) $tabttc[$obj->rowid][$compta_soc]=0;
    		if (! isset($tabht[$obj->rowid][$compta_prod])) $tabht[$obj->rowid][$compta_prod]=0;
@@ -290,7 +292,7 @@ if (GETPOST('action') == 'export_csv')
             print $sep;
             print ($mt < 0?'D':'C').$sep;
             print ($mt<=0?price(-$mt):$mt).$sep;
-    				print $langs->trans("Products").$sep;
+    				print dol_trunc($val["description"],32).$sep;
             print $val["ref"];
     				print "\n";
     			}
@@ -336,7 +338,7 @@ if (GETPOST('action') == 'export_csv')
     			{
     				print '"'.$date.'"'.$sep;
     				print '"'.$val["ref"].'"'.$sep;
-    				print '"'.length_accountg(html_entity_decode($k)).'"'.$sep.'"'.$langs->trans("Products").'"'.$sep.'"'.($mt<0?price(-$mt):'').'"'.$sep.'"'.($mt>=0?price($mt):'').'"';
+    				print '"'.length_accountg(html_entity_decode($k)).'"'.$sep.'"'.dol_trunc($val["description"],32).'"'.$sep.'"'.($mt<0?price(-$mt):'').'"'.$sep.'"'.($mt>=0?price($mt):'').'"';
     				print "\n";
     			}
     		}
@@ -360,7 +362,7 @@ else
 
 $form=new Form($db);
 
-llxHeader('',$langs->trans("SellsJournal"),'');
+llxHeader('',$langs->trans("SellsJournal"));
 
 $nom=$langs->trans("SellsJournal");
 $nomlink='';
@@ -404,7 +406,9 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
 	print "<td>".$langs->trans("Date")."</td>";
 	print "<td>".$langs->trans("Piece").' ('.$langs->trans("InvoiceRef").")</td>";
 	print "<td>".$langs->trans("Account")."</td>";
-	print "<td>".$langs->trans("Type")."</td><th align='right'>".$langs->trans("Debit")."</td><th align='right'>".$langs->trans("Credit")."</td>";
+	print "<td>".$langs->trans("Type")."</td>";
+  print "<td align='right'>".$langs->trans("Debit")."</td>";
+  print "<td align='right'>".$langs->trans("Credit")."</td>";
 	print "</tr>\n";
 
 	$var=true;
@@ -446,7 +450,11 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
 				//print "<td>".$conf->global->COMPTA_JOURNAL_SELL."</td>";
 				print "<td>".$date."</td>";
 				print "<td>".$invoicestatic->getNomUrl(1)."</td>";
-				print "<td>".length_accountg($k)."</td><td>".$langs->trans("Products")."</td><td align='right'>".($mt<0?price(-$mt):'')."</td><td align='right'>".($mt>=0?price($mt):'')."</td></tr>";
+				print "<td>".length_accountg($k)."</td>";
+        print "<td>".dol_trunc($invoicestatic->description=$val["description"],32)."</td>";
+        print "<td align='right'>".($mt<0?price(-$mt):'')."</td>";
+        print "<td align='right'>".($mt>=0?price($mt):'')."</td>";
+        print "</tr>";
 			}
 		}
 		// vat
@@ -457,7 +465,7 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
 		    {
 	    		print "<tr ".$bc[$var].">";
 	    		//print "<td>".$conf->global->COMPTA_JOURNAL_SELL."</td>";
-				print "<td>".$date."</td>";
+				  print "<td>".$date."</td>";
 	    		print "<td>".$invoicestatic->getNomUrl(1)."</td>";
 	    		print "<td>".length_accountg($k)."</td><td>".$langs->trans("VAT")."</td><td align='right'>".($mt<0?price(-$mt):'')."</td><td align='right'>".($mt>=0?price($mt):'')."</td></tr>";
 		    }
