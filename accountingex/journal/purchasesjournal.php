@@ -97,7 +97,7 @@ $p = explode(":", $conf->global->MAIN_INFO_SOCIETE_COUNTRY);
 $idpays = $p[0];
 
 $sql = "SELECT f.rowid, f.ref, f.type, f.datef as df, f.libelle,";
-$sql.= " fd.rowid as fdid, fd.total_ttc, fd.tva_tx, fd.total_ht, fd.tva as total_tva, fd.product_type,";
+$sql.= " fd.rowid as fdid, fd.description, fd.total_ttc, fd.tva_tx, fd.total_ht, fd.tva as total_tva, fd.product_type,";
 $sql.= " s.rowid as socid, s.nom as name, s.code_compta_fournisseur, s.fournisseur,";
 $sql.= " s.code_compta_fournisseur, p.accountancy_code_buy , ct.accountancy_code_buy as account_tva, aa.rowid as fk_compte, aa.account_number as compte, aa.label as label_compte";
 $sql.= " FROM ".MAIN_DB_PREFIX."facture_fourn_det fd";
@@ -112,6 +112,7 @@ else $sql.= " AND f.type IN (0,1,2,3)";
 if ($date_start && $date_end) $sql .= " AND f.datef >= '".$db->idate($date_start)."' AND f.datef <= '".$db->idate($date_end)."'";
 $sql.= " ORDER BY f.datef";
 
+dol_syslog('accountingex/journal/purchasesjournal.php:: $sql='.$sql);
 $result = $db->query($sql);
 if ($result)
 {
@@ -143,6 +144,7 @@ if ($result)
 		$tabfac[$obj->rowid]["date"] = $obj->df;
 		$tabfac[$obj->rowid]["ref"] = $obj->ref;
 		$tabfac[$obj->rowid]["type"] = $obj->type;
+    $tabfac[$obj->rowid]["description"] = $obj->description;
 		$tabfac[$obj->rowid]["fk_facturefourndet"] = $obj->fdid;
 		$tabttc[$obj->rowid][$compta_soc] += $obj->total_ttc;
 		$tabht[$obj->rowid][$compta_prod] += $obj->total_ht;
@@ -270,7 +272,7 @@ if (GETPOST('action') == 'export_csv')
           print $sep;
           print ($mt < 0?'C':'D').$sep;
           print ($mt<=0?price(-$mt):$mt).$sep;
-          print $langs->trans("Products").$sep;
+          print dol_trunc($val["description"],32).$sep;
           print $val["ref"];
   				print "\n";
   			}
@@ -324,7 +326,7 @@ if (GETPOST('action') == 'export_csv')
   			{
   				print '"'.$date.'"'.$sep;
   				print '"'.$val["ref"].'"'.$sep;
-  				print '"'.html_entity_decode($k).'"'.$sep.'"'.$langs->trans("Products").'"'.$sep.'"'.($mt>=0?price($mt):'').'"'.$sep.'"'.($mt<0?price(-$mt):'').'"';
+  				print '"'.html_entity_decode($k).'"'.$sep.'"'.dol_trunc($val["description"],32).'"'.$sep.'"'.($mt>=0?price($mt):'').'"'.$sep.'"'.($mt<0?price(-$mt):'').'"';
   				print "\n";
   			}
   		}
@@ -430,7 +432,8 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
 				//print "<td>".$conf->global->COMPTA_JOURNAL_BUY."</td>";
 				print "<td>".$date."</td>";
 				print "<td>".$invoicestatic->getNomUrl(1)."</td>";
-				print "<td>".length_accountg($k)."</td><td>".$langs->trans("Products")."</td>";
+				print "<td>".length_accountg($k)."</td>";
+        print "<td>".dol_trunc($invoicestatic->description=$val["description"],32)."</td>";
 				print '<td align="right">'.($mt>=0?price($mt):'')."</td>";
 				print '<td align="right">'.($mt<0?price(-$mt):'')."</td>";
 				print "</tr>";
