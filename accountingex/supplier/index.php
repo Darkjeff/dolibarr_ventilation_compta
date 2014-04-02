@@ -156,6 +156,7 @@ $sql .= "  LEFT JOIN ".MAIN_DB_PREFIX."facture_fourn as ff ON ff.rowid = ffd.fk_
 $sql .= "  LEFT JOIN ".MAIN_DB_PREFIX."accountingaccount as aa ON aa.rowid = ffd.fk_code_ventilation";
 $sql .= " WHERE ff.datef >= '".$db->idate(dol_get_first_day($y,1,false))."'";
 $sql .= "  AND ff.datef <= '".$db->idate(dol_get_last_day($y,12,false))."'";
+$sql .= "  AND ff.fk_statut > 0 ";
 
 if (! empty($conf->multicompany->enabled)) 
 {
@@ -164,6 +165,7 @@ if (! empty($conf->multicompany->enabled))
 
 $sql .= " GROUP BY ffd.fk_code_ventilation";
 
+dol_syslog('/accountingex/supplier/index.php:: sql='.$sql);
 $resql = $db->query($sql);
 if ($resql)
 {
@@ -177,19 +179,19 @@ if ($resql)
 
       print '<tr><td>'.$row[0].'</td>';
 	print '<td align="left">'.$row[1].'</td>';
-	print '<td align="right">'.$row[2].'</td>';
-	print '<td align="right">'.$row[3].'</td>';
-	print '<td align="right">'.$row[4].'</td>';
-	print '<td align="right">'.$row[5].'</td>';
-	print '<td align="right">'.$row[6].'</td>';
-	print '<td align="right">'.$row[7].'</td>';
-	print '<td align="right">'.$row[8].'</td>';
-	print '<td align="right">'.$row[9].'</td>';
-	print '<td align="right">'.$row[10].'</td>';
-	print '<td align="right">'.$row[11].'</td>';
-	print '<td align="right">'.$row[12].'</td>';
-	print '<td align="right">'.$row[13].'</td>';
-	print '<td align="right"><b>'.$row[14].'</b></td>';
+	print '<td align="right">'.price($row[2]).'</td>';
+	print '<td align="right">'.price($row[3]).'</td>';
+	print '<td align="right">'.price($row[4]).'</td>';
+	print '<td align="right">'.price($row[5]).'</td>';
+	print '<td align="right">'.price($row[6]).'</td>';
+	print '<td align="right">'.price($row[7]).'</td>';
+	print '<td align="right">'.price($row[8]).'</td>';
+	print '<td align="right">'.price($row[9]).'</td>';
+	print '<td align="right">'.price($row[10]).'</td>';
+	print '<td align="right">'.price($row[11]).'</td>';
+	print '<td align="right">'.price($row[12]).'</td>';
+	print '<td align="right">'.price($row[13]).'</td>';
+	print '<td align="right"><b>'.price($row[14]).'</b></td>';
 	print '</tr>';
       $i++;
     }
@@ -234,12 +236,14 @@ $sql .= " FROM ".MAIN_DB_PREFIX."facture_fourn_det as ffd";
 $sql .= "  LEFT JOIN ".MAIN_DB_PREFIX."facture_fourn as ff ON ff.rowid = ffd.fk_facture_fourn";
 $sql .= " WHERE ff.datef >= '".$db->idate(dol_get_first_day($y,1,false))."'";
 $sql .= "  AND ff.datef <= '".$db->idate(dol_get_last_day($y,12,false))."'";
+$sql .= "  AND ff.fk_statut > 0 ";
 
 if (! empty($conf->multicompany->enabled)) 
 {
   $sql .=" AND ff.entity = '".$conf->entity."'";
 }
 
+dol_syslog('/accountingex/supplier/index.php:: sql='.$sql);
 $resql = $db->query($sql);
 if ($resql)
 {
@@ -252,19 +256,19 @@ if ($resql)
       $row = $db->fetch_row($resql);
 
       print '<tr><td>'.$row[0].'</td>';
-	print '<td align="right">'.$row[1].'</td>';
-	print '<td align="right">'.$row[2].'</td>';
-	print '<td align="right">'.$row[3].'</td>';
-	print '<td align="right">'.$row[4].'</td>';
-	print '<td align="right">'.$row[5].'</td>';
-	print '<td align="right">'.$row[6].'</td>';
-	print '<td align="right">'.$row[7].'</td>';
-	print '<td align="right">'.$row[8].'</td>';
-	print '<td align="right">'.$row[9].'</td>';
-	print '<td align="right">'.$row[10].'</td>';
-	print '<td align="right">'.$row[11].'</td>';
-	print '<td align="right">'.$row[12].'</td>';
-	print '<td align="right"><b>'.$row[13].'</b></td>';
+	print '<td align="center">'.$row[1].'</td>';
+	print '<td align="center">'.price($row[2]).'</td>';
+	print '<td align="center">'.price($row[3]).'</td>';
+	print '<td align="center">'.price($row[4]).'</td>';
+	print '<td align="center">'.price($row[5]).'</td>';
+	print '<td align="center">'.price($row[6]).'</td>';
+	print '<td align="center">'.price($row[7]).'</td>';
+	print '<td align="center">'.price($row[8]).'</td>';
+	print '<td align="center">'.price($row[9]).'</td>';
+	print '<td align="center">'.price($row[10]).'</td>';
+	print '<td align="center">'.price($row[11]).'</td>';
+	print '<td align="center">'.price($row[12]).'</td>';
+	print '<td align="center"><b>'.price($row[13]).'</b></td>';
 	print '</tr>';
       $i++;
     }

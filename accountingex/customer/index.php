@@ -181,19 +181,19 @@ if ($resql)
 
 		print '<tr><td>'.$row[0].'</td>';
 		print '<td align="left">'.$row[1].'</td>';
-		print '<td align="right">'.$row[2].'</td>';
-		print '<td align="right">'.$row[3].'</td>';
-		print '<td align="right">'.$row[4].'</td>';
-		print '<td align="right">'.$row[5].'</td>';
-		print '<td align="right">'.$row[6].'</td>';
-		print '<td align="right">'.$row[7].'</td>';
-		print '<td align="right">'.$row[8].'</td>';
-		print '<td align="right">'.$row[9].'</td>';
-		print '<td align="right">'.$row[10].'</td>';
-		print '<td align="right">'.$row[11].'</td>';
-		print '<td align="right">'.$row[12].'</td>';
-		print '<td align="right">'.$row[13].'</td>';
-		print '<td align="right"><b>'.$row[14].'</b></td>';
+		print '<td align="right">'.price($row[2]).'</td>';
+		print '<td align="right">'.price($row[3]).'</td>';
+		print '<td align="right">'.price($row[4]).'</td>';
+		print '<td align="right">'.price($row[5]).'</td>';
+		print '<td align="right">'.price($row[6]).'</td>';
+		print '<td align="right">'.price($row[7]).'</td>';
+		print '<td align="right">'.price($row[8]).'</td>';
+		print '<td align="right">'.price($row[9]).'</td>';
+		print '<td align="right">'.price($row[10]).'</td>';
+		print '<td align="right">'.price($row[11]).'</td>';
+		print '<td align="right">'.price($row[12]).'</td>';
+		print '<td align="right">'.price($row[13]).'</td>';
+		print '<td align="right"><b>'.price($row[14]).'</b></td>';
 		print '</tr>';
       	$i++;
     }
@@ -247,6 +247,7 @@ if (! empty($conf->multicompany->enabled))
   $sql .=" AND f.entity = '".$conf->entity."'";
 }
 
+dol_syslog('accountingext/customer/index.php:: $sql='.$sql);
 $resql = $db->query($sql);
 if ($resql)
 {
@@ -258,19 +259,19 @@ if ($resql)
 		$row = $db->fetch_row($resql);
 
 		print '<tr><td>'.$row[0].'</td>';
-		print '<td align="right">'.$row[1].'</td>';
-		print '<td align="right">'.$row[2].'</td>';
-		print '<td align="right">'.$row[3].'</td>';
-		print '<td align="right">'.$row[4].'</td>';
-		print '<td align="right">'.$row[5].'</td>';
-		print '<td align="right">'.$row[6].'</td>';
-		print '<td align="right">'.$row[7].'</td>';
-		print '<td align="right">'.$row[8].'</td>';
-		print '<td align="right">'.$row[9].'</td>';
-		print '<td align="right">'.$row[10].'</td>';
-		print '<td align="right">'.$row[11].'</td>';
-		print '<td align="right">'.$row[12].'</td>';
-		print '<td align="right"><b>'.$row[13].'</b></td>';
+		print '<td align="right">'.price($row[1]).'</td>';
+		print '<td align="right">'.price($row[2]).'</td>';
+		print '<td align="right">'.price($row[3]).'</td>';
+		print '<td align="right">'.price($row[4]).'</td>';
+		print '<td align="right">'.price($row[5]).'</td>';
+		print '<td align="right">'.price($row[6]).'</td>';
+		print '<td align="right">'.price($row[7]).'</td>';
+		print '<td align="right">'.price($row[8]).'</td>';
+		print '<td align="right">'.price($row[9]).'</td>';
+		print '<td align="right">'.price($row[10]).'</td>';
+		print '<td align="right">'.price($row[11]).'</td>';
+		print '<td align="right">'.price($row[12]).'</td>';
+		print '<td align="right"><b>'.price($row[13]).'</b></td>';
 		print '</tr>';
       	$i++;
     }
@@ -326,6 +327,7 @@ if (! empty($conf->margin->enabled))
       $sql .=" AND f.entity = '".$conf->entity."'";
     }
     
+    dol_syslog('accountingext/customer/index.php:: $sql='.$sql);
     $resql = $db->query($sql);
     if ($resql)
     {
@@ -337,19 +339,19 @@ if (! empty($conf->margin->enabled))
     		$row = $db->fetch_row($resql);
     
     		print '<tr><td>'.$row[0].'</td>';
-    		print '<td align="right">'.$row[1].'</td>';
-    		print '<td align="right">'.$row[2].'</td>';
-    		print '<td align="right">'.$row[3].'</td>';
-    		print '<td align="right">'.$row[4].'</td>';
-    		print '<td align="right">'.$row[5].'</td>';
-    		print '<td align="right">'.$row[6].'</td>';
-    		print '<td align="right">'.$row[7].'</td>';
-    		print '<td align="right">'.$row[8].'</td>';
-    		print '<td align="right">'.$row[9].'</td>';
-    		print '<td align="right">'.$row[10].'</td>';
-    		print '<td align="right">'.$row[11].'</td>';
-    		print '<td align="right">'.$row[12].'</td>';
-    		print '<td align="right"><b>'.$row[13].'</b></td>';
+    		print '<td align="right">'.price($row[1]).'</td>';
+    		print '<td align="right">'.price($row[2]).'</td>';
+    		print '<td align="right">'.price($row[3]).'</td>';
+    		print '<td align="right">'.price($row[4]).'</td>';
+    		print '<td align="right">'.price($row[5]).'</td>';
+    		print '<td align="right">'.price($row[6]).'</td>';
+    		print '<td align="right">'.price($row[7]).'</td>';
+    		print '<td align="right">'.price($row[8]).'</td>';
+    		print '<td align="right">'.price($row[9]).'</td>';
+    		print '<td align="right">'.price($row[10]).'</td>';
+    		print '<td align="right">'.price($row[11]).'</td>';
+    		print '<td align="right">'.price($row[12]).'</td>';
+    		print '<td align="right"><b>'.price($row[13]).'</b></td>';
     		print '</tr>';
           	$i++;
         }
