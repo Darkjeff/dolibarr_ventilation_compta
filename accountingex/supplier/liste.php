@@ -77,7 +77,8 @@ if($_POST["action"] == 'ventil')
       $sql = " UPDATE ".MAIN_DB_PREFIX."facture_fourn_det";
       $sql .= " SET fk_code_ventilation = ".$monCompte;
       $sql .= " WHERE rowid = ".$monId;
-
+      
+      dol_syslog('accountingext/supplier/liste.php:: sql='.$sql);
       if($db->query($sql))
       {
             print '<div><font color="green">'.$langs->trans("Lineofinvoice").' '.$monId.' '.$langs->trans("VentilatedinAccount").' : '.$monCompte.'</font></div>';
@@ -109,6 +110,7 @@ $sqlCompte .= " WHERE a.fk_pcg_version = s.pcg_version AND s.rowid=".$conf->glob
 $sqlCompte .= " AND a.active = '1'";
 $sqlCompte .= " ORDER BY a.account_number ASC";
 
+dol_syslog('accountingext/supplier/liste.php:: $sqlCompte='.$sqlCompte);
 $resultCompte = $db->query($sqlCompte);
 $cgs = array();
 $cgn = array();
@@ -147,6 +149,7 @@ $sql.= " ORDER BY l.rowid";
 if ($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION_TODO > 0) { $sql.= " DESC "; }
 $sql.= $db->plimit($limit+1,$offset);
 
+dol_syslog('accountingext/supplier/liste.php:: $sql='.$sql);
 $result = $db->query($sql);
 if ($result)
 {
