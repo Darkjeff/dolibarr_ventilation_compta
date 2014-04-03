@@ -59,13 +59,11 @@ $textprevyear="<a href=\"listebyyear.php?year=" . ($year_current-1) . "\">".img_
 $textnextyear=" <a href=\"listebyyear.php?year=" . ($year_current+1) . "\">".img_next()."</a>";
 
 
-print_fiche_titre("Grand Livre $textprevyear ".$langs->trans("Year")." $year_start $textnextyear");
+print_fiche_titre($langs->trans("Bookkeeping")." $textprevyear ".$langs->trans("Year")." $year_start $textnextyear");
 
 
 /*
  * Mode Liste
- *
- *
  *
  */
 
@@ -94,6 +92,7 @@ if ($resql)
   print_liste_field_titre($langs->trans("Debit"));
   print_liste_field_titre($langs->trans("Credit"));
   print_liste_field_titre($langs->trans("Amount"));
+  print_liste_field_titre("&nbsp;");
   print "</tr>\n";
 
   $var=True;
@@ -104,19 +103,18 @@ if ($resql)
       $var=!$var;
 
       print "<tr $bc[$var]>";
-
-      print '<td><a href="./fiche.php?action=update&id='.$obj->rowid.'">';
-	    print img_edit();
-	    print '</a>&nbsp;'.$obj->doc_type.'</td>'."\n";
+      
+      print '<td>'.$obj->doc_type.'</td>'."\n";
 	    print '<td>'.dol_print_date($db->jdate($obj->doc_date)).'</td>';
       print '<td>'.$obj->doc_ref.'</td>';
       print '<td>'.length_accountg($obj->numero_compte).'</td>';
       print '<td>'.length_accounta($obj->code_tiers).'</td>';
       print '<td>'.$obj->label_compte.'</td>';
-      print '<td align="right">'.$obj->debit.'</td>';
-      print '<td align="right">'.$obj->credit.'</td>';
-      print '<td align="right">'.$obj->montant.'</td>';
-            
+      print '<td align="center">'.price($obj->debit).'</td>';
+      print '<td align="center">'.price($obj->credit).'</td>';
+      print '<td align="center">'.price($obj->montant).'</td>';
+      print '<td><a href="./fiche.php?action=update&id='.$obj->rowid.'">'.img_edit().'</a></td>';
+	                
       print "</tr>\n";
       $i++;
     }
