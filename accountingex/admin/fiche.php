@@ -52,11 +52,12 @@ $accounting = new AccountingAccount ( $db );
 // action
 if ($action == 'add') {
 
-$sql = 'SELECT pcg_version FROM ' . MAIN_DB_PREFIX . 'accounting_system WHERE rowid=' . $conf->global->CHARTOFACCOUNTS;
-		$result = $db->query ( $sql );
-		$obj = $db->fetch_object ( $result );
-		$cpt = 0;
-		
+  $sql = 'SELECT pcg_version FROM ' . MAIN_DB_PREFIX . 'accounting_system WHERE rowid=' . $conf->global->CHARTOFACCOUNTS;
+	
+  dol_syslog('accountingex/admin/fiche.php:: $sql='.$sql);
+  $result = $db->query ( $sql );
+	$obj = $db->fetch_object ( $result );
+			
 	$accounting->fk_pcg_version = $obj->pcg_version;
 	$accounting->pcg_type = GETPOST ( 'pcgType' );
 	$accounting->pcg_subtype = GETPOST ( 'pcgSubType' );
@@ -86,10 +87,10 @@ else if ($action == 'edit') {
 		$result = $accounting->fetch ( $id );
 		
 		$sql = 'SELECT pcg_version FROM ' . MAIN_DB_PREFIX . 'accounting_system WHERE rowid=' . $conf->global->CHARTOFACCOUNTS;
-		$result2 = $db->query ( $sql );
-		$obj = $db->fetch_object ( $result2 );
-		$cpt = 0;
 		
+    dol_syslog('accountingex/admin/fiche.php:: $sql='.$sql);
+    $result2 = $db->query ( $sql );
+		$obj = $db->fetch_object ( $result2 );
 		
 		$accounting->fk_pcg_version = $obj->pcg_version;
 		$accounting->pcg_type = GETPOST ( 'pcgType' );
@@ -275,15 +276,24 @@ else if ($id)
 			
 			print '<tr><td width="25%">' . $langs->trans ( "AccountNumber" ) . '</td>';
 			print '<td>' . $accounting->account_number . '</td></tr>';
+      
 			print '<tr><td>' . $langs->trans ( "Label" ) . '</td>';
 			print '<td>' . $accounting->label . '</td></tr>';
+      
+      $accp = new AccountingAccount($db);
+			if ($accounting->account_parent) {
+				$accp->fetch($accounting->account_parent);
+			}
 			print '<tr><td>' . $langs->trans ( "Accountparent" ) . '</td>';
-			print '<td>' . $accounting->account_parent . '</td></tr>';
-			print '<tr><td>' . $langs->trans ( "Pcgtype" ) . '</td>';
+			print '<td>'.$accp->account_number.' - '.$accp->label.'</td></tr>';
+			
+      print '<tr><td>' . $langs->trans ( "Pcgtype" ) . '</td>';
 			print '<td>' . $accounting->pcg_type . '</td></tr>';
-			print '<tr><td>' . $langs->trans ( "Pcgsubtype" ) . '</td>';
+			
+      print '<tr><td>' . $langs->trans ( "Pcgsubtype" ) . '</td>';
 			print '<td>' . $accounting->pcg_subtype . '</td></tr>';
-			print '<tr><td>' . $langs->trans ( "Active" ) . '</td>';
+			
+      print '<tr><td>' . $langs->trans ( "Active" ) . '</td>';
 			print '<td>';
 			
 			if (empty ( $accounting->active )) 
