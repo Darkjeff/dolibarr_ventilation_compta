@@ -127,6 +127,8 @@ ErrorDebitCredit=Debit et Credit ne peuvent avoir une valeur en même temps
 ReportThirdParty=Liste compte tiers
 DescThirdPartyReport=Consultez ici la liste des tiers clients et fournisseurs et leurs codes comptables
 
+ListAccounts=Liste des comptes comptables
+
 Pcgversion=Version du plan
 Pcgtype=Classe de compte
 Pcgsubtype=Sous classe de compte
