@@ -100,9 +100,17 @@ llxHeader ( '',$langs->trans("CustomersVentilation").' - '.$langs->trans("Dispat
 *
 */
 $page = GETPOST ( "page" );
-if ($page < 0)
-	$page = 0;
-$limit = $conf->global->ACCOUNTINGEX_LIMIT_LIST_VENTILATION;
+if ($page < 0) $page = 0;
+
+if (! empty($conf->global->ACCOUNTINGEX_LIMIT_LIST_VENTILATION)) 
+{ 
+  $limit = $conf->global->ACCOUNTINGEX_LIMIT_LIST_VENTILATION; 
+} 
+else 
+{ 
+  $limit == 10;
+}
+
 $offset = $limit * $page;
 
 $sql = "SELECT l.rowid , f.facnumber, f.rowid as facid, l.fk_product, l.description, l.total_ht, l.qty, l.tva_tx, l.fk_code_ventilation, aa.label, aa.account_number,";
@@ -151,7 +159,7 @@ if ($result) {
 	
 	// print '<a class="butAction" href="' . $_SERVER ['PHP_SELF'] . '?action=changeaccount">' . $langs->trans ( "ChangeAccount" ) . '</a>';
 	print '<div class="inline-block divButAction"><input type="submit" class="butAction" value="' . $langs->trans ( "ChangeAccount" ) . '"/></div>';
-	print $formventilation->select_account_parent ( GETPOST ( 'account_parent' ), 'account_parent', 1 );
+	print $formventilation->select_account( GETPOST ( 'account_parent' ), 'account_parent', 1 );
 	
 	print '<tr class="liste_titre"><td>' . $langs->trans ( "Invoice" ) . '</td>';
 	print '<td>' . $langs->trans ( "Ref" ) . '</td>';
