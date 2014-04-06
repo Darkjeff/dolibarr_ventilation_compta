@@ -456,7 +456,8 @@ if (GETPOST ( 'action' ) == 'export_csv')
     }  
 } else {
 	
-	
+	$form = new Form ( $db );
+  
 	llxHeader('',$langs->trans("BankJournal"));
   
   $nom = $langs->trans("BankJournal");
