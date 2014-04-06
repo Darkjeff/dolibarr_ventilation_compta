@@ -118,7 +118,7 @@ class FormVentilation extends Form {
 					$obj = $this->db->fetch_object ( $resql );
 					$label = $obj->account_number.'-'.$obj->label;
 	
-					if (($selectid != '') && $selectid == $obj->account_number) {
+					if (($selectid != '') && $selectid == $obj->rowid) {
 						$out .= '<option value="' . $obj->rowid . '" selected="selected">' . $label . '</option>';
 					} else {
 						$out .= '<option value="' . $obj->rowid . '">' . $label . '</option>';
