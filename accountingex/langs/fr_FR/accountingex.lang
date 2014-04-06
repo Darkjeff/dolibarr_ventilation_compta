@@ -70,7 +70,7 @@ NotVentilatedinAccount=Non ventilée dans le compte comptable
 
 ACCOUNTINGEX_SEPARATORCSV=Séparateur CSV
 
-ACCOUNTINGEX_LIMIT_LIST_VENTILATION=Nombre d'éléments à ventiler affichés par page
+ACCOUNTINGEX_LIMIT_LIST_VENTILATION=Nombre d'éléments à ventiler affichés par page (maximum conseillé : 50)
 ACCOUNTINGEX_LIST_SORT_VENTILATION_TODO=Commencer le tri des pages de ventilation "A ventiler" par les éléments les plus récents
 ACCOUNTINGEX_LIST_SORT_VENTILATION_DONE=Commencer le tri des pages de ventilation "Ventilées" par les éléments les plus récents
 
