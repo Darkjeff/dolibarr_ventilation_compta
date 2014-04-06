@@ -456,11 +456,41 @@ if (GETPOST ( 'action' ) == 'export_csv')
     }  
 } else {
 	
-	$form = new Form ( $db );
 	
-	llxHeader ( '', $langs->trans ( "BankJournal" ), '' );
+	llxHeader('',$langs->trans("BankJournal"));
+  
+  $form = new Form ( $db );
 	
-	$nom = $langs->trans ( "BankJournal" );
+  print '<form action="'.$_SERVER["PHP_SELF"].'" method="POST">';
+  print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'" />';
+  print '<input type="hidden" name="action" value="setbankaccount">';
+  print '<table class="noborder" width="100%">';
+  $var=True;
+
+  print '<tr class="liste_titre">';
+  print '<td colspan="3">';
+  print $langs->trans("SelectBankAccount").'</td>';
+  $var=!$var;
+  print '<tr '.$bc[$var].'>';
+  print "<td>".$langs->trans("SelectBankAccount")."</td>";
+  print "<td>";
+  if (! empty($conf->banque->enabled))
+  {
+    $form->select_comptes(empty($_POST['accountid'])?'':$_POST['accountid'],'accountid',0,'',2);
+    print '<td><input type="submit" class="button" value="'.$langs->trans("Select").'"></td>';
+  }
+  else
+  {
+    print '<tr><td colspan="2">&nbsp;</td></tr>';
+  }
+  
+  print "</td></tr>";
+  print "</table>";
+  print "</form>";
+
+  print "<br>\n";
+	
+  $nom = $langs->trans("BankJournal");
 	$nomlink = '';
 	$periodlink = '';
 	$exportlink = '';
