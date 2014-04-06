@@ -153,7 +153,7 @@ if ($action == 'create') {
 	print '<td><input name="label" size="70" value="' . $accounting->label . '"</td></tr>';
 	print '<tr><td>' . $langs->trans ( "Accountparent" ) . '</td>';
 	print '<td>';
-	print $htmlacc->select_account_parent ( $accounting->account_parent, 'account_parent' );
+	print $htmlacc->select_account($accounting->account_parent, 'account_parent');
 	print '</td></tr>';
 	print '<tr><td>' . $langs->trans ( "Pcgtype" ) . '</td>';
 	print '<td>';
@@ -208,7 +208,7 @@ else if ($id)
 			print '<td><input name="label" size="70" value="' . $accounting->label . '"</td></tr>';
 			print '<tr><td>' . $langs->trans ( "Accountparent" ) . '</td>';
 			print '<td>';
-			print $htmlacc->select_account_parent ( $accounting->account_parent, 'account_parent' );
+			print $htmlacc->select_account($accounting->account_parent, 'account_parent');
 			print '</td></tr>';
 			print '<tr><td>' . $langs->trans ( "Pcgtype" ) . '</td>';
 			print '<td>';
@@ -247,7 +247,7 @@ else if ($id)
       
       $accp = new AccountingAccount($db);
 			if ($accounting->account_parent) {
-				$accp->fetch($accounting->account_parent);
+				$accp->fetch('',$accounting->account_parent);
 			}
 			print '<tr><td>'.$langs->trans("Accountparent").'</td>';
 			print '<td colspan="2">'.$accp->account_number.' - '.$accp->label.'</td></tr>';
