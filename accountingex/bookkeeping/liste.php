@@ -205,9 +205,9 @@ llxHeader ( '', $langs->trans("Accounting").' - '.$langs->trans("Bookkeeping") )
 			print '<td>' . length_accountg($obj->numero_compte) . '</td>';
 			print '<td>' . length_accounta($obj->code_tiers) . '</td>';
 			print '<td>' . $obj->label_compte . '</td>';
-			print '<td>' . $obj->debit . '</td>';
-			print '<td>' . $obj->credit . '</td>';
-			print '<td>' . $obj->montant . '</td>';
+			print '<td>' . price($obj->debit) . '</td>';
+			print '<td>' . price($obj->credit) . '</td>';
+			print '<td>' . price($obj->montant) . '</td>';
 			print '<td>' . $obj->sens . '</td>';
 			print '<td>' . $obj->code_journal . '</td>';
 			print "</tr>\n";
