@@ -170,7 +170,7 @@ if ($result)
 
 		//Colonne choix du compte
   print '<td>';
-	print $htmlacc->select_account_parent($accounting->account_parent, 'AccountParent');
+	print $htmlacc->select_account($accounting->account_parent, 'AccountParent');
 	print '</td>';
 		
 		print '<td>';

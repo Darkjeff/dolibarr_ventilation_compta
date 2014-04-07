@@ -139,79 +139,9 @@ if ($resql)
 	print $db->lasterror(); // affiche la derniere erreur sql
 }
 
-
 print "</table>\n";
-
-print '</td><td valign="top" width="70%" class="notopnoleftnoright">';
-
-print '</td><td valign="top" width="70%" class="notopnoleftnoright"></td>';
-
-print '</tr><tr><td colspan=2>';
-
-print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre"><td width=150>'.$langs->trans("Total").'</td><td align="center">'.$langs->trans("JanuaryMin").'</td><td align="center">'.$langs->trans("FebruaryMin").'</td><td align="center">'.$langs->trans("MarchMin").'</td><td align="center">'.$langs->trans("AprilMin").'</td><td align="center">'.$langs->trans("MayMin").'</td><td align="center">'.$langs->trans("JuneMin").'</td><td align="center">'.$langs->trans("JulyMin").'</td><td align="center">'.$langs->trans("AugustMin").'</td><td align="center">'.$langs->trans("SeptemberMin").'</td><td align="center">'.$langs->trans("OctoberMin").'</td><td align="center">'.$langs->trans("NovemberMin").'</td><td align="center">'.$langs->trans("DecemberMin").'</td><td align="center"><b>Total</b></td></tr>';
-
-$sql = "SELECT 'Total chiffre affaires HT' AS 'Total',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=1,fd.total_ht,0)),2) AS 'Janvier',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=2,fd.total_ht,0)),2) AS 'Fevrier',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=3,fd.total_ht,0)),2) AS 'Mars',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=4,fd.total_ht,0)),2) AS 'Avril',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=5,fd.total_ht,0)),2) AS 'Mai',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=6,fd.total_ht,0)),2) AS 'Juin',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=7,fd.total_ht,0)),2) AS 'Juillet',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=8,fd.total_ht,0)),2) AS 'Aout',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=9,fd.total_ht,0)),2) AS 'Septembre',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=10,fd.total_ht,0)),2) AS 'Octobre',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=11,fd.total_ht,0)),2) AS 'Novembre',";
-$sql .= "  ROUND(SUM(IF(MONTH(f.datef)=12,fd.total_ht,0)),2) AS 'Decembre',";
-$sql .= "  ROUND(SUM(fd.total_ht),2) as 'Total'";
-$sql .= " FROM llx_facturedet as fd";
-$sql .= "  LEFT JOIN ".MAIN_DB_PREFIX."facture as f ON f.rowid = fd.fk_facture";
-$sql .= " WHERE f.datef >= '".$db->idate(dol_get_first_day($y,1,false))."'";
-$sql .= "  AND f.datef <= '".$db->idate(dol_get_last_day($y,12,false))."'";
-
-
-$resql = $db->query($sql);
-if ($resql)
-{
-  $i = 0;
-  $num = $db->num_rows($resql);
-
-  while ($i < $num)
-    {
-
-      $row = $db->fetch_row($resql);
-
-      print '<tr><td width="14%">'.length_accountg($row[0]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[1]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[2]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[3]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[4]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[5]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[6]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[7]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[8]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[9]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[10]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[11]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[12]).'</td>';
-	    print '<td align="right" width="8%"><b>'.price($row[13]).'</b></td>';
-	    print '</tr>';
-      
-      $i++;
-    }
-  $db->free($resql);
-}else {
-	print $db->lasterror(); // affiche la derniere erreur sql
-}
-
-print "</table>\n";
-
-
-print '</td></tr></table>';
 
 $db->close();
-
 
 llxFooter();
 

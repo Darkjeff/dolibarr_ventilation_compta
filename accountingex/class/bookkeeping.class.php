@@ -2,6 +2,7 @@
 /* Copyright (C) 2004-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
  * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com>
+ * Copyright (C) 2013-2014 Florian Henry	      <florian.henry@open-concept.pro> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +34,7 @@ class BookKeeping {
 	var $doc_date;
 	var $doc_type;
 	var $doc_ref;
-	var $date_create;
+  var $date_create;
 	var $fk_doc;
 	var $fk_docdet;
 	var $code_tiers;
@@ -252,8 +253,8 @@ class BookKeeping {
 				
 				$now = dol_now ();
 				if (empty($this->date_create)) $this->date_create=$now();
-				
-				$sql = "INSERT INTO " . MAIN_DB_PREFIX . "bookkeeping (doc_date, ";
+  				
+ 				$sql = "INSERT INTO " . MAIN_DB_PREFIX . "bookkeeping (doc_date, ";
 				$sql .= "doc_type, doc_ref,fk_doc,fk_docdet,code_tiers,numero_compte,label_compte,";
 				$sql .= "debit,credit,montant,sens,fk_user_author,import_key,code_journal,piece_num)";
 				$sql .= " VALUES ('" . $this->doc_date . "','" . $this->doc_type . "','" . $this->doc_ref . "'," . $this->fk_doc . "," ;

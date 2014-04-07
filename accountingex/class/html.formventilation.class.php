@@ -36,14 +36,11 @@ class FormVentilation extends Form {
 	}
 	
 	/**
-	 *	Return select filer with date of transaction
+	 *	Return select filter with date of transaction
 	 *
 	 *  @param	string	$htmlname 		name of input
 	 *  @param	string	$selectedkey	selected default value
-	 *  @param	int		$custid 		customerid
-	 *  @param	int 	$shopid 		shopid
-	 *  @param	string 	$type 			'histoshop' or 'histocust' or ''
-	 *	@return	string					HTML select input
+	 *  @return	string					HTML select input
 	 */
 	function select_bookkeeping_importkey ($htmlname='importkey',$selectedkey) {
 	
@@ -89,7 +86,16 @@ class FormVentilation extends Form {
 		return $out;
 	}
 	
-	function select_account_parent($selectid, $htmlname = 'account_parent', $showempty = 0, $event = array()) {
+   /**
+    *    Return list of the accounts with label
+    *
+    *    @param	string	$selectedid   Preselected pcg_type
+    *    @param string	$htmlname	    Name of combo list
+    *    @param  int		$showempty    1=Add en empty line
+    *              
+    *    @return	string					String with HTML select
+    */
+	  function select_account($selectid, $htmlname = 'account', $showempty = 0, $event = array()) {
 		global $conf, $user, $langs;
 	
 		$out = '';
@@ -106,22 +112,21 @@ class FormVentilation extends Form {
 		if ($resql) {
 	
 			$out .= ajax_combobox ( $htmlname, $event );
-	
-	
-			$out .= '<select id="' . $htmlname . '" class="flat" name="' . $htmlname . '">';
+	    $out .= '<select id="' . $htmlname . '" class="flat" name="' . $htmlname . '">';
 			if ($showempty)
 				$out .= '<option value="-1"></option>';
 			$num = $this->db->num_rows ( $resql );
+      
 			$i = 0;
 			if ($num) {
 				while ( $i < $num ) {
 					$obj = $this->db->fetch_object ( $resql );
-					$label = $obj->account_number.'-'.$obj->label;
+					$label = $obj->account_number.' - '.$obj->label;
 	
 					if (($selectid != '') && $selectid == $obj->account_number) {
-						$out .= '<option value="' . $obj->rowid . '" selected="selected">' . $label . '</option>';
+						$out .= '<option value="' . $obj->account_number . '" selected="selected">' . $label . '</option>';
 					} else {
-						$out .= '<option value="' . $obj->rowid . '">' . $label . '</option>';
+						$out .= '<option value="' . $obj->account_number . '">' . $label . '</option>';
 					}
 					$i ++;
 				}
@@ -134,7 +139,15 @@ class FormVentilation extends Form {
 		return $out;
 	}
 
-	
+   /**
+    *    Return list of pcg with label
+    *
+    *    @param	string	$selectedid   Preselected pcg_type
+    *    @param string	$htmlname	    Name of combo list
+    *    @param  int		$showempty    1=Add en empty line
+    *              
+    *    @return	string					String with HTML select
+    */	
 		function select_pcgtype($selectid, $htmlname = 'pcg_type', $showempty = 0, $event = array()) {
 		global $conf, $user, $langs;
 	
@@ -177,7 +190,16 @@ class FormVentilation extends Form {
 		return $out;
 	}
 	
-	function select_pcgsubtype($selectid, $htmlname = 'pcg_subtype', $showempty = 0, $event = array()) {
+  /**
+    *    Return subtype list of pcg with label
+    *
+    *    @param	string	$selectedid   Preselected pcg_type
+    *    @param string	$htmlname	    Name of combo list
+    *    @param  int		$showempty    1=Add en empty line
+    *              
+    *    @return	string					String with HTML select
+    */
+	  function select_pcgsubtype($selectid, $htmlname = 'pcg_subtype', $showempty = 0, $event = array()) {
 		global $conf, $user, $langs;
 	
 		$out = '';
