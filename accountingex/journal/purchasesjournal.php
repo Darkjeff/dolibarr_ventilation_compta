@@ -160,6 +160,8 @@ else {
 // Bookkeeping Write
 if (GETPOST('action') == 'writebookkeeping')
 {
+  $now=dol_now();
+  
 	foreach ($tabfac as $key => $val)
 	{
 		foreach ($tabttc[$key] as $k => $mt)
@@ -169,6 +171,7 @@ if (GETPOST('action') == 'writebookkeeping')
 			    $bookkeeping = new BookKeeping($db);
 			    $bookkeeping->doc_date = $val["date"];
 			    $bookkeeping->doc_ref = $val["ref"];
+          $bookkeeping->date_create = $now;
 			    $bookkeeping->doc_type = 'supplier_invoice';
 			    $bookkeeping->fk_doc = $key;
 			    $bookkeeping->fk_docdet = $val["fk_facturefourndet"];
@@ -196,6 +199,7 @@ if (GETPOST('action') == 'writebookkeeping')
 				    $bookkeeping = new BookKeeping($db);
 				    $bookkeeping->doc_date = $val["date"];
 				    $bookkeeping->doc_ref = $val["ref"];
+            $bookkeeping->date_create = $now;
 				    $bookkeeping->doc_type = 'supplier_invoice';
 				    $bookkeeping->fk_doc = $key;
 				    $bookkeeping->fk_docdet = $val["fk_facturefourndet"];
@@ -225,6 +229,7 @@ if (GETPOST('action') == 'writebookkeeping')
 				    $bookkeeping = new BookKeeping($db);
 				    $bookkeeping->doc_date = $val["date"];
 				    $bookkeeping->doc_ref = $val["ref"];
+            $bookkeeping->date_create = $now;
 				    $bookkeeping->doc_type = 'supplier_invoice';
 				    $bookkeeping->fk_doc = $key;
 				    $bookkeeping->fk_docdet = $val["fk_facturefourndet"];
@@ -258,7 +263,7 @@ if (GETPOST('action') == 'export_csv')
   	{
   	  $date = dol_print_date($db->jdate($val["date"]),'%d%m%Y');
   		
-      // product
+      // Product / Service
   		foreach ($tabht[$key] as $k => $mt)
   		{
         $companystatic->id=$tabcompany[$key]['id'];
@@ -279,7 +284,7 @@ if (GETPOST('action') == 'export_csv')
   			}
   		}
   		
-      // vat
+      // VAT
   		//var_dump($tabtva);
   		foreach ($tabtva[$key] as $k => $mt)
   		{
