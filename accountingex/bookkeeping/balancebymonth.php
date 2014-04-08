@@ -117,19 +117,19 @@ if ($resql)
       $row = $db->fetch_row($resql);
 
       print '<tr><td width="14%">'.length_accountg($row[0]).'</td>';
-	    print '<td align="right" width="6.5%">'.$row[1].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[2].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[3].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[4].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[5].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[6].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[7].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[8].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[9].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[10].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[11].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[12].'</td>';
-	    print '<td align="right" width="8%"><b>'.$row[13].'</b></td>';
+	    print '<td align="right" width="6.5%">'.price($row[1]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[2]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[3]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[4]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[5]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[6]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[7]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[8]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[9]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[10]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[11]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[12]).'</td>';
+	    print '<td align="right" width="8%"><b>'.price($row[13]).'</b></td>';
 	    print '</tr>';
       
       $i++;
@@ -183,19 +183,19 @@ if ($resql)
       $row = $db->fetch_row($resql);
 
       print '<tr><td width="14%">'.length_accountg($row[0]).'</td>';
-	    print '<td align="right" width="6.5%">'.$row[1].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[2].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[3].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[4].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[5].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[6].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[7].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[8].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[9].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[10].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[11].'</td>';
-	    print '<td align="right" width="6.5%">'.$row[12].'</td>';
-	    print '<td align="right" width="8%"><b>'.$row[13].'</b></td>';
+	    print '<td align="right" width="6.5%">'.price($row[1]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[2]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[3]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[4]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[5]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[6]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[7]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[8]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[9]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[10]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[11]).'</td>';
+	    print '<td align="right" width="6.5%">'.price($row[12]).'</td>';
+	    print '<td align="right" width="8%"><b>'.price($row[13]).'</b></td>';
 	    print '</tr>';
       
       $i++;

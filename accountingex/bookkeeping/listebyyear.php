@@ -113,9 +113,9 @@ if ($resql)
       print '<td>'.length_accountg($obj->numero_compte).'</td>';
       print '<td>'.length_accounta($obj->code_tiers).'</td>';
       print '<td>'.$obj->label_compte.'</td>';
-      print '<td align="right">'.$obj->debit.'</td>';
-      print '<td align="right">'.$obj->credit.'</td>';
-      print '<td align="right">'.$obj->montant.'</td>';
+      print '<td align="right">'.price($obj->debit).'</td>';
+      print '<td align="right">'.price($obj->credit).'</td>';
+      print '<td align="right">'.price($obj->montant).'</td>';
             
       print "</tr>\n";
       $i++;
