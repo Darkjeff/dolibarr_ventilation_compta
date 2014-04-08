@@ -74,8 +74,6 @@ if (!$user->rights->accountingex->access) accessforbidden();
  * View
  */
 
-
-
 $year_current = strftime("%Y",dol_now());
 $pastmonth = strftime("%m",dol_now()) - 1;
 $pastmonthyear = $year_current;
@@ -266,7 +264,7 @@ if (GETPOST('action') == 'export_csv')
   	
     $companystatic=new Client($db);
     
-    if ($conf->global->ACCOUNTINGEX_MODELCSV == 1) // Modèle Cegid Expert
+    if ($conf->global->ACCOUNTINGEX_MODELCSV == 1) // Modèle Export Cegid Expert
     {
       foreach ($tabfac as $key => $val)
     	{
@@ -323,7 +321,7 @@ if (GETPOST('action') == 'export_csv')
     		}
   	  }
     }
-    else
+    else // Modèle Export Classique
     {
       foreach ($tabfac as $key => $val)
     	{

@@ -374,7 +374,7 @@ if (GETPOST ( 'action' ) == 'export_csv')
 	  
     $companystatic=new Client($db);
     
-    if ($conf->global->ACCOUNTINGEX_MODELCSV == 1) // Modèle Cegid Expert
+    if ($conf->global->ACCOUNTINGEX_MODELCSV == 1) // Modèle Export Cegid Expert
     {
       foreach ( $tabpay as $key => $val )
       {
@@ -383,7 +383,7 @@ if (GETPOST ( 'action' ) == 'export_csv')
         $companystatic->id=$tabcompany[$key]['id'];
 	      $companystatic->name=$tabcompany[$key]['name'];
       
-        // bank
+        // Bank
   		  print $date.$sep;
   		  print $conf->global->ACCOUNTINGEX_BANK_JOURNAL.$sep;
         foreach ( $tabbq [$key] as $k => $mt ) 
@@ -397,7 +397,7 @@ if (GETPOST ( 'action' ) == 'export_csv')
   		  }
   		  print "\n";
   		
-        // third party
+        // Third party
   		  foreach ( $tabtp [$key] as $k => $mt ) 
         {
   			   if ($mt)
@@ -421,7 +421,7 @@ if (GETPOST ( 'action' ) == 'export_csv')
   		  }
   	  }
     }
-    else
+    else // Modèle Export Classique
     {
       foreach ( $tabpay as $key => $val )
       {
@@ -433,14 +433,17 @@ if (GETPOST ( 'action' ) == 'export_csv')
         print '"' . $date . '"'.$sep;
   		  print '"' . $val ["ref"] . '"'.$sep;
   		
-  		  // bank
+  		  // Bank
   		  foreach ( $tabbq [$key] as $k => $mt ) 
         {
-  			   print '"' . length_accountg(html_entity_decode ( $k )) . '"'.$sep.'"' . $langs->trans ( "Bank" ) . '"'.$sep.'"' . ($mt >= 0 ? price ( $mt ) : '') . '"'.$sep.'"' . ($mt < 0 ? price ( - $mt ) : '') . '"';
+  			   print '"' . length_accountg(html_entity_decode ( $k )) . '"'.$sep;
+           print '"' . $langs->trans ( "Bank" ) . '"'.$sep;
+           print '"' . ($mt >= 0 ? price ( $mt ) : '') . '"'.$sep;
+           print '"' . ($mt < 0 ? price ( - $mt ) : '') . '"';
   		  }
   		  print "\n";
   		
-        // third party
+        // Third party
   		  foreach ( $tabtp [$key] as $k => $mt ) 
         {
   			   if ($mt)
@@ -448,7 +451,10 @@ if (GETPOST ( 'action' ) == 'export_csv')
   				    print '"' . $date . '"'.$sep;
   				    print '"' . $val ["ref"] . '"'.$sep;
               
-  				    print '"' . length_accounta(html_entity_decode ( $k )) . '"'.$sep.'"' . $companystatic->name . '"'.$sep.'"' . ($mt < 0 ? price ( - $mt ) : '') . '"'.$sep.'"' . ($mt >= 0 ? price ( $mt ) : '') . '"';
+  				    print '"' . length_accounta(html_entity_decode ( $k )) . '"'.$sep;
+              print '"' . $companystatic->name . '"'.$sep;
+              print '"' . ($mt < 0 ? price ( - $mt ) : '') . '"'.$sep;
+              print '"' . ($mt >= 0 ? price ( $mt ) : '') . '"';
   				    print "\n";
   			   }
   		  }
@@ -527,7 +533,7 @@ if (GETPOST ( 'action' ) == 'export_csv')
 			}
 		}
 		
-		// third party
+		// Third party
 		foreach ( $tabtp[$key] as $k => $mt ) {
 			if ($k!='type') {
 				print "<tr ".$bc[$var].">";

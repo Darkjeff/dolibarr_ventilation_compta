@@ -257,7 +257,7 @@ if (GETPOST('action') == 'export_csv')
   header('Content-Type: text/csv');
   header('Content-Disposition: attachment;filename=journal_achats.csv');
 	
-  if ($conf->global->ACCOUNTINGEX_MODELCSV == 1) // Modèle Cegid Expert
+  if ($conf->global->ACCOUNTINGEX_MODELCSV == 1) // Modèle Export Cegid Expert
   {
     foreach ($tabfac as $key => $val)
   	{
@@ -315,7 +315,7 @@ if (GETPOST('action') == 'export_csv')
   		print "\n";
   	}
   }
-  else
+  else // Modèle Export Classique
   {
     foreach ($tabfac as $key => $val)
   	{
@@ -325,21 +325,21 @@ if (GETPOST('action') == 'export_csv')
 	    $companystatic->name=$tabcompany[$key]['name'];
 	    $companystatic->client=$tabcompany[$key]['code_client'];
       
-      // product
+      // Product / Service
   		foreach ($tabht[$key] as $k => $mt)
   		{
   			if ($mt)
   			{
   				print '"'.$date.'"'.$sep;
   				print '"'.$val["ref"].'"'.$sep;
-  				print '"'.html_entity_decode($k).'"'.$sep;
+  				print '"'.length_accountg(html_entity_decode($k)).'"'.$sep;
           print '"'.dol_trunc($val["description"],32).'"'.$sep;
           print '"'.($mt >= 0? price($mt):'').'"'.$sep;
           print '"'.($mt < 0? price(-$mt):'').'"';
   				print "\n";
   			}
   		}
-  		// vat
+  		// VAT
   		//var_dump($tabtva);
   		foreach ($tabtva[$key] as $k => $mt)
   		{
@@ -347,7 +347,7 @@ if (GETPOST('action') == 'export_csv')
   		    {
   				print '"'.$date.'"'.$sep;
   				print '"'.$val["ref"].'"'.$sep;
-  				print '"'.html_entity_decode($k).'"'.$sep;
+  				print '"'.length_accountg(html_entity_decode($k)).'"'.$sep;
           print '"'.$langs->trans("VAT").'"'.$sep;
           print '"'.($mt >= 0? price($mt):'').'"'.$sep;
           print '"'.($mt <0? price(-$mt):'').'"';
@@ -358,7 +358,7 @@ if (GETPOST('action') == 'export_csv')
   		print '"'.$val["ref"].'"'.$sep;
   		foreach ($tabttc[$key] as $k => $mt)
   		{
-  			print '"'.html_entity_decode($k).'"'.$sep;
+  			print '"'.length_accountga(html_entity_decode($k)).'"'.$sep;
         print '"'.utf8_decode($companystatic->name).'"'.$sep;
         print '"'.($mt<0?price(-$mt):'').'"'.$sep;
         print '"'.($mt>=0?price($mt):'').'"';
