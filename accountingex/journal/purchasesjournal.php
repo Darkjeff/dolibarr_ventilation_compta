@@ -354,11 +354,13 @@ if (GETPOST('action') == 'export_csv')
   				print "\n";
   			}
   		}
+      
+      // Third party
   		print '"'.$date.'"'.$sep;
   		print '"'.$val["ref"].'"'.$sep;
   		foreach ($tabttc[$key] as $k => $mt)
   		{
-  			print '"'.length_accountga(html_entity_decode($k)).'"'.$sep;
+  			print '"'.length_accounta(html_entity_decode($k)).'"'.$sep;
         print '"'.utf8_decode($companystatic->name).'"'.$sep;
         print '"'.($mt<0?price(-$mt):'').'"'.$sep;
         print '"'.($mt>=0?price($mt):'').'"';
@@ -484,11 +486,11 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
     	  $companystatic->name=$tabcompany[$key]['name'];
     	  
 		    print "<td>".length_accounta($k);
-		    print "</td><td>".$langs->trans("ThirdParty");
-		    print ' ('.$companystatic->getNomUrl(0,'supplier',16).')';
-	      print "</td>";
-		    print '<td align="right">'.($mt<0?-price(-$mt):'')."</td>";
-		    print '<td align="right">'.($mt>=0?price($mt):'')."</td>";
+        print "</td><td>".$langs->trans("ThirdParty");
+        print ' ('.$companystatic->getNomUrl(0,'supplier',16).')';
+        print "</td>";
+        print '<td align="right">'.($mt<0?-price(-$mt):'')."</td>";
+        print '<td align="right">'.($mt>=0?price($mt):'')."</td>";
 		}
 		print "</tr>";
 
