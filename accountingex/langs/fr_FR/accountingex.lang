@@ -16,6 +16,7 @@ ConfigAccountingExpert=Configuration du module comptabilité expert
 Journaux=Journaux
 Exports=Exports
 About=A propos
+Authors=Auteurs
 Modelcsv=Modèle d'export
 Selectmodelcsv=Sélectionnez un modèle d'export
 Modelcsv_normal=Export classique
