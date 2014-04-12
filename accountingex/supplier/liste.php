@@ -139,16 +139,15 @@ if ($page < 0) $page = 0;
 
 if (! empty($conf->global->ACCOUNTINGEX_LIMIT_LIST_VENTILATION)) 
 { 
-  $limit = $conf->global->ACCOUNTINGEX_LIMIT_LIST_VENTILATION; 
+	$limit = $conf->global->ACCOUNTINGEX_LIMIT_LIST_VENTILATION; 
 }
-else if ($conf->global->ACCOUNTINGEX_LIMIT_LIST_VENTILATION < 10) 
+else if ($conf->global->ACCOUNTINGEX_LIMIT_LIST_VENTILATION <= 0)
 {
-  $limit == 10;
-
-} 
+	$limit = $conf->liste_limit;
+}
 else 
 { 
-  $limit == 10;
+	$limit = $conf->liste_limit;
 }
 
 $offset = $limit * $page ;
