@@ -2,7 +2,7 @@
 /* Copyright (C) 2004-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2005      Laurent Destailleur  <eldy@users.sourceforge.net>
  * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013-2014 Florian Henry	      <florian.henry@open-concept.pro>
+ * Copyright (C) 2013-2014 Florian Henry		<florian.henry@open-concept.pro>
  * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
  *
  * This program is free software; you can redistribute it and/or modify
@@ -100,12 +100,9 @@ llxHeader ( '', $langs->trans("Accounting").' - '.$langs->trans("Bookkeeping") )
 /*
  * Mode Liste
  *
- *
- *
  */
 	
 	$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal , bk.piece_num ";
-	
 	$sql .= " FROM " . MAIN_DB_PREFIX . "bookkeeping as bk";
 	
 	if (dol_strlen ( trim ( GETPOST ( "search_doc_type" ) ) )) {
@@ -121,10 +118,12 @@ llxHeader ( '', $langs->trans("Accounting").' - '.$langs->trans("Bookkeeping") )
 	}
 	if (dol_strlen ( trim ( GETPOST ( "search_compte" ) ) )) {
 		$sql .= " WHERE bk.numero_compte LIKE '%" . GETPOST ( "search_compte" ) . "%'";
-	}
-	
+	}	
 	if (dol_strlen ( trim ( GETPOST ( "search_tiers" ) ) )) {
 		$sql .= " WHERE bk.code_tiers LIKE '%" . GETPOST ( "search_tiers" ) . "%'";
+	}
+	if (dol_strlen ( trim ( GETPOST ( "search_journal" ) ) )) {
+		$sql .= " WHERE bk.code_journal LIKE '%" . GETPOST ( "search_journal" ) . "%'";
 	}
 	
 	$sql .= " ORDER BY $sortfield $sortorder " . $db->plimit ( $conf->liste_limit + 1, $offset );
@@ -169,13 +168,14 @@ llxHeader ( '', $langs->trans("Accounting").' - '.$langs->trans("Bookkeeping") )
 		print_liste_field_titre ( $langs->trans ( "Amount" ), $_SERVER ['PHP_SELF'], "bk.montant","","","",$sortfield,$sortorder);
 		print_liste_field_titre ( $langs->trans ( "Sens" ), $_SERVER ['PHP_SELF'], "bk.sens","","","",$sortfield,$sortorder);
 		print_liste_field_titre ( $langs->trans ( "Codejournal" ), $_SERVER ['PHP_SELF'], "bk.code_journal","","","",$sortfield,$sortorder);
+		print_liste_field_titre("&nbsp;");
 		print "</tr>\n";
 		
 		print '<tr class="liste_titre">';
 		print '<form action="liste.php" method="GET">';
 		print '<td><input type="text" name="search_doc_type" value="' . $_GET ["search_doc_type"] . '"></td>';
 		print '<td>&nbsp;</td>';
-		print '<td><input type="text" name="search_doc_refe" value="' . $_GET ["search_doc_ref"] . '"></td>';
+		print '<td><input type="text" name="search_doc_ref" value="' . $_GET ["search_doc_ref"] . '"></td>';
 		print '<td><input type="text" name="search_compte" value="' . $_GET ["search_compte"] . '"></td>';
 		print '<td><input type="text" name="search_tiers" value="' . $_GET ["search_tiers"] . '"></td>';
 		print '<td>&nbsp;</td>';
@@ -183,6 +183,7 @@ llxHeader ( '', $langs->trans("Accounting").' - '.$langs->trans("Bookkeeping") )
 		print '<td>&nbsp;</td>';
 		print '<td>&nbsp;</td>';
 		print '<td>&nbsp;</td>';
+		print '<td><input type="text" name="search_journal" size="3" value="' . $_GET ["search_journal"] . '"></td>';
 		print '<td align="right">';
 		print '<input type="image" class="liste_titre" name="button_search" src="' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/search.png" value="' . dol_escape_htmltag ( $langs->trans ( "Search" ) ) . '" title="' . dol_escape_htmltag ( $langs->trans ( "Search" ) ) . '">';
 		print '</td>';
@@ -197,19 +198,18 @@ llxHeader ( '', $langs->trans("Accounting").' - '.$langs->trans("Bookkeeping") )
 			
 			print "<tr $bc[$var]>";
 			
-			print '<td><a href="./fiche.php?piece_num=' . $obj->piece_num . '">';
-			print img_edit ();
-			print '</a>&nbsp;' . $obj->doc_type . '</td>' . "\n";
+			print '<td>' . $obj->doc_type . '</td>';
 			print '<td>' . dol_print_date ( $db->jdate ( $obj->doc_date ), 'day' ) . '</td>';
 			print '<td>' . $obj->doc_ref . '</td>';
 			print '<td>' . length_accountg($obj->numero_compte) . '</td>';
 			print '<td>' . length_accounta($obj->code_tiers) . '</td>';
 			print '<td>' . $obj->label_compte . '</td>';
-			print '<td>' . price($obj->debit) . '</td>';
-			print '<td>' . price($obj->credit) . '</td>';
-			print '<td>' . price($obj->montant) . '</td>';
+			print '<td align="right">' . price($obj->debit) . '</td>';
+			print '<td align="right">' . price($obj->credit) . '</td>';
+			print '<td align="right">' . price($obj->montant) . '</td>';
 			print '<td>' . $obj->sens . '</td>';
 			print '<td>' . $obj->code_journal . '</td>';
+			print '<td><a href="./fiche.php?piece_num=' . $obj->piece_num . '">' .img_edit().'</a></td>';
 			print "</tr>\n";
 			$i ++;
 		}
