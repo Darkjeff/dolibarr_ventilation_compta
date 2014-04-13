@@ -168,7 +168,7 @@ llxHeader ( '', $langs->trans("Accounting").' - '.$langs->trans("Bookkeeping") )
 		print_liste_field_titre ( $langs->trans ( "Credit" ), $_SERVER ['PHP_SELF'], "bk.credit","","","",$sortfield,$sortorder);
 		print_liste_field_titre ( $langs->trans ( "Amount" ), $_SERVER ['PHP_SELF'], "bk.montant","","","",$sortfield,$sortorder);
 		print_liste_field_titre ( $langs->trans ( "Sens" ), $_SERVER ['PHP_SELF'], "bk.sens","","","",$sortfield,$sortorder);
-		print_liste_field_titre ( $langs->trans ( "Codejournal" ),$_SERVER ['PHP_SELF'], "bk.code_journal","","","",$sortfield,$sortorder);
+		print_liste_field_titre ( $langs->trans ( "Codejournal" ), $_SERVER ['PHP_SELF'], "bk.code_journal","","","",$sortfield,$sortorder);
 		print "</tr>\n";
 		
 		print '<tr class="liste_titre">';
