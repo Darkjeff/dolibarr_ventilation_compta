@@ -144,7 +144,7 @@ if ($result)
 		$tabfac[$obj->rowid]["date"] = $obj->df;
 		$tabfac[$obj->rowid]["ref"] = $obj->ref;
 		$tabfac[$obj->rowid]["type"] = $obj->type;
-		$tabfac[$obj->rowid]["description"] = $obj->description;
+    $tabfac[$obj->rowid]["description"] = $obj->description;
 		$tabfac[$obj->rowid]["fk_facturefourndet"] = $obj->fdid;
 		$tabttc[$obj->rowid][$compta_soc] += $obj->total_ttc;
 		$tabht[$obj->rowid][$compta_prod] += $obj->total_ht;
@@ -217,7 +217,7 @@ if (GETPOST('action') == 'writebookkeeping')
 			}
 		}
 		
-    	// VAT
+    // VAT
 		//var_dump($tabtva);
 		foreach ($tabtva[$key] as $k => $mt)
 		{
@@ -254,8 +254,8 @@ if (GETPOST('action') == 'export_csv')
 {
   $sep = $conf->global->ACCOUNTINGEX_SEPARATORCSV;
   
-  header( 'Content-Type: text/csv' );
-  header( 'Content-Disposition: attachment;filename=journal_achats.csv');
+  header('Content-Type: text/csv');
+  header('Content-Disposition: attachment;filename=journal_achats.csv');
 	
   if ($conf->global->ACCOUNTINGEX_MODELCSV == 1) // Modèle Export Cegid Expert
   {
@@ -274,21 +274,12 @@ if (GETPOST('action') == 'export_csv')
   			{
   				print $date.$sep;
   				print $conf->global->ACCOUNTINGEX_PURCHASE_JOURNAL.$sep;
-<<<<<<< HEAD
-				print length_accountg(html_entity_decode($k)).$sep;
-				print $sep;
-				print ($mt < 0?'C':'D').$sep;
-				print ($mt<=0?price(-$mt):$mt).$sep;
-          		print dol_trunc($val["description"],32).$sep;
-				print $val["ref"];
-=======
           print length_accountg(html_entity_decode($k)).$sep;
           print $sep;
           print ($mt < 0?'C':'D').$sep;
           print ($mt<=0?price(-$mt):$mt).$sep;
           print dol_trunc($val["description"],32).$sep;
           print $val["ref"];
->>>>>>> dd15c49777d1491e2b67082e5ae33c7319997990
   				print "\n";
   			}
   		}
@@ -341,17 +332,10 @@ if (GETPOST('action') == 'export_csv')
   			{
   				print '"'.$date.'"'.$sep;
   				print '"'.$val["ref"].'"'.$sep;
-<<<<<<< HEAD
-  				print '"'.html_entity_decode($k).'"'.$sep;
-          		print '"'.dol_trunc($val["description"],32).'"'.$sep;
-         		print '"'.($mt >= 0? price($mt):'').'"'.$sep;
-				print '"'.($mt < 0? price(-$mt):'').'"';
-=======
   				print '"'.length_accountg(html_entity_decode($k)).'"'.$sep;
           print '"'.dol_trunc($val["description"],32).'"'.$sep;
           print '"'.($mt >= 0? price($mt):'').'"'.$sep;
           print '"'.($mt < 0? price(-$mt):'').'"';
->>>>>>> dd15c49777d1491e2b67082e5ae33c7319997990
   				print "\n";
   			}
   		}
@@ -363,35 +347,23 @@ if (GETPOST('action') == 'export_csv')
   		    {
   				print '"'.$date.'"'.$sep;
   				print '"'.$val["ref"].'"'.$sep;
-<<<<<<< HEAD
-  				print '"'.html_entity_decode($k).'"'.$sep;
-          		print '"'.$langs->trans("VAT").'"'.$sep;
-         		print '"'.($mt >= 0? price($mt):'').'"'.$sep;
-          		print '"'.($mt <0? price(-$mt):'').'"';
-=======
   				print '"'.length_accountg(html_entity_decode($k)).'"'.$sep;
           print '"'.$langs->trans("VAT").'"'.$sep;
           print '"'.($mt >= 0? price($mt):'').'"'.$sep;
           print '"'.($mt <0? price(-$mt):'').'"';
->>>>>>> dd15c49777d1491e2b67082e5ae33c7319997990
   				print "\n";
   			}
   		}
+      
+      // Third party
   		print '"'.$date.'"'.$sep;
   		print '"'.$val["ref"].'"'.$sep;
   		foreach ($tabttc[$key] as $k => $mt)
   		{
-<<<<<<< HEAD
-			print '"'.html_entity_decode($k).'"'.$sep;
-			print '"'.utf8_decode($companystatic->name).'"'.$sep;
-			print '"'.($mt<0?price(-$mt):'').'"'.$sep;
-			print '"'.($mt>=0?price($mt):'').'"';
-=======
-  			print '"'.length_accountga(html_entity_decode($k)).'"'.$sep;
+  			print '"'.length_accounta(html_entity_decode($k)).'"'.$sep;
         print '"'.utf8_decode($companystatic->name).'"'.$sep;
         print '"'.($mt<0?price(-$mt):'').'"'.$sep;
         print '"'.($mt>=0?price($mt):'').'"';
->>>>>>> dd15c49777d1491e2b67082e5ae33c7319997990
   		}
   		print "\n";
   	}
@@ -419,11 +391,11 @@ report_header($nom,$nomlink,$period,$periodlink,$description,$builddate,$exportl
 
 
 
-print '<input type="button" class="button" style="float: right;" value="Export CSV" onclick="launch_export();" />';
+	print '<input type="button" class="button" style="float: right;" value="Export CSV" onclick="launch_export();" />';
 
-print '<input type="button" class="button" value="'.$langs->trans("WriteBookKeeping").'" onclick="writebookkeeping();" />';
+  print '<input type="button" class="button" value="'.$langs->trans("WriteBookKeeping").'" onclick="writebookkeeping();" />';
 	
-print '
+	print '
 	<script type="text/javascript">
 		function launch_export() {
 		    $("div.fiche div.tabBar form input[name=\"action\"]").val("export_csv");
@@ -437,10 +409,10 @@ print '
 		}
 	</script>';
 
-/*
- * Show result array
- */
-print '<br><br>';
+	/*
+	 * Show result array
+	 */
+  print '<br><br>';
   
 	$i = 0;
 	print "<table class=\"noborder\" width=\"100%\">";
@@ -465,9 +437,9 @@ print '<br><br>';
 		$invoicestatic->id=$key;
 		$invoicestatic->ref=$val["ref"];
 		$invoicestatic->type=$val["type"];
-		$invoicestatic->description=html_entity_decode(dol_trunc($val["description"],32));
+    $invoicestatic->description=html_entity_decode(dol_trunc($val["description"],32));
     
-    	$date = dol_print_date($db->jdate($val["date"]),'day');		
+    $date = dol_print_date($db->jdate($val["date"]),'day');		
 		
 		// Product / Service
 		foreach ($tabht[$key] as $k => $mt)
@@ -479,7 +451,7 @@ print '<br><br>';
 				print "<td>".$date."</td>";
 				print "<td>".$invoicestatic->getNomUrl(1)."</td>";
 				print "<td>".length_accountg($k)."</td>";
-        		print "<td>".$invoicestatic->description."</td>";
+        print "<td>".$invoicestatic->description."</td>";
 				print '<td align="right">'.($mt>=0?price($mt):'')."</td>";
 				print '<td align="right">'.($mt<0?price(-$mt):'')."</td>";
 				print "</tr>";
@@ -503,7 +475,7 @@ print '<br><br>';
 		}
 		print "<tr ".$bc[$var].">";
 		
-    	// Third party
+    // Third party
 		//print "<td>".$conf->global->COMPTA_JOURNAL_BUY."</td>";
 		print "<td>".$date."</td>";
 		print "<td>".$invoicestatic->getNomUrl(1)."</td>";
@@ -514,11 +486,11 @@ print '<br><br>';
     	  $companystatic->name=$tabcompany[$key]['name'];
     	  
 		    print "<td>".length_accounta($k);
-		    print "</td><td>".$langs->trans("ThirdParty");
-		    print ' ('.$companystatic->getNomUrl(0,'supplier',16).')';
-	      print "</td>";
-		    print '<td align="right">'.($mt<0?-price(-$mt):'')."</td>";
-		    print '<td align="right">'.($mt>=0?price($mt):'')."</td>";
+        print "</td><td>".$langs->trans("ThirdParty");
+        print ' ('.$companystatic->getNomUrl(0,'supplier',16).')';
+        print "</td>";
+        print '<td align="right">'.($mt<0?-price(-$mt):'')."</td>";
+        print '<td align="right">'.($mt>=0?price($mt):'')."</td>";
 		}
 		print "</tr>";
 
