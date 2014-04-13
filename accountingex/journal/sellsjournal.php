@@ -5,7 +5,7 @@
  * Copyright (C) 2012		   Regis Houssin		    <regis@dolibarr.fr>
  * Copyright (C) 2013		   Christophe Battarel	<christophe.battarel@altairis.fr>
  * Copyright (C) 2013-2014 Alexandre Spangaro	  <alexandre.spangaro@gmail.com>
- * Copyright (C) 2013      Florian Henry	      <florian.henry@open-concept.pro>
+ * Copyright (C) 2013-2014 Florian Henry	      <florian.henry@open-concept.pro>
  * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -73,8 +73,6 @@ if (!$user->rights->accountingex->access) accessforbidden();
 /*
  * View
  */
-
-
 
 $year_current = strftime("%Y",dol_now());
 $pastmonth = strftime("%m",dol_now()) - 1;
@@ -173,8 +171,8 @@ else {
 // Bookkeeping Write
 if (GETPOST('action') == 'writebookkeeping')
 {
-	$now=dol_now();
-	
+  $now=dol_now();
+  
 	foreach ($tabfac as $key => $val)
 	{
 		foreach ($tabttc[$key] as $k => $mt)
@@ -182,7 +180,7 @@ if (GETPOST('action') == 'writebookkeeping')
 		    $bookkeeping = new BookKeeping($db);
 		    $bookkeeping->doc_date = $val["date"];
 		    $bookkeeping->doc_ref = $val["ref"];
-		    $bookkeeping->date_create = $now;
+        $bookkeeping->date_create = $now;
 		    $bookkeeping->doc_type = 'customer_invoice';
 		    $bookkeeping->fk_doc = $key;
 		    $bookkeeping->fk_docdet = $val["fk_facturedet"];
@@ -210,7 +208,7 @@ if (GETPOST('action') == 'writebookkeeping')
 				    $bookkeeping = new BookKeeping($db);
 				    $bookkeeping->doc_date = $val["date"];
 				    $bookkeeping->doc_ref = $val["ref"];
-				    $bookkeeping->date_create = $now;
+            $bookkeeping->date_create = $now;
 				    $bookkeeping->doc_type = 'customer_invoice';
 				    $bookkeeping->fk_doc = $key;
 				    $bookkeeping->fk_docdet = $val["fk_facturedet"];
@@ -237,7 +235,7 @@ if (GETPOST('action') == 'writebookkeeping')
 			    $bookkeeping = new BookKeeping($db);
 			    $bookkeeping->doc_date = $val["date"];
 			    $bookkeeping->doc_ref = $val["ref"];
-			    $bookkeeping->date_create = $now;
+          $bookkeeping->date_create = $now;
 			    $bookkeeping->doc_type = 'customer_invoice';
 			    $bookkeeping->fk_doc = $key;
 			    $bookkeeping->fk_docdet = $val["fk_facturedet"];
@@ -266,7 +264,7 @@ if (GETPOST('action') == 'export_csv')
   	
     $companystatic=new Client($db);
     
-    if ($conf->global->ACCOUNTINGEX_MODELCSV == 1) // Modèle Cegid Expert
+    if ($conf->global->ACCOUNTINGEX_MODELCSV == 1) // Modèle Export Cegid Expert
     {
       foreach ($tabfac as $key => $val)
     	{
@@ -323,7 +321,7 @@ if (GETPOST('action') == 'export_csv')
     		}
   	  }
     }
-    else
+    else // Modèle Export Classique
     {
       foreach ($tabfac as $key => $val)
     	{

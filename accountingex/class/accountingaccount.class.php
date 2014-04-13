@@ -359,5 +359,68 @@ class AccountingAccount {
 			dol_print_error ( $this->db );
 		}
 	}
+  
+  /**
+   * Account desactivate
+   *
+   * @param User $user update
+   * @return int if KO, >0 if OK
+   */
+  function account_desactivate($user) {
+  
+  global $langs;
+  		
+  $result = $this->checkUsage ();
+  		
+  if ($result > 0) {
+    $this->db->begin ();
+  			
+    $sql = "UPDATE " . MAIN_DB_PREFIX . "accountingaccount ";
+  	$sql .= "SET active = '0'";
+  	$sql .= " WHERE rowid = " . $this->id;
+  			
+  	dol_syslog ( get_class ( $this ) . "::desactivate sql=" . $sql, LOG_DEBUG );
+  	$result = $this->db->query ( $sql );
+  	
+    if ($result) {
+  	   $this->db->commit ();
+  		 return 1;
+  	} else {
+  	   $this->error = $this->db->lasterror ();
+  		 $this->db->rollback ();
+  		 return - 1;
+  	}
+  } else {
+      return - 1;
+  	}
+  }
+
+  /**
+   * Account activate
+   *
+   * @param User $user update
+   * @return int if KO, >0 if OK
+   */
+  function account_activate($user) {
+  
+  global $langs;
+  		
+  $this->db->begin ();
+  		
+  $sql = "UPDATE " . MAIN_DB_PREFIX . "accountingaccount ";
+  $sql .= "SET active = '1'";
+  $sql .= " WHERE rowid = " . $this->id;
+  		
+  dol_syslog ( get_class ( $this ) . "::activate sql=" . $sql, LOG_DEBUG );
+  $result = $this->db->query ( $sql );
+  if ($result) {
+    $this->db->commit ();
+    return 1;
+  } else {
+    $this->error = $this->db->lasterror ();
+  	$this->db->rollback ();
+  	return - 1;
+  	}
+  }
 }
 ?>

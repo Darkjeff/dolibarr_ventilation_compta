@@ -105,7 +105,20 @@ llxHeader ( '',$langs->trans("SuppliersVentilation").' - '.$langs->trans("Dispat
  */
 $page = $_GET["page"];
 if ($page < 0) $page = 0;
-$limit = $conf->global->ACCOUNTINGEX_LIMIT_LIST_VENTILATION;
+
+if (! empty($conf->global->ACCOUNTINGEX_LIMIT_LIST_VENTILATION)) 
+{ 
+	$limit = $conf->global->ACCOUNTINGEX_LIMIT_LIST_VENTILATION; 
+}
+else if ($conf->global->ACCOUNTINGEX_LIMIT_LIST_VENTILATION <= 0)
+{
+	$limit = $conf->liste_limit;
+}
+else 
+{ 
+	$limit = $conf->liste_limit;
+}
+
 $offset = $limit * $page ;
 
 $sql = "SELECT f.ref as facnumber, f.rowid as facid, l.fk_product, l.description, l.total_ht , l.qty, l.rowid, l.tva_tx, aa.label, aa.account_number, ";
@@ -164,7 +177,7 @@ print_barre_liste ( $langs->trans ( "InvoiceLinesDone" ), $page, "lignes.php", "
   
   print '<div class="inline-block divButAction"><input type="submit" class="butAction" value="' . $langs->trans ( "ChangeAccount" ) . '" /></div>';
 
-	print $formventilation->select_account_parent  ( GETPOST ( 'account_parent' ), 'account_parent', 1 );
+	print $formventilation->select_account  ( GETPOST ( 'account_parent' ), 'account_parent', 1 );
   
   print '<tr class="liste_titre"><td>'.$langs->trans("Invoice").'</td>';
   print '<td>'.$langs->trans("Ref").'</td>';

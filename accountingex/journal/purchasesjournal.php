@@ -160,8 +160,8 @@ else {
 // Bookkeeping Write
 if (GETPOST('action') == 'writebookkeeping')
 {
-	$now=dol_now();
-	
+  $now=dol_now();
+  
 	foreach ($tabfac as $key => $val)
 	{
 		foreach ($tabttc[$key] as $k => $mt)
@@ -171,7 +171,7 @@ if (GETPOST('action') == 'writebookkeeping')
 			    $bookkeeping = new BookKeeping($db);
 			    $bookkeeping->doc_date = $val["date"];
 			    $bookkeeping->doc_ref = $val["ref"];
-			    $bookkeeping->date_create = $now;
+          $bookkeeping->date_create = $now;
 			    $bookkeeping->doc_type = 'supplier_invoice';
 			    $bookkeeping->fk_doc = $key;
 			    $bookkeeping->fk_docdet = $val["fk_facturefourndet"];
@@ -199,7 +199,7 @@ if (GETPOST('action') == 'writebookkeeping')
 				    $bookkeeping = new BookKeeping($db);
 				    $bookkeeping->doc_date = $val["date"];
 				    $bookkeeping->doc_ref = $val["ref"];
-				    $bookkeeping->date_create = $now;
+            $bookkeeping->date_create = $now;
 				    $bookkeeping->doc_type = 'supplier_invoice';
 				    $bookkeeping->fk_doc = $key;
 				    $bookkeeping->fk_docdet = $val["fk_facturefourndet"];
@@ -229,7 +229,7 @@ if (GETPOST('action') == 'writebookkeeping')
 				    $bookkeeping = new BookKeeping($db);
 				    $bookkeeping->doc_date = $val["date"];
 				    $bookkeeping->doc_ref = $val["ref"];
-				    $bookkeeping->date_create = $now;
+            $bookkeeping->date_create = $now;
 				    $bookkeeping->doc_type = 'supplier_invoice';
 				    $bookkeeping->fk_doc = $key;
 				    $bookkeeping->fk_docdet = $val["fk_facturefourndet"];
@@ -257,13 +257,13 @@ if (GETPOST('action') == 'export_csv')
   header( 'Content-Type: text/csv' );
   header( 'Content-Disposition: attachment;filename=journal_achats.csv');
 	
-  if ($conf->global->ACCOUNTINGEX_MODELCSV == 1) // Modèle Cegid Expert
+  if ($conf->global->ACCOUNTINGEX_MODELCSV == 1) // Modèle Export Cegid Expert
   {
     foreach ($tabfac as $key => $val)
   	{
   	  $date = dol_print_date($db->jdate($val["date"]),'%d%m%Y');
   		
-      // product
+      // Product / Service
   		foreach ($tabht[$key] as $k => $mt)
   		{
         $companystatic->id=$tabcompany[$key]['id'];
@@ -274,17 +274,26 @@ if (GETPOST('action') == 'export_csv')
   			{
   				print $date.$sep;
   				print $conf->global->ACCOUNTINGEX_PURCHASE_JOURNAL.$sep;
+<<<<<<< HEAD
 				print length_accountg(html_entity_decode($k)).$sep;
 				print $sep;
 				print ($mt < 0?'C':'D').$sep;
 				print ($mt<=0?price(-$mt):$mt).$sep;
           		print dol_trunc($val["description"],32).$sep;
 				print $val["ref"];
+=======
+          print length_accountg(html_entity_decode($k)).$sep;
+          print $sep;
+          print ($mt < 0?'C':'D').$sep;
+          print ($mt<=0?price(-$mt):$mt).$sep;
+          print dol_trunc($val["description"],32).$sep;
+          print $val["ref"];
+>>>>>>> dd15c49777d1491e2b67082e5ae33c7319997990
   				print "\n";
   			}
   		}
   		
-      // vat
+      // VAT
   		//var_dump($tabtva);
   		foreach ($tabtva[$key] as $k => $mt)
   		{
@@ -315,7 +324,7 @@ if (GETPOST('action') == 'export_csv')
   		print "\n";
   	}
   }
-  else
+  else // Modèle Export Classique
   {
     foreach ($tabfac as $key => $val)
   	{
@@ -325,21 +334,28 @@ if (GETPOST('action') == 'export_csv')
 	    $companystatic->name=$tabcompany[$key]['name'];
 	    $companystatic->client=$tabcompany[$key]['code_client'];
       
-      // product
+      // Product / Service
   		foreach ($tabht[$key] as $k => $mt)
   		{
   			if ($mt)
   			{
   				print '"'.$date.'"'.$sep;
   				print '"'.$val["ref"].'"'.$sep;
+<<<<<<< HEAD
   				print '"'.html_entity_decode($k).'"'.$sep;
           		print '"'.dol_trunc($val["description"],32).'"'.$sep;
          		print '"'.($mt >= 0? price($mt):'').'"'.$sep;
 				print '"'.($mt < 0? price(-$mt):'').'"';
+=======
+  				print '"'.length_accountg(html_entity_decode($k)).'"'.$sep;
+          print '"'.dol_trunc($val["description"],32).'"'.$sep;
+          print '"'.($mt >= 0? price($mt):'').'"'.$sep;
+          print '"'.($mt < 0? price(-$mt):'').'"';
+>>>>>>> dd15c49777d1491e2b67082e5ae33c7319997990
   				print "\n";
   			}
   		}
-  		// vat
+  		// VAT
   		//var_dump($tabtva);
   		foreach ($tabtva[$key] as $k => $mt)
   		{
@@ -347,10 +363,17 @@ if (GETPOST('action') == 'export_csv')
   		    {
   				print '"'.$date.'"'.$sep;
   				print '"'.$val["ref"].'"'.$sep;
+<<<<<<< HEAD
   				print '"'.html_entity_decode($k).'"'.$sep;
           		print '"'.$langs->trans("VAT").'"'.$sep;
          		print '"'.($mt >= 0? price($mt):'').'"'.$sep;
           		print '"'.($mt <0? price(-$mt):'').'"';
+=======
+  				print '"'.length_accountg(html_entity_decode($k)).'"'.$sep;
+          print '"'.$langs->trans("VAT").'"'.$sep;
+          print '"'.($mt >= 0? price($mt):'').'"'.$sep;
+          print '"'.($mt <0? price(-$mt):'').'"';
+>>>>>>> dd15c49777d1491e2b67082e5ae33c7319997990
   				print "\n";
   			}
   		}
@@ -358,10 +381,17 @@ if (GETPOST('action') == 'export_csv')
   		print '"'.$val["ref"].'"'.$sep;
   		foreach ($tabttc[$key] as $k => $mt)
   		{
+<<<<<<< HEAD
 			print '"'.html_entity_decode($k).'"'.$sep;
 			print '"'.utf8_decode($companystatic->name).'"'.$sep;
 			print '"'.($mt<0?price(-$mt):'').'"'.$sep;
 			print '"'.($mt>=0?price($mt):'').'"';
+=======
+  			print '"'.length_accountga(html_entity_decode($k)).'"'.$sep;
+        print '"'.utf8_decode($companystatic->name).'"'.$sep;
+        print '"'.($mt<0?price(-$mt):'').'"'.$sep;
+        print '"'.($mt>=0?price($mt):'').'"';
+>>>>>>> dd15c49777d1491e2b67082e5ae33c7319997990
   		}
   		print "\n";
   	}
