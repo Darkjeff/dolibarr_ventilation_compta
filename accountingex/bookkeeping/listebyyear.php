@@ -1,7 +1,7 @@
 <?PHP
 /* Copyright (C) 2004-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2005      Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2013      Florian Henry	      <florian.henry@open-concept.pro>
+ * Copyright (C) 2013-2014 Florian Henry	    <florian.henry@open-concept.pro>
  * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
  * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
  *
@@ -67,7 +67,7 @@ print_fiche_titre($langs->trans("Bookkeeping")." $textprevyear ".$langs->trans("
  *
  */
 
-$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens ";
+$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens, bk.code_journal";
 $sql .= " FROM ".MAIN_DB_PREFIX."bookkeeping as bk";
 //$sql .= " WHERE bk.doc_date >= '".$db->idate(dol_get_first_day($y,1,false))."'";
 //$sql .= "  AND bk.doc_date <= '".$db->idate(dol_get_last_day($y,12,false))."'";
@@ -92,6 +92,8 @@ if ($resql)
   print_liste_field_titre($langs->trans("Debit"));
   print_liste_field_titre($langs->trans("Credit"));
   print_liste_field_titre($langs->trans("Amount"));
+  print_liste_field_titre($langs->trans("Sens"));
+  print_liste_field_titre($langs->trans("Codejournal"));
   print_liste_field_titre("&nbsp;");
   print "</tr>\n";
 
@@ -105,14 +107,16 @@ if ($resql)
       print "<tr $bc[$var]>";
       
       print '<td>'.$obj->doc_type.'</td>'."\n";
-	    print '<td>'.dol_print_date($db->jdate($obj->doc_date)).'</td>';
+	  print '<td>'.dol_print_date($db->jdate($obj->doc_date)).'</td>';
       print '<td>'.$obj->doc_ref.'</td>';
       print '<td>'.length_accountg($obj->numero_compte).'</td>';
       print '<td>'.length_accounta($obj->code_tiers).'</td>';
       print '<td>'.$obj->label_compte.'</td>';
-      print '<td align="center">'.price($obj->debit).'</td>';
-      print '<td align="center">'.price($obj->credit).'</td>';
-      print '<td align="center">'.price($obj->montant).'</td>';
+      print '<td align="right">'.price($obj->debit).'</td>';
+      print '<td align="right">'.price($obj->credit).'</td>';
+      print '<td align="right">'.price($obj->montant).'</td>';
+	  print '<td>'.$obj->sens.'</td>';
+      print '<td>'.$obj->code_journal.'</td>';
       print '<td><a href="./fiche.php?action=update&id='.$obj->rowid.'">'.img_edit().'</a></td>';
 	                
       print "</tr>\n";
