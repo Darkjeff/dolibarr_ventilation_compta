@@ -17,20 +17,24 @@
  *
  */
 
- /**
- *    \file       accountingex/journal/index.php
- *    \ingroup    Accounting Expert
- *    \brief      Balance par mois
+/**
+ * \file accountingex/journal/index.php
+ * \ingroup Accounting Expert
+ * \brief Balance par mois
  */
- 
-// Dolibarr environment
-$res=@include("../main.inc.php");
-if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
-if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.php");
-if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
-if (! $res) die("Include of main fails");
 
-// Langs
+// Dolibarr environment
+$res = @include ("../main.inc.php");
+if (! $res && file_exists("../main.inc.php"))
+	$res = @include ("../main.inc.php");
+if (! $res && file_exists("../../main.inc.php"))
+	$res = @include ("../../main.inc.php");
+if (! $res && file_exists("../../../main.inc.php"))
+	$res = @include ("../../../main.inc.php");
+if (! $res)
+	die("Include of main fails");
+	
+	// Langs
 $langs->load("compta");
 $langs->load("bills");
 $langs->load("other");
@@ -38,36 +42,41 @@ $langs->load("main");
 $langs->load("accountingex@accountingex");
 
 // Security check
-if ($user->societe_id > 0) accessforbidden();
-if (!$user->rights->accountingex->access) accessforbidden();
+if ($user->societe_id > 0)
+	accessforbidden();
+if (! $user->rights->accountingex->access)
+	accessforbidden();
 
+/**
+ * *****************************************************************
+ * ACTIONS
+ *
+ * Put here all code to do according to value of "action" parameter
+ * ******************************************************************
+ */
 
-/*******************************************************************
-* ACTIONS
-*
-* Put here all code to do according to value of "action" parameter
-********************************************************************/
+/**
+ * *************************************************
+ * PAGE
+ *
+ * Put here all code to build page
+ * **************************************************
+ */
 
+llxHeader('', 'Journaux', '');
 
-/***************************************************
-* PAGE
-*
-* Put here all code to build page
-****************************************************/
-
-llxHeader('','Journaux','');
-
-$form=new Form($db);
-
+$form = new Form($db);
 
 // Put here content of your page
 // ...
 
-/***************************************************
-* LINKED OBJECT BLOCK
-*
-* Put here code to view linked object
-****************************************************/
+/**
+ * *************************************************
+ * LINKED OBJECT BLOCK
+ *
+ * Put here code to view linked object
+ * **************************************************
+ */
 /*
  
 $somethingshown=$myobject->showLinkedObjectBlock();

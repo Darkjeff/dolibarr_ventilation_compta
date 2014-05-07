@@ -18,9 +18,9 @@
  */
 
 /**
- * \file      accountingex/class/Accountingaccount.class.php
- * \ingroup   Accounting Expert
- * \brief     Fichier de la classe des comptes comptable
+ * \file accountingex/class/Accountingaccount.class.php
+ * \ingroup Accounting Expert
+ * \brief Fichier de la classe des comptes comptable
  */
 
 /**
@@ -41,25 +41,23 @@ class AccountingAccount {
 	var $fk_user_author;
 	var $fk_user_modif;
 	var $active;
-
+	
 	/**
 	 * \brief Constructeur de la classe
 	 * \param DB handler acces base de donnees
 	 * \param id id compte (0 par defaut)
 	 */
 	function __construct($db, $rowid = '') {
-
 		$this->db = $db;
 		
 		if ($rowid != '')
-			return $this->fetch ( $rowid );
+			return $this->fetch($rowid);
 	}
-
+	
 	/**
 	 * \brief Load record in memory
 	 */
 	function fetch($rowid = null, $account_number = null) {
-
 		if ($rowid || $account_number) {
 			$sql = "SELECT * FROM " . MAIN_DB_PREFIX . "accountingaccount WHERE ";
 			if ($rowid) {
@@ -68,10 +66,10 @@ class AccountingAccount {
 				$sql .= " account_number = '" . $account_number . "'";
 			}
 			
-			dol_syslog ( get_class ( $this ) . "::fetch sql=" . $sql, LOG_DEBUG );
-			$result = $this->db->query ( $sql );
+			dol_syslog(get_class($this) . "::fetch sql=" . $sql, LOG_DEBUG);
+			$result = $this->db->query($sql);
 			if ($result) {
-				$obj = $this->db->fetch_object ( $result );
+				$obj = $this->db->fetch_object($result);
 			} else {
 				return null;
 			}
@@ -93,33 +91,32 @@ class AccountingAccount {
 		
 		return $obj->rowid;
 	}
-
+	
 	/**
 	 * \brief insert line in accountingaccount
 	 * \param user utilisateur qui effectue l'insertion
 	 */
 	function create($user, $notrigger = 0) {
-
 		global $conf, $langs;
 		$error = 0;
 		
 		// Clean parameters
-		if (isset ( $this->fk_pcg_version ))
-			$this->fk_pcg_version = trim ( $this->fk_pcg_version );
-		if (isset ( $this->pcg_type ))
-			$this->pcg_type = trim ( $this->pcg_type );
-		if (isset ( $this->pcg_subtype ))
-			$this->pcg_subtype = trim ( $this->pcg_subtype );
-		if (isset ( $this->account_number ))
-			$this->account_number = trim ( $this->account_number );
-		if (isset ( $this->account_parent ))
-			$this->account_parent = trim ( $this->account_parent );
-		if (isset ( $this->label ))
-			$this->account_parent = trim ( $this->label );
-		if (isset ( $this->fk_user_author ))
-			$this->fk_user_author = trim ( $this->fk_user_author );
-		if (isset ( $this->active ))
-			$this->active = trim ( $this->active );
+		if (isset($this->fk_pcg_version))
+			$this->fk_pcg_version = trim($this->fk_pcg_version);
+		if (isset($this->pcg_type))
+			$this->pcg_type = trim($this->pcg_type);
+		if (isset($this->pcg_subtype))
+			$this->pcg_subtype = trim($this->pcg_subtype);
+		if (isset($this->account_number))
+			$this->account_number = trim($this->account_number);
+		if (isset($this->account_parent))
+			$this->account_parent = trim($this->account_parent);
+		if (isset($this->label))
+			$this->account_parent = trim($this->label);
+		if (isset($this->fk_user_author))
+			$this->fk_user_author = trim($this->fk_user_author);
+		if (isset($this->active))
+			$this->active = trim($this->active);
 			
 			// Check parameters
 			// Put here code to add control on parameters values
@@ -140,30 +137,30 @@ class AccountingAccount {
 		
 		$sql .= ") VALUES (";
 		
-		$sql .= " '" . $this->db->idate ( $now ) . "'";
+		$sql .= " '" . $this->db->idate($now) . "'";
 		$sql .= ", " . $conf->entity;
-		$sql .= ", " . (! isset ( $this->fk_pcg_version ) ? 'NULL' : "'" . $this->db->escape ( $this->fk_pcg_version ) . "'");
-		$sql .= ", " . (! isset ( $this->pcg_type ) ? 'NULL' : "'" . $this->db->escape ( $this->pcg_type ) . "'");
-		$sql .= ", " . (! isset ( $this->pcg_subtype ) ? 'NULL' : "'" . $this->pcg_subtype . "'");
-		$sql .= ", " . (! isset ( $this->account_number ) ? 'NULL' : "'" . $this->account_number . "'");
-		$sql .= ", " . (! isset ( $this->account_parent ) ? 'NULL' : "'" . $this->db->escape ( $this->account_parent ) . "'");
-		$sql .= ", " . (! isset ( $this->label ) ? 'NULL' : "'" . $this->db->escape ( $this->label ) . "'");
+		$sql .= ", " . (! isset($this->fk_pcg_version) ? 'NULL' : "'" . $this->db->escape($this->fk_pcg_version) . "'");
+		$sql .= ", " . (! isset($this->pcg_type) ? 'NULL' : "'" . $this->db->escape($this->pcg_type) . "'");
+		$sql .= ", " . (! isset($this->pcg_subtype) ? 'NULL' : "'" . $this->pcg_subtype . "'");
+		$sql .= ", " . (! isset($this->account_number) ? 'NULL' : "'" . $this->account_number . "'");
+		$sql .= ", " . (! isset($this->account_parent) ? 'NULL' : "'" . $this->db->escape($this->account_parent) . "'");
+		$sql .= ", " . (! isset($this->label) ? 'NULL' : "'" . $this->db->escape($this->label) . "'");
 		$sql .= ", " . $user->id;
-		$sql .= ", " . (! isset ( $this->active ) ? 'NULL' : "'" . $this->db->escape ( $this->active ) . "'");
+		$sql .= ", " . (! isset($this->active) ? 'NULL' : "'" . $this->db->escape($this->active) . "'");
 		
 		$sql .= ")";
 		
-		$this->db->begin ();
+		$this->db->begin();
 		
-		dol_syslog ( get_class ( $this ) . "::create sql=" . $sql, LOG_DEBUG );
-		$resql = $this->db->query ( $sql );
+		dol_syslog(get_class($this) . "::create sql=" . $sql, LOG_DEBUG);
+		$resql = $this->db->query($sql);
 		if (! $resql) {
 			$error ++;
-			$this->errors [] = "Error " . $this->db->lasterror ();
+			$this->errors [] = "Error " . $this->db->lasterror();
 		}
 		
 		if (! $error) {
-			$this->id = $this->db->last_insert_id ( MAIN_DB_PREFIX . "accountingaccount" );
+			$this->id = $this->db->last_insert_id(MAIN_DB_PREFIX . "accountingaccount");
 			
 			if (! $notrigger) {
 				// Uncomment this and change MYOBJECT to your own tag if you
@@ -181,17 +178,17 @@ class AccountingAccount {
 		// Commit or rollback
 		if ($error) {
 			foreach ( $this->errors as $errmsg ) {
-				dol_syslog ( get_class ( $this ) . "::create " . $errmsg, LOG_ERR );
+				dol_syslog(get_class($this) . "::create " . $errmsg, LOG_ERR);
 				$this->error .= ($this->error ? ', ' . $errmsg : $errmsg);
 			}
-			$this->db->rollback ();
+			$this->db->rollback();
 			return - 1 * $error;
 		} else {
-			$this->db->commit ();
+			$this->db->commit();
 			return $this->id;
 		}
 	}
-
+	
 	/**
 	 * Update record
 	 *
@@ -199,35 +196,34 @@ class AccountingAccount {
 	 * @return int if KO, >0 if OK
 	 */
 	function update($user) {
-
 		global $langs;
 		
-		$this->db->begin ();
+		$this->db->begin();
 		
 		$sql = "UPDATE " . MAIN_DB_PREFIX . "accountingaccount ";
-		$sql .= " SET fk_pcg_version = " . ($this->fk_pcg_version ? "'" . $this->db->escape ( $this->fk_pcg_version ) . "'" : "null");
-		$sql .= " , pcg_type = " . ($this->pcg_type ? "'" . $this->db->escape ( $this->pcg_type ) . "'" : "null");
-		$sql .= " , pcg_subtype = " . ($this->pcg_subtype ? "'" . $this->db->escape ( $this->pcg_subtype ) . "'" : "null");
+		$sql .= " SET fk_pcg_version = " . ($this->fk_pcg_version ? "'" . $this->db->escape($this->fk_pcg_version) . "'" : "null");
+		$sql .= " , pcg_type = " . ($this->pcg_type ? "'" . $this->db->escape($this->pcg_type) . "'" : "null");
+		$sql .= " , pcg_subtype = " . ($this->pcg_subtype ? "'" . $this->db->escape($this->pcg_subtype) . "'" : "null");
 		$sql .= " , account_number = '" . $this->account_number . "'";
 		$sql .= " , account_parent = '" . $this->account_parent . "'";
-		$sql .= " , label = " . ($this->label ? "'" . $this->db->escape ( $this->label ) . "'" : "null");
+		$sql .= " , label = " . ($this->label ? "'" . $this->db->escape($this->label) . "'" : "null");
 		$sql .= " , fk_user_modif = " . $user->id;
 		$sql .= " , active = '" . $this->active . "'";
 		
 		$sql .= " WHERE rowid = " . $this->id;
 		
-		dol_syslog ( get_class ( $this ) . "::update sql=" . $sql, LOG_DEBUG );
-		$result = $this->db->query ( $sql );
+		dol_syslog(get_class($this) . "::update sql=" . $sql, LOG_DEBUG);
+		$result = $this->db->query($sql);
 		if ($result) {
-			$this->db->commit ();
+			$this->db->commit();
 			return 1;
 		} else {
-			$this->error = $this->db->lasterror ();
-			$this->db->rollback ();
+			$this->error = $this->db->lasterror();
+			$this->db->rollback();
 			return - 1;
 		}
 	}
-
+	
 	/**
 	 * Check usage of accounting code
 	 *
@@ -235,7 +231,6 @@ class AccountingAccount {
 	 * @return int if KO, >0 if OK
 	 */
 	function checkUsage() {
-
 		global $langs;
 		
 		$sql = "(SELECT fk_code_ventilation FROM " . MAIN_DB_PREFIX . "facturedet";
@@ -244,11 +239,11 @@ class AccountingAccount {
 		$sql .= "(SELECT fk_code_ventilation FROM " . MAIN_DB_PREFIX . "facture_fourn_det";
 		$sql .= " WHERE  fk_code_ventilation=" . $this->id . ")";
 		
-		dol_syslog ( get_class ( $this ) . "::checkUsage sql=" . $sql, LOG_DEBUG );
-		$resql = $this->db->query ( $sql );
+		dol_syslog(get_class($this) . "::checkUsage sql=" . $sql, LOG_DEBUG);
+		$resql = $this->db->query($sql);
 		
 		if ($resql) {
-			$num = $this->db->num_rows ( $resql );
+			$num = $this->db->num_rows($resql);
 			if ($num > 0) {
 				$this->error = $langs->trans('ErrorAccountancyCodeIsAlreadyUse');
 				return 0;
@@ -256,11 +251,11 @@ class AccountingAccount {
 				return 1;
 			}
 		} else {
-			$this->error = $this->db->lasterror ();
+			$this->error = $this->db->lasterror();
 			return - 1;
 		}
 	}
-
+	
 	/**
 	 * Delete object in database
 	 *
@@ -269,15 +264,14 @@ class AccountingAccount {
 	 * @return int <0 if KO, >0 if OK
 	 */
 	function delete($user, $notrigger = 0) {
-
 		global $conf, $langs;
 		$error = 0;
 		
-		$result = $this->checkUsage ();
+		$result = $this->checkUsage();
 		
 		if ($result > 0) {
 			
-			$this->db->begin ();
+			$this->db->begin();
 			
 			if (! $error) {
 				if (! $notrigger) {
@@ -297,31 +291,31 @@ class AccountingAccount {
 				$sql = "DELETE FROM " . MAIN_DB_PREFIX . "accountingaccount";
 				$sql .= " WHERE rowid=" . $this->id;
 				
-				dol_syslog ( get_class ( $this ) . "::delete sql=" . $sql );
-				$resql = $this->db->query ( $sql );
+				dol_syslog(get_class($this) . "::delete sql=" . $sql);
+				$resql = $this->db->query($sql);
 				if (! $resql) {
 					$error ++;
-					$this->errors [] = "Error " . $this->db->lasterror ();
+					$this->errors [] = "Error " . $this->db->lasterror();
 				}
 			}
 			
 			// Commit or rollback
 			if ($error) {
 				foreach ( $this->errors as $errmsg ) {
-					dol_syslog ( get_class ( $this ) . "::delete " . $errmsg, LOG_ERR );
+					dol_syslog(get_class($this) . "::delete " . $errmsg, LOG_ERR);
 					$this->error .= ($this->error ? ', ' . $errmsg : $errmsg);
 				}
-				$this->db->rollback ();
+				$this->db->rollback();
 				return - 1 * $error;
 			} else {
-				$this->db->commit ();
+				$this->db->commit();
 				return 1;
 			}
 		} else {
 			return - 1;
 		}
 	}
-
+	
 	/**
 	 * Information on record
 	 *
@@ -329,98 +323,95 @@ class AccountingAccount {
 	 * @return void
 	 */
 	function info($id) {
-
 		$sql = 'SELECT a.rowid, a.datec, a.fk_user_author, a.fk_user_modif, a.tms';
 		$sql .= ' FROM ' . MAIN_DB_PREFIX . 'accountingaccount as a';
 		$sql .= ' WHERE a.rowid = ' . $id;
 		
-		dol_syslog ( get_class ( $this ) . '::info sql=' . $sql );
-		$result = $this->db->query ( $sql );
+		dol_syslog(get_class($this) . '::info sql=' . $sql);
+		$result = $this->db->query($sql);
 		
 		if ($result) {
-			if ($this->db->num_rows ( $result )) {
-				$obj = $this->db->fetch_object ( $result );
+			if ($this->db->num_rows($result)) {
+				$obj = $this->db->fetch_object($result);
 				$this->id = $obj->rowid;
 				if ($obj->fk_user_author) {
-					$cuser = new User ( $this->db );
-					$cuser->fetch ( $obj->fk_user_author );
+					$cuser = new User($this->db);
+					$cuser->fetch($obj->fk_user_author);
 					$this->user_creation = $cuser;
 				}
 				if ($obj->fk_user_modif) {
-					$muser = new User ( $this->db );
-					$muser->fetch ( $obj->fk_user_modif );
+					$muser = new User($this->db);
+					$muser->fetch($obj->fk_user_modif);
 					$this->user_modification = $muser;
 				}
-				$this->date_creation = $this->db->jdate ( $obj->datec );
-				$this->date_modification = $this->db->jdate ( $obj->tms );
+				$this->date_creation = $this->db->jdate($obj->datec);
+				$this->date_modification = $this->db->jdate($obj->tms);
 			}
-			$this->db->free ( $result );
+			$this->db->free($result);
 		} else {
-			dol_print_error ( $this->db );
+			dol_print_error($this->db);
 		}
 	}
-  
-  /**
-   * Account desactivate
-   *
-   * @param User $user update
-   * @return int if KO, >0 if OK
-   */
-  function account_desactivate($user) {
-  
-  global $langs;
-  		
-  $result = $this->checkUsage ();
-  		
-  if ($result > 0) {
-    $this->db->begin ();
-  			
-    $sql = "UPDATE " . MAIN_DB_PREFIX . "accountingaccount ";
-  	$sql .= "SET active = '0'";
-  	$sql .= " WHERE rowid = " . $this->id;
-  			
-  	dol_syslog ( get_class ( $this ) . "::desactivate sql=" . $sql, LOG_DEBUG );
-  	$result = $this->db->query ( $sql );
-  	
-    if ($result) {
-  	   $this->db->commit ();
-  		 return 1;
-  	} else {
-  	   $this->error = $this->db->lasterror ();
-  		 $this->db->rollback ();
-  		 return - 1;
-  	}
-  } else {
-      return - 1;
-  	}
-  }
-
-  /**
-   * Account activate
-   *
-   * @param User $user update
-   * @return int if KO, >0 if OK
-   */
-  function account_activate($user) {
-  
-  global $langs;
-  		
-  $this->db->begin ();
-  		
-  $sql = "UPDATE " . MAIN_DB_PREFIX . "accountingaccount ";
-  $sql .= "SET active = '1'";
-  $sql .= " WHERE rowid = " . $this->id;
-  		
-  dol_syslog ( get_class ( $this ) . "::activate sql=" . $sql, LOG_DEBUG );
-  $result = $this->db->query ( $sql );
-  if ($result) {
-    $this->db->commit ();
-    return 1;
-  } else {
-    $this->error = $this->db->lasterror ();
-  	$this->db->rollback ();
-  	return - 1;
-  	}
-  }
+	
+	/**
+	 * Account desactivate
+	 *
+	 * @param User $user update
+	 * @return int if KO, >0 if OK
+	 */
+	function account_desactivate($user) {
+		global $langs;
+		
+		$result = $this->checkUsage();
+		
+		if ($result > 0) {
+			$this->db->begin();
+			
+			$sql = "UPDATE " . MAIN_DB_PREFIX . "accountingaccount ";
+			$sql .= "SET active = '0'";
+			$sql .= " WHERE rowid = " . $this->id;
+			
+			dol_syslog(get_class($this) . "::desactivate sql=" . $sql, LOG_DEBUG);
+			$result = $this->db->query($sql);
+			
+			if ($result) {
+				$this->db->commit();
+				return 1;
+			} else {
+				$this->error = $this->db->lasterror();
+				$this->db->rollback();
+				return - 1;
+			}
+		} else {
+			return - 1;
+		}
+	}
+	
+	/**
+	 * Account activate
+	 *
+	 * @param User $user update
+	 * @return int if KO, >0 if OK
+	 */
+	function account_activate($user) {
+		global $langs;
+		
+		$this->db->begin();
+		
+		$sql = "UPDATE " . MAIN_DB_PREFIX . "accountingaccount ";
+		$sql .= "SET active = '1'";
+		$sql .= " WHERE rowid = " . $this->id;
+		
+		dol_syslog(get_class($this) . "::activate sql=" . $sql, LOG_DEBUG);
+		$result = $this->db->query($sql);
+		if ($result) {
+			$this->db->commit();
+			return 1;
+		} else {
+			$this->error = $this->db->lasterror();
+			$this->db->rollback();
+			return - 1;
+		}
+	}
 }
 ?>

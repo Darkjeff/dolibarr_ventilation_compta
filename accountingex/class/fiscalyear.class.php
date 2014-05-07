@@ -17,108 +17,98 @@
  */
 
 /**
- *	\file       accountingex/class/accountancy.class.php
- * 	\ingroup    Accounting Expert
- * 	\brief      Fichier de la classe comptabilité expert
+ * \file accountingex/class/accountancy.class.php
+ * \ingroup Accounting Expert
+ * \brief Fichier de la classe comptabilité expert
  */
 dol_include_once("/core/class/commonobject.class.php");
 
 /**
- * \class 		Accountancy
- * \brief 		Classe permettant la gestion comptable
+ * \class Accountancy
+ * \brief Classe permettant la gestion comptable
  */
-class Accountancy
-{
-  public $element='Accountancy';
-	public $table_element='accounting';
+class Accountancy {
+	public $element = 'Accountancy';
+	public $table_element = 'accounting';
 	public $table_element_line = '';
 	public $fk_element = '';
-	protected $ismultientitymanaged = 1;	// 0=No test on entity, 1=Test with field entity, 2=Test with link by societe
-
+	protected $ismultientitymanaged = 1; // 0=No test on entity, 1=Test with field entity, 2=Test with link by societe
 	var $id;
-  var $rowid;
-
-  var $label;
+	var $rowid;
+	var $label;
 	var $datestart;
 	var $dateend;
-	var $statut;		// 0=open, 1=closed
-  var $entity;
-  var $extraparams=array();
-
-	var $statuts=array();
-	var $statuts_short=array();
+	var $statut; // 0=open, 1=closed
+	var $entity;
+	var $extraparams = array ();
+	var $statuts = array ();
+	var $statuts_short = array ();
 	
- /**
-	* Constructor
-	*
-	* @param	DoliDB		$db		Database handler
-	*/
-	function __construct($db)
-	{
+	/**
+	 * Constructor
+	 *
+	 * @param DoliDB $db
+	 */
+	function __construct($db) {
 		$this->db = $db;
-
+		
 		return 1;
 	}
-
+	
 	/**
 	 * Create object in database
 	 * TODO Add ref number
 	 *
-	 * @return 	int				<0 if KO, >0 if OK
+	 * @return int if KO, >0 if OK
 	 */
-	function create()
-	{
+	function create() {
 		global $conf;
-
-    $now=dol_now();
-
-    $this->db->begin();
-
-		$sql = "INSERT INTO ".MAIN_DB_PREFIX."accountingfiscalyear (";
-		$sql.= " label";
-		$sql.= ", datestart";
-		$sql.= ", dateend";
-		$sql.= ", statut";
-		$sql.= ", entity";
-		$sql.= ") VALUES (";
-		$sql.= " '".$this->label;
-		$sql.= "', ".$this->datestart;
-		$sql.= ", ".$this->dateend;
-		$sql.= ", ".$this->statut;
-		$sql.= ", ".$conf->entity;
-		$sql.= ")";
-    
-    $this->db->begin();
-
-    dol_syslog(get_class($this)."::create sql=".$sql, LOG_DEBUG);
-    $resql=$this->db->query($sql);
-    if (! $resql) {
-        $error++; $this->errors[]="Error ".$this->db->lasterror();
-    }
-
-    if (! $error)
-    {
-        $this->rowid = $this->db->last_insert_id(MAIN_DB_PREFIX."accountingfiscalyear");
-    }
-
-    // Commit or rollback
-    if ($error)
-    {
-        foreach($this->errors as $errmsg)
-        {
-            dol_syslog(get_class($this)."::create ".$errmsg, LOG_ERR);
-            $this->error.=($this->error?', '.$errmsg:$errmsg);
-        }
-            $this->db->rollback();
-            return -1*$error;
-    }
-    else
-    {
-        $this->db->commit();
-        return $this->rowid;
-    }
-        
-    /*
+		
+		$now = dol_now();
+		
+		$this->db->begin();
+		
+		$sql = "INSERT INTO " . MAIN_DB_PREFIX . "accountingfiscalyear (";
+		$sql .= " label";
+		$sql .= ", datestart";
+		$sql .= ", dateend";
+		$sql .= ", statut";
+		$sql .= ", entity";
+		$sql .= ") VALUES (";
+		$sql .= " '" . $this->label;
+		$sql .= "', " . $this->datestart;
+		$sql .= ", " . $this->dateend;
+		$sql .= ", " . $this->statut;
+		$sql .= ", " . $conf->entity;
+		$sql .= ")";
+		
+		$this->db->begin();
+		
+		dol_syslog(get_class($this) . "::create sql=" . $sql, LOG_DEBUG);
+		$resql = $this->db->query($sql);
+		if (! $resql) {
+			$error ++;
+			$this->errors [] = "Error " . $this->db->lasterror();
+		}
+		
+		if (! $error) {
+			$this->rowid = $this->db->last_insert_id(MAIN_DB_PREFIX . "accountingfiscalyear");
+		}
+		
+		// Commit or rollback
+		if ($error) {
+			foreach ( $this->errors as $errmsg ) {
+				dol_syslog(get_class($this) . "::create " . $errmsg, LOG_ERR);
+				$this->error .= ($this->error ? ', ' . $errmsg : $errmsg);
+			}
+			$this->db->rollback();
+			return - 1 * $error;
+		} else {
+			$this->db->commit();
+			return $this->rowid;
+		}
+		
+		/*
 		dol_syslog(get_class($this)."::create sql=".$sql, LOG_DEBUG);
 		$result = $this->db->query($sql);
 		if ($result)
@@ -145,7 +135,6 @@ class Accountancy
 			return -1;
 		}
     */
-
 	}
 }
 ?>
