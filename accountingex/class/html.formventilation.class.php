@@ -87,6 +87,7 @@ class FormVentilation extends Form {
 	 * @param string $selectedid pcg_type
 	 * @param string $htmlname of combo list
 	 * @param int $showempty en empty line
+	 * @param array $event js event array
 	 *       
 	 * @return string with HTML select
 	 */
@@ -102,7 +103,7 @@ class FormVentilation extends Form {
 		$sql .= " AND aa.active = 1";
 		$sql .= " ORDER BY aa.account_number";
 		
-		dol_syslog(get_class($this) . "::select_account_parent sql=" . $sql, LOG_DEBUG);
+		dol_syslog(get_class($this) . "::select_account sql=" . $sql, LOG_DEBUG);
 		$resql = $this->db->query($sql);
 		if ($resql) {
 			
@@ -131,6 +132,60 @@ class FormVentilation extends Form {
 			dol_print_error($this->db);
 		}
 		$this->db->free($resql);
+		return $out;
+	}
+	
+	/**
+	 * Return list of the accounts with label
+	 *
+	 * @param string $selectedid pcg_type
+	 * @param string $htmlname of combo list
+	 * @param int $showempty en empty line
+	 *
+	 * @return string with HTML select
+	 */
+	function select_account_parent($selectid, $htmlname = 'account_parent', $showempty = 0, $event = array()) {
+		global $conf, $user, $langs;
+	
+		$out = '';
+	
+		$sql = "SELECT DISTINCT aa.account_number, aa.label, aa.rowid, aa.fk_pcg_version";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "accountingaccount as aa";
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "accounting_system as asy ON aa.fk_pcg_version = asy.pcg_version";
+		$sql .= " AND asy.rowid = ".$conf->global->CHARTOFACCOUNTS;
+		$sql .= " AND aa.active = 1";
+		$sql .= " ORDER BY aa.account_number";
+	
+		dol_syslog ( get_class ( $this ) . "::select_account_parent sql=" . $sql, LOG_DEBUG );
+		$resql = $this->db->query ( $sql );
+		if ($resql) {
+	
+			$out .= ajax_combobox ( $htmlname, $event );
+	
+	
+			$out .= '<select id="' . $htmlname . '" class="flat" name="' . $htmlname . '">';
+			if ($showempty)
+				$out .= '<option value="-1"></option>';
+			$num = $this->db->num_rows ( $resql );
+			$i = 0;
+			if ($num) {
+				while ( $i < $num ) {
+					$obj = $this->db->fetch_object ( $resql );
+					$label = $obj->account_number.'-'.$obj->label;
+	
+					if (($selectid != '') && $selectid == $obj->account_number) {
+						$out .= '<option value="' . $obj->rowid . '" selected="selected">' . $label . '</option>';
+					} else {
+						$out .= '<option value="' . $obj->rowid . '">' . $label . '</option>';
+					}
+					$i ++;
+				}
+			}
+			$out .= '</select>';
+		} else {
+			dol_print_error ( $this->db );
+		}
+		$this->db->free ( $resql );
 		return $out;
 	}
 	

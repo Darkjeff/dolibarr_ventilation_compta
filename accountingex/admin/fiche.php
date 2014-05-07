@@ -118,6 +118,28 @@ else if ($action == 'edit') {
 		header("Location: " . $_SERVER ["PHP_SELF"] . "?id=" . $id);
 		exit();
 	}
+} else if ($action == 'disable') {
+	
+	$result = $accounting->fetch($id);
+	if (! empty($accounting->id)) {
+		$result = $accounting->account_desactivate($user);
+	}
+	
+	$action = 'update';
+	if ($result < 0) {
+		setEventMessage($accounting->error, 'errors');
+	}
+} else if ($action == 'enable') {
+	
+	$result = $accounting->fetch($id);
+	
+	if (! empty($accounting->id)) {
+		$result = $accounting->account_activate($user);
+	}
+	$action = 'update';
+	if ($result < 0) {
+		setEventMessage($accounting->error, 'errors');
+	}
 } else if ($action == 'delete') {
 	
 	$result = $accounting->fetch($id);
@@ -143,6 +165,8 @@ llxheader('', $langs->trans('AccountAccounting'));
 
 $form = new Form($db);
 $htmlacc = new FormVentilation($db);
+
+$linkback = '<a href="' . DOL_URL_ROOT . '/accountingex/admin/account.php">' . $langs->trans("BackToChartofaccounts") . '</a>';
 
 if ($action == 'create') {
 	
