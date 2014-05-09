@@ -2,6 +2,7 @@
 *	Accounting Expert MODULE
 *	by Olivier Geffroy (Jeffinfo)
 *	And Alexandre Spangaro
+*	And Florian Henry
 *		
 * Version	3.5 alpha - Revision 1.0.0
 *	for Dolibarr >= 3.5.x
