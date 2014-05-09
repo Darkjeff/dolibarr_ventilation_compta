@@ -48,11 +48,9 @@ if ($user->societe_id > 0)
 if (! $user->rights->accountingex->access)
 	accessforbidden();
 
-
 llxHeader('', 'Journaux', '');
 
 $form = new Form($db);
-
 
 // End of page
 $db->close();

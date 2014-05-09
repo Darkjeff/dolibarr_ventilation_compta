@@ -118,14 +118,13 @@ class FormVentilation extends Form {
 					$obj = $this->db->fetch_object($resql);
 					$label = $obj->account_number . ' - ' . $obj->label;
 					
-					
-					//Remember guy's we store in database llx_facturedet the rowid of accountingaccount and not the account_number
-					//Bacause same account_number can be share between different accounting_system and do have the same meaning 
+					// Remember guy's we store in database llx_facturedet the rowid of accountingaccount and not the account_number
+					// Bacause same account_number can be share between different accounting_system and do have the same meaning
 					if (($selectid != '') && $selectid == $obj->rowid) {
-						//$out .= '<option value="' . $obj->account_number . '" selected="selected">' . $label . '</option>';
+						// $out .= '<option value="' . $obj->account_number . '" selected="selected">' . $label . '</option>';
 						$out .= '<option value="' . $obj->rowid . '" selected="selected">' . $label . '</option>';
 					} else {
-						//$out .= '<option value="' . $obj->account_number . '">' . $label . '</option>';
+						// $out .= '<option value="' . $obj->account_number . '">' . $label . '</option>';
 						$out .= '<option value="' . $obj->rowid . '">' . $label . '</option>';
 					}
 					$i ++;

@@ -47,7 +47,7 @@ $langs->load("other");
 $langs->load("accountingex@accountingex");
 
 // Filter
-$year = $_GET ["year"];
+$year = $_GET["year"];
 if ($year == 0) {
 	$year_current = strftime("%Y", time());
 	$year_start = $year_current;
@@ -75,7 +75,7 @@ dol_syslog('accountingex/bookkeeping/balancebymonth.php:: $sql=' . $sql);
 $result = $db->query($sql);
 if ($result) {
 	$row = $db->fetch_row($result);
-	$nbfac = $row [0];
+	$nbfac = $row[0];
 	
 	$db->free($result);
 }
@@ -115,20 +115,20 @@ if ($resql) {
 		
 		$row = $db->fetch_row($resql);
 		
-		print '<tr><td width="14%">' . length_accountg($row [0]) . '</td>';
-		print '<td align="right" width="6.5%">' . price($row [1]) . '</td>';
-		print '<td align="right" width="6.5%">' . price($row [2]) . '</td>';
-		print '<td align="right" width="6.5%">' . price($row [3]) . '</td>';
-		print '<td align="right" width="6.5%">' . price($row [4]) . '</td>';
-		print '<td align="right" width="6.5%">' . price($row [5]) . '</td>';
-		print '<td align="right" width="6.5%">' . price($row [6]) . '</td>';
-		print '<td align="right" width="6.5%">' . price($row [7]) . '</td>';
-		print '<td align="right" width="6.5%">' . price($row [8]) . '</td>';
-		print '<td align="right" width="6.5%">' . price($row [9]) . '</td>';
-		print '<td align="right" width="6.5%">' . price($row [10]) . '</td>';
-		print '<td align="right" width="6.5%">' . price($row [11]) . '</td>';
-		print '<td align="right" width="6.5%">' . price($row [12]) . '</td>';
-		print '<td align="right" width="8%"><b>' . price($row [13]) . '</b></td>';
+		print '<tr><td width="14%">' . length_accountg($row[0]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row[1]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row[2]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row[3]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row[4]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row[5]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row[6]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row[7]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row[8]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row[9]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row[10]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row[11]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row[12]) . '</td>';
+		print '<td align="right" width="8%"><b>' . price($row[13]) . '</b></td>';
 		print '</tr>';
 		
 		$i ++;

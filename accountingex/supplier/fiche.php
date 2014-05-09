@@ -47,10 +47,9 @@ $langs->load("other");
 $langs->load("main");
 $langs->load("accountingex@accountingex");
 
-$action=GETPOST('action');
-$id=GETPOST('id','int');
-$codeventil=GETPOST('codeventil');
-
+$action = GETPOST('action');
+$id = GETPOST('id', 'int');
+$codeventil = GETPOST('codeventil');
 
 // Security check
 if ($user->societe_id > 0)
@@ -65,9 +64,9 @@ if ($action == 'ventil' && $user->rights->accountingex->access) {
 	
 	dol_syslog('accountingex/journal/sellsjournal.php:: $sql=' . $sql);
 	
-	$resql=$db->query($sql);
-	if (!$resql) {
-		setEventMessage($db->lasterror(),'errors');
+	$resql = $db->query($sql);
+	if (! $resql) {
+		setEventMessage($db->lasterror(), 'errors');
 	}
 }
 
@@ -108,7 +107,7 @@ if ($_GET["id"]) {
 		if ($num_lignes) {
 			$objp = $db->fetch_object($result);
 			
-			print '<form action="' . $_SERVER ["PHP_SELF"] . '?id=' . $id . '" method="post">' . "\n";
+			print '<form action="' . $_SERVER["PHP_SELF"] . '?id=' . $id . '" method="post">' . "\n";
 			print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 			print '<input type="hidden" name="action" value="ventil">';
 			
@@ -128,7 +127,7 @@ if ($_GET["id"]) {
 			print '<tr><td width="20%">' . $langs->trans("ProductLabel") . '</td>';
 			print '<td>' . dol_trunc($objp->product_label, 24) . '</td>';
 			print '<tr><td width="20%">' . $langs->trans("Account") . '</td><td>';
-			print $objp->account_number.'-'.$objp->label;
+			print $objp->account_number . '-' . $objp->label;
 			print '<tr><td width="20%">' . $langs->trans("NewAccount") . '</td><td>';
 			print $formventilation->select_account($objp->fk_code_ventilation, 'codeventil', 1);
 			print '</td></tr>';

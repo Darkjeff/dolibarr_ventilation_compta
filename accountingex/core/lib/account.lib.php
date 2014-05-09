@@ -35,9 +35,9 @@ function admin_account_prepare_head($object) {
 	$h = 0;
 	$head = array ();
 	
-	$head [$h] [0] = dol_buildpath('/accountingex/admin/index.php', 1);
-	$head [$h] [1] = $langs->trans("Configuration");
-	$head [$h] [2] = 'general';
+	$head[$h][0] = dol_buildpath('/accountingex/admin/index.php', 1);
+	$head[$h][1] = $langs->trans("Configuration");
+	$head[$h][2] = 'general';
 	$h ++;
 	
 	// Show more tabs from modules
@@ -46,19 +46,19 @@ function admin_account_prepare_head($object) {
 	// $this->tabs = array('entity:-tabname); to remove a tab
 	complete_head_from_modules($conf, $langs, $object, $head, $h, 'accountingex_admin');
 	
-	$head [$h] [0] = dol_buildpath('/accountingex/admin/journaux.php', 1);
-	$head [$h] [1] = $langs->trans("Journaux");
-	$head [$h] [2] = 'journal';
+	$head[$h][0] = dol_buildpath('/accountingex/admin/journaux.php', 1);
+	$head[$h][1] = $langs->trans("Journaux");
+	$head[$h][2] = 'journal';
 	$h ++;
 	
-	$head [$h] [0] = dol_buildpath('/accountingex/admin/export.php', 1);
-	$head [$h] [1] = $langs->trans("Export");
-	$head [$h] [2] = 'export';
+	$head[$h][0] = dol_buildpath('/accountingex/admin/export.php', 1);
+	$head[$h][1] = $langs->trans("Export");
+	$head[$h][2] = 'export';
 	$h ++;
 	
-	$head [$h] [0] = dol_buildpath('/accountingex/admin/about.php', 1);
-	$head [$h] [1] = $langs->trans("About");
-	$head [$h] [2] = 'about';
+	$head[$h][0] = dol_buildpath('/accountingex/admin/about.php', 1);
+	$head[$h][1] = $langs->trans("About");
+	$head[$h][2] = 'about';
 	$h ++;
 	
 	complete_head_from_modules($conf, $langs, $object, $head, $h, 'accountingex_admin', 'remove');
@@ -78,9 +78,9 @@ function account_prepare_head($object) {
 	$h = 0;
 	$head = array ();
 	
-	$head [$h] [0] = dol_buildpath('/accountingex/admin/fiche.php', 1) . '?id=' . $object->id;
-	$head [$h] [1] = $langs->trans("Card");
-	$head [$h] [2] = 'card';
+	$head[$h][0] = dol_buildpath('/accountingex/admin/fiche.php', 1) . '?id=' . $object->id;
+	$head[$h][1] = $langs->trans("Card");
+	$head[$h][2] = 'card';
 	$h ++;
 	
 	// Show more tabs from modules

@@ -47,14 +47,13 @@ $langs->load("compta");
 $langs->load("main");
 $langs->load("accountingex@accountingex");
 
-$account_parent=GETPOST('account_parent');
+$account_parent = GETPOST('account_parent');
 
 // Security check
 if ($user->societe_id > 0)
 	accessforbidden();
 if (! $user->rights->accountingex->admin)
 	accessforbidden();
-	
 
 $formventilation = new FormVentilation($db);
 
@@ -149,13 +148,13 @@ if ($result) {
 	$i = 0;
 	
 	// TODO : print_barre_liste always use $conf->liste_limit and do not care about custom limit in list...
-	print_barre_liste($langs->trans("InvoiceLinesDone"), $page, $_SERVER ["PHP_SELF"], "", $sortfield, $sortorder, '', $num_lignes);
+	print_barre_liste($langs->trans("InvoiceLinesDone"), $page, $_SERVER["PHP_SELF"], "", $sortfield, $sortorder, '', $num_lignes);
 	
 	print '<td align="left"><br><b>' . $langs->trans("DescVentilDoneCustomer") . '</b></br><br></td>';
 	
-	print '<form method="POST" action="' . $_SERVER ["PHP_SELF"] . '">';
+	print '<form method="POST" action="' . $_SERVER["PHP_SELF"] . '">';
 	print '<table class="noborder" width="100%">';
-
+	
 	print '<div class="inline-block divButAction">' . $langs->trans("ChangeAccount") . '</div>';
 	print $formventilation->select_account($account_parent, 'account_parent', 1);
 	print '<div class="inline-block divButAction"><input type="submit" class="butAction" value="' . $langs->trans("Validate") . '"/></div>';
@@ -187,7 +186,7 @@ if ($result) {
 	$product_static = new Product($db);
 	
 	$var = True;
-	while ($objp = $db->fetch_object($result)) {
+	while ( $objp = $db->fetch_object($result) ) {
 		$var = ! $var;
 		$codeCompta = $objp->account_number . ' ' . $objp->label;
 		

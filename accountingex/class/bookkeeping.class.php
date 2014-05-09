@@ -181,7 +181,7 @@ class BookKeeping {
 				$line->code_journal = $obj->code_journal;
 				$line->piece_num = $obj->piece_num;
 				
-				$this->linesmvt [] = $line;
+				$this->linesmvt[] = $line;
 			}
 		} else {
 			$this->error = "Error " . $this->db->lasterror();
@@ -213,7 +213,7 @@ class BookKeeping {
 		
 		if ($resql) {
 			$row = $this->db->fetch_array($resql);
-			if ($row [0] == 0) {
+			if ($row[0] == 0) {
 				
 				// Determine piece_num
 				$sqlnum = "SELECT piece_num";
@@ -299,7 +299,7 @@ class BookKeeping {
 		$resql = $this->db->query($sql);
 		if (! $resql) {
 			$error ++;
-			$this->errors [] = "Error " . $this->db->lasterror();
+			$this->errors[] = "Error " . $this->db->lasterror();
 		}
 		
 		// Commit or rollback
@@ -410,7 +410,7 @@ class BookKeeping {
 		$resql = $this->db->query($sql);
 		if (! $resql) {
 			$error ++;
-			$this->errors [] = "Error " . $this->db->lasterror();
+			$this->errors[] = "Error " . $this->db->lasterror();
 		}
 		
 		if (! $error) {
@@ -518,7 +518,7 @@ class BookKeeping {
 		$resql = $this->db->query($sql);
 		if (! $resql) {
 			$error ++;
-			$this->errors [] = "Error " . $this->db->lasterror();
+			$this->errors[] = "Error " . $this->db->lasterror();
 		}
 		
 		if (! $error) {
@@ -584,7 +584,7 @@ class BookKeeping {
 			$resql = $this->db->query($sql);
 			if (! $resql) {
 				$error ++;
-				$this->errors [] = "Error " . $this->db->lasterror();
+				$this->errors[] = "Error " . $this->db->lasterror();
 			}
 		}
 		
@@ -640,7 +640,7 @@ class BookKeeping {
 				$line->code_journal = $obj->code_journal;
 				$line->piece_num = $obj->piece_num;
 				
-				$this->linesexport [] = $line;
+				$this->linesexport[] = $line;
 			}
 			$this->db->free($resql);
 			

@@ -85,21 +85,21 @@ if ($resql) {
 	$num = $db->num_rows($resql);
 	$i = 0;
 	
-	print_barre_liste($langs->trans("Bookkeeping") . " $textprevyear " . $langs->trans("Year") . " $year_start $textnextyear", $page, $_SERVER ['PHP_SELF'], "", $sortfield, $sortorder, '', $num);
+	print_barre_liste($langs->trans("Bookkeeping") . " $textprevyear " . $langs->trans("Year") . " $year_start $textnextyear", $page, $_SERVER['PHP_SELF'], "", $sortfield, $sortorder, '', $num);
 	print "<table class=\"noborder\" width=\"100%\">";
 	
 	print '<tr class="liste_titre">';
-	print_liste_field_titre($langs->trans("Doctype"), $_SERVER ['PHP_SELF'], "bk.doc_type", "", "", "", $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("Docdate"), $_SERVER ['PHP_SELF'], "bk.doc_date", "", "", "", $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("Docref"), $_SERVER ['PHP_SELF'], "bk.doc_ref", "", "", "", $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("Numerocompte"), $_SERVER ['PHP_SELF'], "bk.numero_compte", "", "", "", $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("Code_tiers"), $_SERVER ['PHP_SELF'], "bk.code_tiers", "", "", "", $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("Labelcompte"), $_SERVER ['PHP_SELF'], "bk_label_compte", "", "", "", $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("Debit"), $_SERVER ['PHP_SELF'], "bk.debit", "", "", "", $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("Credit"), $_SERVER ['PHP_SELF'], "bk.credit", "", "", "", $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("Amount"), $_SERVER ['PHP_SELF'], "bk.montant", "", "", "", $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("Sens"), $_SERVER ['PHP_SELF'], "bk.sens", "", "", "", $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("Codejournal"), $_SERVER ['PHP_SELF'], "bk.code_journal", "", "", "", $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("Doctype"), $_SERVER['PHP_SELF'], "bk.doc_type", "", "", "", $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("Docdate"), $_SERVER['PHP_SELF'], "bk.doc_date", "", "", "", $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("Docref"), $_SERVER['PHP_SELF'], "bk.doc_ref", "", "", "", $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("Numerocompte"), $_SERVER['PHP_SELF'], "bk.numero_compte", "", "", "", $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("Code_tiers"), $_SERVER['PHP_SELF'], "bk.code_tiers", "", "", "", $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("Labelcompte"), $_SERVER['PHP_SELF'], "bk_label_compte", "", "", "", $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("Debit"), $_SERVER['PHP_SELF'], "bk.debit", "", "", "", $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("Credit"), $_SERVER['PHP_SELF'], "bk.credit", "", "", "", $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("Amount"), $_SERVER['PHP_SELF'], "bk.montant", "", "", "", $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("Sens"), $_SERVER['PHP_SELF'], "bk.sens", "", "", "", $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("Codejournal"), $_SERVER['PHP_SELF'], "bk.code_journal", "", "", "", $sortfield, $sortorder);
 	print_liste_field_titre("&nbsp;");
 	print "</tr>\n";
 	

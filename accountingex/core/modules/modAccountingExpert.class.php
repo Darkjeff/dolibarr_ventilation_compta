@@ -84,82 +84,82 @@ class modAccountingExpert extends DolibarrModules {
 		
 		// Constantes
 		$this->const = array ();
-		$this->const [1] = array (
+		$this->const[1] = array (
 				"ACCOUNTINGEX_SEPARATORCSV",
 				"string",
 				"," 
 		);
-		$this->const [2] = array (
+		$this->const[2] = array (
 				"ACCOUNTINGEX_ACCOUNT_SUSPENSE",
 				"chaine",
 				"471" 
 		);
-		$this->const [3] = array (
+		$this->const[3] = array (
 				"ACCOUNTINGEX_SELL_JOURNAL",
 				"chaine",
 				"VTE" 
 		);
-		$this->const [4] = array (
+		$this->const[4] = array (
 				"ACCOUNTINGEX_PURCHASE_JOURNAL",
 				"chaine",
 				"ACH" 
 		);
-		$this->const [5] = array (
+		$this->const[5] = array (
 				"ACCOUNTINGEX_SOCIAL_JOURNAL",
 				"chaine",
 				"SOC" 
 		);
-		$this->const [6] = array (
+		$this->const[6] = array (
 				"ACCOUNTINGEX_CASH_JOURNAL",
 				"chaine",
 				"CAI" 
 		);
-		$this->const [7] = array (
+		$this->const[7] = array (
 				"ACCOUNTINGEX_MISCELLANEOUS_JOURNAL",
 				"chaine",
 				"OD" 
 		);
-		$this->const [8] = array (
+		$this->const[8] = array (
 				"ACCOUNTINGEX_BANK_JOURNAL",
 				"chaine",
 				"BQ" 
 		); // Deprecated Move into llx_bank_account
-		$this->const [9] = array (
+		$this->const[9] = array (
 				"ACCOUNTINGEX_ACCOUNT_TRANSFER_CASH",
 				"chaine",
 				"58" 
 		);
-		$this->const [10] = array (
+		$this->const[10] = array (
 				"CHARTOFACCOUNTS",
 				"chaine",
 				"2" 
 		);
-		$this->const [11] = array (
+		$this->const[11] = array (
 				"ACCOUNTINGEX_MODELCSV",
 				"chaine",
 				"0" 
 		);
-		$this->const [12] = array (
+		$this->const[12] = array (
 				"ACCOUNTINGEX_LENGTH_GACCOUNT",
 				"chaine",
 				"" 
 		);
-		$this->const [13] = array (
+		$this->const[13] = array (
 				"ACCOUNTINGEX_LENGTH_AACCOUNT",
 				"chaine",
 				"" 
 		);
-		$this->const [14] = array (
+		$this->const[14] = array (
 				"ACCOUNTINGEX_LIMIT_LIST_VENTILATION",
 				"chaine",
 				"50" 
 		);
-		$this->const [15] = array (
+		$this->const[15] = array (
 				"ACCOUNTINGEX_LIST_SORT_VENTILATION_TODO",
 				"yesno",
 				"1" 
 		);
-		$this->const [16] = array (
+		$this->const[16] = array (
 				"ACCOUNTINGEX_LIST_SORT_VENTILATION_DONE",
 				"yesno",
 				"1" 
@@ -181,32 +181,32 @@ class modAccountingExpert extends DolibarrModules {
 		$this->rights = array (); // Permission array used by this module
 		$r = 0;
 		
-		$this->rights [$r] [0] = 150001; // Permission id (must not be already used)
-		$this->rights [$r] [1] = 'Acces_module'; // Permission label
-		$this->rights [$r] [3] = 0; // Permission by default for new user (0/1)
-		$this->rights [$r] [4] = 'access'; // In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
-		$this->rights [$r] [5] = ''; // In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
+		$this->rights[$r][0] = 150001; // Permission id (must not be already used)
+		$this->rights[$r][1] = 'Acces_module'; // Permission label
+		$this->rights[$r][3] = 0; // Permission by default for new user (0/1)
+		$this->rights[$r][4] = 'access'; // In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
+		$this->rights[$r][5] = ''; // In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
 		$r ++;
 		
-		$this->rights [$r] [0] = 150002; // Permission id (must not be already used)
-		$this->rights [$r] [1] = 'Administration_module'; // Permission label
-		$this->rights [$r] [3] = 0; // Permission by default for new user (0/1)
-		$this->rights [$r] [4] = 'admin'; // In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
-		$this->rights [$r] [5] = ''; // In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
+		$this->rights[$r][0] = 150002; // Permission id (must not be already used)
+		$this->rights[$r][1] = 'Administration_module'; // Permission label
+		$this->rights[$r][3] = 0; // Permission by default for new user (0/1)
+		$this->rights[$r][4] = 'admin'; // In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
+		$this->rights[$r][5] = ''; // In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
 		$r ++;
 		
-		$this->rights [$r] [0] = 150010; // Permission id (must not be already used)
-		$this->rights [$r] [1] = 'Développement'; // Permission label
-		$this->rights [$r] [3] = 0; // Permission by default for new user (0/1)
-		$this->rights [$r] [4] = 'dev'; // In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
-		$this->rights [$r] [5] = ''; // In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
+		$this->rights[$r][0] = 150010; // Permission id (must not be already used)
+		$this->rights[$r][1] = 'Développement'; // Permission label
+		$this->rights[$r][3] = 0; // Permission by default for new user (0/1)
+		$this->rights[$r][4] = 'dev'; // In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
+		$this->rights[$r][5] = ''; // In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
 		$r ++;
 		
 		// Main menu entries
 		$this->menus = array ();
 		$r = 0;
 		
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 0,
 				'type' => 'top',
 				'titre' => 'Accounting',
@@ -222,7 +222,7 @@ class modAccountingExpert extends DolibarrModules {
 		);
 		$r ++;
 		
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting',
 				'type' => 'left',
 				'titre' => 'CustomersVentilation',
@@ -238,7 +238,7 @@ class modAccountingExpert extends DolibarrModules {
 		);
 		$r ++;
 		
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting,fk_leftmenu=CustomersVentilation',
 				'type' => 'left',
 				'titre' => 'ToDispatch',
@@ -254,7 +254,7 @@ class modAccountingExpert extends DolibarrModules {
 		);
 		$r ++;
 		
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting,fk_leftmenu=CustomersVentilation',
 				'type' => 'left',
 				'titre' => 'Dispatched',
@@ -270,7 +270,7 @@ class modAccountingExpert extends DolibarrModules {
 		);
 		$r ++;
 		
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting',
 				'type' => 'left',
 				'titre' => 'SuppliersVentilation',
@@ -286,7 +286,7 @@ class modAccountingExpert extends DolibarrModules {
 		);
 		$r ++;
 		
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting,fk_leftmenu=SuppliersVentilation',
 				'type' => 'left',
 				'titre' => 'ToDispatch',
@@ -302,7 +302,7 @@ class modAccountingExpert extends DolibarrModules {
 		);
 		$r ++;
 		
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting,fk_leftmenu=SuppliersVentilation',
 				'type' => 'left',
 				'titre' => 'Dispatched',
@@ -318,7 +318,7 @@ class modAccountingExpert extends DolibarrModules {
 		);
 		$r ++;
 		
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting',
 				'type' => 'left',
 				'titre' => 'Journaux',
@@ -334,7 +334,7 @@ class modAccountingExpert extends DolibarrModules {
 		);
 		$r ++;
 		
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting,fk_leftmenu=Journaux',
 				'type' => 'left',
 				'titre' => 'SellsJournal',
@@ -350,7 +350,7 @@ class modAccountingExpert extends DolibarrModules {
 		);
 		$r ++;
 		
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting,fk_leftmenu=Journaux',
 				'type' => 'left',
 				'titre' => 'PurchasesJournal',
@@ -366,7 +366,7 @@ class modAccountingExpert extends DolibarrModules {
 		);
 		$r ++;
 		
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting,fk_leftmenu=Journaux',
 				'type' => 'left',
 				'titre' => 'CashJournal',
@@ -382,7 +382,7 @@ class modAccountingExpert extends DolibarrModules {
 		);
 		$r ++;
 		
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting,fk_leftmenu=Journaux',
 				'type' => 'left',
 				'titre' => 'BankJournal',
@@ -398,7 +398,7 @@ class modAccountingExpert extends DolibarrModules {
 		);
 		$r ++;
 		
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting',
 				'type' => 'left',
 				'titre' => 'Bookkeeping',
@@ -414,7 +414,7 @@ class modAccountingExpert extends DolibarrModules {
 		);
 		$r ++;
 		
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting,fk_leftmenu=Bookkeeping',
 				'type' => 'left',
 				'titre' => 'ByYear',
@@ -430,7 +430,7 @@ class modAccountingExpert extends DolibarrModules {
 		);
 		$r ++;
 		
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting,fk_leftmenu=Bookkeeping',
 				'type' => 'left',
 				'titre' => 'AccountBalanceByMonth',
@@ -447,7 +447,7 @@ class modAccountingExpert extends DolibarrModules {
 		$r ++;
 		
 		// Parameters Menu
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting',
 				'type' => 'left',
 				'titre' => 'Parameters',
@@ -463,7 +463,7 @@ class modAccountingExpert extends DolibarrModules {
 		);
 		$r ++;
 		
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting,fk_leftmenu=Parameters',
 				'type' => 'left',
 				'titre' => 'Globalparameters',
@@ -479,7 +479,7 @@ class modAccountingExpert extends DolibarrModules {
 		);
 		$r ++;
 		
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting,fk_leftmenu=Globalparameters',
 				'type' => 'left',
 				'titre' => 'Chartofaccounts',
@@ -495,7 +495,7 @@ class modAccountingExpert extends DolibarrModules {
 		);
 		$r ++;
 		
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting,fk_leftmenu=Globalparameters',
 				'type' => 'left',
 				'titre' => 'Menuaccount',
@@ -511,7 +511,7 @@ class modAccountingExpert extends DolibarrModules {
 		);
 		$r ++;
 		
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting,fk_leftmenu=Parameters',
 				'type' => 'left',
 				'titre' => 'Menuthirdpartyaccount',
@@ -526,7 +526,7 @@ class modAccountingExpert extends DolibarrModules {
 		);
 		$r ++;
 		
-		$this->menu [$r] = array (
+		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting,fk_leftmenu=Parameters',
 				'type' => 'left',
 				'titre' => 'MenuTools',

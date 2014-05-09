@@ -74,8 +74,8 @@ if ($user->societe_id > 0)
 if (! $user->rights->accountingex->access)
 	accessforbidden();
 
-$action=GETPOST('action');
-	
+$action = GETPOST('action');
+
 /*
  * View
  */

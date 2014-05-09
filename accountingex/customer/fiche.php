@@ -34,7 +34,7 @@ if (! $res && file_exists("../../../main.inc.php"))
 if (! $res)
 	die("Include of main fails");
 	
-// Class
+	// Class
 dol_include_once("/compta/facture/class/facture.class.php");
 dol_include_once("/accountingex/class/html.formventilation.class.php");
 
@@ -42,29 +42,29 @@ dol_include_once("/accountingex/class/html.formventilation.class.php");
 $langs->load("bills");
 $langs->load("accountingex@accountingex");
 
-$action=GETPOST('action','alpha');
-$codeventil=GETPOST('codeventil');
-$id=GETPOST('id');
+$action = GETPOST('action', 'alpha');
+$codeventil = GETPOST('codeventil');
+$id = GETPOST('id');
 
 // Security check
 if ($user->societe_id > 0)
 	accessforbidden();
 if (! $user->rights->accountingex->access)
 	accessforbidden();
-
-/*
+	
+	/*
  * Actions
  */
 
-if ( $action == 'ventil' && $user->rights->accountingex->access) {
+if ($action == 'ventil' && $user->rights->accountingex->access) {
 	$sql = " UPDATE " . MAIN_DB_PREFIX . "facturedet";
 	$sql .= " SET fk_code_ventilation = " . $codeventil;
 	$sql .= " WHERE rowid = " . $id;
 	
 	dol_syslog("/accountingex/customer/fiche.php sql=" . $sql, LOG_DEBUG);
-	$resql=$db->query($sql);
-	if (!$resql) {
-		setEventMessage($db->lasterror(),'errors');
+	$resql = $db->query($sql);
+	if (! $resql) {
+		setEventMessage($db->lasterror(), 'errors');
 	}
 }
 
@@ -81,7 +81,7 @@ $form = new Form($db);
 $facture_static = new Facture($db);
 $formventilation = new FormVentilation($db);
 
-if (!empty($id)) {
+if (! empty($id)) {
 	$sql = "SELECT f.facnumber, f.rowid as facid, l.fk_product, l.description, l.price,";
 	$sql .= " l.qty, l.rowid, l.tva_tx, l.remise_percent, l.subprice, p.accountancy_code_sell as code_sell,";
 	$sql .= " l.fk_code_ventilation, aa.account_number, aa.label";
@@ -106,8 +106,8 @@ if (!empty($id)) {
 			
 			$objp = $db->fetch_object($result);
 			
-			print '<form action="' . $_SERVER ["PHP_SELF"] . '?id=' . $id . '" method="post">' . "\n";
-			print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '">';
+			print '<form action="' . $_SERVER["PHP_SELF"] . '?id=' . $id . '" method="post">' . "\n";
+			print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 			print '<input type="hidden" name="action" value="ventil">';
 			
 			print_fiche_titre($langs->trans("Ventilation"));
@@ -124,7 +124,7 @@ if (!empty($id)) {
 			print '<tr><td width="20%">' . $langs->trans("Line") . '</td>';
 			print '<td>' . nl2br($objp->description) . '</td></tr>';
 			print '<tr><td width="20%">' . $langs->trans("Account") . '</td><td>';
-			print $objp->account_number.'-'.$objp->label;
+			print $objp->account_number . '-' . $objp->label;
 			print '<tr><td width="20%">' . $langs->trans("NewAccount") . '</td><td>';
 			print $formventilation->select_account($objp->fk_code_ventilation, 'codeventil', 1);
 			print '</td></tr>';

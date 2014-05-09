@@ -68,15 +68,15 @@ $date_startyear = GETPOST('date_startyear');
 $date_endmonth = GETPOST('date_endmonth');
 $date_endday = GETPOST('date_endday');
 $date_endyear = GETPOST('date_endyear');
-$action=GETPOST('action');
+$action = GETPOST('action');
 
 // Security check
 if ($user->societe_id > 0)
 	accessforbidden();
 if (! $user->rights->accountingex->access)
 	accessforbidden();
-
-/*
+	
+	/*
  * View
  */
 
@@ -107,7 +107,7 @@ $sql .= " JOIN " . MAIN_DB_PREFIX . "bank_account ba on b.fk_account=ba.rowid";
 $sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "bank_url bu1 ON bu1.fk_bank = b.rowid AND bu1.type='company'";
 $sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "societe soc on bu1.url_id=soc.rowid";
 // Pour isoler la caisse des autres comptes
-$sql .= " WHERE ba.courant <> 2"; 
+$sql .= " WHERE ba.courant <> 2";
 if (! empty($conf->multicompany->enabled)) {
 	$sql .= " AND ba.entity = " . $conf->entity;
 }

@@ -216,7 +216,7 @@ if ($resql) {
 	
 	$var = True;
 	
-	while ($obj = $db->fetch_object($resql)) {
+	while ( $obj = $db->fetch_object($resql) ) {
 		
 		$var = ! $var;
 		
