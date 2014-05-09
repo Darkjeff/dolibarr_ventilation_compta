@@ -1,8 +1,7 @@
 <?php
-/* Copyright (C) 2001-2006 Rodolphe Quiedeville <rodolphe@quiedeville.org>
- * Copyright (C) 2004-2005 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
+/* Copyright (C) 2013-2014 Olivier Geffroy		<jeff@jeffinfo.com>
+ * Copyright (C) 2013-2014 Alexandre Spangaro	<alexandre.spangaro@gmail.com>
+ * Copyright (C) 2014	   Florian Henry		<florian.henry@open-concept.pro>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,18 +19,23 @@
  */
 
 /**
- *    \file       accountingex/bookkeeping/balancebymonth.php
- *    \ingroup    Accounting Expert
- *    \brief      Balance par mois
+ * \file accountingex/bookkeeping/balancebymonth.php
+ * \ingroup Accounting Expert
+ * \brief Balance by month
  */
- // Dolibarr environment
-$res=@include("../main.inc.php");
-if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
-if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.php");
-if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
-if (! $res) die("Include of main fails");
 
-// Class
+// Dolibarr environment
+$res = @include ("../main.inc.php");
+if (! $res && file_exists("../main.inc.php"))
+	$res = @include ("../main.inc.php");
+if (! $res && file_exists("../../main.inc.php"))
+	$res = @include ("../../main.inc.php");
+if (! $res && file_exists("../../../main.inc.php"))
+	$res = @include ("../../../main.inc.php");
+if (! $res)
+	die("Include of main fails");
+	
+	// Class
 dol_include_once("/core/lib/date.lib.php");
 dol_include_once("accountingex/core/lib/account.lib.php");
 
@@ -43,48 +47,45 @@ $langs->load("other");
 $langs->load("accountingex@accountingex");
 
 // Filter
-$year=$_GET["year"];
-if ($year == 0 )
-{
-  $year_current = strftime("%Y",time());
-  $year_start = $year_current;
+$year = $_GET ["year"];
+if ($year == 0) {
+	$year_current = strftime("%Y", time());
+	$year_start = $year_current;
 } else {
-  $year_current = $year;
-  $year_start = $year;
+	$year_current = $year;
+	$year_start = $year;
 }
-
 
 /*
  * View
  */
-llxHeader('',$langs->trans("CustomersVentilation"));
+llxHeader('', $langs->trans("CustomersVentilation"));
 
-$textprevyear="<a href=\"balancebymonth.php?year=" . ($year_current-1) . "\">".img_previous()."</a>";
-$textnextyear=" <a href=\"balancebymonth.php?year=" . ($year_current+1) . "\">".img_next()."</a>";
+$textprevyear = "<a href=\"balancebymonth.php?year=" . ($year_current - 1) . "\">" . img_previous() . "</a>";
+$textnextyear = " <a href=\"balancebymonth.php?year=" . ($year_current + 1) . "\">" . img_next() . "</a>";
 
-print_fiche_titre($langs->trans("AccountBalanceByMonth").' '.$textprevyear.' '.$langs->trans("Year").' '.$year_start.' '.$textnextyear);
+print_fiche_titre($langs->trans("AccountBalanceByMonth") . ' ' . $textprevyear . ' ' . $langs->trans("Year") . ' ' . $year_start . ' ' . $textnextyear);
 
-$sql = "SELECT count(*) FROM ".MAIN_DB_PREFIX."facturedet as fd";
-$sql.= " , ".MAIN_DB_PREFIX."facture as f";
-$sql.= " WHERE fd.fk_code_ventilation = 0";
-$sql.= " AND f.rowid = fd.fk_facture AND f.fk_statut = 1;";
+$sql = "SELECT count(*) FROM " . MAIN_DB_PREFIX . "facturedet as fd";
+$sql .= " , " . MAIN_DB_PREFIX . "facture as f";
+$sql .= " WHERE fd.fk_code_ventilation = 0";
+$sql .= " AND f.rowid = fd.fk_facture AND f.fk_statut = 1;";
 
+dol_syslog('accountingex/bookkeeping/balancebymonth.php:: $sql=' . $sql);
 $result = $db->query($sql);
-if ($result)
-{
-  $row = $db->fetch_row($result);
-  $nbfac = $row[0];
-
-  $db->free($result);
+if ($result) {
+	$row = $db->fetch_row($result);
+	$nbfac = $row [0];
+	
+	$db->free($result);
 }
 
-$y = $year_current ;
+$y = $year_current;
 
-
-$var=true;
+$var = true;
 
 print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre"><td width=150>'.$langs->trans("Intitule").'</td><td align="center">'.$langs->trans("JanuaryMin").'</td><td align="center">'.$langs->trans("FebruaryMin").'</td><td align="center">'.$langs->trans("MarchMin").'</td><td align="center">'.$langs->trans("AprilMin").'</td><td align="center">'.$langs->trans("MayMin").'</td><td align="center">'.$langs->trans("JuneMin").'</td><td align="center">'.$langs->trans("JulyMin").'</td><td align="center">'.$langs->trans("AugustMin").'</td><td align="center">'.$langs->trans("SeptemberMin").'</td><td align="center">'.$langs->trans("OctoberMin").'</td><td align="center">'.$langs->trans("NovemberMin").'</td><td align="center">'.$langs->trans("DecemberMin").'</td><td align="center"><b>Total</b></td></tr>';
+print '<tr class="liste_titre"><td width=150>' . $langs->trans("Intitule") . '</td><td align="center">' . $langs->trans("JanuaryMin") . '</td><td align="center">' . $langs->trans("FebruaryMin") . '</td><td align="center">' . $langs->trans("MarchMin") . '</td><td align="center">' . $langs->trans("AprilMin") . '</td><td align="center">' . $langs->trans("MayMin") . '</td><td align="center">' . $langs->trans("JuneMin") . '</td><td align="center">' . $langs->trans("JulyMin") . '</td><td align="center">' . $langs->trans("AugustMin") . '</td><td align="center">' . $langs->trans("SeptemberMin") . '</td><td align="center">' . $langs->trans("OctoberMin") . '</td><td align="center">' . $langs->trans("NovemberMin") . '</td><td align="center">' . $langs->trans("DecemberMin") . '</td><td align="center"><b>Total</b></td></tr>';
 
 $sql = "SELECT bk.numero_compte AS 'compte',";
 $sql .= "  ROUND(SUM(IF(MONTH(bk.doc_date)=1,bk.montant,0)),2) AS 'Janvier',";
@@ -100,49 +101,43 @@ $sql .= "  ROUND(SUM(IF(MONTH(bk.doc_date)=10,bk.montant,0)),2) AS 'Octobre',";
 $sql .= "  ROUND(SUM(IF(MONTH(bk.doc_date)=11,bk.montant,0)),2) AS 'Novembre',";
 $sql .= "  ROUND(SUM(IF(MONTH(bk.doc_date)=12,bk.montant,0)),2) AS 'Decembre',";
 $sql .= "  ROUND(SUM(bk.montant),2) as 'Total'";
-$sql .= " FROM ".MAIN_DB_PREFIX."bookkeeping as bk";
-$sql .= " WHERE bk.doc_date >= '".$db->idate(dol_get_first_day($y,1,false))."'";
-$sql .= "  AND bk.doc_date <= '".$db->idate(dol_get_last_day($y,12,false))."'";
+$sql .= " FROM " . MAIN_DB_PREFIX . "bookkeeping as bk";
+$sql .= " WHERE bk.doc_date >= '" . $db->idate(dol_get_first_day($y, 1, false)) . "'";
+$sql .= "  AND bk.doc_date <= '" . $db->idate(dol_get_last_day($y, 12, false)) . "'";
 $sql .= " GROUP BY bk.numero_compte";
 
 $resql = $db->query($sql);
-if ($resql)
-{
-  $i = 0;
-  $num = $db->num_rows($resql);
-
-  while ($i < $num)
-    {
-      
-      $row = $db->fetch_row($resql);
-
-      print '<tr><td width="14%">'.length_accountg($row[0]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[1]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[2]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[3]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[4]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[5]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[6]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[7]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[8]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[9]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[10]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[11]).'</td>';
-	    print '<td align="right" width="6.5%">'.price($row[12]).'</td>';
-	    print '<td align="right" width="8%"><b>'.price($row[13]).'</b></td>';
-	    print '</tr>';
-      
-      $i++;
-    }
-  $db->free($resql);
-}else {
-	print $db->lasterror(); // affiche la derniere erreur sql
+if ($resql) {
+	$i = 0;
+	$num = $db->num_rows($resql);
+	
+	while ( $i < $num ) {
+		
+		$row = $db->fetch_row($resql);
+		
+		print '<tr><td width="14%">' . length_accountg($row [0]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row [1]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row [2]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row [3]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row [4]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row [5]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row [6]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row [7]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row [8]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row [9]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row [10]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row [11]) . '</td>';
+		print '<td align="right" width="6.5%">' . price($row [12]) . '</td>';
+		print '<td align="right" width="8%"><b>' . price($row [13]) . '</b></td>';
+		print '</tr>';
+		
+		$i ++;
+	}
+	$db->free($resql);
+} else {
+	print $db->lasterror();
 }
-
 print "</table>\n";
 
-$db->close();
-
 llxFooter();
-
-?>
+$db->close();

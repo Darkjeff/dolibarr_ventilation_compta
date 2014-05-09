@@ -4,6 +4,7 @@ CHARSET=UTF-8
 Module150000Name= Desglose contable
 Module150000Desc= Gestión desglose contable
 
+Ventilation=Contabilidad
 
 Accounting=Contabilidad
 Globalparameters=Configuración global

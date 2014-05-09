@@ -1,8 +1,8 @@
 <?PHP
-/* Copyright (C) 2004-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
- * Copyright (C) 2005      Laurent Destailleur  <eldy@users.sourceforge.net>
+/* 
  * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@fidurex.fr> 
+ * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@fidurex.fr>
+ * Copyright (C) 2014 	   Florian Henry		<florian.henry@open-concept.pro>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,19 +19,23 @@
  */
 
 /**
- *  \file       accountingex/admin/productaccount.php
- *  \ingroup    Accounting Expert
- * 	\brief      Onglet de gestion de parametrages des ventilations
+ * \file accountingex/admin/productaccount.php
+ * \ingroup Accounting Expert
+ * \brief Onglet de gestion de parametrages des ventilations
  */
 
 // Dolibarr environment
-$res=@include("../main.inc.php");
-if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
-if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.php");
-if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
-if (! $res) die("Include of main fails");
-
-// Class
+$res = @include ("../main.inc.php");
+if (! $res && file_exists("../main.inc.php"))
+	$res = @include ("../main.inc.php");
+if (! $res && file_exists("../../main.inc.php"))
+	$res = @include ("../../main.inc.php");
+if (! $res && file_exists("../../../main.inc.php"))
+	$res = @include ("../../../main.inc.php");
+if (! $res)
+	die("Include of main fails");
+	
+	// Class
 dol_include_once("/core/lib/report.lib.php");
 dol_include_once("/core/lib/date.lib.php");
 dol_include_once("/product/class/product.class.php");
@@ -42,17 +46,15 @@ $langs->load("main");
 $langs->load("accountingex@accountingex");
 
 // Security check
-if ($user->societe_id > 0) accessforbidden();
-if (!$user->rights->accountingex->admin) accessforbidden();
+if ($user->societe_id > 0)
+	accessforbidden();
+if (! $user->rights->accountingex->admin)
+	accessforbidden();
 
+llxHeader('', $langs->trans("Accounts"));
 
-llxHeader ( '', $langs->trans ( "Accounts" ) );
+$form = new Form($db);
 
-$form=new Form($db);
-
-
-
- 
 print '<input type="button" class="button" style="float: right;" value="Renseigner les comptes comptables produits manquant" onclick="launch_export();" />';
 
 print '
@@ -65,97 +67,83 @@ print '
 </script>';
 
 $sql = "SELECT p.rowid, p.ref , p.label, p.description , p.accountancy_code_sell as codesell, p.accountancy_code_buy, p.tms, p.fk_product_type as product_type , p.tosell , p.tobuy ";
-$sql.= " FROM ".MAIN_DB_PREFIX."product as p";
-$sql.=  " WHERE p.accountancy_code_sell IS NULL  AND p.tosell = 1  OR p.accountancy_code_buy IS NULL AND p.tobuy = 1" ;
+$sql .= " FROM " . MAIN_DB_PREFIX . "product as p";
+$sql .= " WHERE p.accountancy_code_sell IS NULL  AND p.tosell = 1  OR p.accountancy_code_buy IS NULL AND p.tobuy = 1";
 
-    
+dol_syslog('accountingex/admin/productaccount.php:: $sql=' . $sql);
 $resql = $db->query($sql);
-if ($resql)
-{
-  $num = $db->num_rows($resql);
-  $i = 0;
-
-
-
-
-
-/*
+if ($resql) {
+	$num = $db->num_rows($resql);
+	$i = 0;
+	
+	/*
 * view
 */
-
-
-print '<br><br>';
-
-print '<table class="noborder" width="100%">';
-print '<td align="left">'.$langs->trans("Ref").'</td>';
-print '<td align="left">'.$langs->trans("Label").'</td>';
-print '<td align="left">'.$langs->trans("Description").'</td>';
-print '<td align="left">'.$langs->trans("Accountancy_code_buy").'</td>';
-print '<td align="left">'.$langs->trans("Accountancy_code_buy_suggest").'</td>';
-print '<td align="left">'.$langs->trans("Accountancy_code_sell").'</td>';
-print '<td align="left">'.$langs->trans("Accountancy_code_sell_suggest").'</td>';
-
-
-
-  $var=True;
-
-  while ($i < min($num,250))
-    {
-      $obj = $db->fetch_object($resql);
-      $var=!$var;
-      
-      	$compta_prodsell = $obj->accountancy_code_sell;
-		if (empty($compta_prodsell))
-		{
-			if($obj->product_type == 0) $compta_prodsell = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT)?$conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT:$langs->trans("CodeNotDef"));
-			else $compta_prodsell = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT)?$conf->global->COMPTA_SERVICE_SOLD_ACCOUNT:$langs->trans("CodeNotDef"));
+	
+	print '<br><br>';
+	
+	print '<table class="noborder" width="100%">';
+	print '<td align="left">' . $langs->trans("Ref") . '</td>';
+	print '<td align="left">' . $langs->trans("Label") . '</td>';
+	print '<td align="left">' . $langs->trans("Description") . '</td>';
+	print '<td align="left">' . $langs->trans("Accountancy_code_buy") . '</td>';
+	print '<td align="left">' . $langs->trans("Accountancy_code_buy_suggest") . '</td>';
+	print '<td align="left">' . $langs->trans("Accountancy_code_sell") . '</td>';
+	print '<td align="left">' . $langs->trans("Accountancy_code_sell_suggest") . '</td>';
+	
+	$var = True;
+	
+	while ( $i < min($num, 250) ) {
+		$obj = $db->fetch_object($resql);
+		$var = ! $var;
+		
+		$compta_prodsell = $obj->accountancy_code_sell;
+		if (empty($compta_prodsell)) {
+			if ($obj->product_type == 0)
+				$compta_prodsell = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT) ? $conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));
+			else
+				$compta_prodsell = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT) ? $conf->global->COMPTA_SERVICE_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));
 		}
 		
 		$compta_prodbuy = $obj->accountancy_code_buy;
-		if (empty($compta_prodbuy))
-		{
-			if($obj->product_type == 0) $compta_prodbuy = (! empty($conf->global->COMPTA_PRODUCT_BUY_ACCOUNT)?$conf->global->COMPTA_PRODUCT_BUY_ACCOUNT:$langs->trans("CodeNotDef"));
-			else $compta_prodbuy = (! empty($conf->global->COMPTA_SERVICE_BUY_ACCOUNT)?$conf->global->COMPTA_SERVICE_BUY_ACCOUNT:$langs->trans("CodeNotDef"));
+		if (empty($compta_prodbuy)) {
+			if ($obj->product_type == 0)
+				$compta_prodbuy = (! empty($conf->global->COMPTA_PRODUCT_BUY_ACCOUNT) ? $conf->global->COMPTA_PRODUCT_BUY_ACCOUNT : $langs->trans("CodeNotDef"));
+			else
+				$compta_prodbuy = (! empty($conf->global->COMPTA_SERVICE_BUY_ACCOUNT) ? $conf->global->COMPTA_SERVICE_BUY_ACCOUNT : $langs->trans("CodeNotDef"));
 		}
 		
-		$product_static = new Product ( $db );
-
- print "<tr $bc[$var]>";
-// Ref produit
-		$product_static->ref = $objp->p.ref;
+		$product_static = new Product($db);
+		
+		print "<tr $bc[$var]>";
+		// Ref produit
+		$product_static->ref = $objp->p . ref;
 		$product_static->id = $objp->rowid;
 		$product_static->type = $objp->type;
 		print '<td>';
 		if ($product_static->id)
-			print $product_static->getNomUrl ( 1 );
+			print $product_static->getNomUrl(1);
 		else
 			print '&nbsp;';
 		print '</td>';
-		 print '<td align="left">'.$obj->ref.'</td>';
- print '<td align="left">'.$obj->label.'</td>';
- print '<td align="left">'.$obj->description.'</td>';
- 
- print '<td align="left">'.$obj->accountancy_code_buy.'</td>';
- print '<td align="left">'.$compta_prodbuy.'</td>';
- 
- print '<td align="left">'.$obj->accountancy_code_sell.'</td>';
- print '<td align="left">'.$compta_prodsell.'</td>';
-
-   
-
-
-      print "</tr>\n";
-      $i++;
-    }
-  print "</table>";
-  $db->free($resql);
+		print '<td align="left">' . $obj->ref . '</td>';
+		print '<td align="left">' . $obj->label . '</td>';
+		print '<td align="left">' . $obj->description . '</td>';
+		
+		print '<td align="left">' . $obj->accountancy_code_buy . '</td>';
+		print '<td align="left">' . $compta_prodbuy . '</td>';
+		
+		print '<td align="left">' . $obj->accountancy_code_sell . '</td>';
+		print '<td align="left">' . $compta_prodsell . '</td>';
+		
+		print "</tr>\n";
+		$i ++;
+	}
+	print "</table>";
+	$db->free($resql);
+} else {
+	dol_print_error($db);
 }
-else
-{
-  dol_print_error($db);
-}
-
-$db->close();
 
 llxFooter();
-?>
+$db->close();
