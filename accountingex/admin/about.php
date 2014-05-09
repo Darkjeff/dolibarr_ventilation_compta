@@ -1,7 +1,6 @@
 <?php
 /* Copyright (C) 2013-2014 Olivier Geffroy			<jeff@jeffinfo.com>
  * Copyright (C) 2013-2014 Alexandre Spangaro		<alexandre.spangaro@gmail.com>
- * Copyright (C) 2014 	   Florian HENRY			<florian.henry@open-concept.pro>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -76,16 +75,6 @@ print '<a title="Accedinfo.com Facebook" target="_blank" href="http://www.facebo
 print '<a target="_blank" href="http://twiter.com/elarifr"><img src="../img/tweet.png" width="20"></a>&nbsp;';
 print '<a target="_blank" href="https://plus.google.com/109875408706351786851"><img src="../img/google+.png" width="20"></a>';
 print '</td></tr>';
-
-//Florian HENRY - Open-concept.pro
-print '<tr><td><img src="http://demo.open-concept.pro/prestashop/img/logo.jpg"></td>';
-print '<td><b>Florian Henry</b>&nbsp;-&nbsp;Intégrateur/développeur Solution Open-Source';
-print '<br>Florian HENRY - Open-Concept.pro  <BR> florian.henry@open-concept.pro <BR> +33 6 03 76 48 07';
-print '<br><a target="_blank" href="http://www.open-concept.pro">http://www.open-concept.pro</a>';
-print '<br><br><a target="_blank" href="http://twitter.com/_open_concept_"><img src="../img/tweet.png" width="20"></a>';
-print '</td></tr>';
-
-print '<tr><td>&nbsp;</td></tr>';
 
   
 dol_htmloutput_mesg($mesg);
