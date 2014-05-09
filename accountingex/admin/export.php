@@ -104,8 +104,8 @@ $head = admin_account_prepare_head(null);
 
 dol_fiche_head($head, 'export', $langs->trans("Configuration"), 0, 'cron');
 
-print '<form action="' . $_SERVER ["PHP_SELF"] . '" method="post">';
-print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '">';
+print '<form action="' . $_SERVER["PHP_SELF"] . '" method="post">';
+print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 print '<input type="hidden" name="action" value="update">';
 
 print '<table class="noborder" width="100%">';
@@ -117,7 +117,7 @@ print '</tr>';
 
 $var = ! $var;
 
-print '<tr ' . $bc [$var] . '>';
+print '<tr ' . $bc[$var] . '>';
 print "<td>" . $langs->trans("Selectmodelcsv") . "</td>";
 print "<td>";
 print '<select class="flat" name="modelcsv" id="modelcsv">';
@@ -156,7 +156,7 @@ if ($num) {
 foreach ( $list as $key ) {
 	$var = ! $var;
 	
-	print '<tr ' . $bc [$var] . ' class="value">';
+	print '<tr ' . $bc[$var] . ' class="value">';
 	
 	// Param
 	$label = $langs->trans($key);

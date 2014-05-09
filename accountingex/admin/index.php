@@ -148,14 +148,14 @@ dol_fiche_head($head, 'general', $langs->trans("Configuration"), 0, 'cron');
 print '<table class="noborder" width="100%">';
 
 // Cas du parametre COMPTA_MODE
-print '<form action="' . $_SERVER ["PHP_SELF"] . '" method="post">';
-print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '">';
+print '<form action="' . $_SERVER["PHP_SELF"] . '" method="post">';
+print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 print '<input type="hidden" name="action" value="setcomptamode">';
 print '<tr class="liste_titre">';
 print '<td>' . $langs->trans('OptionMode') . '</td><td>' . $langs->trans('Description') . '</td>';
 print '<td align="right"><input class="button" type="submit" value="' . $langs->trans('Modify') . '"></td>';
 print "</tr>\n";
-print '<tr ' . $bc [false] . '><td width="200"><input type="radio" name="compta_mode" value="RECETTES-DEPENSES"' . ($compta_mode != 'CREANCES-DETTES' ? ' checked' : '') . '> ' . $langs->trans('OptionModeTrue') . '</td>';
+print '<tr ' . $bc[false] . '><td width="200"><input type="radio" name="compta_mode" value="RECETTES-DEPENSES"' . ($compta_mode != 'CREANCES-DETTES' ? ' checked' : '') . '> ' . $langs->trans('OptionModeTrue') . '</td>';
 print '<td colspan="2">' . nl2br($langs->trans('OptionModeTrueDesc'));
 // Write info on way to count VAT
 if (! empty($conf->global->MAIN_MODULE_COMPTABILITE)) {
@@ -166,7 +166,7 @@ if (! empty($conf->global->MAIN_MODULE_COMPTABILITE)) {
 	print nl2br($langs->trans('OptionModeTrueInfoExpert'));
 }
 print "</td></tr>\n";
-print '<tr ' . $bc [true] . '><td width="200"><input type="radio" name="compta_mode" value="CREANCES-DETTES"' . ($compta_mode == 'CREANCES-DETTES' ? ' checked' : '') . '> ' . $langs->trans('OptionModeVirtual') . '</td>';
+print '<tr ' . $bc[true] . '><td width="200"><input type="radio" name="compta_mode" value="CREANCES-DETTES"' . ($compta_mode == 'CREANCES-DETTES' ? ' checked' : '') . '> ' . $langs->trans('OptionModeVirtual') . '</td>';
 print '<td colspan="2">' . nl2br($langs->trans('OptionModeVirtualDesc')) . "</td></tr>\n";
 print '</form>';
 
@@ -178,8 +178,8 @@ print "</table>\n";
  */
 print '<br>';
 
-print '<form action="' . $_SERVER ["PHP_SELF"] . '" method="POST">';
-print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '" />';
+print '<form action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
+print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '" />';
 
 print '<table class="noborder" width="100%">';
 $var = True;
@@ -191,7 +191,7 @@ print $langs->trans("Chartofaccounts") . '</td>';
 print '<td align="right"><input type="submit" class="button" value="' . $langs->trans("Modify") . '"></td>';
 print "</tr>\n";
 $var = ! $var;
-print '<tr ' . $bc [$var] . '>';
+print '<tr ' . $bc[$var] . '>';
 print "<td>" . $langs->trans("Selectchartofaccounts") . "</td>";
 print "<td>";
 print '<select class="flat" name="chartofaccounts" id="chartofaccounts">';
@@ -214,9 +214,9 @@ if ($resql) {
 		$var = ! $var;
 		$row = $db->fetch_row($resql);
 		
-		print '<option value="' . $row [0] . '"';
-		print $conf->global->CHARTOFACCOUNTS == $row [0] ? ' selected="selected"' : '';
-		print '>' . $row [1] . ' - ' . $row [3] . '</option>';
+		print '<option value="' . $row[0] . '"';
+		print $conf->global->CHARTOFACCOUNTS == $row[0] ? ' selected="selected"' : '';
+		print '>' . $row[1] . ' - ' . $row[3] . '</option>';
 		
 		$i ++;
 	}
@@ -258,13 +258,13 @@ foreach ( $list as $key ) {
 	$var = ! $var;
 	
 	print '<form action="index.php" method="POST">';
-	print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '">';
+	print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 	
 	print '<input type="hidden" name="action" value="update">';
 	print '<input type="hidden" name="consttype" value="string">';
 	print '<input type="hidden" name="constname" value="' . $key . '">';
 	
-	print '<tr ' . $bc [$var] . ' class="value">';
+	print '<tr ' . $bc[$var] . ' class="value">';
 	
 	// Param
 	$label = $langs->trans($key);
@@ -283,32 +283,32 @@ foreach ( $list as $key ) {
 	$i ++;
 }
 
-print '<form method="POST" action="' . $_SERVER ['PHP_SELF'] . '">';
-print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '">';
+print '<form method="POST" action="' . $_SERVER['PHP_SELF'] . '">';
+print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 print '<input type="hidden" name="action" value="updateoptions">';
 
 $var = ! $var;
-print "<tr " . $bc [$var] . ">";
+print "<tr " . $bc[$var] . ">";
 print '<td width="80%">' . $langs->trans("ACCOUNTINGEX_LIST_SORT_VENTILATION_TODO") . '</td>';
 if (! empty($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION_TODO)) {
-	print '<td align="center" colspan="2"><a href="' . $_SERVER ['PHP_SELF'] . '?action=setlistsorttodo&value=0">';
+	print '<td align="center" colspan="2"><a href="' . $_SERVER['PHP_SELF'] . '?action=setlistsorttodo&value=0">';
 	print img_picto($langs->trans("Activated"), 'switch_on');
 	print '</a></td>';
 } else {
-	print '<td align="center" colspan="2"><a href="' . $_SERVER ['PHP_SELF'] . '?action=setlistsorttodo&value=1">';
+	print '<td align="center" colspan="2"><a href="' . $_SERVER['PHP_SELF'] . '?action=setlistsorttodo&value=1">';
 	print img_picto($langs->trans("Disabled"), 'switch_off');
 	print '</a></td>';
 }
 print '</tr>';
 
-print "<tr " . $bc [$var] . ">";
+print "<tr " . $bc[$var] . ">";
 print '<td width="80%">' . $langs->trans("ACCOUNTINGEX_LIST_SORT_VENTILATION_DONE") . '</td>';
 if (! empty($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION_DONE)) {
-	print '<td align="center" colspan="2"><a href="' . $_SERVER ['PHP_SELF'] . '?action=setlistsortdone&value=0">';
+	print '<td align="center" colspan="2"><a href="' . $_SERVER['PHP_SELF'] . '?action=setlistsortdone&value=0">';
 	print img_picto($langs->trans("Activated"), 'switch_on');
 	print '</a></td>';
 } else {
-	print '<td align="center" colspan="2"><a href="' . $_SERVER ['PHP_SELF'] . '?action=setlistsortdone&value=1">';
+	print '<td align="center" colspan="2"><a href="' . $_SERVER['PHP_SELF'] . '?action=setlistsortdone&value=1">';
 	print img_picto($langs->trans("Disabled"), 'switch_off');
 	print '</a></td>';
 }

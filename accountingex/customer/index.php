@@ -51,7 +51,7 @@ if (! $user->rights->accountingex->access)
 	accessforbidden();
 	
 	// Filter
-$year = $_GET ["year"];
+$year = $_GET["year"];
 if ($year == 0) {
 	$year_current = strftime("%Y", time());
 	$year_start = $year_current;
@@ -105,7 +105,7 @@ $textnextyear = " <a href=\"index.php?year=" . ($year_current + 1) . "\">" . img
 print_fiche_titre($langs->trans("CustomersVentilation") . " " . $textprevyear . " " . $langs->trans("Year") . " " . $year_start . " " . $textnextyear);
 
 print '<b>' . $langs->trans("DescVentilCustomer") . '</b>';
-print '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER ['PHP_SELF'] . '?action=validatehistory">' . $langs->trans("ValidateHistory") . '</a></div>';
+print '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER['PHP_SELF'] . '?action=validatehistory">' . $langs->trans("ValidateHistory") . '</a></div>';
 
 $sql = "SELECT count(*) FROM " . MAIN_DB_PREFIX . "facturedet as fd";
 $sql .= " , " . MAIN_DB_PREFIX . "facture as f";
@@ -116,7 +116,7 @@ dol_syslog("/accountingex/customer/index.php sql=" . $sql, LOG_DEBUG);
 $result = $db->query($sql);
 if ($result) {
 	$row = $db->fetch_row($result);
-	$nbfac = $row [0];
+	$nbfac = $row[0];
 	$db->free($result);
 }
 
@@ -177,21 +177,21 @@ if ($resql) {
 	while ( $i < $num ) {
 		$row = $db->fetch_row($resql);
 		
-		print '<tr><td>' . $row [0] . '</td>';
-		print '<td align="left">' . $row [1] . '</td>';
-		print '<td align="right">' . price($row [2]) . '</td>';
-		print '<td align="right">' . price($row [3]) . '</td>';
-		print '<td align="right">' . price($row [4]) . '</td>';
-		print '<td align="right">' . price($row [5]) . '</td>';
-		print '<td align="right">' . price($row [6]) . '</td>';
-		print '<td align="right">' . price($row [7]) . '</td>';
-		print '<td align="right">' . price($row [8]) . '</td>';
-		print '<td align="right">' . price($row [9]) . '</td>';
-		print '<td align="right">' . price($row [10]) . '</td>';
-		print '<td align="right">' . price($row [11]) . '</td>';
-		print '<td align="right">' . price($row [12]) . '</td>';
-		print '<td align="right">' . price($row [13]) . '</td>';
-		print '<td align="right"><b>' . price($row [14]) . '</b></td>';
+		print '<tr><td>' . $row[0] . '</td>';
+		print '<td align="left">' . $row[1] . '</td>';
+		print '<td align="right">' . price($row[2]) . '</td>';
+		print '<td align="right">' . price($row[3]) . '</td>';
+		print '<td align="right">' . price($row[4]) . '</td>';
+		print '<td align="right">' . price($row[5]) . '</td>';
+		print '<td align="right">' . price($row[6]) . '</td>';
+		print '<td align="right">' . price($row[7]) . '</td>';
+		print '<td align="right">' . price($row[8]) . '</td>';
+		print '<td align="right">' . price($row[9]) . '</td>';
+		print '<td align="right">' . price($row[10]) . '</td>';
+		print '<td align="right">' . price($row[11]) . '</td>';
+		print '<td align="right">' . price($row[12]) . '</td>';
+		print '<td align="right">' . price($row[13]) . '</td>';
+		print '<td align="right"><b>' . price($row[14]) . '</b></td>';
 		print '</tr>';
 		$i ++;
 	}
@@ -250,20 +250,20 @@ if ($resql) {
 	while ( $i < $num ) {
 		$row = $db->fetch_row($resql);
 		
-		print '<tr><td>' . $row [0] . '</td>';
-		print '<td align="right">' . price($row [1]) . '</td>';
-		print '<td align="right">' . price($row [2]) . '</td>';
-		print '<td align="right">' . price($row [3]) . '</td>';
-		print '<td align="right">' . price($row [4]) . '</td>';
-		print '<td align="right">' . price($row [5]) . '</td>';
-		print '<td align="right">' . price($row [6]) . '</td>';
-		print '<td align="right">' . price($row [7]) . '</td>';
-		print '<td align="right">' . price($row [8]) . '</td>';
-		print '<td align="right">' . price($row [9]) . '</td>';
-		print '<td align="right">' . price($row [10]) . '</td>';
-		print '<td align="right">' . price($row [11]) . '</td>';
-		print '<td align="right">' . price($row [12]) . '</td>';
-		print '<td align="right"><b>' . price($row [13]) . '</b></td>';
+		print '<tr><td>' . $row[0] . '</td>';
+		print '<td align="right">' . price($row[1]) . '</td>';
+		print '<td align="right">' . price($row[2]) . '</td>';
+		print '<td align="right">' . price($row[3]) . '</td>';
+		print '<td align="right">' . price($row[4]) . '</td>';
+		print '<td align="right">' . price($row[5]) . '</td>';
+		print '<td align="right">' . price($row[6]) . '</td>';
+		print '<td align="right">' . price($row[7]) . '</td>';
+		print '<td align="right">' . price($row[8]) . '</td>';
+		print '<td align="right">' . price($row[9]) . '</td>';
+		print '<td align="right">' . price($row[10]) . '</td>';
+		print '<td align="right">' . price($row[11]) . '</td>';
+		print '<td align="right">' . price($row[12]) . '</td>';
+		print '<td align="right"><b>' . price($row[13]) . '</b></td>';
 		print '</tr>';
 		$i ++;
 	}
@@ -323,20 +323,20 @@ if (! empty($conf->margin->enabled)) {
 		while ( $i < $num ) {
 			$row = $db->fetch_row($resql);
 			
-			print '<tr><td>' . $row [0] . '</td>';
-			print '<td align="right">' . price($row [1]) . '</td>';
-			print '<td align="right">' . price($row [2]) . '</td>';
-			print '<td align="right">' . price($row [3]) . '</td>';
-			print '<td align="right">' . price($row [4]) . '</td>';
-			print '<td align="right">' . price($row [5]) . '</td>';
-			print '<td align="right">' . price($row [6]) . '</td>';
-			print '<td align="right">' . price($row [7]) . '</td>';
-			print '<td align="right">' . price($row [8]) . '</td>';
-			print '<td align="right">' . price($row [9]) . '</td>';
-			print '<td align="right">' . price($row [10]) . '</td>';
-			print '<td align="right">' . price($row [11]) . '</td>';
-			print '<td align="right">' . price($row [12]) . '</td>';
-			print '<td align="right"><b>' . price($row [13]) . '</b></td>';
+			print '<tr><td>' . $row[0] . '</td>';
+			print '<td align="right">' . price($row[1]) . '</td>';
+			print '<td align="right">' . price($row[2]) . '</td>';
+			print '<td align="right">' . price($row[3]) . '</td>';
+			print '<td align="right">' . price($row[4]) . '</td>';
+			print '<td align="right">' . price($row[5]) . '</td>';
+			print '<td align="right">' . price($row[6]) . '</td>';
+			print '<td align="right">' . price($row[7]) . '</td>';
+			print '<td align="right">' . price($row[8]) . '</td>';
+			print '<td align="right">' . price($row[9]) . '</td>';
+			print '<td align="right">' . price($row[10]) . '</td>';
+			print '<td align="right">' . price($row[11]) . '</td>';
+			print '<td align="right">' . price($row[12]) . '</td>';
+			print '<td align="right"><b>' . price($row[13]) . '</b></td>';
 			print '</tr>';
 			$i ++;
 		}

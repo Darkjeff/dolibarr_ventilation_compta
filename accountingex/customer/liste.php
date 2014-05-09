@@ -56,7 +56,6 @@ if ($user->societe_id > 0)
 if (! $user->rights->accountingex->access)
 	accessforbidden();
 
-
 $formventilation = new FormVentilation($db);
 
 llxHeader('', $langs->trans("Ventilation"));

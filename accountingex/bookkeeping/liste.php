@@ -101,7 +101,7 @@ else {
 	
 	llxHeader('', $langs->trans("Accounting") . ' - ' . $langs->trans("Bookkeeping"));
 	
-/*
+	/*
  * List
  */
 	
@@ -139,8 +139,8 @@ else {
 		
 		print_barre_liste($langs->trans("Bookkeeping"), $page, "liste.php", "", $sortfield, $sortorder, '', $num);
 		
-		print '<form name="add" action="' . $_SERVER ["PHP_SELF"] . '" method="POST">';
-		print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '">';
+		print '<form name="add" action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
+		print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 		print '<input type="hidden" name="action" value="delbookkeeping">';
 		
 		print $formventilation->select_bookkeeping_importkey('importkey', GETPOST('importkey'));
@@ -151,41 +151,41 @@ else {
 		
 		print '<a href="./fiche.php?action=create" class="butAction">Nouveau mouvement comptable</a>';
 		
-		print '<form name="add" action="' . $_SERVER ["PHP_SELF"] . '" method="POST">';
-		print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '">';
+		print '<form name="add" action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
+		print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 		print '<input type="hidden" name="action" value="export_csv">';
 		print '<input type="submit" class="button" style="float: right;" value="Export CSV" />';
 		print '</form>';
 		
 		print "<table class=\"noborder\" width=\"100%\">";
 		print '<tr class="liste_titre">';
-		print_liste_field_titre($langs->trans("Doctype"), $_SERVER ['PHP_SELF'], "bk.doc_type", "", "", "", $sortfield, $sortorder);
-		print_liste_field_titre($langs->trans("Docdate"), $_SERVER ['PHP_SELF'], "bk.doc_date", "", "", "", $sortfield, $sortorder);
-		print_liste_field_titre($langs->trans("Docref"), $_SERVER ['PHP_SELF'], "bk.doc_ref", "", "", "", $sortfield, $sortorder);
-		print_liste_field_titre($langs->trans("Numerocompte"), $_SERVER ['PHP_SELF'], "bk.numero_compte", "", "", "", $sortfield, $sortorder);
-		print_liste_field_titre($langs->trans("Code_tiers"), $_SERVER ['PHP_SELF'], "bk.code_tiers", "", "", "", $sortfield, $sortorder);
-		print_liste_field_titre($langs->trans("Labelcompte"), $_SERVER ['PHP_SELF'], "bk_label_compte", "", "", "", $sortfield, $sortorder);
-		print_liste_field_titre($langs->trans("Debit"), $_SERVER ['PHP_SELF'], "bk.debit", "", "", "", $sortfield, $sortorder);
-		print_liste_field_titre($langs->trans("Credit"), $_SERVER ['PHP_SELF'], "bk.credit", "", "", "", $sortfield, $sortorder);
-		print_liste_field_titre($langs->trans("Amount"), $_SERVER ['PHP_SELF'], "bk.montant", "", "", "", $sortfield, $sortorder);
-		print_liste_field_titre($langs->trans("Sens"), $_SERVER ['PHP_SELF'], "bk.sens", "", "", "", $sortfield, $sortorder);
-		print_liste_field_titre($langs->trans("Codejournal"), $_SERVER ['PHP_SELF'], "bk.code_journal", "", "", "", $sortfield, $sortorder);
+		print_liste_field_titre($langs->trans("Doctype"), $_SERVER['PHP_SELF'], "bk.doc_type", "", "", "", $sortfield, $sortorder);
+		print_liste_field_titre($langs->trans("Docdate"), $_SERVER['PHP_SELF'], "bk.doc_date", "", "", "", $sortfield, $sortorder);
+		print_liste_field_titre($langs->trans("Docref"), $_SERVER['PHP_SELF'], "bk.doc_ref", "", "", "", $sortfield, $sortorder);
+		print_liste_field_titre($langs->trans("Numerocompte"), $_SERVER['PHP_SELF'], "bk.numero_compte", "", "", "", $sortfield, $sortorder);
+		print_liste_field_titre($langs->trans("Code_tiers"), $_SERVER['PHP_SELF'], "bk.code_tiers", "", "", "", $sortfield, $sortorder);
+		print_liste_field_titre($langs->trans("Labelcompte"), $_SERVER['PHP_SELF'], "bk_label_compte", "", "", "", $sortfield, $sortorder);
+		print_liste_field_titre($langs->trans("Debit"), $_SERVER['PHP_SELF'], "bk.debit", "", "", "", $sortfield, $sortorder);
+		print_liste_field_titre($langs->trans("Credit"), $_SERVER['PHP_SELF'], "bk.credit", "", "", "", $sortfield, $sortorder);
+		print_liste_field_titre($langs->trans("Amount"), $_SERVER['PHP_SELF'], "bk.montant", "", "", "", $sortfield, $sortorder);
+		print_liste_field_titre($langs->trans("Sens"), $_SERVER['PHP_SELF'], "bk.sens", "", "", "", $sortfield, $sortorder);
+		print_liste_field_titre($langs->trans("Codejournal"), $_SERVER['PHP_SELF'], "bk.code_journal", "", "", "", $sortfield, $sortorder);
 		print_liste_field_titre("&nbsp;");
 		print "</tr>\n";
 		
 		print '<tr class="liste_titre">';
 		print '<form action="liste.php" method="GET">';
-		print '<td><input type="text" name="search_doc_type" value="' . $_GET ["search_doc_type"] . '"></td>';
+		print '<td><input type="text" name="search_doc_type" value="' . $_GET["search_doc_type"] . '"></td>';
 		print '<td>&nbsp;</td>';
-		print '<td><input type="text" name="search_doc_ref" value="' . $_GET ["search_doc_ref"] . '"></td>';
-		print '<td><input type="text" name="search_compte" value="' . $_GET ["search_compte"] . '"></td>';
-		print '<td><input type="text" name="search_tiers" value="' . $_GET ["search_tiers"] . '"></td>';
-		print '<td>&nbsp;</td>';
-		print '<td>&nbsp;</td>';
+		print '<td><input type="text" name="search_doc_ref" value="' . $_GET["search_doc_ref"] . '"></td>';
+		print '<td><input type="text" name="search_compte" value="' . $_GET["search_compte"] . '"></td>';
+		print '<td><input type="text" name="search_tiers" value="' . $_GET["search_tiers"] . '"></td>';
 		print '<td>&nbsp;</td>';
 		print '<td>&nbsp;</td>';
 		print '<td>&nbsp;</td>';
-		print '<td><input type="text" name="search_journal" size="3" value="' . $_GET ["search_journal"] . '"></td>';
+		print '<td>&nbsp;</td>';
+		print '<td>&nbsp;</td>';
+		print '<td><input type="text" name="search_journal" size="3" value="' . $_GET["search_journal"] . '"></td>';
 		print '<td align="right">';
 		print '<input type="image" class="liste_titre" name="button_search" src="' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/search.png" value="' . dol_escape_htmltag($langs->trans("Search")) . '" title="' . dol_escape_htmltag($langs->trans("Search")) . '">';
 		print '</td>';

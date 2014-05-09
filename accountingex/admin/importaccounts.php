@@ -56,12 +56,11 @@ llxHeader('', $langs->trans("ImportAccount"));
 
 $to_import = GETPOST("mesCasesCochees");
 
-if ($_POST ["action"] == 'import') {
+if ($_POST["action"] == 'import') {
 	print '<div><font color="red">' . $langs->trans("Processing") . '...</font></div>';
 	if (is_array($to_import) && count($to_import) > 0) {
 		print '<div><font color="red">' . count($to_import) . ' ' . $langs->trans("SelectedLines") . '</font></div>';
 		$sql = 'SELECT pcg_version FROM ' . MAIN_DB_PREFIX . 'accounting_system WHERE rowid=' . $conf->global->CHARTOFACCOUNTS;
-		
 		
 		$result = $db->query($sql);
 		if ($result && ($db->num_rows($result) > 0)) {

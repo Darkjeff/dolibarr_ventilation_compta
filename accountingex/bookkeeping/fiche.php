@@ -196,7 +196,7 @@ $nbligne = 0;
  *	Confirmation to delete the command
  */
 if ($action == 'delete') {
-	$formconfirm = $html->formconfirm($_SERVER ["PHP_SELF"] . '?id=' . $id, $langs->trans('DeleteMvt'), $langs->trans('ConfirmDeleteMvt'), 'confirm_delete', '', 0, 1);
+	$formconfirm = $html->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $id, $langs->trans('DeleteMvt'), $langs->trans('ConfirmDeleteMvt'), 'confirm_delete', '', 0, 1);
 	print $formconfirm;
 }
 
@@ -214,7 +214,7 @@ if ($action == 'create') {
 	$book = new BookKeeping($db);
 	$next_num_mvt = $book->next_num_mvt();
 	
-	print '<form action="' . $_SERVER ["PHP_SELF"] . '" name="create_mvt" method="post">';
+	print '<form action="' . $_SERVER["PHP_SELF"] . '" name="create_mvt" method="post">';
 	print '<input type="hidden" name="action" value="confirm_create">' . "\n";
 	print '<input type="hidden" name="next_num_mvt" value="' . $next_num_mvt . '">' . "\n";
 	
@@ -309,7 +309,7 @@ if ($action == 'create') {
 					
 					if ($action == 'update' && $line->id == $id) {
 						
-						print '<form action="' . $_SERVER ["PHP_SELF"] . '?piece_num=' . $book->piece_num . '" method="post">';
+						print '<form action="' . $_SERVER["PHP_SELF"] . '?piece_num=' . $book->piece_num . '" method="post">';
 						print '<input type="hidden" name="id" value="' . $line->id . '">' . "\n";
 						print '<input type="hidden" name="action" value="confirm_update">' . "\n";
 						print '<td><input type="text" size="6" name="numero_compte" value="' . $line->numero_compte . '"/></td>';
@@ -353,7 +353,7 @@ if ($action == 'create') {
 					$var = ! $var;
 					print "<tr $bc[$var]>";
 					
-					print '<form action="' . $_SERVER ["PHP_SELF"] . '?piece_num=' . $book->piece_num . '" method="post">';
+					print '<form action="' . $_SERVER["PHP_SELF"] . '?piece_num=' . $book->piece_num . '" method="post">';
 					print '<input type="hidden" name="action" value="add">' . "\n";
 					print '<input type="hidden" name="doc_date" value="' . $book->doc_date . '">' . "\n";
 					print '<input type="hidden" name="doc_type" value="' . $book->doc_type . '">' . "\n";

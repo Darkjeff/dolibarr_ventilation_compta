@@ -103,13 +103,13 @@ if ($action == 'add') {
 		$result = $accounting->update($user);
 		
 		if ($result > 0) {
-			header("Location: " . $_SERVER ["PHP_SELF"] . "?id=" . $id);
+			header("Location: " . $_SERVER["PHP_SELF"] . "?id=" . $id);
 			exit();
 		} else {
 			$mesg = $object->error;
 		}
 	} else {
-		header("Location: " . $_SERVER ["PHP_SELF"] . "?id=" . $id);
+		header("Location: " . $_SERVER["PHP_SELF"] . "?id=" . $id);
 		exit();
 	}
 } else if ($action == 'delete') {
@@ -141,8 +141,8 @@ $htmlacc = new FormVentilation($db);
 if ($action == 'create') {
 	print_fiche_titre($langs->trans('NewAccount'));
 	
-	print '<form name="add" action="' . $_SERVER ["PHP_SELF"] . '" method="POST">' . "\n";
-	print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '">';
+	print '<form name="add" action="' . $_SERVER["PHP_SELF"] . '" method="POST">' . "\n";
+	print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 	print '<input type="hidden" name="action" value="add">';
 	
 	print '<table class="border" width="100%">';
@@ -192,8 +192,8 @@ if ($action == 'create') {
 			
 			dol_fiche_head($head, 'card', $langs->trans('AccountAccounting'), 0, 'billr');
 			
-			print '<form name="update" action="' . $_SERVER ["PHP_SELF"] . '" method="POST">' . "\n";
-			print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '">';
+			print '<form name="update" action="' . $_SERVER["PHP_SELF"] . '" method="POST">' . "\n";
+			print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 			print '<input type="hidden" name="action" value="edit">';
 			print '<input type="hidden" name="id" value="' . $id . '">';
 			
@@ -275,13 +275,13 @@ if ($action == 'create') {
 			print '<div class="tabsAction">';
 			
 			if ($user->rights->accountingex->admin) {
-				print '<a class="butAction" href="' . $_SERVER ["PHP_SELF"] . '?action=update&id=' . $id . '">' . $langs->trans('Modify') . '</a>';
+				print '<a class="butAction" href="' . $_SERVER["PHP_SELF"] . '?action=update&id=' . $id . '">' . $langs->trans('Modify') . '</a>';
 			} else {
 				print '<a class="butActionRefused" href="#" title="' . dol_escape_htmltag($langs->trans("NotAllowed")) . '">' . $langs->trans('Modify') . '</a>';
 			}
 			
 			if ($user->rights->accountingex->admin) {
-				print '<a class="butActionDelete" href="' . $_SERVER ["PHP_SELF"] . '?action=delete&id=' . $id . '">' . $langs->trans('Delete') . '</a>';
+				print '<a class="butActionDelete" href="' . $_SERVER["PHP_SELF"] . '?action=delete&id=' . $id . '">' . $langs->trans('Delete') . '</a>';
 			} else {
 				print '<a class="butActionRefused" href="#" title="' . dol_escape_htmltag($langs->trans("NotAllowed")) . '">' . $langs->trans('Delete') . '</a>';
 			}

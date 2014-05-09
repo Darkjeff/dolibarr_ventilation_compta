@@ -36,8 +36,8 @@ if (! $res)
 	die("Include of main fails");
 	
 	// Load user to have $user->conf loaded (not done into main because of NOLOGIN constant defined)
-if (empty($user->id) && ! empty($_SESSION ['dol_login']))
-	$user->fetch('', $_SESSION ['dol_login']);
+if (empty($user->id) && ! empty($_SESSION['dol_login']))
+	$user->fetch('', $_SESSION['dol_login']);
 	
 	// Define css type
 header('Content-type: text/css');

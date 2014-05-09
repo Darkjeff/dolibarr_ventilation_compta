@@ -69,7 +69,7 @@ if (! $sortorder)
 	$sortorder = "ASC";
 
 if ($action == 'delete') {
-	$formconfirm = $html->formconfirm($_SERVER ["PHP_SELF"] . '?id=' . $id, $langs->trans('DeleteAccount'), $langs->trans('ConfirmDeleteAccount'), 'confirm_delete', '', 0, 1);
+	$formconfirm = $html->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $id, $langs->trans('DeleteAccount'), $langs->trans('ConfirmDeleteAccount'), 'confirm_delete', '', 0, 1);
 	print $formconfirm;
 }
 
@@ -111,20 +111,20 @@ $sql .= " FROM " . MAIN_DB_PREFIX . "accountingaccount as aa, " . MAIN_DB_PREFIX
 $sql .= " WHERE aa.fk_pcg_version = asy.pcg_version";
 $sql .= " AND asy.rowid = " . $pcgver;
 
-if (strlen(trim($_GET ["search_account"]))) {
-	$sql .= " AND aa.account_number like '%" . $_GET ["search_account"] . "%'";
+if (strlen(trim($_GET["search_account"]))) {
+	$sql .= " AND aa.account_number like '%" . $_GET["search_account"] . "%'";
 }
-if (strlen(trim($_GET ["search_label"]))) {
-	$sql .= " AND aa.label like '%" . $_GET ["search_label"] . "%'";
+if (strlen(trim($_GET["search_label"]))) {
+	$sql .= " AND aa.label like '%" . $_GET["search_label"] . "%'";
 }
-if (strlen(trim($_GET ["search_accountparent"]))) {
-	$sql .= " AND aa.account_parent like '%" . $_GET ["search_accountparent"] . "%'";
+if (strlen(trim($_GET["search_accountparent"]))) {
+	$sql .= " AND aa.account_parent like '%" . $_GET["search_accountparent"] . "%'";
 }
-if (strlen(trim($_GET ["search_pcgtype"]))) {
-	$sql .= " AND aa.pcg_type like '%" . $_GET ["search_pcgtype"] . "%'";
+if (strlen(trim($_GET["search_pcgtype"]))) {
+	$sql .= " AND aa.pcg_type like '%" . $_GET["search_pcgtype"] . "%'";
 }
-if (strlen(trim($_GET ["search_pcgsubtype"]))) {
-	$sql .= " AND aa.pcg_subtype like '%" . $_GET ["search_pcgsubtype"] . "%'";
+if (strlen(trim($_GET["search_pcgsubtype"]))) {
+	$sql .= " AND aa.pcg_subtype like '%" . $_GET["search_pcgsubtype"] . "%'";
 }
 
 $sql .= $db->order($sortfield, $sortorder);
@@ -136,11 +136,11 @@ $result = $db->query($sql);
 if ($result) {
 	$num = $db->num_rows($result);
 	
-	print_barre_liste($langs->trans('ListAccounts'), $page, $_SERVER ["PHP_SELF"], '', $sortfield, $sortorder, '', $num);
+	print_barre_liste($langs->trans('ListAccounts'), $page, $_SERVER["PHP_SELF"], '', $sortfield, $sortorder, '', $num);
 	
 	$i = 0;
 	
-	print '<form method="GET" action="' . $_SERVER ["PHP_SELF"] . '">';
+	print '<form method="GET" action="' . $_SERVER["PHP_SELF"] . '">';
 	
 	print '<br/>';
 	
@@ -177,7 +177,7 @@ if ($result) {
 		$obj = $db->fetch_object($resql);
 		
 		$var = ! $var;
-		print '<tr ' . $bc [$var] . '>';
+		print '<tr ' . $bc[$var] . '>';
 		print '<td><a href="./fiche.php?id=' . $obj->rowid . '">' . $obj->account_number . '</td>';
 		print '<td>' . $obj->label . '</td>';
 		print '<td>' . $obj->account_parent . '</td>';
@@ -185,11 +185,11 @@ if ($result) {
 		print '<td>' . $obj->pcg_subtype . '</td>';
 		print '<td>';
 		if (empty($obj->active)) {
-			print '<a href="' . $_SERVER ["PHP_SELF"] . '?id=' . $obj->rowid . '&action=enable">';
+			print '<a href="' . $_SERVER["PHP_SELF"] . '?id=' . $obj->rowid . '&action=enable">';
 			print img_picto($langs->trans("Disabled"), 'switch_off');
 			print '</a>';
 		} else {
-			print '<a href="' . $_SERVER ["PHP_SELF"] . '?id=' . $obj->rowid . '&action=disable">';
+			print '<a href="' . $_SERVER["PHP_SELF"] . '?id=' . $obj->rowid . '&action=disable">';
 			print img_picto($langs->trans("Activated"), 'switch_on');
 			print '</a>';
 		}
