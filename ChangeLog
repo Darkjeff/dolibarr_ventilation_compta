@@ -8,6 +8,7 @@ New: Add cash journal
 New: Possibility of defining the separator in the export csv
 New: Possibility of defining the length of account
 Add: CSV Export Model - CEGID Expert
+New: Review all code
 
 ***** ChangeLog for 3.4.x compared to none *****
 First release of this module

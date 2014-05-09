@@ -1,8 +1,8 @@
 # Dolibarr language file - fr_FR - Accounting Expert
 CHARSET=UTF-8
 
-Module150000Name= Comptabilité Expert
-Module150000Desc= Gestion avancée de la comptabilité
+Module150000Name=Comptabilité Expert
+Module150000Desc=Gestion avancée de la comptabilité
 
 Accounting=Comptabilité
 Globalparameters=Paramètres globaux
@@ -109,12 +109,16 @@ Codejournal=Journal
 
 DelBookKeeping=Supprimer les écritures du grand livre
 
+SellsJournal=Journal des ventes
+PurchasesJournal=Journal des achats
+DescSellsJournal=Journal des ventes
+DescPurchasesJournal=Journal des achats
 BankJournal=Journal de banque
-DescBankJournal=Journal de banque description
+DescBankJournal=Journal de banque comprenant tous les types de règlements autres que espèce			
 CashJournal=Journal de caisse
-DescCashJournal=Journal de caisse description
+DescCashJournal=Journal de caisse comprenant le type de règlement "espèce"
 
-CashPayment=Reglement espece
+CashPayment=Règlement espèce
 
 SupplierInvoicePayment=Règlement de facture fournisseur
 CustomerInvoicePayment=Règlement de facture client
@@ -152,3 +156,5 @@ DescVentilDoneSupplier=Consultez ici la liste des lignes de factures fournisseur
 ValidateHistory=Valider Automatiquement 
 
 ErrorAccountancyCodeIsAlreadyUse=Erreur, vous ne pouvez pas supprimer ce compte comptable car il est utilisé 
+
+FicheVentilation=Fiche ventilation

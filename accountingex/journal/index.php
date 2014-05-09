@@ -1,6 +1,7 @@
 <?php
 /* Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
+ * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com>
+ * Copyright (C) 2013-2014  Florian Henry	    <florian.henry@open-concept.pro>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,20 +18,24 @@
  *
  */
 
- /**
- *    \file       accountingex/journal/index.php
- *    \ingroup    Accounting Expert
- *    \brief      Balance par mois
+/**
+ * \file accountingex/journal/index.php
+ * \ingroup Accounting Expert
+ * \brief Index
  */
- 
-// Dolibarr environment
-$res=@include("../main.inc.php");
-if (! $res && file_exists("../main.inc.php")) $res=@include("../main.inc.php");
-if (! $res && file_exists("../../main.inc.php")) $res=@include("../../main.inc.php");
-if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main.inc.php");
-if (! $res) die("Include of main fails");
 
-// Langs
+// Dolibarr environment
+$res = @include ("../main.inc.php");
+if (! $res && file_exists("../main.inc.php"))
+	$res = @include ("../main.inc.php");
+if (! $res && file_exists("../../main.inc.php"))
+	$res = @include ("../../main.inc.php");
+if (! $res && file_exists("../../../main.inc.php"))
+	$res = @include ("../../../main.inc.php");
+if (! $res)
+	die("Include of main fails");
+	
+	// Langs
 $langs->load("compta");
 $langs->load("bills");
 $langs->load("other");
@@ -38,41 +43,16 @@ $langs->load("main");
 $langs->load("accountingex@accountingex");
 
 // Security check
-if ($user->societe_id > 0) accessforbidden();
-if (!$user->rights->accountingex->access) accessforbidden();
+if ($user->societe_id > 0)
+	accessforbidden();
+if (! $user->rights->accountingex->access)
+	accessforbidden();
 
 
-/*******************************************************************
-* ACTIONS
-*
-* Put here all code to do according to value of "action" parameter
-********************************************************************/
+llxHeader('', 'Journaux', '');
 
+$form = new Form($db);
 
-/***************************************************
-* PAGE
-*
-* Put here all code to build page
-****************************************************/
-
-llxHeader('','Journaux','');
-
-$form=new Form($db);
-
-
-// Put here content of your page
-// ...
-
-/***************************************************
-* LINKED OBJECT BLOCK
-*
-* Put here code to view linked object
-****************************************************/
-/*
- 
-$somethingshown=$myobject->showLinkedObjectBlock();
-
-*/
 
 // End of page
 $db->close();
