@@ -21,8 +21,8 @@
 
 /**
  * \file		accountingex/customer/lignes.php
- * \ingroup	Accounting Expert
- * \brief		Page de detail des lignes de ventilation d'une facture client
+ * \ingroup		Accounting Expert
+ * \brief		Page of detail of the lines of ventilation of invoices customers
  */
 
 // Dolibarr environment
@@ -36,7 +36,7 @@ if (! $res && file_exists("../../../main.inc.php"))
 if (! $res)
 	die("Include of main fails");
 	
-	// Class
+// Class
 dol_include_once("/accountingex/class/html.formventilation.class.php");
 dol_include_once("/compta/facture/class/facture.class.php");
 dol_include_once("/product/class/product.class.php");
@@ -87,12 +87,12 @@ if (is_array($changeaccount) && count($changeaccount) > 0 && empty($is_search)) 
 	}
 }
 
+/*
+ * View
+ */
+
 llxHeader('', $langs->trans("CustomersVentilation") . ' - ' . $langs->trans("Dispatched"));
 
-/*
- * Lignes de factures
- *
- */
 $page = GETPOST("page");
 if ($page < 0)
 	$page = 0;
@@ -150,14 +150,14 @@ if ($result) {
 	// TODO : print_barre_liste always use $conf->liste_limit and do not care about custom limit in list...
 	print_barre_liste($langs->trans("InvoiceLinesDone"), $page, $_SERVER["PHP_SELF"], "", $sortfield, $sortorder, '', $num_lignes);
 	
-	print '<td align="left"><br><b>' . $langs->trans("DescVentilDoneCustomer") . '</b></br><br></td>';
+	print '<td align="left"><b>' . $langs->trans("DescVentilDoneCustomer") . '</b></td>';
 	
 	print '<form method="POST" action="' . $_SERVER["PHP_SELF"] . '">';
 	print '<table class="noborder" width="100%">';
 	
-	print '<div class="inline-block divButAction">' . $langs->trans("ChangeAccount") . '</div>';
+	print '<br><br><div class="inline-block divButAction">' . $langs->trans("ChangeAccount");
 	print $formventilation->select_account($account_parent, 'account_parent', 1);
-	print '<div class="inline-block divButAction"><input type="submit" class="butAction" value="' . $langs->trans("Validate") . '"/></div>';
+	print '<input type="submit" class="butAction" value="' . $langs->trans("Validate") . '"/></div>';
 	
 	print '<tr class="liste_titre"><td>' . $langs->trans("Invoice") . '</td>';
 	print '<td>' . $langs->trans("Ref") . '</td>';

@@ -359,7 +359,7 @@ class AccountingAccount {
 	 * @param User $user update
 	 * @return int if KO, >0 if OK
 	 */
-	function account_desactivate($user) {
+	function account_desactivate($id) {
 		global $langs;
 		
 		$result = $this->checkUsage();
@@ -369,7 +369,7 @@ class AccountingAccount {
 			
 			$sql = "UPDATE " . MAIN_DB_PREFIX . "accountingaccount ";
 			$sql .= "SET active = '0'";
-			$sql .= " WHERE rowid = " . $this->id;
+			$sql .= " WHERE rowid = ".$this->db->escape($id);
 			
 			dol_syslog(get_class($this) . "::desactivate sql=" . $sql, LOG_DEBUG);
 			$result = $this->db->query($sql);
@@ -393,14 +393,14 @@ class AccountingAccount {
 	 * @param User $user update
 	 * @return int if KO, >0 if OK
 	 */
-	function account_activate($user) {
+	function account_activate($id) {
 		global $langs;
 		
 		$this->db->begin();
 		
 		$sql = "UPDATE " . MAIN_DB_PREFIX . "accountingaccount ";
 		$sql .= "SET active = '1'";
-		$sql .= " WHERE rowid = " . $this->id;
+		$sql .= " WHERE rowid = ".$this->db->escape($id);
 		
 		dol_syslog(get_class($this) . "::activate sql=" . $sql, LOG_DEBUG);
 		$result = $this->db->query($sql);

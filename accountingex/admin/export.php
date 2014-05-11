@@ -1,7 +1,8 @@
 <?php
-/* Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com>
+/* Copyright (C) 2013-2014 Olivier Geffroy		<jeff@jeffinfo.com>
+ * Copyright (C) 2013-2014 Alexandre Spangaro	<alexandre.spangaro@gmail.com>
  * Copyright (C) 2014	   Florian Henry		<florian.henry@open-concept.pro>
+ * Copyright (C) 2014      Marcos García        <marcosgdf@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,13 +16,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 /**
- * \file htdocs/accountingex/admin/export.php
- * \ingroup Accounting Expert
- * \brief Setup page to configure accounting expert module
+ * \file		htdocs/accountingex/admin/export.php
+ * \ingroup		Accounting Expert
+ * \brief		Setup page to configure accounting expert module
  */
 
 // Dolibarr environment
@@ -54,7 +54,6 @@ $action = GETPOST('action', 'alpha');
 
 // Other parameters ACCOUNTINGEX_*
 $list = array (
-		'ACCOUNTINGEX_MODELCSV',
 		'ACCOUNTINGEX_SEPARATORCSV' 
 );
 
@@ -66,7 +65,7 @@ if ($action == 'update') {
 	
 	$modelcsv = GETPOST('modelcsv', 'int');
 	
-	if (in_array($modelcsv, $modelcsv)) {
+	if (! empty($modelcsv)) {
 		
 		if (! dolibarr_set_const($db, 'ACCOUNTINGEX_MODELCSV', $modelcsv, 'chaine', 0, '', $conf->entity)) {
 			$error ++;
@@ -91,7 +90,7 @@ if ($action == 'update') {
 }
 
 /*
- * Affichage page
+ * View
  */
 
 llxHeader();

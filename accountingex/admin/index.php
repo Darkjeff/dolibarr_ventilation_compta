@@ -1,8 +1,9 @@
 <?php
-/* Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
+/* Copyright (C) 2013-2014 Olivier Geffroy		<jeff@jeffinfo.com>
  * Copyright (C) 2013-2014 Florian Henry		<florian.henry@open-concept.pro>
  * Copyright (C) 2013-2014 Alexandre Spangaro	<alexandre.spangaro@gmail.com>
- * Copyright (C) 2014      Ari Elbaz (elarifr)	<github@accedinfo.com>  
+ * Copyright (C) 2014      Ari Elbaz (elarifr)	<github@accedinfo.com>
+ * Copyright (C) 2014      Marcos García        <marcosgdf@gmail.com> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,9 +21,9 @@
  */
 
 /**
- * \file htdocs/accountingex/admin/index.php
- * \ingroup Accounting Expert
- * \brief Setup page to configure accounting expert module
+ * \file		htdocs/accountingex/admin/index.php
+ * \ingroup		Accounting Expert
+ * \brief		Setup page to configure accounting expert module
  */
 
 // Dolibarr environment
@@ -53,40 +54,74 @@ if (! $user->rights->accountingex->admin)
 
 $action = GETPOST('action', 'alpha');
 
+// Other parameters COMPTA_* & ACCOUNTINGEX_*
+$list = array (
+		'ACCOUNTINGEX_LIMIT_LIST_VENTILATION',
+		'ACCOUNTINGEX_LENGTH_GACCOUNT',
+		'ACCOUNTINGEX_LENGTH_AACCOUNT',
+		'COMPTA_ACCOUNT_CUSTOMER',
+		'COMPTA_ACCOUNT_SUPPLIER',
+		'COMPTA_PRODUCT_BUY_ACCOUNT',
+		'COMPTA_PRODUCT_SOLD_ACCOUNT',
+		'COMPTA_SERVICE_BUY_ACCOUNT',
+		'COMPTA_SERVICE_SOLD_ACCOUNT',
+		'ACCOUNTINGEX_ACCOUNT_SUSPENSE',
+		'ACCOUNTINGEX_ACCOUNT_TRANSFER_CASH' 
+);
+
 /*
  * Actions
  */
+ 
+$compta_mode = defined('COMPTA_MODE')?COMPTA_MODE:'RECETTES-DEPENSES';
 
-$compta_mode = defined('COMPTA_MODE') ? COMPTA_MODE : 'RECETTES-DEPENSES';
+if ($action == 'update')
+{
+    $error = 0;
 
-if ($action == 'setcomptamode') {
-	$compta_mode = GETPOST('compta_mode', 'alpha');
+    $compta_modes = array(
+        'RECETTES-DEPENSES',
+        'CREANCES-DETTES'
+    );
+
+    $compta_mode = GETPOST('compta_mode','alpha');
 	
-	$res = dolibarr_set_const($db, 'COMPTA_MODE', $compta_mode, 'chaine', 0, '', $conf->entity);
+	if (in_array($compta_mode,$compta_modes)) {
+
+        if (!dolibarr_set_const($db, 'COMPTA_MODE', $compta_mode, 'chaine', 0, '', $conf->entity)) {
+            $error++;
+        }
+    } else {
+        $error++;
+    }
 	
-	if (! $res > 0)
-		$error ++;
+	$chartofaccounts = GETPOST('chartofaccounts', 'int');
 	
-	if (! $error) {
-		setEventMessage($langs->trans("SetupSaved"), 'mesgs');
+	if (! empty($chartofaccounts)) {
+		
+		if (! dolibarr_set_const($db, 'CHARTOFACCOUNTS', $chartofaccounts, 'chaine', 0, '', $conf->entity)) {
+			$error ++;
+		}
 	} else {
-		setEventMessage($langs->trans("Error"), 'mesgs');
-	}
-}
-
-if ($action == 'setchart') {
-	$chartofaccounts = GETPOST('chartofaccounts', 'alpha');
-	
-	$res = dolibarr_set_const($db, 'CHARTOFACCOUNTS', $chartofaccounts, 'string', 0, '', $conf->entity);
-	
-	if (! $res > 0)
 		$error ++;
-	
-	if (! $error) {
-		setEventMessage($langs->trans("SetupSaved"), 'mesgs');
-	} else {
-		setEventMessage($langs->trans("Error"), 'mesgs');
 	}
+	
+    foreach ($list as $constname) {
+        $constvalue = GETPOST($constname, 'alpha');
+
+        if (!dolibarr_set_const($db, $constname, $constvalue, 'chaine', 0, '', $conf->entity)) {
+            $error++;
+        }
+    }
+
+    if (! $error)
+    {
+        setEventMessage($langs->trans("SetupSaved"));
+    }
+    else
+    {
+        setEventMessage($langs->trans("Error"),'errors');
+    }
 }
 
 if ($action == 'setlistsorttodo') {
@@ -114,25 +149,8 @@ if ($action == 'setlistsortdone') {
 	}
 }
 
-if ($action == 'update' || $action == 'add') {
-	$constname = GETPOST('constname', 'alpha');
-	$constvalue = GETPOST('constvalue', 'alpha');
-	$consttype = GETPOST('consttype', 'alpha');
-	$constnote = GETPOST('constnote', 'alpha');
-	
-	$res = dolibarr_set_const($db, $constname, $constvalue, $consttype, 0, $constnote, $conf->entity);
-	
-	if (! $res > 0)
-		$error ++;
-	
-	if (! $error) {
-		setEventMessage($langs->trans("SetupSaved"), 'mesgs');
-	} else {
-		setEventMessage($langs->trans("Error"), 'mesgs');
-	}
-}
 /*
- * Affichage page
+ * View
  */
 
 llxHeader();
@@ -145,57 +163,54 @@ $head = admin_account_prepare_head($accounting);
 
 dol_fiche_head($head, 'general', $langs->trans("Configuration"), 0, 'cron');
 
+print '<form action="'.$_SERVER["PHP_SELF"].'" method="post">';
+print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+print '<input type="hidden" name="action" value="update">';
+
 print '<table class="noborder" width="100%">';
 
 // Cas du parametre COMPTA_MODE
-print '<form action="' . $_SERVER["PHP_SELF"] . '" method="post">';
-print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
-print '<input type="hidden" name="action" value="setcomptamode">';
+
 print '<tr class="liste_titre">';
-print '<td>' . $langs->trans('OptionMode') . '</td><td>' . $langs->trans('Description') . '</td>';
-print '<td align="right"><input class="button" type="submit" value="' . $langs->trans('Modify') . '"></td>';
+print '<td>'.$langs->trans('OptionMode').'</td><td>'.$langs->trans('Description').'</td>';
 print "</tr>\n";
-print '<tr ' . $bc[false] . '><td width="200"><input type="radio" name="compta_mode" value="RECETTES-DEPENSES"' . ($compta_mode != 'CREANCES-DETTES' ? ' checked' : '') . '> ' . $langs->trans('OptionModeTrue') . '</td>';
-print '<td colspan="2">' . nl2br($langs->trans('OptionModeTrueDesc'));
+print '<tr '.$bc[false].'><td width="200"><input type="radio" name="compta_mode" value="RECETTES-DEPENSES"'.($compta_mode != 'CREANCES-DETTES' ? ' checked' : '').'> '.$langs->trans('OptionModeTrue').'</td>';
+print '<td colspan="2">'.nl2br($langs->trans('OptionModeTrueDesc'));
 // Write info on way to count VAT
-if (! empty($conf->global->MAIN_MODULE_COMPTABILITE)) {
-	print "<br>\n";
-	print nl2br($langs->trans('OptionModeTrueInfoModuleComptabilite'));
-} else {
-	print "<br>\n";
-	print nl2br($langs->trans('OptionModeTrueInfoExpert'));
-}
+//if (! empty($conf->global->MAIN_MODULE_COMPTABILITE))
+//{
+//	//	print "<br>\n";
+//	//	print nl2br($langs->trans('OptionModeTrueInfoModuleComptabilite'));
+//}
+//else
+//{
+//	//	print "<br>\n";
+//	//	print nl2br($langs->trans('OptionModeTrueInfoExpert'));
+//}
 print "</td></tr>\n";
-print '<tr ' . $bc[true] . '><td width="200"><input type="radio" name="compta_mode" value="CREANCES-DETTES"' . ($compta_mode == 'CREANCES-DETTES' ? ' checked' : '') . '> ' . $langs->trans('OptionModeVirtual') . '</td>';
-print '<td colspan="2">' . nl2br($langs->trans('OptionModeVirtualDesc')) . "</td></tr>\n";
+print '<tr '.$bc[true].'><td width="200"><input type="radio" name="compta_mode" value="CREANCES-DETTES"'.($compta_mode == 'CREANCES-DETTES' ? ' checked' : '').'> '.$langs->trans('OptionModeVirtual').'</td>';
+print '<td colspan="2">'.nl2br($langs->trans('OptionModeVirtualDesc'))."</td></tr>\n";
 print '</form>';
 
 print "</table>\n";
 
+print "<br>\n";
+
 /*
  *  Define Chart of accounts
- *
  */
-print '<br>';
-
-print '<form action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
-print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '" />';
-
 print '<table class="noborder" width="100%">';
 $var = True;
 
 print '<tr class="liste_titre">';
-print '<td>';
-print '<input type="hidden" name="action" value="setchart">';
+print '<td colspan="3">';
 print $langs->trans("Chartofaccounts") . '</td>';
-print '<td align="right"><input type="submit" class="button" value="' . $langs->trans("Modify") . '"></td>';
 print "</tr>\n";
 $var = ! $var;
 print '<tr ' . $bc[$var] . '>';
 print "<td>" . $langs->trans("Selectchartofaccounts") . "</td>";
 print "<td>";
 print '<select class="flat" name="chartofaccounts" id="chartofaccounts">';
-// print '<option value="0">'.$langs->trans("DoNotSuggestChart").'</option>';
 
 $sql = "SELECT rowid, pcg_version, fk_pays, label, active";
 $sql .= " FROM " . MAIN_DB_PREFIX . "accounting_system";
@@ -224,70 +239,33 @@ if ($resql) {
 print "</select>";
 print "</td></tr>";
 print "</table>";
-print "</form>";
 
 print "<br>\n";
 
 /*
- *  Params
- *
+ *  Others params
  */
-$list = array (
-		'ACCOUNTINGEX_LIMIT_LIST_VENTILATION',
-		'ACCOUNTINGEX_LENGTH_GACCOUNT',
-		'ACCOUNTINGEX_LENGTH_AACCOUNT',
-		'COMPTA_ACCOUNT_CUSTOMER',
-		'COMPTA_ACCOUNT_SUPPLIER',
-		'COMPTA_PRODUCT_BUY_ACCOUNT',
-		'COMPTA_PRODUCT_SOLD_ACCOUNT',
-		'COMPTA_SERVICE_BUY_ACCOUNT',
-		'COMPTA_SERVICE_SOLD_ACCOUNT',
-		'ACCOUNTINGEX_ACCOUNT_SUSPENSE',
-		'ACCOUNTINGEX_ACCOUNT_TRANSFER_CASH' 
-);
+print '<table class="noborder" width="100%">';
+print '<tr class="liste_titre">';
+print '<td colspan="3">' . $langs->trans('OtherOptions') . '</td>';
+print "</tr>\n";
 
-$num = count($list);
-if ($num) {
-	print '<table class="noborder" width="100%">';
-	print '<tr class="liste_titre">';
-	print '<td colspan="3">' . $langs->trans('OtherOptions') . '</td>';
-	print "</tr>\n";
-}
+foreach ($list as $key)
+{
+	$var=!$var;
 
-foreach ( $list as $key ) {
-	$var = ! $var;
-	
-	print '<form action="index.php" method="POST">';
-	print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
-	
-	print '<input type="hidden" name="action" value="update">';
-	print '<input type="hidden" name="consttype" value="string">';
-	print '<input type="hidden" name="constname" value="' . $key . '">';
-	
-	print '<tr ' . $bc[$var] . ' class="value">';
-	
+	print '<tr '.$bc[$var].' class="value">';
+
 	// Param
-	$label = $langs->trans($key);
-	print '<td>' . $label;
-	// print ' ('.$key.')';
-	print "</td>\n";
-	
+	$label = $langs->trans($key); 
+	print '<td><label for="'.$key.'">'.$label.'</label></td>';
+
 	// Value
 	print '<td>';
-	print '<input type="text" size="20" name="constvalue" value="' . $conf->global->$key . '">';
-	print '</td><td>';
-	print '<input type="submit" class="button" value="' . $langs->trans('Modify') . '" name="button"> &nbsp; ';
-	print "</td></tr>\n";
-	print '</form>';
-	
-	$i ++;
+	print '<input type="text" size="20" id="'.$key.'" name="'.$key.'" value="'.$conf->global->$key.'">';
+	print '</td></tr>';
 }
 
-print '<form method="POST" action="' . $_SERVER['PHP_SELF'] . '">';
-print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
-print '<input type="hidden" name="action" value="updateoptions">';
-
-$var = ! $var;
 print "<tr " . $bc[$var] . ">";
 print '<td width="80%">' . $langs->trans("ACCOUNTINGEX_LIST_SORT_VENTILATION_TODO") . '</td>';
 if (! empty($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION_TODO)) {
@@ -314,11 +292,10 @@ if (! empty($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION_DONE)) {
 }
 print '</tr>';
 
-if ($num) {
-	print "</table>\n";
-}
-
 print '</form>';
+print "</table>\n";
+
+print '<br /><br /><div style="text-align:center"><input type="submit" class="button" value="'.$langs->trans('Modify').'" name="button"></div>';
 
 llxFooter();
 $db->close();
