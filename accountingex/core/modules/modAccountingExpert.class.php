@@ -46,7 +46,7 @@ class modAccountingExpert extends DolibarrModules {
 		$this->description = "Advanced manage of accounting";
 		
 		// Possible values for version are: 'development', 'experimental', 'dolibarr' or version
-		$this->version = '3.4.x - 3.5.x';
+		$this->version = '3.5.x beta 20140511';
 		$this->revision = '2.0.0';
 		
 		$this->const_name = 'MAIN_MODULE_' . strtoupper($this->name);
