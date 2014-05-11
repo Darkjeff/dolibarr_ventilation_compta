@@ -17,9 +17,9 @@
  */
 
 /**
- * \file accountingex/admin/account.php
- * \ingroup Accounting Expert
- * \brief List accounting account
+ * \file		accountingex/admin/account.php
+ * \ingroup		Accounting Expert
+ * \brief		List accounting account
  */
 
 // Dolibarr environment
@@ -78,7 +78,7 @@ $accounting = new AccountingAccount($db);
 if ($action == 'disable') {
 	$accounting = $accounting->fetch($id);
 	if (! empty($accounting->id)) {
-		$result = $accounting->account_desactivate($user);
+		$result = $accounting->account_desactivate($id);
 	}
 	
 	$action = 'update';
@@ -90,7 +90,7 @@ if ($action == 'disable') {
 	$accounting = $accounting->fetch($id);
 	
 	if (! empty($accounting->id)) {
-		$result = $accounting->account_activate($user);
+		$result = $accounting->account_activate($id);
 	}
 	$action = 'update';
 	if ($result < 0) {

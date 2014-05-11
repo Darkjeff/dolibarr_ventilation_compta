@@ -23,7 +23,7 @@
 
 /**
  * \file		accountingex/journal/purchasesjournal.php
- * \ingroup	Accounting Expert
+ * \ingroup		Accounting Expert
  * \brief		Page with purchases journal
  */
 
@@ -38,7 +38,7 @@ if (! $res && file_exists("../../../main.inc.php"))
 if (! $res)
 	die("Include of main fails");
 	
-	// Class
+// Class
 dol_include_once("/core/lib/report.lib.php");
 dol_include_once("/core/lib/date.lib.php");
 dol_include_once("/accountingex/core/lib/account.lib.php");
@@ -185,9 +185,9 @@ if ($action == 'writebookkeeping') {
 			$bookkeeping->label_compte = $tabcompany[$key]['name'];
 			$bookkeeping->numero_compte = $conf->global->COMPTA_ACCOUNT_SUPPLIER;
 			$bookkeeping->montant = $mt;
-			$bookkeeping->sens = ($mt >= 0) ? 'D' : 'C';
-			$bookkeeping->debit = ($mt >= 0) ? $mt : 0;
-			$bookkeeping->credit = ($mt < 0) ? $mt : 0;
+			$bookkeeping->sens = ($mt >= 0) ? 'C' : 'D';
+			$bookkeeping->debit = ($mt <= 0) ? $mt : 0;
+			$bookkeeping->credit = ($mt > 0) ? $mt : 0;
 			$bookkeeping->code_journal = $conf->global->ACCOUNTINGEX_PURCHASE_JOURNAL;
 			
 			$bookkeeping->create();
@@ -210,9 +210,9 @@ if ($action == 'writebookkeeping') {
 					$bookkeeping->label_compte = dol_trunc($val["description"], 128);
 					$bookkeeping->numero_compte = $k;
 					$bookkeeping->montant = $mt;
-					$bookkeeping->sens = ($mt < 0) ? 'D' : 'C';
-					$bookkeeping->debit = ($mt < 0) ? $mt : 0;
-					$bookkeeping->credit = ($mt >= 0) ? $mt : 0;
+					$bookkeeping->sens = ($mt < 0) ? 'C' : 'D';
+					$bookkeeping->debit = ($mt > 0) ? $mt : 0;
+					$bookkeeping->credit = ($mt <= 0) ? $mt : 0;
 					$bookkeeping->code_journal = $conf->global->ACCOUNTINGEX_PURCHASE_JOURNAL;
 					
 					$bookkeeping->create();
@@ -237,9 +237,9 @@ if ($action == 'writebookkeeping') {
 				$bookkeeping->label_compte = $langs->trans("VAT");
 				$bookkeeping->numero_compte = $k;
 				$bookkeeping->montant = $mt;
-				$bookkeeping->sens = ($mt < 0) ? 'D' : 'C';
-				$bookkeeping->debit = ($mt < 0) ? $mt : 0;
-				$bookkeeping->credit = ($mt >= 0) ? $mt : 0;
+				$bookkeeping->sens = ($mt < 0) ? 'C' : 'D';
+				$bookkeeping->debit = ($mt > 0) ? $mt : 0;
+				$bookkeeping->credit = ($mt <= 0) ? $mt : 0;
 				$bookkeeping->code_journal = $conf->global->ACCOUNTINGEX_PURCHASE_JOURNAL;
 				
 				$bookkeeping->create();
