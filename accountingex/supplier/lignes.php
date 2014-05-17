@@ -53,7 +53,7 @@ $langs->load("accountingex@accountingex");
 // Security check
 if ($user->societe_id > 0)
 	accessforbidden();
-if (! $user->rights->accountingex->admin)
+if (! $user->rights->accountingex->access)
 	accessforbidden();
 
 $formventilation = new FormVentilation($db);
