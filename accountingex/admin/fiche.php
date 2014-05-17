@@ -241,8 +241,8 @@ if ($action == 'create') {
 			print '<td colspan="2">' . $accounting->label . '</td></tr>';
 			
 			$accp = new AccountingAccount($db);
-			if ($accounting->account_parent) {
-				$accp->fetch('', $accounting->account_parent);
+			if (! empty($accounting->account_parent)) {
+				$accp->fetch($accounting->account_parent, '');
 			}
 			print '<tr><td>' . $langs->trans("Accountparent") . '</td>';
 			print '<td colspan="2">' . $accp->account_number . ' - ' . $accp->label . '</td></tr>';
