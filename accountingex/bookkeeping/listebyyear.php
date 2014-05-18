@@ -1,4 +1,4 @@
-<?PHP
+<?php
 /* Copyright (C) 2013-2014 Olivier Geffroy		<jeff@jeffinfo.com>
  * Copyright (C) 2013-2014 Alexandre Spangaro	<alexandre.spangaro@gmail.com> 
  * Copyright (C) 2013-2014 Florian Henry		<florian.henry@open-concept.pro>
@@ -20,7 +20,7 @@
 
 /**
  * \file		accountingex/bookkeeping/listebyyear.php
- * \ingroup	Accounting Expert
+ * \ingroup		Accounting Expert
  * \brief		Book keeping by year
  */
 
@@ -35,7 +35,7 @@ if (! $res && file_exists("../../../main.inc.php"))
 if (! $res)
 	die("Include of main fails");
 	
-	// Class
+// Class
 dol_include_once("/core/lib/date.lib.php");
 dol_include_once("/accountingex/core/lib/account.lib.php");
 
@@ -90,11 +90,11 @@ if ($resql) {
 	
 	print '<tr class="liste_titre">';
 	print_liste_field_titre($langs->trans("Doctype"), $_SERVER['PHP_SELF'], "bk.doc_type", "", "", "", $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("Docdate"), $_SERVER['PHP_SELF'], "bk.doc_date", "", "", "", $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("Date"), $_SERVER['PHP_SELF'], "bk.doc_date", "", "", "", $sortfield, $sortorder);
 	print_liste_field_titre($langs->trans("Docref"), $_SERVER['PHP_SELF'], "bk.doc_ref", "", "", "", $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("Numerocompte"), $_SERVER['PHP_SELF'], "bk.numero_compte", "", "", "", $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("Code_tiers"), $_SERVER['PHP_SELF'], "bk.code_tiers", "", "", "", $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("Labelcompte"), $_SERVER['PHP_SELF'], "bk_label_compte", "", "", "", $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("AccountAccounting"), $_SERVER['PHP_SELF'], "bk.numero_compte", "", "", "", $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("ThirdPartyAccount"), $_SERVER['PHP_SELF'], "bk.code_tiers", "", "", "", $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("Label"), $_SERVER['PHP_SELF'], "bk_label_compte", "", "", "", $sortfield, $sortorder);
 	print_liste_field_titre($langs->trans("Debit"), $_SERVER['PHP_SELF'], "bk.debit", "", "", "", $sortfield, $sortorder);
 	print_liste_field_titre($langs->trans("Credit"), $_SERVER['PHP_SELF'], "bk.credit", "", "", "", $sortfield, $sortorder);
 	print_liste_field_titre($langs->trans("Amount"), $_SERVER['PHP_SELF'], "bk.montant", "", "", "", $sortfield, $sortorder);
