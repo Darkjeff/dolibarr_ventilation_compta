@@ -16,7 +16,8 @@ ConfigAccountingExpert=Configuration du module comptabilité expert
 Journaux=Journaux
 Exports=Exports
 About=A propos
-Authors=Auteurs
+Contributors=Contributeurs
+Investors=Investisseurs
 Modelcsv=Modèle d'export
 Selectmodelcsv=Sélectionnez un modèle d'export
 Modelcsv_normal=Export classique
@@ -56,7 +57,7 @@ Line=Ligne
 CAHTF=Total achat fournisseur HT
 InvoiceLines=Lignes de facture à ventiler
 InvoiceLinesDone=Lignes de facture ventilées
-IntoAccount=Dans le compte
+IntoAccount=Dans le compte comptable
 
 Ventilate=Ventiler
 VentilationAuto=Ventilation automatique
@@ -78,7 +79,7 @@ ACCOUNTINGEX_LIST_SORT_VENTILATION_DONE=Commencer le tri des pages de ventilatio
 AccountLength=Longueur des comptes comptables affichés dans Dolibarr
 AccountLengthDesc=Fonction permettant de simuler une longueur de compte comptable en remplaçant les espaces par le chiffre zéro. Cette fonction touche uniquement à l'affichage, elle ne modifie pas les comptes comptables enregistrés dans Dolibarr. Pour l'export, cette fonction est nécessaire pour être compatible avec certains logiciels.  
 ACCOUNTINGEX_LENGTH_GACCOUNT=Longueur des comptes généraux
-ACCOUNTINGEX_LENGTH_AACCOUNT=Longueur des comptes auxiliaires
+ACCOUNTINGEX_LENGTH_AACCOUNT=Longueur des comptes tiers
 
 ACCOUNTINGEX_SELL_JOURNAL=Journal des Ventes
 ACCOUNTINGEX_PURCHASE_JOURNAL=Journal des Achats
@@ -125,8 +126,8 @@ CustomerInvoicePayment=Règlement de facture client
 
 ThirdPartyAccount=Compte tiers
 
-NumMvts = Numero de mouvement 
-ListeMvts = Liste du mouvement 
+NumMvts=Numero de mouvement
+ListeMvts=Liste du mouvement
 ErrorDebitCredit=Debit et Credit ne peuvent avoir une valeur en même temps
 
 ReportThirdParty=Liste compte tiers
@@ -153,8 +154,8 @@ DescVentilSupplier=Consultez ici la ventilation comptable annuelle de vos factur
 DescVentilTodoSupplier=Ventilez vos lignes de facture fournisseur avec un compte comptable
 DescVentilDoneSupplier=Consultez ici la liste des lignes de factures fournisseur et leur compte comptable
 
-ValidateHistory=Valider Automatiquement 
+ValidateHistory=Valider Automatiquement
 
-ErrorAccountancyCodeIsAlreadyUse=Erreur, vous ne pouvez pas supprimer ce compte comptable car il est utilisé 
+ErrorAccountancyCodeIsAlreadyUse=Erreur, vous ne pouvez pas supprimer ce compte comptable car il est utilisé
 
 FicheVentilation=Fiche ventilation

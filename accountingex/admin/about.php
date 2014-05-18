@@ -62,7 +62,7 @@ dol_fiche_head($head, 'about', $langs->trans("Configuration"), 0, 'cron');
 
 print '<table class="noborder" width="100%">';
 
-print '<tr class="liste_titre"><td colspan="2">' . $langs->trans("Authors") . '</td>';
+print '<tr class="liste_titre"><td colspan="2">' . $langs->trans("Contributors") . '</td>';
 print '</tr>';
 
 // Olivier Geffroy
@@ -106,9 +106,12 @@ print '<br><a target="_blank" href="http://www.open-concept.pro">http://www.open
 print '<br><br><a target="_blank" href="http://twitter.com/_open_concept_"><img src="../img/tweet.png" width="20"></a>';
 print '</td></tr>';
 
-print '<table class="noborder" width="100%">';
 
-print '<tr class="liste_titre"><td colspan="2">' . $langs->trans("Investor") . '</td>';
+print '</table>';
+print '<br>';
+// Investors
+print '<table class="noborder" width="100%">';
+print '<tr class="liste_titre"><td colspan="2">' . $langs->trans("Investors") . '</td>';
 print '</tr>';
 
 print '<tr><td>Jeffinfo</td>';
@@ -121,6 +124,8 @@ print '<tr><td>Asysteo</td>';
 print '<td>120 €</td></tr>';
 print '<tr><td>Fournisseur Medical</td>';
 print '<td>120 €</td></tr>';
+
+print '</table>';
 
 dol_htmloutput_mesg($mesg);
 
