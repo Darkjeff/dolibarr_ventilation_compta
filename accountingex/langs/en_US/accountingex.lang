@@ -110,10 +110,10 @@ Codejournal=Journal
 
 DelBookKeeping=Delete the records of the general ledger
 
-SellsJournal=Sell journal
-PurchasesJournal=Purchase journal
-DescSellsJournal=Sell journal
-DescPurchasesJournal=Purchase journal
+SellsJournal=Sells journal
+PurchasesJournal=Purchases journal
+DescSellsJournal=Sells journal
+DescPurchasesJournal=Purchases journal
 BankJournal=Bank journal
 DescBankJournal=Banl journal including all the types of payments other than cash	
 CashJournal=Cash journal
