@@ -35,7 +35,7 @@ if (! $res && file_exists("../../../main.inc.php"))
 if (! $res)
 	die("Include of main fails");
 	
-	// Class
+// Class
 dol_include_once("/core/lib/admin.lib.php");
 dol_include_once("/accountingex/core/lib/account.lib.php");
 
@@ -103,7 +103,7 @@ $head = admin_account_prepare_head(null);
 
 dol_fiche_head($head, 'export', $langs->trans("Configuration"), 0, 'cron');
 
-print '<form action="' . $_SERVER["PHP_SELF"] . '" method="post">';
+print '<form action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
 print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 print '<input type="hidden" name="action" value="update">';
 
@@ -117,20 +117,24 @@ print '</tr>';
 $var = ! $var;
 
 print '<tr ' . $bc[$var] . '>';
-print "<td>" . $langs->trans("Selectmodelcsv") . "</td>";
-print "<td>";
-print '<select class="flat" name="modelcsv" id="modelcsv">';
-print '<option value="0"';
-if ($conf->global->ACCOUNTINGEX_MODELCSV == 0) {
-	print ' selected="selected"';
+print "<td width='50%'>" . $langs->trans("Selectmodelcsv") . "</td>";
+if (! $conf->use_javascript_ajax)
+{
+	print '<td class="nowrap">';
+	print $langs->trans("NotAvailableWhenAjaxDisabled");
+	print "</td>";
 }
-print '>' . $langs->trans("Modelcsv_normal") . '</option>';
-print '<option value="1"';
-if ($conf->global->ACCOUNTINGEX_MODELCSV == 1) {
-	print ' selected="selected"';
+else
+{
+	print '<td>';
+	$listmodelcsv=array(
+		'1'=>$langs->trans("Modelcsv_normal"),
+		'2'=>$langs->trans("Modelcsv_CEGID"),
+	);
+	print $form->selectarray("modelcsv",$listmodelcsv,$conf->global->ACCOUNTINGEX_MODELCSV,0);
+	print '</td>';
 }
-print '>' . $langs->trans("Modelcsv_CEGID") . '</option>';
-print "</select>";
+
 print "</td></tr>";
 print "</table>";
 
@@ -159,7 +163,7 @@ foreach ( $list as $key ) {
 	
 	// Param
 	$label = $langs->trans($key);
-	print '<td>' . $label . '</td>';
+	print '<td width="50%">' . $label . '</td>';
 	
 	// Value
 	print '<td>';

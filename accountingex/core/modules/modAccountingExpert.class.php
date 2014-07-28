@@ -46,7 +46,7 @@ class modAccountingExpert extends DolibarrModules {
 		$this->description = "Advanced manage of accounting";
 		
 		// Possible values for version are: 'development', 'experimental', 'dolibarr' or version
-		$this->version = '3.5.x beta 20140511';
+		$this->version = '3.5.x beta 20140728';
 		$this->revision = '2.0.0';
 		
 		$this->const_name = 'MAIN_MODULE_' . strtoupper($this->name);
@@ -123,7 +123,7 @@ class modAccountingExpert extends DolibarrModules {
 				"ACCOUNTINGEX_BANK_JOURNAL",
 				"chaine",
 				"BQ" 
-		); // Deprecated Move into llx_bank_account
+		);
 		$this->const[9] = array (
 				"ACCOUNTINGEX_ACCOUNT_TRANSFER_CASH",
 				"chaine",
@@ -137,7 +137,7 @@ class modAccountingExpert extends DolibarrModules {
 		$this->const[11] = array (
 				"ACCOUNTINGEX_MODELCSV",
 				"chaine",
-				"0" 
+				"1" 
 		);
 		$this->const[12] = array (
 				"ACCOUNTINGEX_LENGTH_GACCOUNT",

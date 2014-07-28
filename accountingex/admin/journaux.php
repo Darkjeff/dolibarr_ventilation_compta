@@ -20,9 +20,9 @@
  */
 
 /**
- * \file htdocs/accountingex/admin/journaux.php
- * \ingroup Accounting Expert
- * \brief Setup page to configure accounting expert module
+ * \file		htdocs/accountingex/admin/journaux.php
+ * \ingroup		Accounting Expert
+ * \brief		Setup page to configure accounting expert module
  */
 
 // Dolibarr environment
@@ -36,7 +36,7 @@ if (! $res && file_exists("../../../main.inc.php"))
 if (! $res)
 	die("Include of main fails");
 	
-	// Class
+// Class
 dol_include_once("/core/lib/admin.lib.php");
 dol_include_once("/accountingex/core/lib/account.lib.php");
 
@@ -55,6 +55,7 @@ $list = array (
 		'ACCOUNTINGEX_SELL_JOURNAL',
 		'ACCOUNTINGEX_PURCHASE_JOURNAL',
 		'ACCOUNTINGEX_SOCIAL_JOURNAL',
+		'ACCOUNTINGEX_BANK_JOURNAL',
 		'ACCOUNTINGEX_CASH_JOURNAL',
 		'ACCOUNTINGEX_MISCELLANEOUS_JOURNAL' 
 );
