@@ -19,8 +19,9 @@
  */
 
 /**
- * \file	accountingex/class/html.formventilation.class.php
- * \brief	Class for HTML form
+ * \file		accountingex/class/html.formventilation.class.php
+ * \ingroup 	Accounting Expert
+ * \brief		Class for HTML form
  */
 class FormVentilation extends Form {
 	var $db;

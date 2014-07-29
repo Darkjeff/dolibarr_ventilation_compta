@@ -3,6 +3,8 @@ CHARSET=UTF-8
 
 Module150000Name=Accounting Expert
 Module150000Desc=Advanced management of the accounting
+Permission150001=Access to the module
+Permission150002=Administration of the module
 
 Accounting=Accounting
 Globalparameters=Global parameters
@@ -142,6 +144,7 @@ Accountparent=Root of the account
 Active=Statement
 
 NewFiscalYear=New fiscal year
+NewMovCompta=New accounting movement
 
 DescVentilCustomer=Consult here the annual accounting ventilation of your invoices customers
 TotalVente=Total turnover HT
@@ -159,3 +162,12 @@ ValidateHistory=Validate Automatically
 ErrorAccountancyCodeIsAlreadyUse=Error, you cannot delete this accounting account because it is used
 
 FicheVentilation=Ventilation card
+
+Accountancy_code_buy=Code buy
+Accountancy_code_buy_suggest=Code buy suggest
+Accountancy_code_sell=Code sell
+Accountancy_code_sell_suggest=Code sell suggest
+CreateMvts=Create a movement
+
+customer_invoice=Customer invoice
+supplier_invoice=Supplier invoice

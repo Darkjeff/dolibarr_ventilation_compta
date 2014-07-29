@@ -1,7 +1,8 @@
 <?php
 /* Copyright (C) 2013-2014 Olivier Geffroy		<jeff@jeffinfo.com>
  * Copyright (C) 2013-2014 Florian Henry		<florian.henry@open-concept.pro>
- * Copyright (C) 2013-2014 Alexandre Spangaro	<alexandre.spangaro@gmail.com> 
+ * Copyright (C) 2013-2014 Alexandre Spangaro	<alexandre.spangaro@gmail.com>
+ * Copyright (C) 2014 	   Juanjo Menent		<jmenent@2byte.es> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
 
 /**
  * \file		accountingex/bookkeeping/liste.php
- * \ingroup	Accounting Expert
+ * \ingroup		Accounting Expert
  * \brief		List operation of book keeping
  */
 
@@ -35,7 +36,7 @@ if (! $res && file_exists("../../../main.inc.php"))
 if (! $res)
 	die("Include of main fails");
 	
-	// Class
+// Class
 dol_include_once("/accountingex/class/html.formventilation.class.php");
 dol_include_once("/accountingex/class/bookkeeping.class.php");
 dol_include_once("/accountingex/core/lib/account.lib.php");
@@ -101,7 +102,7 @@ else {
 	
 	llxHeader('', $langs->trans("Accounting") . ' - ' . $langs->trans("Bookkeeping"));
 	
-	/*
+/*
  * List
  */
 	
@@ -149,7 +150,7 @@ else {
 		
 		print '</form>';
 		
-		print '<a href="./fiche.php?action=create" class="butAction">Nouveau mouvement comptable</a>';
+		print '<a href="./fiche.php?action=create" class="butAction">'.$langs->trans("NewMovCompta").'</a>';
 		
 		print '<form name="add" action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
 		print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
@@ -200,7 +201,7 @@ else {
 			
 			print "<tr $bc[$var]>";
 			
-			print '<td>' . $obj->doc_type . '</td>';
+			print '<td>' . $langs->trans($obj->doc_type) . '</td>';
 			print '<td>' . dol_print_date($db->jdate($obj->doc_date), 'day') . '</td>';
 			print '<td>' . $obj->doc_ref . '</td>';
 			print '<td>' . length_accountg($obj->numero_compte) . '</td>';

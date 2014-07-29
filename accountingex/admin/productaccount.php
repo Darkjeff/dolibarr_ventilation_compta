@@ -3,6 +3,7 @@
  * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
  * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@fidurex.fr>
  * Copyright (C) 2014 	   Florian Henry		<florian.henry@open-concept.pro>
+ * Copyright (C) 2014 	   Juanjo Menent		<jmenent@2byte.es>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +20,9 @@
  */
 
 /**
- * \file accountingex/admin/productaccount.php
- * \ingroup Accounting Expert
- * \brief Onglet de gestion de parametrages des ventilations
+ * \file		accountingex/admin/productaccount.php
+ * \ingroup 	Accounting Expert
+ * \brief		Page to inform information forgotten in products and services
  */
 
 // Dolibarr environment
@@ -53,6 +54,8 @@ if (! $user->rights->accountingex->admin)
 
 llxHeader('', $langs->trans("Accounts"));
 
+print_fiche_titre($langs->trans("Tools"));
+
 $form = new Form($db);
 
 print '<input type="button" class="button" style="float: right;" value="Renseigner les comptes comptables produits manquant" onclick="launch_export();" />';
@@ -68,7 +71,7 @@ print '
 
 $sql = "SELECT p.rowid, p.ref , p.label, p.description , p.accountancy_code_sell as codesell, p.accountancy_code_buy, p.tms, p.fk_product_type as product_type , p.tosell , p.tobuy ";
 $sql .= " FROM " . MAIN_DB_PREFIX . "product as p";
-$sql .= " WHERE p.accountancy_code_sell IS NULL  AND p.tosell = 1  OR p.accountancy_code_buy IS NULL AND p.tobuy = 1";
+$sql .= " WHERE p.accountancy_code_sell ='' AND p.tosell = 1  OR p.accountancy_code_buy = '' AND p.tobuy = 1";
 
 dol_syslog('accountingex/admin/productaccount.php:: $sql=' . $sql);
 $resql = $db->query($sql);
@@ -76,13 +79,14 @@ if ($resql) {
 	$num = $db->num_rows($resql);
 	$i = 0;
 	
-	/*
-* view
-*/
+/*
+ * View
+ */
 	
 	print '<br><br>';
 	
 	print '<table class="noborder" width="100%">';
+	print '<tr class="liste_titre">';
 	print '<td align="left">' . $langs->trans("Ref") . '</td>';
 	print '<td align="left">' . $langs->trans("Label") . '</td>';
 	print '<td align="left">' . $langs->trans("Description") . '</td>';
@@ -90,6 +94,7 @@ if ($resql) {
 	print '<td align="left">' . $langs->trans("Accountancy_code_buy_suggest") . '</td>';
 	print '<td align="left">' . $langs->trans("Accountancy_code_sell") . '</td>';
 	print '<td align="left">' . $langs->trans("Accountancy_code_sell_suggest") . '</td>';
+	print '</tr>';
 	
 	$var = True;
 	
@@ -117,7 +122,7 @@ if ($resql) {
 		
 		print "<tr $bc[$var]>";
 		// Ref produit
-		$product_static->ref = $objp->p . ref;
+		$product_static->ref = $objp->ref;
 		$product_static->id = $objp->rowid;
 		$product_static->type = $objp->type;
 		print '<td>';
@@ -126,7 +131,7 @@ if ($resql) {
 		else
 			print '&nbsp;';
 		print '</td>';
-		print '<td align="left">' . $obj->ref . '</td>';
+		// print '<td align="left">' . $obj->ref . '</td>';
 		print '<td align="left">' . $obj->label . '</td>';
 		print '<td align="left">' . $obj->description . '</td>';
 		

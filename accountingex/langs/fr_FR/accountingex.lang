@@ -3,6 +3,8 @@ CHARSET=UTF-8
 
 Module150000Name=Comptabilité Expert
 Module150000Desc=Gestion avancée de la comptabilité
+Permission150001=Accès au module
+Permission150002=Administration du module
 
 Accounting=Comptabilité
 Globalparameters=Paramètres globaux
@@ -142,6 +144,7 @@ Accountparent=Racine du compte
 Active=État
 
 NewFiscalYear=Nouvel exercice fiscal
+NewMovCompta=Nouveau mouvement comptable
 
 DescVentilCustomer=Consultez ici la ventilation comptable annuelle de vos factures clients
 TotalVente=Total chiffre affaires HT
@@ -159,3 +162,12 @@ ValidateHistory=Valider Automatiquement
 ErrorAccountancyCodeIsAlreadyUse=Erreur, vous ne pouvez pas supprimer ce compte comptable car il est utilisé
 
 FicheVentilation=Fiche ventilation
+
+Accountancy_code_buy=Code achats
+Accountancy_code_buy_suggest=Code achats suggéré
+Accountancy_code_sell=Code ventes
+Accountancy_code_sell_suggest=Code ventes suggéré
+CreateMvts=Créer un mouvement
+
+customer_invoice=Facture client
+supplier_invoice=Facture fournisseur
