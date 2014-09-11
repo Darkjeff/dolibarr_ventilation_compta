@@ -18,9 +18,9 @@
  */
 
 /**
- * \file accountingex/admin/fiche.php
- * \ingroup Accounting Expert
- * \brief Page fiche de compte
+ * \file		accountancyex/admin/fiche.php
+ * \ingroup		Accounting Expert
+ * \brief		Card accounting account
  */
 $res = @include ("../main.inc.php");
 if (! $res && file_exists("../main.inc.php"))
@@ -32,7 +32,7 @@ if (! $res && file_exists("../../../main.inc.php"))
 if (! $res)
 	die("Include of main fails");
 	
-	// Class
+// Class
 dol_include_once("/accountingex/core/lib/account.lib.php");
 dol_include_once("/accountingex/class/accountingaccount.class.php");
 dol_include_once("/accountingex/class/html.formventilation.class.php");
@@ -53,38 +53,44 @@ if (! $user->rights->accountingex->admin)
 	accessforbidden();
 $accounting = new AccountingAccount($db);
 
-// action
-if ($action == 'add') {
-	$sql = 'SELECT pcg_version FROM ' . MAIN_DB_PREFIX . 'accounting_system WHERE rowid=' . $conf->global->CHARTOFACCOUNTS;
-	
-	dol_syslog('accountingex/admin/fiche.php:: $sql=' . $sql);
-	$result = $db->query($sql);
-	$obj = $db->fetch_object($result);
-	
-	$accounting->fk_pcg_version = $obj->pcg_version;
-	$accounting->pcg_type = GETPOST('pcg_type');
-	$accounting->pcg_subtype = GETPOST('pcg_subtype');
-	$accounting->account_number = GETPOST('account_number', 'int');
-	$accounting->account_parent = GETPOST('account_parent', 'int');
-	$accounting->label = GETPOST('label', 'alpha');
-	$accounting->active = 1;
-	
-	$res = $accounting->create($user);
-	
-	if ($res == 0) {
-	} else {
-		if ($res == - 3) {
-			$_error = 1;
-			$action = "create";
-		}
-		if ($res == - 4) {
-			$_error = 2;
-			$action = "create";
+// Action
+if ($action == 'add')
+{
+	if (! GETPOST('cancel', 'alpha')) {
+		$sql = 'SELECT pcg_version FROM ' . MAIN_DB_PREFIX . 'accounting_system WHERE rowid=' . $conf->global->CHARTOFACCOUNTS;
+		
+		dol_syslog('accountancy/admin/card.php:: $sql=' . $sql);
+		$result = $db->query($sql);
+		$obj = $db->fetch_object($result);
+		
+		$accounting->fk_pcg_version = $obj->pcg_version;
+		$accounting->pcg_type = GETPOST('pcg_type');
+		$accounting->pcg_subtype = GETPOST('pcg_subtype');
+		$accounting->account_number = GETPOST('account_number', 'int');
+		$accounting->account_parent = GETPOST('account_parent', 'int');
+		$accounting->label = GETPOST('label', 'alpha');
+		$accounting->active = 1;
+		
+		$res = $accounting->create($user);
+		
+		if ($res == 0) {
+		} else {
+			if ($res == - 3) {
+				$_error = 1;
+				$action = "create";
+			}
+			if ($res == - 4) {
+				$_error = 2;
+				$action = "create";
+			}
 		}
 	}
 	Header("Location: account.php");
-} elseif ($action == 'edit') {
-	if (! GETPOST('cancel', 'alpha')) {
+}
+elseif ($action == 'edit')
+{
+	if (! GETPOST('cancel', 'alpha'))
+	{
 		$result = $accounting->fetch($id);
 		
 		$sql = 'SELECT pcg_version FROM ' . MAIN_DB_PREFIX . 'accounting_system WHERE rowid=' . $conf->global->CHARTOFACCOUNTS;
@@ -268,9 +274,9 @@ if ($action == 'create') {
 			
 			print '</div>';
 			
-			/*
-       * Barre d'actions
-       */
+		/*
+		 * Barre d'actions
+         */
 			
 			print '<div class="tabsAction">';
 			
