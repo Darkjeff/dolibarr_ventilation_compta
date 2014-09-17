@@ -383,7 +383,7 @@ if ($action == 'export_csv') {
 	header('Content-Type: text/csv');
 	header('Content-Disposition:attachment;filename=journal_caisse.csv');
 	
-	if ($conf->global->ACCOUNTINGEX_MODELCSV == 1) 	// Modèle Export Cegid Expert
+	if ($conf->global->ACCOUNTINGEX_MODELCSV == 2) 	// Modèle Export Cegid Expert
 	{
 		foreach ( $tabpay as $key => $val ) {
 			$date = dol_print_date($db->jdate($val["date"]), '%d%m%Y');

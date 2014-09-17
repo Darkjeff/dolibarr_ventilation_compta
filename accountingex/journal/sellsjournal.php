@@ -265,7 +265,7 @@ if ($action == 'export_csv') {
 	
 	$companystatic = new Client($db);
 	
-	if ($conf->global->ACCOUNTINGEX_MODELCSV == 1) 	// Modèle Export Cegid Expert
+	if ($conf->global->ACCOUNTINGEX_MODELCSV == 2) 	// Modèle Export Cegid Expert
 	{
 		foreach ( $tabfac as $key => $val ) {
 			$companystatic->id = $tabcompany[$key]['id'];
