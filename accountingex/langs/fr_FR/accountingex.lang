@@ -171,3 +171,4 @@ CreateMvts=Créer un mouvement
 
 customer_invoice=Facture client
 supplier_invoice=Facture fournisseur
+GroupByAccount=Afficher le libélé du compte (sinon libelle produit)

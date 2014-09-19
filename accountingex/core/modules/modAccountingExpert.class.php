@@ -164,6 +164,11 @@ class modAccountingExpert extends DolibarrModules {
 				"yesno",
 				"1" 
 		);
+		$this->const[17] = array (
+				"ACCOUNTINGEX_GROUPBYACCOUNT",
+				"yesno",
+				"1"
+		);
 		
 		// Css
 		$this->module_parts = array (

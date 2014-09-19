@@ -146,7 +146,12 @@ if ($result) {
 		$tabfac[$obj->rowid]["date"] = $obj->df;
 		$tabfac[$obj->rowid]["ref"] = $obj->ref;
 		$tabfac[$obj->rowid]["type"] = $obj->type;
-		$tabfac[$obj->rowid]["description"] = $obj->description;
+		if (!empty($conf->global->ACCOUNTINGEX_GROUPBYACCOUNT)) {
+			$tabfac[$obj->rowid]["description"] = $obj->label_compte;
+		} else {
+			$tabfac[$obj->rowid]["description"] = $obj->description;
+		}
+		//$tabfac[$obj->rowid]["description"] = $obj->description;
 		$tabfac[$obj->rowid]["fk_facturefourndet"] = $obj->fdid;
 		$tabttc[$obj->rowid][$compta_soc] += $obj->total_ttc;
 		$tabht[$obj->rowid][$compta_prod] += $obj->total_ht;
