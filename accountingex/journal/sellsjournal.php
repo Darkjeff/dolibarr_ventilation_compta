@@ -152,8 +152,11 @@ if ($result) {
 		$tabfac[$obj->rowid]["ref"] = $obj->facnumber;
 		$tabfac[$obj->rowid]["type"] = $obj->type;
 		if (!empty($conf->global->ACCOUNTINGEX_GROUPBYACCOUNT)) {
-			$tabfac[$obj->rowid]["description"] = $obj->label_compte;
-		} else {
+		$compte = new AccountingAccount($db);
+			    if ($compte->fetch(null, $k))
+			    {
+			$tabfac[$obj->rowid]["description"] = $compte->label;
+		} }else {
 			$tabfac[$obj->rowid]["description"] = $obj->description;
 		}
 		$tabfac[$obj->rowid]["fk_facturedet"] = $obj->fdid;
@@ -479,7 +482,18 @@ if ($action == 'export_csv') {
 				print "<td>" . $date . "</td>";
 				print "<td>" . $invoicestatic->getNomUrl(1) . "</td>";
 				print "<td>" . length_accountg($k) . "</td>";
-				print "<td>" . $invoicestatic->description . "</td>";
+				
+				if (!empty($conf->global->ACCOUNTINGEX_GROUPBYACCOUNT)) {
+				$compte = new AccountingAccount($db);
+			    if ($compte->fetch(null, $k))
+			    {
+				print "<td>" . $compte->label . "</td>";
+			
+		} else {
+			print "<td>" . $invoicestatic->description . "</td>";
+		}
+				
+				}
 				print "<td align='right'>" . ($mt < 0 ? price(- $mt) : '') . "</td>";
 				print "<td align='right'>" . ($mt >= 0 ? price($mt) : '') . "</td>";
 				print "</tr>";
