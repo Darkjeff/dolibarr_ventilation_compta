@@ -207,17 +207,17 @@ if ($result) {
 			
 			if (! empty($objp->type)) {
 				if ($objp->type == 1) {
-					$objp->code_sell = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT) ? $conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));
+					$objp->code_sell2 = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT) ? $conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));
 				} else {
-					$objp->code_sell = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT) ? $conf->global->COMPTA_SERVICE_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));
+					$objp->code_sell2 = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT) ? $conf->global->COMPTA_SERVICE_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));
 				}
 			} else {
 				$code_sell_notset = 'color:blue';
 				
 				if ($objp->type == 1) {
-					$objp->code_sell = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT) ? $conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));
+					$objp->code_sell2 = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT) ? $conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));
 				} else {
-					$objp->code_sell = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT) ? $conf->global->COMPTA_SERVICE_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));
+					$objp->code_sell2 = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT) ? $conf->global->COMPTA_SERVICE_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));
 				}
 			}
 		}
@@ -248,7 +248,7 @@ if ($result) {
 		print '</td>';
 		
 		print '<td align="center" style="' . $code_sell_notset . '">';
-		print $objp->code_sell;
+		print $objp->code_sell2;
 		print '</td>';
 		
 		// Colonne choix du compte
@@ -259,7 +259,7 @@ if ($result) {
 		
 		// Colonne choix ligne a ventiler
 		print '<td align="center">';
-		print '<input type="checkbox" name="mesCasesCochees[]" value="' . $objp->rowid . "_" . $i . '"' . ($objp->aarowid ? "checked" : "") . '/>';
+		print '<input type="checkbox" name="mesCasesCochees[]" value="' . $objp->rowid . "_" . $i . '"' . ($objp->code_sell ? "checked" : "") . '/>';
 		print '</td>';
 		
 		print '</tr>';
