@@ -242,7 +242,7 @@ if ($result) {
 		print '</td>';
 		// Colonne choix ligne a ventiler
 		print '<td align="center">';
-		print '<input type="checkbox" name="mesCasesCochees[]" value="' . $objp->rowid . "_" . $i . '"' . ($objp->aarowid ? "checked" : "") . '/>';
+		print '<input type="checkbox" name="mesCasesCochees[]" value="' . $objp->rowid . "_" . $i . '"' . ($objp->code_buy ? "checked" : "") . '/>';
 		print '</td>';
 		
 		print "</tr>";
