@@ -98,6 +98,39 @@ if ($action == 'ventil') {
 	print '<div><font color="red">' . $langs->trans("EndProcessing") . '</font></div>';
 }
 
+/* 
+ * Liste des comptes
+ */
+
+$sqlCompte = "SELECT a.rowid, a.account_number, a.label, a.fk_pcg_version";
+$sqlCompte .= " , s.rowid, s.pcg_version";
+$sqlCompte .= " FROM ".MAIN_DB_PREFIX."accountingaccount as a, ".MAIN_DB_PREFIX."accounting_system as s";
+$sqlCompte .= " WHERE a.fk_pcg_version = s.pcg_version AND s.rowid=".$conf->global->CHARTOFACCOUNTS;
+$sqlCompte .= " AND a.active = '1'";
+$sqlCompte .= " ORDER BY a.account_number ASC";
+
+$resultCompte = $db->query($sqlCompte);
+$cgs = array();
+$cgn = array();
+if ($resultCompte)
+{
+  $numCompte = $db->num_rows($resultCompte);
+  $iCompte = 0; 
+  
+  while ($iCompte < $numCompte)
+    {
+      $rowCompte = $db->fetch_row($resultCompte);
+      $cgs[$rowCompte[0]] = $rowCompte[1] . ' ' . $rowCompte[2];
+      $cgn[$rowCompte[1]] = $rowCompte[0];
+      $iCompte++;
+    }
+}
+
+
+
+
+
+
 /*
  * Supplier Invoice Lines
  *
@@ -204,7 +237,8 @@ if ($result) {
 		
 		// Colonne choix du compte
 		print '<td align="center">';
-		print $formventilation->select_account($objp->aarowid, 'codeventil[]', 1);
+		//print $formventilation->select_account($objp->aarowid, 'codeventil[]', 1);
+		print $form->selectarray("codeventil[]",$cgs, $cgn[$objp->code_buy]);
 		print '</td>';
 		// Colonne choix ligne a ventiler
 		print '<td align="center">';
