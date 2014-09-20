@@ -173,3 +173,4 @@ CreateMvts=Crear movimiento
 
 customer_invoice=Factura a cliente
 supplier_invoice=Factura de proveedor
+GroupByAccount=Display account number (else product label)

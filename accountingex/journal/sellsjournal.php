@@ -151,16 +151,39 @@ if ($result) {
 		$tabfac[$obj->rowid]["date"] = $obj->df;
 		$tabfac[$obj->rowid]["ref"] = $obj->facnumber;
 		$tabfac[$obj->rowid]["type"] = $obj->type;
-		$tabfac[$obj->rowid]["description"] = $obj->description;
+		if (!empty($conf->global->ACCOUNTINGEX_GROUPBYACCOUNT)) {
+			$tabfac[$obj->rowid]["description"] = $obj->label_compte;
+		} else {
+			$tabfac[$obj->rowid]["description"] = $obj->description;
+		}
 		$tabfac[$obj->rowid]["fk_facturedet"] = $obj->fdid;
 		if (! isset($tabttc[$obj->rowid][$compta_soc]))
 			$tabttc[$obj->rowid][$compta_soc] = 0;
-		if (! isset($tabht[$obj->rowid][$compta_prod]))
+		
+		/*if (empty($conf->global->ACCOUNTINGEX_GROUPBYACCOUNT)) {
+			if (! isset($tabht[$obj->rowid][$compta_prod])) {
+				$tabht[$obj->rowid][$compta_prod] = 0;
+			} 
+		} else {
+			if (! isset($tabht[$obj->rowid][$compta_prod])) {
+				$tabht[$obj->rowid][$compta_prod] = 0;
+			}
+		}*/
+		if (! isset($tabht[$obj->rowid][$compta_prod])) {
 			$tabht[$obj->rowid][$compta_prod] = 0;
+		}
+		
 		if (! isset($tabtva[$obj->rowid][$compta_tva]))
 			$tabtva[$obj->rowid][$compta_tva] = 0;
 		$tabttc[$obj->rowid][$compta_soc] += $obj->total_ttc;
+		
+		/*if (empty($conf->global->ACCOUNTINGEX_GROUPBYACCOUNT)) {
+			$tabht[$obj->rowid][$compta_prod] += $obj->total_ht;
+		} else {
+			$tabht[$obj->rowid][$compta_prod] += $obj->total_ht;
+		}*/
 		$tabht[$obj->rowid][$compta_prod] += $obj->total_ht;
+		
 		$tabtva[$obj->rowid][$compta_tva] += $obj->total_tva;
 		$tabcompany[$obj->rowid] = array (
 				'id' => $obj->socid,
@@ -181,7 +204,6 @@ if ($result) {
 // Bookkeeping Write
 if ($action == 'writebookkeeping') {
 	$now = dol_now();
-	
 	foreach ( $tabfac as $key => $val ) {
 		foreach ( $tabttc[$key] as $k => $mt ) {
 			$bookkeeping = new BookKeeping($db);
@@ -426,6 +448,7 @@ if ($action == 'export_csv') {
 		$invoicestatic->id = $key;
 		$invoicestatic->ref = $val["ref"];
 		$invoicestatic->type = $val["type"];
+		
 		$invoicestatic->description = html_entity_decode(dol_trunc($val["description"], 32));
 		
 		$date = dol_print_date($db->jdate($val["date"]), 'day');

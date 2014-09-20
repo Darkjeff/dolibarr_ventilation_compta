@@ -80,6 +80,17 @@ if ($action == 'update') {
 	} else {
 		setEventMessage($langs->trans("Error"), 'errors');
 	}
+}elseif($action=='setgroupbyaccount') {
+	$constvalue=GETPOST('value');
+	$error = 0;
+	
+	$result=dolibarr_set_const($db, 'ACCOUNTINGEX_GROUPBYACCOUNT', $constvalue, 'chaine', 0, '', $conf->entity);
+	
+	if ($result<0) {
+		setEventMessage($langs->trans("Error"), 'errors');
+	} else {
+		setEventMessage($langs->trans("SetupSaved"));
+	}
 }
 
 /*
@@ -120,8 +131,21 @@ foreach ( $list as $key ) {
 	print '</td></tr>';
 }
 
-print '</form>';
+$var=!$var;
+print "<tr " . $bc[$var] . ">";
+print '<td>' . $langs->trans("GroupByAccount") . '</td>';
+if (! empty($conf->global->ACCOUNTINGEX_GROUPBYACCOUNT)) {
+	print '<td><a href="' . $_SERVER['PHP_SELF'] . '?action=setgroupbyaccount&value=0">';
+	print img_picto($langs->trans("Activated"), 'switch_on');
+	print '</a></td>';
+} else {
+	print '<td><a href="' . $_SERVER['PHP_SELF'] . '?action=setgroupbyaccount&value=1">';
+	print img_picto($langs->trans("Disabled"), 'switch_off');
+	print '</a></td>';
+}
+print '</tr>';
 print "</table>\n";
+print '</form>';
 
 print '<br /><div style="text-align:center"><input type="submit" class="button" value="' . $langs->trans('Modify') . '" name="button"></div>';
 
