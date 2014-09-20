@@ -169,6 +169,37 @@ class modAccountingExpert extends DolibarrModules {
 				"yesno",
 				"1"
 		);
+		$this->const[18] = array (
+				"ACCOUNTINGEX_EXP_DATE",
+				"chaine",
+				""
+		);
+		$this->const[19] = array (
+				"ACCOUNTINGEX_EXP_PIECE",
+				"chaine",
+				""
+		);
+		$this->const[20] = array (
+				"ACCOUNTINGEX_EXP_GLOBAL_ACCOUNT",
+				"yesno",
+				"1" 
+		);
+		$this->const[21] = array (
+				"ACCOUNTINGEX_EXP_LABEL",
+				"chaine",
+				""
+		);
+		$this->const[22] = array (
+				"ACCOUNTINGEX_EXP_AMOUNT",
+				"yesno",
+				"1" 
+		);
+		$this->const[23] = array (
+				"ACCOUNTINGEXP_EXP_DEVISE",
+				"yesno",
+				"1" 
+		);
+		
 		
 		// Css
 		$this->module_parts = array (

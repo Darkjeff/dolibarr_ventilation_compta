@@ -54,7 +54,13 @@ $action = GETPOST('action', 'alpha');
 
 // Other parameters ACCOUNTINGEX_*
 $list = array (
-		'ACCOUNTINGEX_SEPARATORCSV' 
+		'ACCOUNTINGEX_SEPARATORCSV'
+	/*	'ACCOUNTINGEX_EXP_DATE'
+		'ACCOUNTINGEX_EXP_PIECE'
+		'ACCOUNTINGEX_EXP_GLOBAL_ACCOUNT'
+		'ACCOUNTINGEX_EXP_LABEL'
+		'ACCOUNTINGEX_EXP_AMOUNT'
+		'ACCOUNTINGEXP_EXP_DEVISE'*/
 );
 
 /*
@@ -170,6 +176,10 @@ foreach ( $list as $key ) {
 	print '<input type="text" size="20" name="' . $key . '" value="' . $conf->global->$key . '">';
 	print '</td></tr>';
 }
+
+
+
+
 
 print '</form>';
 print "</table>\n";
