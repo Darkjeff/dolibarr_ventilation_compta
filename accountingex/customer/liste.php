@@ -144,7 +144,7 @@ if (! empty($conf->global->ACCOUNTINGEX_LIMIT_LIST_VENTILATION)) {
 $offset = $limit * $page;
 
 $sql = "SELECT f.facnumber, f.rowid as facid, l.fk_product, l.description, l.total_ht, l.rowid, l.fk_code_ventilation,";
-$sql .= " p.rowid as product_id, p.ref as product_ref, p.label as product_label, p.fk_product_type as type, p.accountancy_code_sell as code_sell";
+$sql .= " p.rowid as product_id, p.ref as product_ref, p.label as product_label, l.product_type as type, p.accountancy_code_sell as code_sell";
 $sql .= " , aa.rowid as aarowid";
 $sql .= " FROM " . MAIN_DB_PREFIX . "facture as f";
 $sql .= " INNER JOIN " . MAIN_DB_PREFIX . "facturedet as l ON f.rowid = l.fk_facture";
@@ -202,22 +202,25 @@ if ($result) {
 		// issue : if we change product_type value in product DB it should differ from the value stored in facturedet DB !
 		$code_sell_notset = '';
 		
-		if (empty($objp->code_sell)) {
+		if (empty($objp->fk_product)) {
 			$code_sell_notset = 'color:red';
 			
 			if (! empty($objp->type)) {
 				if ($objp->type == 1) {
-					$objp->code_sell2 = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT) ? $conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));
+				$objp->code_sell2 = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT) ? $conf->global->COMPTA_SERVICE_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));
+					
 				} else {
-					$objp->code_sell2 = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT) ? $conf->global->COMPTA_SERVICE_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));
+$objp->code_sell2 = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT) ? $conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));					
 				}
 			} else {
 				$code_sell_notset = 'color:blue';
 				
 				if ($objp->type == 1) {
-					$objp->code_sell2 = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT) ? $conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));
+				$objp->code_sell2 = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT) ? $conf->global->COMPTA_SERVICE_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));
+					
 				} else {
-					$objp->code_sell2 = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT) ? $conf->global->COMPTA_SERVICE_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));
+				$objp->code_sell2 = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT) ? $conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));
+					
 				}
 			}
 		}
@@ -245,6 +248,10 @@ if ($result) {
 		
 		print '<td align="right">';
 		print price($objp->total_ht);
+		print '</td>';
+		
+			print '<td align="right">';
+		print $objp->type;
 		print '</td>';
 		
 		print '<td align="center" style="' . $code_sell_notset . '">';
