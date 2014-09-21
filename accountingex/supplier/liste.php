@@ -83,7 +83,7 @@ if ($action == 'ventil') {
 			$sql .= " SET fk_code_ventilation = " . $monCompte;
 			$sql .= " WHERE rowid = " . $monId;
 			
-			dol_syslog('accountingext/supplier/liste.php:: sql=' . $sql);
+			dol_syslog('accountingex/supplier/liste.php:: sql=' . $sql, LOG_DEBUG);
 			if ($db->query($sql)) {
 				print '<div><font color="green">' . $langs->trans("Lineofinvoice") . ' ' . $monId . ' ' . $langs->trans("VentilatedinAccount") . ' : ' . $monCompte . '</font></div>';
 			} else {
@@ -150,14 +150,14 @@ if (! empty($conf->global->ACCOUNTINGEX_LIMIT_LIST_VENTILATION)) {
 $offset = $limit * $page;
 
 $sql = "SELECT f.ref, f.rowid as facid, f.ref_supplier, l.fk_product, l.description, l.total_ht as price, l.rowid, l.fk_code_ventilation, ";
-$sql .= " p.rowid as product_id, p.ref as product_ref, p.label as product_label, p.fk_product_type as type, p.accountancy_code_buy as code_buy";
+$sql .= " p.rowid as product_id, p.ref as product_ref, p.label as product_label, l.product_type as type, p.accountancy_code_buy as code_buy";
 $sql .= " FROM " . MAIN_DB_PREFIX . "facture_fourn as f";
 $sql .= " INNER JOIN " . MAIN_DB_PREFIX . "facture_fourn_det as l ON f.rowid = l.fk_facture_fourn";
 $sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "product as p ON p.rowid = l.fk_product";
 $sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "accountingaccount as aa ON p.accountancy_code_buy = aa.account_number";
 $sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "accounting_system as accsys ON accsys.pcg_version = aa.fk_pcg_version";
 $sql .= " WHERE f.fk_statut > 0 AND fk_code_ventilation = 0";
-$sql .= " AND (accsys.rowid='".$conf->global->CHARTOFACCOUNTS."' OR p.accountancy_code_sell IS NULL)";
+$sql .= " AND (accsys.rowid='".$conf->global->CHARTOFACCOUNTS."' OR p.accountancy_code_buy IS NULL OR p.accountancy_code_buy ='')";
 if (! empty($conf->multicompany->enabled)) {
 	$sql .= " AND f.entity = '" . $conf->entity . "'";
 }
@@ -168,7 +168,7 @@ if ($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION_TODO > 0) {
 }
 $sql .= $db->plimit($limit + 1, $offset);
 
-dol_syslog('accountingext/supplier/liste.php:: $sql=' . $sql);
+dol_syslog('accountingext/supplier/liste.php:: $sql=' . $sql, LOG_DEBUG);
 $result = $db->query($sql);
 if ($result) {
 	$num_lignes = $db->num_rows($result);
@@ -201,6 +201,48 @@ if ($result) {
 	while ( $i < min($num_lignes, $limit) ) {
 		$objp = $db->fetch_object($result);
 		$var = ! $var;
+		
+		
+			// product_type: 0 = service ? 1 = product
+		// if product does not exist we use the value of product_type provided in facturedet to define if this is a product or service
+		// issue : if we change product_type value in product DB it should differ from the value stored in facturedet DB !
+		$code_buy_notset = '';
+		
+		if (empty($objp->code_buy)) {
+			$code_buy_notset = 'color:red';
+			
+			}else {
+				$code_buy_notset = 'color:blue';
+			
+			}
+		
+		if ($objp->type == 1) {
+				$objp->code_buy2 = (! empty($conf->global->COMPTA_SERVICE_BUY_ACCOUNT) ? $conf->global->COMPTA_SERVICE_BUY_ACCOUNT : $langs->trans("CodeNotDef"));
+					
+				} else {
+        $objp->code_buy2 = (! empty($conf->global->COMPTA_PRODUCT_BUY_ACCOUNT) ? $conf->global->COMPTA_PRODUCT_BUY_ACCOUNT : $langs->trans("CodeNotDef"));					
+				}
+			
+				
+				if ($objp->type == 1) {
+				$objp->code_buy2 = (! empty($conf->global->COMPTA_SERVICE_BUY_ACCOUNT) ? $conf->global->COMPTA_SERVICE_BUY_ACCOUNT : $langs->trans("CodeNotDef"));
+					
+				} else {
+				$objp->code_buy2 = (! empty($conf->global->COMPTA_PRODUCT_BUY_ACCOUNT) ? $conf->global->COMPTA_PRODUCT_BUY_ACCOUNT : $langs->trans("CodeNotDef"));
+					
+				
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		print "<tr $bc[$var]>";
 		
 		// Ref facture
@@ -225,20 +267,24 @@ if ($result) {
 		
 		print '<td>' . dol_trunc($objp->product_label, 24) . '</td>';
 		
-		print '<td>' . stripslashes(nl2br($objp->description)) . '</td>';
+		print '<td>' . nl2br(dol_trunc($objp->description, 32)) . '</td>';
 		
 		print '<td align="right">';
 		print price($objp->price);
 		print '</td>';
 		
-		print '<td align="right">';
-		print $objp->code_buy;
+		print '<td align="center" style="' . $code_buy_notset . '">';
+		print $objp->code_buy2;
+		print '</td>';
+		
+		print '<td align="center" style="' . $code_buy_notset . '">';
+		print $objp->type;
 		print '</td>';
 		
 		// Colonne choix du compte
 		print '<td align="center">';
 		//print $formventilation->select_account($objp->aarowid, 'codeventil[]', 1);
-		print $form->selectarray("codeventil[]",$cgs, $cgn[$objp->code_buy]);
+		print $form->selectarray("codeventil[]",$cgs, $cgn[$objp->code_buy2]);
 		print '</td>';
 		// Colonne choix ligne a ventiler
 		print '<td align="center">';
