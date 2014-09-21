@@ -152,7 +152,7 @@ $sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "product as p ON p.rowid = l.fk_product
 $sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "accountingaccount as aa ON p.accountancy_code_sell = aa.account_number";
 $sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "accounting_system as accsys ON accsys.pcg_version = aa.fk_pcg_version";
 $sql .= " WHERE f.fk_statut > 0 AND fk_code_ventilation = 0";
-$sql .= " AND (accsys.rowid='".$conf->global->CHARTOFACCOUNTS."' OR p.accountancy_code_sell IS NULL)";
+//$sql .= " AND (accsys.rowid='".$conf->global->CHARTOFACCOUNTS."' OR p.accountancy_code_sell IS NULL)";
 if (! empty($conf->multicompany->enabled)) {
 	$sql .= " AND f.entity = '" . $conf->entity . "'";
 }
@@ -202,18 +202,22 @@ if ($result) {
 		// issue : if we change product_type value in product DB it should differ from the value stored in facturedet DB !
 		$code_sell_notset = '';
 		
-		if (empty($objp->fk_product)) {
+		if (empty($objp->code_sell)) {
 			$code_sell_notset = 'color:red';
 			
-			if (! empty($objp->type)) {
+			}else {
+				$code_sell_notset = 'color:blue';
+			
+			}
+			
+			
 				if ($objp->type == 1) {
 				$objp->code_sell2 = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT) ? $conf->global->COMPTA_SERVICE_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));
 					
 				} else {
 $objp->code_sell2 = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT) ? $conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));					
 				}
-			} else {
-				$code_sell_notset = 'color:blue';
+			
 				
 				if ($objp->type == 1) {
 				$objp->code_sell2 = (! empty($conf->global->COMPTA_SERVICE_SOLD_ACCOUNT) ? $conf->global->COMPTA_SERVICE_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));
@@ -221,8 +225,8 @@ $objp->code_sell2 = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT) ? $conf
 				} else {
 				$objp->code_sell2 = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT) ? $conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT : $langs->trans("CodeNotDef"));
 					
-				}
-			}
+				
+			
 		}
 		
 		print "<tr $bc[$var]>";
@@ -261,7 +265,7 @@ $objp->code_sell2 = (! empty($conf->global->COMPTA_PRODUCT_SOLD_ACCOUNT) ? $conf
 		// Colonne choix du compte
 		print '<td align="center">';
 		//print $formventilation->select_account($objp->aarowid, 'codeventil[]', 1);
-		print $form->selectarray("codeventil[]",$cgs, $cgn[$objp->code_sell]);
+		print $form->selectarray("codeventil[]",$cgs, $cgn[$objp->code_sell2]);
 		print '</td>';
 		
 		// Colonne choix ligne a ventiler
