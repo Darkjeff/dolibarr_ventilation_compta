@@ -172,7 +172,7 @@ class modAccountingExpert extends DolibarrModules {
 		$this->const[18] = array (
 				"ACCOUNTINGEX_EXP_DATE",
 				"chaine",
-				""
+				"%d%m%Y"
 		);
 		$this->const[19] = array (
 				"ACCOUNTINGEX_EXP_PIECE",

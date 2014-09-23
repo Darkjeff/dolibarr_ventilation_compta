@@ -73,6 +73,8 @@ class AccountingAccount {
 			} else {
 				return null;
 			}
+		} else {
+			return -1;
 		}
 		
 		$this->id = $obj->rowid;
@@ -369,7 +371,7 @@ class AccountingAccount {
 			
 			$sql = "UPDATE " . MAIN_DB_PREFIX . "accountingaccount ";
 			$sql .= "SET active = '0'";
-			$sql .= " WHERE rowid = ".$this->db->escape($id);
+			$sql .= " WHERE rowid = " . $this->db->escape($id);
 			
 			dol_syslog(get_class($this) . "::desactivate sql=" . $sql, LOG_DEBUG);
 			$result = $this->db->query($sql);
@@ -400,7 +402,7 @@ class AccountingAccount {
 		
 		$sql = "UPDATE " . MAIN_DB_PREFIX . "accountingaccount ";
 		$sql .= "SET active = '1'";
-		$sql .= " WHERE rowid = ".$this->db->escape($id);
+		$sql .= " WHERE rowid = " . $this->db->escape($id);
 		
 		dol_syslog(get_class($this) . "::activate sql=" . $sql, LOG_DEBUG);
 		$result = $this->db->query($sql);

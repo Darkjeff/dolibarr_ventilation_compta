@@ -171,4 +171,6 @@ CreateMvts=Create a movement
 
 customer_invoice=Customer invoice
 supplier_invoice=Supplier invoice
-GroupByAccount=Display account number (else product label)
+GroupByAccount=Group invoice record
+
+ACCOUNTINGEX_EXP_DATE=Format export date
