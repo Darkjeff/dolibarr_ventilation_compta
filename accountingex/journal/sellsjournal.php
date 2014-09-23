@@ -154,8 +154,9 @@ if ($result) {
 		if (!empty($conf->global->ACCOUNTINGEX_GROUPBYACCOUNT)) {
 			$compte = new AccountingAccount($db);
 			$resultcompte=$compte->fetch($obj->fk_compte);
+			
 			if ($resultcompte) {
-				$tabfac[$obj->rowid]["description"] = $compte->label;
+				$tabfac[$obj->rowid]["description"]  = $compte->label;
 			}
 		} else {
 				$tabfac[$obj->rowid]["description"][$obj->fdid]= $obj->description;
@@ -524,12 +525,15 @@ if ($action == 'export_csv') {
 				}
 			} else {
 				if ($mt) {
+				$compte = new AccountingAccount($db);
+				$compte->fetch(null, $k) ;
 					print "<tr " . $bc[$var] . ">";
 					// print "<td>".$conf->global->COMPTA_JOURNAL_SELL."</td>";
 					print "<td>" . $date . "</td>";
 					print "<td>" . $invoicestatic->getNomUrl(1) . "</td>";
 					print "<td>" . length_accountg($k) . "</td>";
-					print "<td>" . html_entity_decode(dol_trunc($invoicestatic->description)) . "</td>";
+					print "<td>" . html_entity_decode(dol_trunc($compte->label)) . "</td>";
+					//print "<td>" . html_entity_decode(dol_trunc($invoicestatic->description)) . "</td>";
 					print "<td align='right'>" . ($mt < 0 ? price(- $mt) : '') . "</td>";
 					print "<td align='right'>" . ($mt >= 0 ? price($mt) : '') . "</td>";
 					print "</tr>";
