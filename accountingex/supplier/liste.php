@@ -61,6 +61,24 @@ $formventilation = new FormVentilation($db);
 
 llxHeader('', $langs->trans("Ventilation"));
 
+print  '<script type="text/javascript">
+			$(function () {
+				$(\'#select-all\').click(function(event) {
+				    // Iterate each checkbox
+				    $(\':checkbox\').each(function() {
+				    	this.checked = true;
+				    });
+			    });
+			    $(\'#unselect-all\').click(function(event) {
+				    // Iterate each checkbox
+				    $(\':checkbox\').each(function() {
+				    	this.checked = false;
+				    });
+			    });
+			});
+			 </script>';
+
+
 /*
  * Action
  */
@@ -190,7 +208,7 @@ if ($result) {
 	print '<td align="right">' . $langs->trans("Amount") . '</td>';
 	print '<td align="right">' . $langs->trans("Compte") . '</td>';
 	print '<td align="center">' . $langs->trans("IntoAccount") . '</td>';
-	print '<td align="center">' . $langs->trans("Ventilate") . '</td>';
+	print '<td align="center">'.$langs->trans("Ventilate").'<BR><label id="select-all">'.$langs->trans('All').'</label>/<label id="unselect-all">'.$langs->trans('None').'</label>'.'</td>';
 	print "</tr>\n";
 	
 	$facturefourn_static = new FactureFournisseur($db);
@@ -277,9 +295,7 @@ if ($result) {
 		print $objp->code_buy2;
 		print '</td>';
 		
-		print '<td align="center" style="' . $code_buy_notset . '">';
-		print $objp->type;
-		print '</td>';
+		
 		
 		// Colonne choix du compte
 		print '<td align="center">';
