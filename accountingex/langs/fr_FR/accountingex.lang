@@ -1,4 +1,4 @@
-# Dolibarr language file - fr_FR - Accounting Expert
+﻿# Dolibarr language file - fr_FR - Accounting Expert
 CHARSET=UTF-8
 
 Module150000Name=Comptabilité Expert
@@ -174,3 +174,7 @@ supplier_invoice=Facture fournisseur
 GroupByAccount=Grouper les écritures de compte
 
 ACCOUNTINGEX_EXP_DATE=Format de la date d'export
+ACCOUNTINGEX_EXP_GLOBAL_ACCOUNT=Afficher un compte collectif 
+ACCOUNTINGEX_EXP_LABEL=Choisir la description
+ACCOUNTINGEX_EXP_AMOUNT=Afficher montant/sens ou debit/credit
+ACCOUNTINGEXP_EXP_DEVISE=Afficher devise

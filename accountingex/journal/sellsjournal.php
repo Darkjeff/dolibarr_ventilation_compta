@@ -71,7 +71,7 @@ if (! $user->rights->accountingex->access)
 $action = GETPOST('action');
 
 /*
- * View
+ * View sql
  */
 
 $year_current = strftime("%Y", dol_now());
@@ -156,7 +156,7 @@ if ($result) {
 			$resultcompte=$compte->fetch($obj->fk_compte);
 			
 			if ($resultcompte) {
-				$tabfac[$obj->rowid]["description"]  = $compte->label;
+				$tabfac[$obj->rowid]["description"]  = $obj->label_compte;
 			}
 		} else {
 				$tabfac[$obj->rowid]["description"][$obj->fdid]= $obj->description;
@@ -292,38 +292,69 @@ if ($action == 'export_csv') {
 	
 	$companystatic = new Client($db);
 	
-	if ($conf->global->ACCOUNTINGEX_MODELCSV == 2) 	// Modèle Export Cegid Expert
-	{
-		foreach ( $tabfac as $key => $val ) {
+	// Tiers
+	
+	foreach ( $tabfac as $key => $val ) {
 			$companystatic->id = $tabcompany[$key]['id'];
 			$companystatic->name = $tabcompany[$key]['name'];
 			$companystatic->client = $tabcompany[$key]['code_client'];
 			
 			$date = dol_print_date($db->jdate($val["date"]), $conf->global->ACCOUNTINGEX_EXP_DATE);
-			
-			print $date . $sep;
+	
+	print $date . $sep;
 			print $conf->global->ACCOUNTINGEX_SELL_JOURNAL . $sep;
+			
+			if ($conf->global->ACCOUNTINGEX_EXP_GLOBAL_ACCOUNT == 1) 
+				{			
 			print length_accountg($conf->global->COMPTA_ACCOUNT_CUSTOMER) . $sep;
+			}
 			foreach ( $tabttc[$key] as $k => $mt ) {
 				print length_accounta(html_entity_decode($k)) . $sep;
+				
+				if ($conf->global->ACCOUNTINGEX_EXP_AMOUNT == 1) 
+				{
 				print ($mt < 0 ? 'C' : 'D') . $sep;
 				print ($mt <= 0 ? price(- $mt) : $mt) . $sep;
+				}else {	
+				print '"' . ($mt >= 0 ? price($mt) : '') . '"' . $sep;
+				print '"' . ($mt < 0 ? price(- $mt) : '') . '"';
+				}
+				
+				
+				
 				print utf8_decode($companystatic->name) . $sep;
 			}
 			print $val["ref"];
 			print "\n";
 			
-			// Product / Service
-			foreach ( $tabht[$key] as $k => $mt ) {
+	// Product / Service
+			
+		foreach ( $tabht[$key] as $k => $mt ) {
+		$date = dol_print_date($db->jdate($val["date"]), $conf->global->ACCOUNTINGEX_EXP_DATE);
+		
 				if (is_array($mt) && count($mt)>0 && empty($conf->global->ACCOUNTINGEX_GROUPBYACCOUNT)) {
 					foreach($mt as $lineid=>$amountline) {
 						if ($amountline) {
 							print $date . $sep;
 							print $conf->global->ACCOUNTINGEX_SELL_JOURNAL . $sep;
+							if ($conf->global->ACCOUNTINGEX_EXP_GLOBAL_ACCOUNT == 1) 
+				{			
+			print $sep;
+			}
 							print length_accountg(html_entity_decode($k)) . $sep;
 							print $sep;
+							
+							if ($conf->global->ACCOUNTINGEX_EXP_AMOUNT == 1) 
+				{
 							print ($amountline < 0 ? 'D' : 'C') . $sep;
 							print ($amountline <= 0 ? price(- $amountline) : $amountline) . $sep;
+							}else {	
+				      print '"' . ($amountline < 0 ? price(- $amountline) : '') . '"' . $sep;
+							print '"' . ($amountline >= 0 ? price($amountline) : '') . '"';
+				}
+							
+							
+							
 							print dol_trunc($val["description"][$lineid], 32) . $sep;
 							print $val["ref"];
 							print "\n";
@@ -333,90 +364,57 @@ if ($action == 'export_csv') {
 					if ($mt) {
 						print $date . $sep;
 						print $conf->global->ACCOUNTINGEX_SELL_JOURNAL . $sep;
+						if ($conf->global->ACCOUNTINGEX_EXP_GLOBAL_ACCOUNT == 1) 
+				{			
+			print $sep;
+			}
 						print length_accountg(html_entity_decode($k)) . $sep;
 						print $sep;
+						
+						
+						if ($conf->global->ACCOUNTINGEX_EXP_AMOUNT == 1) 
+				{
 						print ($mt < 0 ? 'D' : 'C') . $sep;
 						print ($mt <= 0 ? price(- $mt) : $mt) . $sep;
+						}else {
+						print '"' . ($mt < 0 ? price(- $mt) : '') . '"' . $sep;
+						print '"' . ($mt >= 0 ? price($mt) : '') . '"';
+						}
+						
 						print dol_trunc($val["description"], 32) . $sep;
 						print $val["ref"];
 						print "\n";
 					}
 				}
-			}
+			}	
+			
 			// TVA
 			foreach ( $tabtva[$key] as $k => $mt ) {
+			$date = dol_print_date($db->jdate($val["date"]), $conf->global->ACCOUNTINGEX_EXP_DATE);
 				if ($mt) {
 					print $date . $sep;
 					print $conf->global->ACCOUNTINGEX_SELL_JOURNAL . $sep;
+					if ($conf->global->ACCOUNTINGEX_EXP_GLOBAL_ACCOUNT == 1) 
+				{			
+			print $sep;
+			}
 					print length_accountg(html_entity_decode($k)) . $sep;
 					print $sep;
+					
+					if ($conf->global->ACCOUNTINGEX_EXP_AMOUNT == 1) 
+				{		
 					print ($mt < 0 ? 'D' : 'C') . $sep;
 					print ($mt <= 0 ? price(- $mt) : $mt) . $sep;
+					}else {
+					print '"' . ($mt < 0 ? price(- $mt) : '') . '"' . $sep;
+					print '"' . ($mt >= 0 ? price($mt) : '') . '"';
+					}
+					
 					print $langs->trans("VAT") . $sep;
 					print $val["ref"];
 					print "\n";
 				}
-			}
-		}
-	} else 	// Modèle Export Classique
-	{
-		foreach ( $tabfac as $key => $val ) {
-			$companystatic->id = $tabcompany[$key]['id'];
-			$companystatic->name = $tabcompany[$key]['name'];
-			$companystatic->client = $tabcompany[$key]['code_client'];
-			
-			$date = dol_print_date($db->jdate($val["date"]), 'day');
-			print '"' . $date . '"' . $sep;
-			print '"' . $val["ref"] . '"' . $sep;
-			foreach ( $tabttc[$key] as $k => $mt ) {
-				print '"' . length_accounta(html_entity_decode($k)) . '"' . $sep;
-				print '"' . utf8_decode($companystatic->name) . '"' . $sep;
-				print '"' . ($mt >= 0 ? price($mt) : '') . '"' . $sep;
-				print '"' . ($mt < 0 ? price(- $mt) : '') . '"';
-			}
-			print "\n";
-			
-			// Product / Service
-			foreach ( $tabht[$key] as $k => $mt ) {
-				if (is_array($mt) && count($mt)>0 && empty($conf->global->ACCOUNTINGEX_GROUPBYACCOUNT)) {
-					foreach($mt as $lineid=>$amountline) {
-						if ($amountline) {
-							print '"' . $date . '"' . $sep;
-							print '"' . $val["ref"] . '"' . $sep;
-							print '"' . length_accountg(html_entity_decode($k)) . '"' . $sep;	
-							print '"' . dol_trunc($val["description"][$lineid], 32) . '"' . $sep;
-							print '"' . ($amountline < 0 ? price(- $amountline) : '') . '"' . $sep;
-							print '"' . ($amountline >= 0 ? price($amountline) : '') . '"';
-							print "\n";
-						}
-					}
-				} else {
-					if ($mt) {
-						print '"' . $date . '"' . $sep;
-						print '"' . $val["ref"] . '"' . $sep;
-						print '"' . length_accountg(html_entity_decode($k)) . '"' . $sep;
-						print '"' . dol_trunc($val["description"], 32) . '"' . $sep;
-						print '"' . ($mt < 0 ? price(- $mt) : '') . '"' . $sep;
-						print '"' . ($mt >= 0 ? price($mt) : '') . '"';
-						print "\n";
-					}
-				}
-			}
-			
-			// VAT
-			// var_dump($tabtva);
-			foreach ( $tabtva[$key] as $k => $mt ) {
-				if ($mt) {
-					print '"' . $date . '"' . $sep;
-					print '"' . $val["ref"] . '"' . $sep;
-					print '"' . length_accountg(html_entity_decode($k)) . '"' . $sep;
-					print '"' . $langs->trans("VAT") . '"' . $sep;
-					print '"' . ($mt < 0 ? price(- $mt) : '') . '"' . $sep;
-					print '"' . ($mt >= 0 ? price($mt) : '') . '"';
-					print "\n";
-				}
-			}
-		}
+			}	
 	}
 } else {
 	

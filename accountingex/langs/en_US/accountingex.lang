@@ -174,3 +174,7 @@ supplier_invoice=Supplier invoice
 GroupByAccount=Group invoice record
 
 ACCOUNTINGEX_EXP_DATE=Format export date
+ACCOUNTINGEX_EXP_GLOBAL_ACCOUNT=Collect account 
+ACCOUNTINGEX_EXP_LABEL=Choose description
+ACCOUNTINGEX_EXP_AMOUNT=Show amount/sens ou debit/credit
+ACCOUNTINGEXP_EXP_DEVISE=Show devise
