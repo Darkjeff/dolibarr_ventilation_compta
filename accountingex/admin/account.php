@@ -76,8 +76,7 @@ if ($action == 'delete') {
 $accounting = new AccountingAccount($db);
 
 if ($action == 'disable') {
-	$accounting = $accounting->fetch($id);
-	if (! empty($accounting->id)) {
+	if ($accounting->fetch($id)) {
 		$result = $accounting->account_desactivate($id);
 	}
 	
@@ -87,9 +86,7 @@ if ($action == 'disable') {
 	}
 } else if ($action == 'enable') {
 	
-	$accounting = $accounting->fetch($id);
-	
-	if (! empty($accounting->id)) {
+	if ($accounting->fetch($id)) {
 		$result = $accounting->account_activate($id);
 	}
 	$action = 'update';
@@ -217,4 +214,5 @@ if ($result) {
 }
 
 llxFooter();
+
 $db->close();

@@ -28,7 +28,7 @@
  * \class BookKeeping
  * \brief Classe permettant la gestion des comptes generaux de compta
  */
-class BookKeeping {
+class BookKeeping extends CommonObject {
 	var $db;
 	var $id;
 	var $doc_date;

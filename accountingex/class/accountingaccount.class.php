@@ -27,7 +27,7 @@
  * \class AccountingAccount
  * \brief Classe permettant la gestion des comptes generaux de compta
  */
-class AccountingAccount {
+class AccountingAccount extends CommonObject {
 	var $db;
 	var $id;
 	var $rowid;
@@ -101,6 +101,7 @@ class AccountingAccount {
 	function create($user, $notrigger = 0) {
 		global $conf, $langs;
 		$error = 0;
+		$now = dol_now();
 		
 		// Clean parameters
 		if (isset($this->fk_pcg_version))

@@ -289,6 +289,8 @@ if ($action == 'export_csv') {
 	header('Content-Type: text/csv');
 	header('Content-Disposition: attachment;filename=journal_achats.csv');
 	
+	$companystatic = new Fournisseur($db);
+	
 	if ($conf->global->ACCOUNTINGEX_MODELCSV == 2) 	// Modèle Export Cegid Expert
 	{
 		foreach ( $tabfac as $key => $val ) {

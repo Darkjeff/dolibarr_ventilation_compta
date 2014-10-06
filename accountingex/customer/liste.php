@@ -20,7 +20,7 @@
 
 /**
  * \file		accountingex/customer/liste.php
- * \ingroup	Accounting Expert
+ * \ingroup		Accounting Expert
  * \brief		Page de ventilation des lignes de facture clients
  */
 
@@ -89,7 +89,7 @@ if ($action == 'ventil') {
 		$cpt = 0;
 		foreach ( $mesCasesCochees as $maLigneCochee ) {
 			// print '<div><font color="red">id selectionnee : '.$monChoix."</font></div>";
-			$maLigneCourante = split("_", $maLigneCochee);
+			$maLigneCourante = explode("_", $maLigneCochee);
 			$monId = $maLigneCourante[0];
 			$monNumLigne = $maLigneCourante[1];
 			$monCompte = $mesCodesVentilChoisis[$monNumLigne];
