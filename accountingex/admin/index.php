@@ -295,7 +295,7 @@ print '</tr>';
 print '</form>';
 print "</table>\n";
 
-print '<br /><br /><div style="text-align:center"><input type="submit" class="button" value="'.$langs->trans('Modify').'" name="button"></div>';
+print '<br /><div style="text-align:center"><input type="submit" class="button" value="'.$langs->trans('Modify').'" name="button"></div>';
 
 llxFooter();
 $db->close();
