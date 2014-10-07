@@ -193,11 +193,11 @@ if ($result) {
 	$i = 0;
 	
 	// TODO : print_barre_liste always use $conf->liste_limit and do not care about custom limit in list...
-	print_barre_liste($langs->trans("InvoiceLines"), $page, "list.php", "", $sortfield, $sortorder, '', $num_lignes);
+	print_barre_liste($langs->trans("InvoiceLines"), $page, $_SERVER["PHP_SELF"], "", $sortfield, $sortorder, '', $num_lignes);
 	
 	print '<td align="left"><br><b>' . $langs->trans("DescVentilTodoSupplier") . '</b></br></td>';
 	
-	print '<form action="list.php" method="post">' . "\n";
+	print '<form action="' . $_SERVER["PHP_SELF"] . '" method="post">' . "\n";
 	print '<input type="hidden" name="action" value="ventil">';
 	
 	print '<table class="noborder" width="100%">';
@@ -252,15 +252,6 @@ if ($result) {
 			
 		}
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		print "<tr $bc[$var]>";
 		
 		// Ref facture
@@ -295,13 +286,12 @@ if ($result) {
 		print $objp->code_buy2;
 		print '</td>';
 		
-		
-		
 		// Colonne choix du compte
 		print '<td align="center">';
 		//print $formventilation->select_account($objp->aarowid, 'codeventil[]', 1);
 		print $form->selectarray("codeventil[]",$cgs, $cgn[$objp->code_buy2]);
 		print '</td>';
+
 		// Colonne choix ligne a ventiler
 		print '<td align="center">';
 		print '<input type="checkbox" name="mesCasesCochees[]" value="' . $objp->rowid . "_" . $i . '"' . ($objp->code_buy ? "checked" : "") . '/>';
@@ -310,7 +300,6 @@ if ($result) {
 		print "</tr>";
 		$i ++;
 	}
-	
 
 	print '</table>';
 	print '<br>';

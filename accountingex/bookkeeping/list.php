@@ -138,7 +138,7 @@ else {
 		$num = $db->num_rows($resql);
 		$i = 0;
 		
-		print_barre_liste($langs->trans("Bookkeeping"), $page, "list.php", "", $sortfield, $sortorder, '', $num);
+		print_barre_liste($langs->trans("Bookkeeping"), $page, $_SERVER["PHP_SELF"], "", $sortfield, $sortorder, '', $num);
 		
 		print '<form name="add" action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
 		print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
@@ -175,18 +175,18 @@ else {
 		print "</tr>\n";
 		
 		print '<tr class="liste_titre">';
-		print '<form action="list.php" method="GET">';
-		print '<td><input type="text" name="search_doc_type" value="' . $_GET["search_doc_type"] . '"></td>';
+		print '<form action="' . $_SERVER["PHP_SELF"] . '" method="GET">';
+		print '<td><input type="text" name="search_doc_type" value="' . $GETPOST("search_doc_type") . '"></td>';
 		print '<td>&nbsp;</td>';
-		print '<td><input type="text" name="search_doc_ref" value="' . $_GET["search_doc_ref"] . '"></td>';
-		print '<td><input type="text" name="search_compte" value="' . $_GET["search_compte"] . '"></td>';
-		print '<td><input type="text" name="search_tiers" value="' . $_GET["search_tiers"] . '"></td>';
-		print '<td>&nbsp;</td>';
-		print '<td>&nbsp;</td>';
+		print '<td><input type="text" name="search_doc_ref" value="' . $GETPOST("search_doc_ref") . '"></td>';
+		print '<td><input type="text" name="search_compte" value="' . $GETPOST("search_compte") . '"></td>';
+		print '<td><input type="text" name="search_tiers" value="' . $GETPOST("search_tiers") . '"></td>';
 		print '<td>&nbsp;</td>';
 		print '<td>&nbsp;</td>';
 		print '<td>&nbsp;</td>';
-		print '<td><input type="text" name="search_journal" size="3" value="' . $_GET["search_journal"] . '"></td>';
+		print '<td>&nbsp;</td>';
+		print '<td>&nbsp;</td>';
+		print '<td><input type="text" name="search_journal" size="3" value="' . $GETPOST("search_journal") . '"></td>';
 		print '<td align="right">';
 		print '<input type="image" class="liste_titre" name="button_search" src="' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/search.png" value="' . dol_escape_htmltag($langs->trans("Search")) . '" title="' . dol_escape_htmltag($langs->trans("Search")) . '">';
 		print '</td>';

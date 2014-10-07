@@ -183,11 +183,11 @@ if ($result) {
 	$i = 0;
 	
 	// TODO : print_barre_liste always use $conf->liste_limit and do not care about custom limit in list...
-	print_barre_liste($langs->trans("InvoiceLines"), $page, "list.php", "", $sortfield, $sortorder, '', $num_lignes);
+	print_barre_liste($langs->trans("InvoiceLines"), $page, $_SERVER["PHP_SELF"], "", $sortfield, $sortorder, '', $num_lignes);
 	
 	print '<br><b>' . $langs->trans("DescVentilTodoCustomer") . '</b></br>';
 	
-	print '<form action="' . $_SERVER["PHP_SELF"] . '" method="post">' . "\n";
+	print '<form action="' . $_SERVER["PHP_SELF"] . '" method="POST">' . "\n";
 	print '<input type="hidden" name="action" value="ventil">';
 	
 	print '<table class="noborder" width="100%">';
