@@ -18,7 +18,7 @@
  */
 
 /**
- * \file		accountancyex/admin/fiche.php
+ * \file		accountancyex/admin/card.php
  * \ingroup		Accounting Expert
  * \brief		Card accounting account
  */
@@ -95,7 +95,7 @@ elseif ($action == 'edit')
 		
 		$sql = 'SELECT pcg_version FROM ' . MAIN_DB_PREFIX . 'accounting_system WHERE rowid=' . $conf->global->CHARTOFACCOUNTS;
 		
-		dol_syslog('accountingex/admin/fiche.php:: $sql=' . $sql);
+		dol_syslog('accountingex/admin/card.php:: $sql=' . $sql);
 		$result2 = $db->query($sql);
 		$obj = $db->fetch_object($result2);
 		

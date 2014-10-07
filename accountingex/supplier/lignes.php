@@ -213,7 +213,7 @@ if ($result) {
 		print '<td align="left">' . price($objp->total_ht) . '</td>';
 		print '<td align="left">' . $codeCompta . '</td>';
 		print '<td>' . $objp->rowid . '</td>';
-		print '<td><a href="./fiche.php?id=' . $objp->rowid . '">';
+		print '<td><a href="./card.php?id=' . $objp->rowid . '">';
 		print img_edit();
 		print '</a></td>';
 		

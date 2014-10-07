@@ -18,7 +18,7 @@
  */
 
 /**
- * \file		accountingex/bookkeeping/fiche.php
+ * \file		accountingex/bookkeeping/card.php
  * \ingroup		Accounting Expert
  * \brief		Page to show account
  */
@@ -337,10 +337,10 @@ if ($action == 'create') {
 						
 						print '<td>';
 						if ($user->rights->accoutingex->access) {
-							print '<a href="./fiche.php?action=update&id=' . $line->id . '&piece_num=' . $line->piece_num . '">';
+							print '<a href="./card.php?action=update&id=' . $line->id . '&piece_num=' . $line->piece_num . '">';
 							print img_edit();
 							print '</a>&nbsp;';
-							print '<a href="./fiche.php?action=delete&id=' . $line->id . '&piece_num=' . $line->piece_num . '">';
+							print '<a href="./card.php?action=delete&id=' . $line->id . '&piece_num=' . $line->piece_num . '">';
 							print img_delete();
 							print '</a>';
 						}

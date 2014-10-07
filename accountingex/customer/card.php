@@ -18,7 +18,7 @@
  */
 
 /**
- * \file accountingex/customer/fiche.php
+ * \file accountingex/customer/card.php
  * \ingroup Accounting Expert
  * \brief Page fiche ventilation
  */
@@ -61,7 +61,7 @@ if ($action == 'ventil' && $user->rights->accountingex->access) {
 	$sql .= " SET fk_code_ventilation = " . $codeventil;
 	$sql .= " WHERE rowid = " . $id;
 	
-	dol_syslog("/accountingex/customer/fiche.php sql=" . $sql, LOG_DEBUG);
+	dol_syslog("/accountingex/customer/card.php sql=" . $sql, LOG_DEBUG);
 	$resql = $db->query($sql);
 	if (! $resql) {
 		setEventMessage($db->lasterror(), 'errors');
@@ -95,7 +95,7 @@ if (! empty($id)) {
 		$sql .= " AND f.entity = '" . $conf->entity . "'";
 	}
 	
-	dol_syslog("/accountingex/customer/fiche.php sql=" . $sql, LOG_DEBUG);
+	dol_syslog("/accountingex/customer/card.php sql=" . $sql, LOG_DEBUG);
 	$result = $db->query($sql);
 	
 	if ($result) {

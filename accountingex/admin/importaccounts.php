@@ -21,7 +21,7 @@
  */
 
 /**
- * \file htdocs/compta/accountingex/liste.php
+ * \file htdocs/compta/accountingex/list.php
  * \ingroup compta
  * \brief Page IMPORT COMPTE COMPTABLE
  */

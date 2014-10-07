@@ -78,7 +78,7 @@ function account_prepare_head($object) {
 	$h = 0;
 	$head = array ();
 	
-	$head[$h][0] = dol_buildpath('/accountingex/admin/fiche.php', 1) . '?id=' . $object->id;
+	$head[$h][0] = dol_buildpath('/accountingex/admin/card.php', 1) . '?id=' . $object->id;
 	$head[$h][1] = $langs->trans("Card");
 	$head[$h][2] = 'card';
 	$h ++;

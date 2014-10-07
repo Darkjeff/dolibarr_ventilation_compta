@@ -20,7 +20,7 @@
  */
 
 /**
- * \file		accountingex/bookkeeping/liste.php
+ * \file		accountingex/bookkeeping/list.php
  * \ingroup		Accounting Expert
  * \brief		List operation of book keeping
  */
@@ -65,7 +65,7 @@ if ($action == 'delbookkeeping') {
 	if (! empty($import_key)) {
 		$object = new BookKeeping($db);
 		$result = $object->delete_by_importkey($import_key);
-		Header("Location: liste.php");
+		Header("Location: list.php");
 		if ($result < 0) {
 			setEventMessage($object->errors, 'errors');
 		}
@@ -132,13 +132,13 @@ else {
 	
 	$sql .= " ORDER BY $sortfield $sortorder " . $db->plimit($conf->liste_limit + 1, $offset);
 	
-	dol_syslog('accountingex/bookkeeping/liste.php:: $sql=' . $sql);
+	dol_syslog('accountingex/bookkeeping/list.php:: $sql=' . $sql);
 	$resql = $db->query($sql);
 	if ($resql) {
 		$num = $db->num_rows($resql);
 		$i = 0;
 		
-		print_barre_liste($langs->trans("Bookkeeping"), $page, "liste.php", "", $sortfield, $sortorder, '', $num);
+		print_barre_liste($langs->trans("Bookkeeping"), $page, "list.php", "", $sortfield, $sortorder, '', $num);
 		
 		print '<form name="add" action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
 		print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
@@ -150,7 +150,7 @@ else {
 		
 		print '</form>';
 		
-		print '<a href="./fiche.php?action=create" class="butAction">'.$langs->trans("NewMovCompta").'</a>';
+		print '<a href="./card.php?action=create" class="butAction">'.$langs->trans("NewMovCompta").'</a>';
 		
 		print '<form name="add" action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
 		print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
@@ -175,7 +175,7 @@ else {
 		print "</tr>\n";
 		
 		print '<tr class="liste_titre">';
-		print '<form action="liste.php" method="GET">';
+		print '<form action="list.php" method="GET">';
 		print '<td><input type="text" name="search_doc_type" value="' . $_GET["search_doc_type"] . '"></td>';
 		print '<td>&nbsp;</td>';
 		print '<td><input type="text" name="search_doc_ref" value="' . $_GET["search_doc_ref"] . '"></td>';
@@ -212,7 +212,7 @@ else {
 			print '<td align="right">' . price($obj->montant) . '</td>';
 			print '<td>' . $obj->sens . '</td>';
 			print '<td>' . $obj->code_journal . '</td>';
-			print '<td><a href="./fiche.php?piece_num=' . $obj->piece_num . '">' . img_edit() . '</a></td>';
+			print '<td><a href="./card.php?piece_num=' . $obj->piece_num . '">' . img_edit() . '</a></td>';
 			print "</tr>\n";
 			$i ++;
 		}

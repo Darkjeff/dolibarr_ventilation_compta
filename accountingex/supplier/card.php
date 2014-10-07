@@ -20,7 +20,7 @@
  *
  */
 /**
- * \file accountingex/supplier/fiche.php
+ * \file accountingex/supplier/card.php
  * \ingroup Accountign Expert
  * \brief Page fiche ventilation
  */

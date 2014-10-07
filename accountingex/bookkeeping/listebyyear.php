@@ -122,7 +122,7 @@ if ($resql) {
 		print '<td align="right">' . price($obj->montant) . '</td>';
 		print '<td>' . $obj->sens . '</td>';
 		print '<td>' . $obj->code_journal . '</td>';
-		print '<td><a href="./fiche.php?action=update&id=' . $obj->rowid . '">' . img_edit() . '</a></td>';
+		print '<td><a href="./card.php?action=update&id=' . $obj->rowid . '">' . img_edit() . '</a></td>';
 		print "</tr>\n";
 		
 		$i ++;

@@ -141,7 +141,7 @@ if ($result) {
 	
 	print '<br/>';
 	
-	print '<a class="butAction" href="./fiche.php?action=create">' . $langs->trans("Addanaccount") . '</a>';
+	print '<a class="butAction" href="./card.php?action=create">' . $langs->trans("Addanaccount") . '</a>';
 	print '<a class="butAction" href="./importaccounts.php">' . $langs->trans("ImportAccount") . '</a>';
 	print '<br/><br/>';
 	
@@ -175,7 +175,7 @@ if ($result) {
 		
 		$var = ! $var;
 		print '<tr ' . $bc[$var] . '>';
-		print '<td><a href="./fiche.php?id=' . $obj->rowid . '">' . $obj->account_number . '</td>';
+		print '<td><a href="./card.php?id=' . $obj->rowid . '">' . $obj->account_number . '</td>';
 		print '<td>' . $obj->label . '</td>';
 		print '<td>' . $obj->account_parent . '</td>';
 		print '<td>' . $obj->pcg_type . '</td>';
@@ -194,10 +194,10 @@ if ($result) {
 		
 		print '<td>';
 		if ($user->rights->accountingex->admin) {
-			print '<a href="./fiche.php?action=update&id=' . $obj->rowid . '">';
+			print '<a href="./card.php?action=update&id=' . $obj->rowid . '">';
 			print img_edit();
 			print '</a>&nbsp;';
-			print '<a href="./fiche.php?action=delete&id=' . $obj->rowid . '">';
+			print '<a href="./card.php?action=delete&id=' . $obj->rowid . '">';
 			print img_delete();
 			print '</a>';
 		}
