@@ -46,7 +46,7 @@ class modAccountingExpert extends DolibarrModules {
 		$this->description = "Advanced manage of accounting";
 		
 		// Possible values for version are: 'development', 'experimental', 'dolibarr' or version
-		$this->version = '3.5.x beta 20141007';
+		$this->version = '3.5.x beta 20141016';
 		$this->revision = '2.0.0';
 		
 		$this->const_name = 'MAIN_MODULE_' . strtoupper($this->name);
@@ -62,7 +62,7 @@ class modAccountingExpert extends DolibarrModules {
 		);
 		
 		// Config pages
-		// $this->config_page_url = array('index.php@accountingex'); Deprecated - Need an admin page into the module directly - Not reserve for the admin
+		$this->config_page_url = array('index.php@accountingex');
 		
 		// Dependencies
 		$this->depends = array (); // List of modules id that must be enabled if this module is enabled
