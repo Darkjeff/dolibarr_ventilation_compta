@@ -266,6 +266,7 @@ foreach ($list as $key)
 	print '</td></tr>';
 }
 
+$var = ! $var;
 print "<tr " . $bc[$var] . ">";
 print '<td width="80%">' . $langs->trans("ACCOUNTINGEX_LIST_SORT_VENTILATION_TODO") . '</td>';
 if (! empty($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION_TODO)) {
@@ -279,6 +280,7 @@ if (! empty($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION_TODO)) {
 }
 print '</tr>';
 
+$var = ! $var;
 print "<tr " . $bc[$var] . ">";
 print '<td width="80%">' . $langs->trans("ACCOUNTINGEX_LIST_SORT_VENTILATION_DONE") . '</td>';
 if (! empty($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION_DONE)) {
