@@ -116,37 +116,6 @@ if ($action == 'ventil') {
 	print '<div><font color="red">' . $langs->trans("EndProcessing") . '</font></div>';
 }
 
-/* 
- * Liste des comptes
- */
-
-$sqlCompte = "SELECT a.rowid, a.account_number, a.label, a.fk_pcg_version";
-$sqlCompte .= " , s.rowid, s.pcg_version";
-$sqlCompte .= " FROM ".MAIN_DB_PREFIX."accountingaccount as a, ".MAIN_DB_PREFIX."accounting_system as s";
-$sqlCompte .= " WHERE a.fk_pcg_version = s.pcg_version AND s.rowid=".$conf->global->CHARTOFACCOUNTS;
-$sqlCompte .= " AND a.active = '1'";
-$sqlCompte .= " ORDER BY a.account_number ASC";
-
-$resultCompte = $db->query($sqlCompte);
-$cgs = array();
-$cgn = array();
-if ($resultCompte)
-{
-  $numCompte = $db->num_rows($resultCompte);
-  $iCompte = 0; 
-  
-  while ($iCompte < $numCompte)
-    {
-      $rowCompte = $db->fetch_row($resultCompte);
-      $cgs[$rowCompte[0]] = $rowCompte[1] . ' ' . $rowCompte[2];
-      $cgn[$rowCompte[1]] = $rowCompte[0];
-      $iCompte++;
-    }
-}
-
-
-
-
 
 
 /*
@@ -169,6 +138,7 @@ $offset = $limit * $page;
 
 $sql = "SELECT f.ref, f.rowid as facid, f.ref_supplier, l.fk_product, l.description, l.total_ht as price, l.rowid, l.fk_code_ventilation, ";
 $sql .= " p.rowid as product_id, p.ref as product_ref, p.label as product_label, l.product_type as type, p.accountancy_code_buy as code_buy";
+$sql .= " , aa.rowid as aarowid";
 $sql .= " FROM " . MAIN_DB_PREFIX . "facture_fourn as f";
 $sql .= " INNER JOIN " . MAIN_DB_PREFIX . "facture_fourn_det as l ON f.rowid = l.fk_facture_fourn";
 $sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "product as p ON p.rowid = l.fk_product";
@@ -228,29 +198,17 @@ if ($result) {
 		
 		if (empty($objp->code_buy)) {
 			$code_buy_notset = 'color:red';
+			if ($objp->type == 1) {
+				$objp->code_buy = (! empty($conf->global->COMPTA_SERVICE_BUY_ACCOUNT) ? $conf->global->COMPTA_SERVICE_BUY_ACCOUNT : $langs->trans("CodeNotDef"));
+					
+				} else {
+        $objp->code_buy = (! empty($conf->global->COMPTA_PRODUCT_BUY_ACCOUNT) ? $conf->global->COMPTA_PRODUCT_BUY_ACCOUNT : $langs->trans("CodeNotDef"));					
+				}
 			
 			}else {
 				$code_buy_notset = 'color:blue';
 			
 			}
-		
-		if ($objp->type == 1) {
-				$objp->code_buy2 = (! empty($conf->global->COMPTA_SERVICE_BUY_ACCOUNT) ? $conf->global->COMPTA_SERVICE_BUY_ACCOUNT : $langs->trans("CodeNotDef"));
-					
-				} else {
-        $objp->code_buy2 = (! empty($conf->global->COMPTA_PRODUCT_BUY_ACCOUNT) ? $conf->global->COMPTA_PRODUCT_BUY_ACCOUNT : $langs->trans("CodeNotDef"));					
-				}
-			
-				
-				if ($objp->type == 1) {
-				$objp->code_buy2 = (! empty($conf->global->COMPTA_SERVICE_BUY_ACCOUNT) ? $conf->global->COMPTA_SERVICE_BUY_ACCOUNT : $langs->trans("CodeNotDef"));
-					
-				} else {
-				$objp->code_buy2 = (! empty($conf->global->COMPTA_PRODUCT_BUY_ACCOUNT) ? $conf->global->COMPTA_PRODUCT_BUY_ACCOUNT : $langs->trans("CodeNotDef"));
-					
-				
-			
-		}
 		
 		print "<tr $bc[$var]>";
 		
@@ -283,18 +241,17 @@ if ($result) {
 		print '</td>';
 		
 		print '<td align="center" style="' . $code_buy_notset . '">';
-		print $objp->code_buy2;
+		print $objp->code_buy;
 		print '</td>';
 		
 		// Colonne choix du compte
 		print '<td align="center">';
-		//print $formventilation->select_account($objp->aarowid, 'codeventil[]', 1);
-		print $form->selectarray("codeventil[]",$cgs, $cgn[$objp->code_buy2]);
+		print $formventilation->select_account($objp->aarowid, 'codeventil[]', 1);
 		print '</td>';
 
 		// Colonne choix ligne a ventiler
 		print '<td align="center">';
-		print '<input type="checkbox" name="mesCasesCochees[]" value="' . $objp->rowid . "_" . $i . '"' . ($objp->code_buy ? "checked" : "") . '/>';
+		print '<input type="checkbox" name="mesCasesCochees[]" value="' . $objp->rowid . "_" . $i . '"' . ($objp->aarowid ? "checked" : "") . '/>';
 		print '</td>';
 		
 		print "</tr>";
