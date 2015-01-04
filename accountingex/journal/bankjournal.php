@@ -450,6 +450,20 @@ if ($action == 'export_csv') {
 					}
 				}
 			}
+			else 
+		foreach ( $tabbq[$key] as $k => $mt ) {
+			if (1) {
+				print $date . $sep;
+			  print $conf->global->ACCOUNTINGEX_BANK_JOURNAL . $sep;
+				print $conf->global->ACCOUNTING_ACCOUNT_SUSPENSE . $sep;
+				print $sep;
+				print $langs->trans("Bank") . $sep;
+				print ($mt < 0 ? 'D' : 'C') . $sep;
+				print ($mt <= 0 ? price(- $mt) : $mt) . $sep;
+				print $val["ref"] . $sep;
+			}
+			print "\n";
+		}
 		}
 	} else 	// Modèle Export Classique
 	{
@@ -488,6 +502,18 @@ if ($action == 'export_csv') {
 					}
 				}
 			}
+			else 
+		foreach ( $tabbq[$key] as $k => $mt ) {
+			if (1) {
+			print '"' . $date . '"' . $sep;
+						print '"' . $val["ref"] . '"' . $sep;
+					print '"' . $conf->global->ACCOUNTING_ACCOUNT_SUSPENSE . '"' . $sep;
+				print '"' . $langs->trans("Bank") . '"' . $sep;
+					print '"' . ($mt < 0 ? price(- $mt) : '') . '"' . $sep;
+						print '"' . ($mt >= 0 ? price($mt) : '') . '"';
+						print "\n";
+			}
+		}
 		}
 	}
 } else {
@@ -581,6 +607,20 @@ if ($action == 'export_csv') {
 				}
 			}
 		}
+		else 
+		foreach ( $tabbq[$key] as $k => $mt ) {
+			if (1) {
+				print "<tr " . $bc[$var] . ">";
+				print "<td>" . $date . "</td>";
+				print "<td>" . $reflabel . "</td>";
+				print "<td>" . $conf->global->ACCOUNTING_ACCOUNT_SUSPENSE . "</td>";
+				print "<td>" . $langs->trans('ThirdParty') . "</td>";
+				print "<td align='right'>" . ($mt < 0 ? price(- $mt) : '') . "</td>";
+				print "<td align='right'>" . ($mt >= 0 ? price($mt) : '') . "</td>";
+				print "</tr>";
+			}
+		}
+		
 		
 		$var = ! $var;
 	}
