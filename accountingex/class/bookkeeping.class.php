@@ -247,7 +247,7 @@ class BookKeeping extends CommonObject {
 				
 				$now = dol_now();
 				if (empty($this->date_create))
-					$this->date_create = $now();
+					$this->date_create = $now;
 				
 				$sql = "INSERT INTO " . MAIN_DB_PREFIX . "bookkeeping (doc_date, ";
 				$sql .= "doc_type, doc_ref,fk_doc,fk_docdet,code_tiers,numero_compte,label_compte,";
