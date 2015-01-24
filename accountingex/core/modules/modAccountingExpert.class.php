@@ -46,8 +46,8 @@ class modAccountingExpert extends DolibarrModules {
 		$this->description = "Advanced manage of accounting";
 		
 		// Possible values for version are: 'development', 'experimental', 'dolibarr' or version
-		$this->version = '3.5.x beta 20140728';
-		$this->revision = '2.0.0';
+		$this->version = '3.6.x beta 20150124';
+		$this->revision = '3.0.0';
 		
 		$this->const_name = 'MAIN_MODULE_' . strtoupper($this->name);
 		$this->special = 0;
@@ -76,7 +76,7 @@ class modAccountingExpert extends DolibarrModules {
 		); // Minimum version of PHP required by module
 		$this->need_dolibarr_version = array (
 				3,
-				4 
+				6 
 		); // Minimum version of Dolibarr required by module
 		$this->langfiles = array (
 				"accountingex@accountingex" 
