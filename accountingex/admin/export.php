@@ -53,6 +53,7 @@ if (! $user->rights->accountingex->admin)
 $action = GETPOST('action', 'alpha');
 
 // Other parameters ACCOUNTINGEX_*
+// All parameters are moved into ACCOUNTING_* in Dolibarr 3.7
 $list = array (
 		'ACCOUNTINGEX_SEPARATORCSV',
 		'ACCOUNTINGEX_EXP_DATE',
@@ -173,10 +174,6 @@ foreach ( $list as $key ) {
 	print '<input type="text" size="20" name="' . $key . '" value="' . $conf->global->$key . '">';
 	print '</td></tr>';
 }
-
-
-
-
 
 print '</form>';
 print "</table>\n";

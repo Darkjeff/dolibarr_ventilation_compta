@@ -176,3 +176,8 @@ supplier_invoice=Factura de proveedor
 GroupByAccount=Group invoice line
 
 ACCOUNTINGEX_EXP_DATE=Format export date
+ACCOUNTINGEX_EXP_GLOBAL_ACCOUNT=Collect account
+ACCOUNTINGEX_EXP_PIECE=Show piece number 
+ACCOUNTINGEX_EXP_LABEL=Choose description
+ACCOUNTINGEX_EXP_AMOUNT=Show amount/sens ou debit/credit
+ACCOUNTINGEX_EXP_DEVISE=Show devise

@@ -51,6 +51,7 @@ if (! $user->rights->accountingex->admin)
 $action = GETPOST('action', 'alpha');
 
 // Other parameters ACCOUNTINGEX_*
+// All parameters are moved into ACCOUNTING_* in Dolibarr 3.7
 $list = array (
 		'ACCOUNTINGEX_SELL_JOURNAL',
 		'ACCOUNTINGEX_PURCHASE_JOURNAL',
