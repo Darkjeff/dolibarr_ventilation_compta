@@ -1,7 +1,7 @@
 <?php
 /* Copyright (C) 2013-2014 Olivier Geffroy		<jeff@jeffinfo.com>
  * Copyright (C) 2013-2014 Florian Henry		<florian.henry@open-concept.pro>
- * Copyright (C) 2013-2014 Alexandre Spangaro	<alexandre.spangaro@gmail.com>
+ * Copyright (C) 2013-2015 Alexandre Spangaro	<alexandre.spangaro@gmail.com>
  * Copyright (C) 2014      Ari Elbaz (elarifr)	<github@accedinfo.com>
  * Copyright (C) 2014      Marcos García        <marcosgdf@gmail.com> 
  *
@@ -55,6 +55,7 @@ if (! $user->rights->accountingex->admin)
 $action = GETPOST('action', 'alpha');
 
 // Other parameters COMPTA_* & ACCOUNTINGEX_*
+// All parameters are moved into ACCOUNTING_* in Dolibarr 3.7
 $list = array (
 		'ACCOUNTINGEX_LIMIT_LIST_VENTILATION',
 		'ACCOUNTINGEX_LENGTH_GACCOUNT',
@@ -266,6 +267,7 @@ foreach ($list as $key)
 	print '</td></tr>';
 }
 
+$var = ! $var;
 print "<tr " . $bc[$var] . ">";
 print '<td width="80%">' . $langs->trans("ACCOUNTINGEX_LIST_SORT_VENTILATION_TODO") . '</td>';
 if (! empty($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION_TODO)) {
@@ -279,6 +281,7 @@ if (! empty($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION_TODO)) {
 }
 print '</tr>';
 
+$var = ! $var;
 print "<tr " . $bc[$var] . ">";
 print '<td width="80%">' . $langs->trans("ACCOUNTINGEX_LIST_SORT_VENTILATION_DONE") . '</td>';
 if (! empty($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION_DONE)) {
