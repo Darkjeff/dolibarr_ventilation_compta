@@ -525,22 +525,6 @@ class modAccountingExpert extends DolibarrModules {
 		$r ++;
 		
 		$this->menu[$r] = array (
-				'fk_menu' => 'fk_mainmenu=accounting,fk_leftmenu=Globalparameters',
-				'type' => 'left',
-				'titre' => 'Menuaccount',
-				'leftmenu' => 'Menuaccount',
-				'mainmenu' => 'accounting',
-				'url' => '/accountingex/admin/account.php',
-				'langs' => 'accountingex@accountingex',
-				'position' => 403,
-				'enabled' => 1,
-				'perms' => '$user->rights->accountingex->admin',
-				'target' => '',
-				'user' => 0 
-		);
-		$r ++;
-		
-		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=accounting,fk_leftmenu=Parameters',
 				'type' => 'left',
 				'titre' => 'Menuthirdpartyaccount',
