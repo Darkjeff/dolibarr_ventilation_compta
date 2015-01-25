@@ -141,14 +141,14 @@ if ($conf->global->ACCOUNTINGEX_LIST_SORT_VENTILATION_DONE > 0) {
 }
 $sql .= $db->plimit($limit + 1, $offset);
 
-dol_syslog("/accountingex/customer/linges.php sql=" . $sql, LOG_DEBUG);
+dol_syslog("/accountingex/customer/lignes.php sql=" . $sql, LOG_DEBUG);
 $result = $db->query($sql);
 if ($result) {
-	$num_lignes = $db->num_rows($result);
+	$num_lines = $db->num_rows($result);
 	$i = 0;
 	
 	// TODO : print_barre_liste always use $conf->liste_limit and do not care about custom limit in list...
-	print_barre_liste($langs->trans("InvoiceLinesDone"), $page, $_SERVER["PHP_SELF"], "", $sortfield, $sortorder, '', $num_lignes);
+	print_barre_liste($langs->trans("InvoiceLinesDone"), $page, $_SERVER["PHP_SELF"], "", $sortfield, $sortorder, '', $num_lines);
 	
 	print '<td align="left"><b>' . $langs->trans("DescVentilDoneCustomer") . '</b></td>';
 	
@@ -228,5 +228,5 @@ if ($result) {
 
 print "</table></form>";
 
-$db->close();
 llxFooter();
+$db->close();

@@ -21,7 +21,7 @@
 /**
  * \file		accountingex/customer/list.php
  * \ingroup		Accounting Expert
- * \brief		Page de ventilation des lignes de facture clients
+ * \brief		Ventilation page from customers invoices
  */
 
 // Dolibarr environment
@@ -79,7 +79,7 @@ print  '<script type="text/javascript">
 
 /*
  * Action
-*/
+ */
 
 if ($action == 'ventil') {
 	print '<div><font color="red">' . $langs->trans("Processing") . '...</font></div>';
@@ -154,11 +154,11 @@ $sql .= $db->plimit($limit + 1, $offset);
 dol_syslog("/accountingex/customer/list.php sql=" . $sql, LOG_DEBUG);
 $result = $db->query($sql);
 if ($result) {
-	$num_lignes = $db->num_rows($result);
+	$num_lines = $db->num_rows($result);
 	$i = 0;
 	
 	// TODO : print_barre_liste always use $conf->liste_limit and do not care about custom limit in list...
-	print_barre_liste($langs->trans("InvoiceLines"), $page, $_SERVER["PHP_SELF"], "", $sortfield, $sortorder, '', $num_lignes);
+	print_barre_liste($langs->trans("InvoiceLines"), $page, $_SERVER["PHP_SELF"], "", $sortfield, $sortorder, '', $num_lines);
 	
 	print '<br><b>' . $langs->trans("DescVentilTodoCustomer") . '</b></br>';
 	
@@ -173,7 +173,7 @@ if ($result) {
 	print '<td align="right">' . $langs->trans("Amount") . '</td>';
 	print '<td align="right">' . $langs->trans("AccountAccounting") . '</td>';
 	print '<td align="center">' . $langs->trans("IntoAccount") . '</td>';
-	print '<td align="center">'.$langs->trans("Ventilate").'<BR><label id="select-all">'.$langs->trans('All').'</label>/<label id="unselect-all">'.$langs->trans('None').'</label>'.'</td>';
+	print '<td align="center">'.$langs->trans("Ventilate").'<br><label id="select-all">'.$langs->trans('All').'</label>/<label id="unselect-all">'.$langs->trans('None').'</label>'.'</td>';
 	print '</tr>';
 	
 	$facture_static = new Facture($db);
@@ -181,7 +181,7 @@ if ($result) {
 	$form = new Form($db);
 	
 	$var = True;
-	while ( $i < min($num_lignes, $limit) ) {
+	while ( $i < min($num_lines, $limit) ) {
 		$objp = $db->fetch_object($result);
 		$var = ! $var;
 		
@@ -246,7 +246,7 @@ if ($result) {
 
 	print '</table>';
 	print '<br>';
-	print '<div><center><input type="submit" class="butAction" value="' . $langs->trans("Ventilate") . '"></center></div>';
+	print '<div><div align="center"><input type="submit" class="butAction" value="' . $langs->trans("Ventilate") . '"></div>';
 	
 	print '</form>';
 } else {

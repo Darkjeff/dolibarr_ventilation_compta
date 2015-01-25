@@ -190,7 +190,6 @@ else if ($action == "confirm_create") {
 llxHeader();
 
 $html = new Form($db);
-$nbligne = 0;
 
 /*
  *	Confirmation to delete the command
@@ -212,7 +211,7 @@ if ($action == 'create') {
 	);
 	
 	$book = new BookKeeping($db);
-	$next_num_mvt = $book->next_num_mvt();
+	$next_num_mvt = $book->getNextNumMvt();
 	
 	print '<form action="' . $_SERVER["PHP_SELF"] . '" name="create_mvt" method="post">';
 	print '<input type="hidden" name="action" value="confirm_create">' . "\n";

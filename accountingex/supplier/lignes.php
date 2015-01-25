@@ -1,7 +1,5 @@
 <?php
-/* Copyright (C) 2002-2005 Rodolphe Quiedeville	<rodolphe@quiedeville.org>
- * Copyright (C) 2005      Simon TOSSER			<simon@kornog-computing.com>
- * Copyright (C) 2013-2014 Olivier Geffroy		<jeff@jeffinfo.com>
+/* Copyright (C) 2013-2014 Olivier Geffroy		<jeff@jeffinfo.com>
  * Copyright (C) 2013-2014 Alexandre Spangaro	<alexandre.spangaro@gmail.com>
  * Copyright (C) 2014      Ari Elbaz (elarifr)	<github@accedinfo.com>  
  * Copyright (C) 2013-2014 Florian Henry		<florian.henry@open-concept.pro>a
@@ -143,15 +141,15 @@ dol_syslog('accountingex/supplier/lignes.php::list sql= ' . $sql1);
 $result = $db->query($sql);
 
 if ($result) {
-	$num_lignes = $db->num_rows($result);
+	$num_lines = $db->num_rows($result);
 	$i = 0;
 	
 	// TODO : print_barre_liste always use $conf->liste_limit and do not care about custom limit in list...
-	print_barre_liste($langs->trans("InvoiceLinesDone"), $page, "lignes.php", "", $sortfield, $sortorder, '', $num_lignes);
+	print_barre_liste($langs->trans("InvoiceLinesDone"), $page, $_SERVER["PHP_SELF"], "", $sortfield, $sortorder, '', $num_lines);
 	
 	print '<td align="left"><b>' . $langs->trans("DescVentilDoneSupplier") . '</b></td>';
 	
-	print '<form method="GET" action="lignes.php">';
+	print '<form method="GET" action="' . $_SERVER["PHP_SELF"] . '">';
 	print '<table class="noborder" width="100%">';
 	
 	print '<br><br><div class="inline-block divButAction">'. $langs->trans("ChangeAccount");
@@ -185,7 +183,7 @@ if ($result) {
 	$product_static = new Product($db);
 	
 	$var = True;
-	while ( $i < min($num_lignes, $limit) ) {
+	while ( $i < min($num_lines, $limit) ) {
 		$objp = $db->fetch_object($result);
 		$var = ! $var;
 		$codeCompta = $objp->account_number . ' ' . $objp->label;
@@ -228,5 +226,5 @@ if ($result) {
 
 print "</table></form>";
 
-$db->close();
 llxFooter();
+$db->close();

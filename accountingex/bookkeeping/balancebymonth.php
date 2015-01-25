@@ -19,9 +19,9 @@
  */
 
 /**
- * \file accountingex/bookkeeping/balancebymonth.php
- * \ingroup Accounting Expert
- * \brief Balance by month
+ * \file		accountingex/bookkeeping/balancebymonth.php
+ * \ingroup		Accounting Expert
+ * \brief		Balance by month
  */
 
 // Dolibarr environment
@@ -35,7 +35,7 @@ if (! $res && file_exists("../../../main.inc.php"))
 if (! $res)
 	die("Include of main fails");
 	
-	// Class
+// Class
 dol_include_once("/core/lib/date.lib.php");
 dol_include_once("accountingex/core/lib/account.lib.php");
 
@@ -59,10 +59,10 @@ if ($year == 0) {
 /*
  * View
  */
-llxHeader('', $langs->trans("CustomersVentilation"));
+llxHeader('', $langs->trans("Bookkeeping"));
 
-$textprevyear = "<a href=\"balancebymonth.php?year=" . ($year_current - 1) . "\">" . img_previous() . "</a>";
-$textnextyear = " <a href=\"balancebymonth.php?year=" . ($year_current + 1) . "\">" . img_next() . "</a>";
+$textprevyear = '<a href="' . $_SERVER["PHP_SELF"] . '?year=' . ($year_current - 1) . '">' . img_previous() . '</a>';
+$textnextyear = '&nbsp;<a href="' . $_SERVER["PHP_SELF"] . '?year=' . ($year_current + 1) . '">' . img_next() . '</a>';
 
 print_fiche_titre($langs->trans("AccountBalanceByMonth") . ' ' . $textprevyear . ' ' . $langs->trans("Year") . ' ' . $year_start . ' ' . $textnextyear);
 
@@ -85,7 +85,7 @@ $y = $year_current;
 $var = true;
 
 print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre"><td width=150>' . $langs->trans("Intitule") . '</td><td align="center">' . $langs->trans("JanuaryMin") . '</td><td align="center">' . $langs->trans("FebruaryMin") . '</td><td align="center">' . $langs->trans("MarchMin") . '</td><td align="center">' . $langs->trans("AprilMin") . '</td><td align="center">' . $langs->trans("MayMin") . '</td><td align="center">' . $langs->trans("JuneMin") . '</td><td align="center">' . $langs->trans("JulyMin") . '</td><td align="center">' . $langs->trans("AugustMin") . '</td><td align="center">' . $langs->trans("SeptemberMin") . '</td><td align="center">' . $langs->trans("OctoberMin") . '</td><td align="center">' . $langs->trans("NovemberMin") . '</td><td align="center">' . $langs->trans("DecemberMin") . '</td><td align="center"><b>Total</b></td></tr>';
+print '<tr class="liste_titre"><td width=150>' . $langs->trans("Label") . '</td><td align="center">' . $langs->trans("JanuaryMin") . '</td><td align="center">' . $langs->trans("FebruaryMin") . '</td><td align="center">' . $langs->trans("MarchMin") . '</td><td align="center">' . $langs->trans("AprilMin") . '</td><td align="center">' . $langs->trans("MayMin") . '</td><td align="center">' . $langs->trans("JuneMin") . '</td><td align="center">' . $langs->trans("JulyMin") . '</td><td align="center">' . $langs->trans("AugustMin") . '</td><td align="center">' . $langs->trans("SeptemberMin") . '</td><td align="center">' . $langs->trans("OctoberMin") . '</td><td align="center">' . $langs->trans("NovemberMin") . '</td><td align="center">' . $langs->trans("DecemberMin") . '</td><td align="center"><b>Total</b></td></tr>';
 
 $sql = "SELECT bk.numero_compte AS 'compte',";
 $sql .= "  ROUND(SUM(IF(MONTH(bk.doc_date)=1,bk.montant,0)),2) AS 'Janvier',";

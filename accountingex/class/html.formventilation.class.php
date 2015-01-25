@@ -19,32 +19,37 @@
  */
 
 /**
- * \file		accountingex/class/html.formventilation.class.php
- * \ingroup 	Accounting Expert
- * \brief		Class for HTML form
+ *  \file		accountingex/class/html.formventilation.class.php
+ *  \ingroup 	Accounting Expert
+ *	\brief		File of class with all html predefined components
  */
-class FormVentilation extends Form {
+
+/**
+ *	Class to manage generation of HTML components for bank module
+ */
+class FormVentilation extends Form
+{
 	var $db;
 	var $error;
 	
 	/**
-	 * Constructor
-	 *
-	 * @param DoliDB $db handler
-	 */
-	function __construct($db) {
-		$this->db = $db;
-		return 1;
-	}
+     * Constructor
+     *
+     * @param		DoliDB		$db      Database handler
+     */
+	public function __construct($db)
+	{
+        $this->db = $db;
+    }
 	
 	/**
-	 * Return select filter with date of transaction
+	 *	Return select filter with date of transaction
 	 *
-	 * @param string $htmlname of input
-	 * @param string $selectedkey value
-	 * @return string select input
+	 *	@param	string	$htmlname		Name of select field
+	 *	@param	string	$selectedkey	Value
+	 *	@return	string					HTML edit field
 	 */
-	function select_bookkeeping_importkey($htmlname = 'importkey', $selectedkey) {
+	function select_bookkeeping_importkey($htmlname = 'importkey', $selectedkey='') {
 		global $langs;
 		
 		$date_array = array ();
@@ -84,14 +89,14 @@ class FormVentilation extends Form {
 	}
 	
 	/**
-	 * Return list of the accounts with label
+	 *	Return list of accounts with label by chart of accounts
 	 *
-	 * @param string $selectedid pcg_type
-	 * @param string $htmlname of combo list
-	 * @param int $showempty en empty line
-	 * @param array $event
+	 *	@param	string	$selectid		Preselected chart of accounts
+	 *	@param	string	$htmlname		Name of field in html form
+	 *	@param	int		$showempty		Add an empty field
+	 *  @param	array	$event			Event options
 	 *       
-	 * @return string with HTML select
+	 *	@return	string					String with HTML select
 	 */
 	function select_account($selectid, $htmlname = 'account', $showempty = 0, $event = array()) {
 		global $conf, $user, $langs;
@@ -144,13 +149,14 @@ class FormVentilation extends Form {
 	}
 	
 	/**
-	 * Return list of pcg with label
+	 *	Return list of accounts with label by class of accounts
 	 *
-	 * @param string $selectedid pcg_type
-	 * @param string $htmlname of combo list
-	 * @param int $showempty en empty line
-	 *       
-	 * @return string with HTML select
+	 *	@param	string	$selectid		Preselected pcg_type
+	 *	@param	string	$htmlname		Name of field in html form
+	 *	@param	int		$showempty		Add an empty field
+	 *  @param	array	$event			Event options
+     *
+	 *	@return	string					String with HTML select
 	 */
 	function select_pcgtype($selectid, $htmlname = 'pcg_type', $showempty = 0, $event = array()) {
 		global $conf, $user, $langs;
@@ -158,8 +164,8 @@ class FormVentilation extends Form {
 		$out = '';
 		
 		$sql  = "SELECT DISTINCT pcg_type ";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "accountingaccount a";
-		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "accounting_system b ON a.fk_pcg_version=b.pcg_version";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "accountingaccount as a";
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "accounting_system as b ON a.fk_pcg_version=b.pcg_version";
 		$sql .= " WHERE b.rowid=".$conf->global->CHARTOFACCOUNTS;
 		$sql .= " ORDER BY pcg_type";
 		
@@ -198,13 +204,14 @@ class FormVentilation extends Form {
 	}
 	
 	/**
-	 * Return subtype list of pcg with label
+	 *	Return list of accounts with label by sub_class of accounts
 	 *
-	 * @param string $selectedid pcg_type
-	 * @param string $htmlname of combo list
-	 * @param int $showempty en empty line
-	 *       
-	 * @return string with HTML select
+	 *	@param	string	$selectid		Preselected pcg_type
+	 *	@param	string	$htmlname		Name of field in html form
+	 *	@param	int		$showempty		Add an empty field
+	 *  @param	array	$event			Event options
+     *
+	 *	@return	string					String with HTML select
 	 */
 	function select_pcgsubtype($selectid, $htmlname = 'pcg_subtype', $showempty = 0, $event = array()) {
 		global $conf, $user, $langs;
@@ -212,8 +219,8 @@ class FormVentilation extends Form {
 		$out = '';
 		
 		$sql  = "SELECT DISTINCT pcg_subtype ";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "accountingaccount a";
-		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "accounting_system b ON a.fk_pcg_version=b.pcg_version";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "accountingaccount as a";
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "accounting_system as b ON a.fk_pcg_version=b.pcg_version";
 		$sql .= " WHERE b.rowid=".$conf->global->CHARTOFACCOUNTS;
 		$sql .= " ORDER BY pcg_subtype";
 		

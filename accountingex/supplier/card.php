@@ -20,9 +20,9 @@
  *
  */
 /**
- * \file accountingex/supplier/card.php
- * \ingroup Accountign Expert
- * \brief Page fiche ventilation
+ * \file		accountingex/supplier/card.php
+ * \ingroup		Accounting Expert
+ * \brief		Card supplier ventilation
  */
 
 // Dolibarr environment
@@ -101,17 +101,17 @@ if ($_GET["id"]) {
 	
 	$result = $db->query($sql);
 	if ($result) {
-		$num_lignes = $db->num_rows($result);
+		$num_lines = $db->num_rows($result);
 		$i = 0;
 		
-		if ($num_lignes) {
+		if ($num_lines) {
 			$objp = $db->fetch_object($result);
 			
 			print '<form action="' . $_SERVER["PHP_SELF"] . '?id=' . $id . '" method="post">' . "\n";
 			print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 			print '<input type="hidden" name="action" value="ventil">';
 			
-			print_fiche_titre($langs->trans("Ventilation"));
+			print_fiche_titre($langs->trans("SuppliersVentilation"));
 			
 			print '<table class="border" width="100%" cellspacing="0" cellpadding="4">';
 			

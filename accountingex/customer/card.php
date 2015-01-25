@@ -1,7 +1,7 @@
 <?PHP
-/* Copyright (C) 2013      Olivier Geffroy		<jeff@jeffinfo.com>
+/* Copyright (C) 2013-2014 Olivier Geffroy		<jeff@jeffinfo.com>
  * Copyright (C) 2013-2014 Florian Henry		<florian.henry@open-concept.pro>
- * Copyright (C) 2013      Alexandre Spangaro	<alexandre.spangaro@fidurex.fr>
+ * Copyright (C) 2013-2014 Alexandre Spangaro	<alexandre.spangaro@fidurex.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
  */
 
 /**
- * \file accountingex/customer/card.php
- * \ingroup Accounting Expert
- * \brief Page fiche ventilation
+ * \file		accountingex/customer/card.php
+ * \ingroup		Accounting Expert
+ * \brief		Card customer ventilation
  */
 
 // Dolibarr environment
@@ -57,14 +57,20 @@ if (! $user->rights->accountingex->access)
  */
 
 if ($action == 'ventil' && $user->rights->accountingex->access) {
-	$sql = " UPDATE " . MAIN_DB_PREFIX . "facturedet";
-	$sql .= " SET fk_code_ventilation = " . $codeventil;
-	$sql .= " WHERE rowid = " . $id;
+	if (! GETPOST('cancel', 'alpha'))
+	{
+		$sql = " UPDATE " . MAIN_DB_PREFIX . "facturedet";
+		$sql .= " SET fk_code_ventilation = " . $codeventil;
+		$sql .= " WHERE rowid = " . $id;
 	
-	dol_syslog("/accountingex/customer/card.php sql=" . $sql, LOG_DEBUG);
-	$resql = $db->query($sql);
-	if (! $resql) {
-		setEventMessage($db->lasterror(), 'errors');
+		dol_syslog("/accountingex/customer/card.php sql=" . $sql, LOG_DEBUG);
+		$resql = $db->query($sql);
+		if (! $resql) {
+			setEventMessage($db->lasterror(), 'errors');
+		}
+	} else {
+		header("Location: ./lines.php");
+		exit();
 	}
 }
 
@@ -99,10 +105,10 @@ if (! empty($id)) {
 	$result = $db->query($sql);
 	
 	if ($result) {
-		$num_lignes = $db->num_rows($result);
+		$num_lines = $db->num_rows($result);
 		$i = 0;
 		
-		if ($num_lignes) {
+		if ($num_lines) {
 			
 			$objp = $db->fetch_object($result);
 			
@@ -110,7 +116,8 @@ if (! empty($id)) {
 			print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 			print '<input type="hidden" name="action" value="ventil">';
 			
-			print_fiche_titre($langs->trans("Ventilation"));
+			$linkback='<a href="'.DOL_URL_ROOT.'/accountingex/customer/lignes.php">'.$langs->trans("Back").'</a>';
+			print_fiche_titre($langs->trans('CustomersVentilation'),$linkback,'setup');
 			
 			print '<table class="border" width="100%">';
 			
@@ -128,8 +135,8 @@ if (! empty($id)) {
 			print '<tr><td width="20%">' . $langs->trans("NewAccount") . '</td><td>';
 			print $formventilation->select_account($objp->fk_code_ventilation, 'codeventil', 1);
 			print '</td></tr>';
-			print '<tr><td>&nbsp;</td><td><input type="submit" class="button" value="' . $langs->trans("Update") . '"></td></tr>';
-			
+			print '<br><div align="center"><input class="button" type="submit" value="' . $langs->trans("Save") . '">&nbsp;&nbsp;&nbsp;&nbsp;';
+			print '<input class="button" type="submit" name="cancel" value="' . $langs->trans("Cancel") . '"></div>';
 			print '</table>';
 			print '</form>';
 		} else {

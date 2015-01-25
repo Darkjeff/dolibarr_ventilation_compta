@@ -45,6 +45,11 @@ $page = GETPOST("page");
 $sortorder = GETPOST("sortorder");
 $sortfield = GETPOST("sortfield");
 $action = GETPOST('action', 'alpha');
+$search_doc_type = GETPOST("search_doc_type");
+$search_doc_ref = GETPOST("search_doc_ref");
+$search_account = GETPOST("search_account");
+$search_thirdparty = GETPOST("search_thirdparty");
+$search_journal = GETPOST("search_journal");
 
 if ($sortorder == "")
 	$sortorder = "ASC";
@@ -54,6 +59,15 @@ if ($sortfield == "")
 $offset = $conf->liste_limit * $page;
 
 $formventilation = new FormVentilation($db);
+
+if (GETPOST("button_removefilter_x") || GETPOST("button_removefilter")) // Both test are required to be compatible with all browsers
+{
+	$search_doc_type="";
+    $search_doc_ref="";
+	$search_account="";
+	$search_thirdparty="";
+	$search_journal="";
+}
 
 /*
  * Action
@@ -100,7 +114,7 @@ else if ($action == 'export_csv') {
 
 else {
 	
-	llxHeader('', $langs->trans("Accounting") . ' - ' . $langs->trans("Bookkeeping"));
+	llxHeader('', $langs->trans("Bookkeeping"));
 	
 /*
  * List
@@ -109,25 +123,25 @@ else {
 	$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal , bk.piece_num ";
 	$sql .= " FROM " . MAIN_DB_PREFIX . "bookkeeping as bk";
 	
-	if (dol_strlen(trim(GETPOST("search_doc_type")))) {
+	if (dol_strlen(trim($search_doc_ref))) {
 		
-		$sql .= " WHERE bk.doc_type LIKE '%" . GETPOST("search_doc_type") . "%'";
+		$sql .= " WHERE bk.doc_type LIKE '%" . $search_doc_ref . "%'";
 		
-		if (dol_strlen(trim(GETPOST("search_doc_ref")))) {
-			$sql .= " AND bk.doc_ref LIKE '%" . GETPOST("search_doc_ref") . "%'";
+		if (dol_strlen(trim($search_doc_ref))) {
+			$sql .= " AND bk.doc_ref LIKE '%" . $search_doc_ref . "%'";
 		}
 	}
-	if (dol_strlen(trim(GETPOST("search_doc_ref")))) {
-		$sql .= " WHERE bk.doc_ref LIKE '%" . GETPOST("search_doc_ref") . "%'";
+	if (dol_strlen(trim($search_doc_ref))) {
+		$sql .= " WHERE bk.doc_ref LIKE '%" . $search_doc_ref . "%'";
 	}
-	if (dol_strlen(trim(GETPOST("search_compte")))) {
-		$sql .= " WHERE bk.numero_compte LIKE '%" . GETPOST("search_compte") . "%'";
+	if (dol_strlen(trim($search_account))) {
+		$sql .= " WHERE bk.numero_compte LIKE '%" . $search_account . "%'";
 	}
-	if (dol_strlen(trim(GETPOST("search_tiers")))) {
-		$sql .= " WHERE bk.code_tiers LIKE '%" . GETPOST("search_tiers") . "%'";
+	if (dol_strlen(trim($search_thirdparty))) {
+		$sql .= " WHERE bk.code_tiers LIKE '%" . $search_thirdparty . "%'";
 	}
-	if (dol_strlen(trim(GETPOST("search_journal")))) {
-		$sql .= " WHERE bk.code_journal LIKE '%" . GETPOST("search_journal") . "%'";
+	if (dol_strlen(trim($search_journal))) {
+		$sql .= " WHERE bk.code_journal LIKE '%" . $search_journal . "%'";
 	}
 	
 	$sql .= " ORDER BY $sortfield $sortorder " . $db->plimit($conf->liste_limit + 1, $offset);
@@ -158,7 +172,7 @@ else {
 		print '<input type="submit" class="button" style="float: right;" value="Export CSV" />';
 		print '</form>';
 		
-		print "<table class=\"noborder\" width=\"100%\">";
+		print '<table class="noborder" width="100%">';
 		print '<tr class="liste_titre">';
 		print_liste_field_titre($langs->trans("Doctype"), $_SERVER['PHP_SELF'], "bk.doc_type", "", "", "", $sortfield, $sortorder);
 		print_liste_field_titre($langs->trans("Docdate"), $_SERVER['PHP_SELF'], "bk.doc_date", "", "", "", $sortfield, $sortorder);
@@ -166,29 +180,31 @@ else {
 		print_liste_field_titre($langs->trans("Numerocompte"), $_SERVER['PHP_SELF'], "bk.numero_compte", "", "", "", $sortfield, $sortorder);
 		print_liste_field_titre($langs->trans("Code_tiers"), $_SERVER['PHP_SELF'], "bk.code_tiers", "", "", "", $sortfield, $sortorder);
 		print_liste_field_titre($langs->trans("Labelcompte"), $_SERVER['PHP_SELF'], "bk_label_compte", "", "", "", $sortfield, $sortorder);
-		print_liste_field_titre($langs->trans("Debit"), $_SERVER['PHP_SELF'], "bk.debit", "", "", "", $sortfield, $sortorder);
-		print_liste_field_titre($langs->trans("Credit"), $_SERVER['PHP_SELF'], "bk.credit", "", "", "", $sortfield, $sortorder);
-		print_liste_field_titre($langs->trans("Amount"), $_SERVER['PHP_SELF'], "bk.montant", "", "", "", $sortfield, $sortorder);
-		print_liste_field_titre($langs->trans("Sens"), $_SERVER['PHP_SELF'], "bk.sens", "", "", "", $sortfield, $sortorder);
+		print_liste_field_titre($langs->trans("Debit"), $_SERVER['PHP_SELF'], "bk.debit", "", "", align="center"', $sortfield, $sortorder);
+		print_liste_field_titre($langs->trans("Credit"), $_SERVER['PHP_SELF'], "bk.credit", "", "", align="center"', $sortfield, $sortorder);
+		print_liste_field_titre($langs->trans("Amount"), $_SERVER['PHP_SELF'], "bk.montant", "", "", align="center"', $sortfield, $sortorder);
+		print_liste_field_titre($langs->trans("Sens"), $_SERVER['PHP_SELF'], "bk.sens", "", "", align="center"', $sortfield, $sortorder);
 		print_liste_field_titre($langs->trans("Codejournal"), $_SERVER['PHP_SELF'], "bk.code_journal", "", "", "", $sortfield, $sortorder);
-		print_liste_field_titre("&nbsp;");
+		print_liste_field_titre($langs->trans("Action"),$_SERVER["PHP_SELF"],"",$param,"",'width="60" align="center"',$sortfield,$sortorder);
 		print "</tr>\n";
 		
 		print '<tr class="liste_titre">';
-		print '<form action="' . $_SERVER["PHP_SELF"] . '" method="GET">';
-		print '<td><input type="text" name="search_doc_type" value="' . $GETPOST("search_doc_type") . '"></td>';
+		print '<form action="'.$_SERVER["PHP_SELF"].'" method="GET">';
+		print '<td><input type="text" name="search_doc_type" size="8" value="' . $search_doc_type . '"></td>';
 		print '<td>&nbsp;</td>';
-		print '<td><input type="text" name="search_doc_ref" value="' . $GETPOST("search_doc_ref") . '"></td>';
-		print '<td><input type="text" name="search_compte" value="' . $GETPOST("search_compte") . '"></td>';
-		print '<td><input type="text" name="search_tiers" value="' . $GETPOST("search_tiers") . '"></td>';
+		print '<td><input type="text" name="search_doc_ref" size="8" value="' . $search_doc_ref . '"></td>';
+		print '<td><input type="text" name="search_account" size="8" value="' . $search_account . '"></td>';
+		print '<td><input type="text" name="search_thirdparty" size="8" value="' . $search_thirdparty . '"></td>';
 		print '<td>&nbsp;</td>';
 		print '<td>&nbsp;</td>';
 		print '<td>&nbsp;</td>';
 		print '<td>&nbsp;</td>';
 		print '<td>&nbsp;</td>';
 		print '<td><input type="text" name="search_journal" size="3" value="' . $GETPOST("search_journal") . '"></td>';
-		print '<td align="right">';
-		print '<input type="image" class="liste_titre" name="button_search" src="' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/search.png" value="' . dol_escape_htmltag($langs->trans("Search")) . '" title="' . dol_escape_htmltag($langs->trans("Search")) . '">';
+		print '<td align="right" colspan="2" class="liste_titre">';
+		print '<input type="image" class="liste_titre" src="'.img_picto($langs->trans("Search"),'search.png','','',1).'" name="button_search" value="'.dol_escape_htmltag($langs->trans("Search")).'" title="'.dol_escape_htmltag($langs->trans("Search")).'">';
+		print '&nbsp;';
+		print '<input type="image" class="liste_titre" src="'.img_picto($langs->trans("Search"),'searchclear.png','','',1).'" name="button_removefilter" value="'.dol_escape_htmltag($langs->trans("RemoveFilter")).'" title="'.dol_escape_htmltag($langs->trans("RemoveFilter")).'">';
 		print '</td>';
 		print '</form>';
 		print '</tr>';
@@ -201,7 +217,7 @@ else {
 			
 			print "<tr $bc[$var]>";
 			
-			print '<td>' . $langs->trans($obj->doc_type) . '</td>';
+			print '<td>' . $obj->doc_type . '</td>';
 			print '<td>' . dol_print_date($db->jdate($obj->doc_date), 'day') . '</td>';
 			print '<td>' . $obj->doc_ref . '</td>';
 			print '<td>' . length_accountg($obj->numero_compte) . '</td>';
@@ -210,9 +226,9 @@ else {
 			print '<td align="right">' . price($obj->debit) . '</td>';
 			print '<td align="right">' . price($obj->credit) . '</td>';
 			print '<td align="right">' . price($obj->montant) . '</td>';
-			print '<td>' . $obj->sens . '</td>';
+			print '<td align="center">' . $obj->sens . '</td>';
 			print '<td>' . $obj->code_journal . '</td>';
-			print '<td><a href="./card.php?piece_num=' . $obj->piece_num . '">' . img_edit() . '</a></td>';
+			print '<td align="center"><a href="./card.php?piece_num=' . $obj->piece_num . '">' . img_edit() . '</a></td>';
 			print "</tr>\n";
 			$i ++;
 		}

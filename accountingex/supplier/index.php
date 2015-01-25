@@ -1,8 +1,5 @@
 <?php
-/* Copyright (C) 2001-2004 Rodolphe Quiedeville	<rodolphe@quiedeville.org>
- * Copyright (C) 2004      Laurent Destailleur	<eldy@users.sourceforge.net>
- * Copyright (C) 2005      Simon TOSSER			<simon@kornog-computing.com>
- * Copyright (C) 2013      Olivier Geffroy		<jeff@jeffinfo.com>
+/* Copyright (C) 2013-2014 Olivier Geffroy		<jeff@jeffinfo.com>
  * Copyright (C) 2013-2014 Florian Henry		<florian.henry@open-concept.pro>
  * Copyright (C) 2013-2014 Alexandre Spangaro	<alexandre.spangaro@gmail.com>
  *
@@ -22,8 +19,8 @@
 
 /**
  * \file		accountingex/supplier/index.php
- * \ingroup	Accounting Expert
- * \brief		Page accueil ventilation
+ * \ingroup		Accounting Expert
+ * \brief		Home supplier ventilation
  */
 
 // Dolibarr environment
@@ -39,6 +36,7 @@ if (! $res)
 	
 	// Class
 dol_include_once("/core/lib/date.lib.php");
+dol_include_once("/accountingex/core/lib/account.lib.php");
 
 // Langs
 $langs->load("compta");
@@ -53,7 +51,7 @@ if ($user->societe_id > 0)
 if (! $user->rights->accountingex->access)
 	accessforbidden();
 	
-	// Filter
+// Filter
 $year = $_GET["year"];
 if ($year == 0) {
 	$year_current = strftime("%Y", time());
@@ -102,10 +100,10 @@ if ($action == 'validatehistory') {
 
 llxHeader('', $langs->trans("SuppliersVentilation"));
 
-$textprevyear = "<a href=\"index.php?year=" . ($year_current - 1) . "\">" . img_previous() . "</a>";
-$textnextyear = " <a href=\"index.php?year=" . ($year_current + 1) . "\">" . img_next() . "</a>";
+$textprevyear = '<a href="' . $_SERVER["PHP_SELF"] . '?year=' . ($year_current - 1) . '">' . img_previous() . '</a>';
+$textnextyear = '&nbsp;<a href="' . $_SERVER["PHP_SELF"] . '?year=' . ($year_current + 1) . '">' . img_next() . '</a>';
 
-print_fiche_titre($langs->trans("VentilationComptableSupplier") . " " . $textprevyear . " " . $langs->trans("Year") . " " . $year_start . " " . $textnextyear);
+print_fiche_titre($langs->trans("SuppliersVentilation") . " " . $textprevyear . " " . $langs->trans("Year") . " " . $year_start . " " . $textnextyear);
 
 print '<b>' . $langs->trans("DescVentilSupplier") . '</b>';
 print '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER['PHP_SELF'] . '?action=validatehistory">' . $langs->trans("ValidateHistory") . '</a></div>';
@@ -115,21 +113,21 @@ $y = $year_current;
 $var = true;
 
 print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre"><td align="left">' . $langs->trans("Account") . '</td>';
-print '<td align="left">' . $langs->trans("Intitule") . '</td>';
-print '<td align="center">' . $langs->trans("JanuaryMin") . '</td>';
-print '<td align="center">' . $langs->trans("FebruaryMin") . '</td>';
-print '<td align="center">' . $langs->trans("MarchMin") . '</td>';
-print '<td align="center">' . $langs->trans("AprilMin") . '</td>';
-print '<td align="center">' . $langs->trans("MayMin") . '</td>';
-print '<td align="center">' . $langs->trans("JuneMin") . '</td>';
-print '<td align="center">' . $langs->trans("JulyMin") . '</td>';
-print '<td align="center">' . $langs->trans("AugustMin") . '</td>';
-print '<td align="center">' . $langs->trans("SeptemberMin") . '</td>';
-print '<td align="center">' . $langs->trans("OctoberMin") . '</td>';
-print '<td align="center">' . $langs->trans("NovemberMin") . '</td>';
-print '<td align="center">' . $langs->trans("DecemberMin") . '</td>';
-print '<td align="center"><b>' . $langs->trans("Total") . '</b></td></tr>';
+print '<tr class="liste_titre"><td width="200" align="left">' . $langs->trans("Account") . '</td>';
+print '<td width="200" align="left">' . $langs->trans("Label") . '</td>';
+print '<td width="60" align="center">' . $langs->trans("JanuaryMin") . '</td>';
+print '<td width="60" align="center">' . $langs->trans("FebruaryMin") . '</td>';
+print '<td width="60" align="center">' . $langs->trans("MarchMin") . '</td>';
+print '<td width="60" align="center">' . $langs->trans("AprilMin") . '</td>';
+print '<td width="60" align="center">' . $langs->trans("MayMin") . '</td>';
+print '<td width="60" align="center">' . $langs->trans("JuneMin") . '</td>';
+print '<td width="60" align="center">' . $langs->trans("JulyMin") . '</td>';
+print '<td width="60" align="center">' . $langs->trans("AugustMin") . '</td>';
+print '<td width="60" align="center">' . $langs->trans("SeptemberMin") . '</td>';
+print '<td width="60" align="center">' . $langs->trans("OctoberMin") . '</td>';
+print '<td width="60" align="center">' . $langs->trans("NovemberMin") . '</td>';
+print '<td width="60" align="center">' . $langs->trans("DecemberMin") . '</td>';
+print '<td width="60" align="center"><b>' . $langs->trans("Total") . '</b></td></tr>';
 
 $sql = "SELECT IF(aa.account_number IS NULL, 'Non pointe', aa.account_number) AS 'code comptable',";
 $sql .= "  IF(aa.label IS NULL, 'Non pointe', aa.label) AS 'Intitulé',";
@@ -169,7 +167,7 @@ if ($resql) {
 		
 		$row = $db->fetch_row($resql);
 		
-		print '<tr><td>' . $row[0] . '</td>';
+		print '<tr><td>' . length_accountg($row[0]) . '</td>';
 		print '<td align="left">' . $row[1] . '</td>';
 		print '<td align="right">' . price($row[2]) . '</td>';
 		print '<td align="right">' . price($row[3]) . '</td>';
@@ -189,7 +187,7 @@ if ($resql) {
 	}
 	$db->free($resql);
 } else {
-	print $db->lasterror(); // affiche la derniere erreur sql
+	print $db->lasterror(); // Show last sql error
 }
 print "</table>\n";
 
@@ -264,7 +262,7 @@ if ($resql) {
 	
 	$db->free($resql);
 } else {
-	print $db->lasterror(); // show last sql error
+	print $db->lasterror(); // Show last sql error
 }
 print "</table>\n";
 

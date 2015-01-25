@@ -70,7 +70,7 @@ if (! $user->rights->accountingex->access)
 $action = GETPOST('action');
 
 /*
- * View
+ * Actions
  */
 
 $year_current = strftime("%Y", dol_now());
@@ -224,8 +224,7 @@ if ($action == 'writebookkeeping') {
 		// var_dump($tabtva);
 		foreach ( $tabtva[$key] as $k => $mt ) {
 			if ($mt) {
-				// get compte id and label
-				
+				// get compte id and label	
 				$bookkeeping = new BookKeeping($db);
 				$bookkeeping->doc_date = $val["date"];
 				$bookkeeping->doc_ref = $val["ref"];
@@ -248,8 +247,13 @@ if ($action == 'writebookkeeping') {
 	}
 }
 
-// export csv
+/*
+ * View
+ */
 
+$companystatic = new Societe($db);
+
+// export csv
 if ($action == 'export_csv') {
 	$sep = $conf->global->ACCOUNTINGEX_SEPARATORCSV;
 	

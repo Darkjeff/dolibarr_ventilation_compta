@@ -1,7 +1,7 @@
 <?php
-/* Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013-2014 Florian Henry	      <florian.henry@open-concept.pro>
- * Copyright (C) 2013-2014 Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
+/* Copyright (C) 2013-2014 Olivier Geffroy		<jeff@jeffinfo.com>
+ * Copyright (C) 2013-2014 Florian Henry		<florian.henry@open-concept.pro>
+ * Copyright (C) 2013-2014 Alexandre Spangaro	<alexandre.spangaro@gmail.com> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,9 @@
  */
 
 /**
- * \file accountingex/customer/index.php
- * \ingroup Accounting Expert
- * \brief Page accueil clients ventilation comptable
+ * \file		accountingex/customer/index.php
+ * \ingroup		Accounting Expert
+ * \brief		Home customer ventilation
  */
 // Dolibarr environment
 $res = @include ("../main.inc.php");
@@ -34,8 +34,9 @@ if (! $res && file_exists("../../../main.inc.php"))
 if (! $res)
 	die("Include of main fails");
 	
-	// Class
+// Class
 dol_include_once("/core/lib/date.lib.php");
+dol_include_once("/accountingex/core/lib/account.lib.php");
 
 // Langs
 $langs->load("compta");
@@ -50,7 +51,7 @@ if ($user->societe_id > 0)
 if (! $user->rights->accountingex->access)
 	accessforbidden();
 	
-	// Filter
+// Filter
 $year = $_GET["year"];
 if ($year == 0) {
 	$year_current = strftime("%Y", time());
@@ -60,7 +61,7 @@ if ($year == 0) {
 	$year_start = $year;
 }
 
-// ValidateHistory
+// Validate History
 $action = GETPOST('action');
 if ($action == 'validatehistory') {
 	
@@ -82,7 +83,7 @@ if ($action == 'validatehistory') {
 		$sql1 .= " AND fd.fk_code_ventilation = 0";
 	}
 	
-	dol_syslog("/accountingex/customer/index.php sql=" . $sql, LOG_DEBUG);
+	dol_syslog("accountingex/customer/index.php sql=" . $sql, LOG_DEBUG);
 	$resql1 = $db->query($sql1);
 	if (! $resql1) {
 		$error ++;
@@ -99,8 +100,8 @@ if ($action == 'validatehistory') {
  */
 llxHeader('', $langs->trans("CustomersVentilation"));
 
-$textprevyear = "<a href=\"index.php?year=" . ($year_current - 1) . "\">" . img_previous() . "</a>";
-$textnextyear = " <a href=\"index.php?year=" . ($year_current + 1) . "\">" . img_next() . "</a>";
+$textprevyear = '<a href="' . $_SERVER["PHP_SELF"] . '?year=' . ($year_current - 1) . '">' . img_previous() . '</a>';
+$textnextyear = ' <a href="' . $_SERVER["PHP_SELF"] . '?year=' . ($year_current + 1) . '">' . img_next() . '</a>';
 
 print_fiche_titre($langs->trans("CustomersVentilation") . " " . $textprevyear . " " . $langs->trans("Year") . " " . $year_start . " " . $textnextyear);
 
@@ -112,7 +113,7 @@ $sql .= " , " . MAIN_DB_PREFIX . "facture as f";
 $sql .= " WHERE fd.fk_code_ventilation = 0";
 $sql .= " AND f.rowid = fd.fk_facture AND f.fk_statut = 1;";
 
-dol_syslog("/accountingex/customer/index.php sql=" . $sql, LOG_DEBUG);
+dol_syslog("accountingex/customer/index.php sql=" . $sql, LOG_DEBUG);
 $result = $db->query($sql);
 if ($result) {
 	$row = $db->fetch_row($result);
@@ -126,7 +127,7 @@ $var = true;
 
 print '<table class="noborder" width="100%">';
 print '<tr class="liste_titre"><td width="200">' . $langs->trans("Account") . '</td>';
-print '<td width="200" align="left">' . $langs->trans("Intitule") . '</td>';
+print '<td width="200" align="left">' . $langs->trans("Label") . '</td>';
 print '<td width="60" align="center">' . $langs->trans("JanuaryMin") . '</td>';
 print '<td width="60" align="center">' . $langs->trans("FebruaryMin") . '</td>';
 print '<td width="60" align="center">' . $langs->trans("MarchMin") . '</td>';
@@ -168,7 +169,7 @@ if (! empty($conf->multicompany->enabled)) {
 
 $sql .= " GROUP BY fd.fk_code_ventilation";
 
-dol_syslog("/accountingex/customer/index.php sql=" . $sql, LOG_DEBUG);
+dol_syslog("accountingex/customer/index.php sql=" . $sql, LOG_DEBUG);
 $resql = $db->query($sql);
 if ($resql) {
 	$i = 0;
@@ -177,7 +178,7 @@ if ($resql) {
 	while ( $i < $num ) {
 		$row = $db->fetch_row($resql);
 		
-		print '<tr><td>' . $row[0] . '</td>';
+		print '<tr><td>' . length_accountg($row[0]) . '</td>';
 		print '<td align="left">' . $row[1] . '</td>';
 		print '<td align="right">' . price($row[2]) . '</td>';
 		print '<td align="right">' . price($row[3]) . '</td>';
@@ -197,7 +198,7 @@ if ($resql) {
 	}
 	$db->free($resql);
 } else {
-	print $db->lasterror(); // affiche la derniere erreur sql
+	print $db->lasterror(); // Show last sql error
 }
 print "</table>\n";
 
@@ -218,7 +219,7 @@ print '<td width="60" align="center">' . $langs->trans("NovemberMin") . '</td>';
 print '<td width="60" align="center">' . $langs->trans("DecemberMin") . '</td>';
 print '<td width="60" align="center"><b>' . $langs->trans("Total") . '</b></td></tr>';
 
-$sql = "SELECT '" . $langs->trans("Vide") . "' AS 'Total',";
+$sql = "SELECT '" . $langs->trans("TotalVente") . "' AS 'Total',";
 $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=1,fd.total_ht,0)),2) AS 'Janvier',";
 $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=2,fd.total_ht,0)),2) AS 'Fevrier',";
 $sql .= "  ROUND(SUM(IF(MONTH(f.datef)=3,fd.total_ht,0)),2) AS 'Mars',";
@@ -241,7 +242,7 @@ if (! empty($conf->multicompany->enabled)) {
 	$sql .= " AND f.entity = '" . $conf->entity . "'";
 }
 
-dol_syslog('accountingext/customer/index.php:: $sql=' . $sql);
+dol_syslog('accountingex/customer/index.php:: $sql=' . $sql);
 $resql = $db->query($sql);
 if ($resql) {
 	$i = 0;
@@ -269,7 +270,7 @@ if ($resql) {
 	}
 	$db->free($resql);
 } else {
-	print $db->lasterror(); // affiche la derniere erreur sql
+	print $db->lasterror(); // Show last sql error
 }
 print "</table>\n";
 
@@ -314,7 +315,7 @@ if (! empty($conf->margin->enabled)) {
 		$sql .= " AND f.entity = '" . $conf->entity . "'";
 	}
 	
-	dol_syslog('accountingext/customer/index.php:: $sql=' . $sql);
+	dol_syslog('accountingex/customer/index.php:: $sql=' . $sql);
 	$resql = $db->query($sql);
 	if ($resql) {
 		$i = 0;
@@ -342,7 +343,7 @@ if (! empty($conf->margin->enabled)) {
 		}
 		$db->free($resql);
 	} else {
-		print $db->lasterror(); // affiche la derniere erreur sql
+		print $db->lasterror(); // Show last sql error
 	}
 	print "</table>\n";
 }

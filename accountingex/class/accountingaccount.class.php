@@ -18,17 +18,19 @@
  */
 
 /**
- * \file accountingex/class/Accountingaccount.class.php
- * \ingroup Accounting Expert
- * \brief Fichier de la classe des comptes comptable
+ * \file		accountingex/class/Accountingaccount.class.php
+ * \ingroup		Accounting Expert
+ * \brief		Fichier de la classe des comptes comptable
  */
 
 /**
- * \class AccountingAccount
- * \brief Classe permettant la gestion des comptes generaux de compta
+ * Class to manage accounting accounts
  */
-class AccountingAccount extends CommonObject {
+class AccountingAccount
 	var $db;
+	var $error;
+	var $errors;
+	
 	var $id;
 	var $rowid;
 	var $datec; // Creation date
@@ -43,23 +45,27 @@ class AccountingAccount extends CommonObject {
 	var $active;
 	
 	/**
-	 * \brief Constructeur de la classe
-	 * \param DB handler acces base de donnees
-	 * \param id id compte (0 par defaut)
+	 * Constructor
+	 *
+	 * @param 	DoliDB	$db		Database handle
 	 */
-	function __construct($db, $rowid = '') {
+	function __construct($db)
+	{
 		$this->db = $db;
-		
-		if ($rowid != '')
-			return $this->fetch($rowid);
 	}
 	
 	/**
-	 * \brief Load record in memory
+	 * Load record in memory
+	 *
+	 * @param	int		$rowid				Id
+	 * @param	string	$account_number		Account number
+	 * @return 	int							<0 if KO, >0 if OK
 	 */
 	function fetch($rowid = null, $account_number = null) {
-		if ($rowid || $account_number) {
-			$sql = "SELECT * FROM " . MAIN_DB_PREFIX . "accountingaccount WHERE ";
+		if ($rowid || $account_number)
+		{
+			$sql = "SELECT rowid, datec, tms, fk_pcg_version, pcg_type, pcg_subtype, account_number, account_parent, label, fk_user_author, fk_user_modif, active";
+			$sql.= " FROM " . MAIN_DB_PREFIX . "accountingaccount WHERE";
 			if ($rowid) {
 				$sql .= " rowid = '" . $rowid . "'";
 			} elseif ($account_number) {
@@ -68,41 +74,55 @@ class AccountingAccount extends CommonObject {
 			
 			dol_syslog(get_class($this) . "::fetch sql=" . $sql, LOG_DEBUG);
 			$result = $this->db->query($sql);
-			if ($result) {
+			if ($result)
+			{
 				$obj = $this->db->fetch_object($result);
-			} else {
-				return null;
+				
+				if ($obj)
+				{
+					$this->id = $obj->rowid;
+					$this->rowid = $obj->rowid;
+					$this->datec = $obj->datec;
+					$this->tms = $obj->tms;
+					$this->fk_pcg_version = $obj->fk_pcg_version;
+					$this->pcg_type = $obj->pcg_type;
+					$this->pcg_subtype = $obj->pcg_subtype;
+					$this->account_number = $obj->account_number;
+					$this->account_parent = $obj->account_parent;
+					$this->label = $obj->label;
+					$this->fk_user_author = $obj->fk_user_author;
+					$this->fk_user_modif = $obj->fk_user_modif;
+					$this->active = $obj->active;
+
+					return $this->id;
+				}
+				else
+				{
+					return 0;
+				}
 			}
-		} else {
-			return -1;
+			else
+
+			{
+				dol_print_error($this->db);
+			}
 		}
-		
-		$this->id = $obj->rowid;
-		$this->rowid = $obj->rowid;
-		$this->datec = $obj->datec;
-		$this->tms = $obj->tms;
-		$this->fk_pcg_version = $obj->fk_pcg_version;
-		$this->pcg_type = $obj->pcg_type;
-		$this->pcg_subtype = $obj->pcg_subtype;
-		$this->account_number = $obj->account_number;
-		$this->account_parent = $obj->account_parent;
-		$this->label = $obj->label;
-		$this->fk_user_author = $obj->fk_user_author;
-		$this->fk_user_modif = $obj->fk_user_modif;
-		$this->active = $obj->active;
-		
-		return $obj->rowid;
+		return -1;
 	}
-	
 	/**
-	 * \brief insert line in accountingaccount
-	 * \param user utilisateur qui effectue l'insertion
+	 * Insert line in accountingaccount
+	 *
+	 * @param 	User	$user 			Use making action
+	 * @param	int		$notrigger		Disable triggers
+	 * @return 	int						<0 if KO, >0 if OK
 	 */
-	function create($user, $notrigger = 0) {
+	function create($user, $notrigger = 0)
+	{
 		global $conf, $langs;
 		$error = 0;
+
 		$now = dol_now();
-		
+
 		// Clean parameters
 		if (isset($this->fk_pcg_version))
 			$this->fk_pcg_version = trim($this->fk_pcg_version);
@@ -120,9 +140,9 @@ class AccountingAccount extends CommonObject {
 			$this->fk_user_author = trim($this->fk_user_author);
 		if (isset($this->active))
 			$this->active = trim($this->active);
-			
-			// Check parameters
-			// Put here code to add control on parameters values
+
+		// Check parameters
+		// Put here code to add control on parameters values
 			
 		// Insert request
 		$sql = "INSERT INTO " . MAIN_DB_PREFIX . "accountingaccount(";
@@ -195,8 +215,8 @@ class AccountingAccount extends CommonObject {
 	/**
 	 * Update record
 	 *
-	 * @param User $user update
-	 * @return int if KO, >0 if OK
+	 * @param 	User 	$user 	Use making update
+	 * @return 	int 			<0 if KO, >0 if OK
 	 */
 	function update($user) {
 		global $langs;
@@ -230,8 +250,7 @@ class AccountingAccount extends CommonObject {
 	/**
 	 * Check usage of accounting code
 	 *
-	 * @param User $user update
-	 * @return int if KO, >0 if OK
+	 * @return 	int 			<0 if KO, >0 if OK
 	 */
 	function checkUsage() {
 		global $langs;
@@ -262,11 +281,12 @@ class AccountingAccount extends CommonObject {
 	/**
 	 * Delete object in database
 	 *
-	 * @param User $user that deletes
-	 * @param int $notrigger triggers after, 1=disable triggers
-	 * @return int <0 if KO, >0 if OK
+	 * @param 	User 	$user 			User that deletes
+	 * @param 	int 	$notrigger 		0=triggers after, 1=disable triggers
+	 * @return 	int 					<0 if KO, >0 if OK
 	 */
-	function delete($user, $notrigger = 0) {
+	function delete($user, $notrigger = 0)
+	{
 		global $conf, $langs;
 		$error = 0;
 		
@@ -359,10 +379,11 @@ class AccountingAccount extends CommonObject {
 	/**
 	 * Account desactivate
 	 *
-	 * @param User $user update
-	 * @return int if KO, >0 if OK
+	 * @param	int		$id		Id
+	 * @return 	int 			<0 if KO, >0 if OK
 	 */
-	function account_desactivate($id) {
+	function account_desactivate($id)
+	{
 		global $langs;
 		
 		$result = $this->checkUsage();
@@ -393,10 +414,11 @@ class AccountingAccount extends CommonObject {
 	/**
 	 * Account activate
 	 *
-	 * @param User $user update
-	 * @return int if KO, >0 if OK
+	 * @param 	int		$id		Id
+	 * @return 	int 			<0 if KO, >0 if OK
 	 */
-	function account_activate($id) {
+	function account_activate($id)
+	{
 		global $langs;
 		
 		$this->db->begin();
