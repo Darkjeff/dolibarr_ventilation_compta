@@ -31,11 +31,10 @@ dol_include_once("/core/modules/DolibarrModules.class.php");
  */
 class modAccountingExpert extends DolibarrModules {
 	/**
-	 * Constructor.
-	 * Define names, constants, directories, boxes, permissions
+	 *   Constructor. Define names, constants, directories, boxes, permissions
 	 *
-	 * @param DoliDB $db
-	 */
+	 *   @param      DoliDB		$db      Database handler
+     */
 	function modAccountingExpert($DB) {
 		$this->db = $DB;
 		$this->numero = 150000;
@@ -195,7 +194,7 @@ class modAccountingExpert extends DolibarrModules {
 				"1" 
 		);
 		$this->const[23] = array (
-				"ACCOUNTINGEXP_EXP_DEVISE",
+				"ACCOUNTINGEX_EXP_DEVISE",
 				"yesno",
 				"1" 
 		);
