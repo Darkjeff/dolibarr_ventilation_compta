@@ -26,7 +26,7 @@
 /**
  * Class to manage accounting accounts
  */
-class AccountingAccount
+class AccountingAccount extends CommonObject {
 	var $db;
 	var $error;
 	var $errors;

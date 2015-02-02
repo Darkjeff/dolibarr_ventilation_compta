@@ -25,6 +25,7 @@ Selectmodelcsv=Sélectionnez un modèle d'export
 Modelcsv_normal=Export classique
 Modelcsv_CEGID=Export vers CEGID Expert
 BackToChartofaccounts=Retour plan comptable
+OptionsDeactivated=Options désactivées avec ce modèle d'export
 
 Definechartofaccounts=Définir un plan comptable
 Selectchartofaccounts=Sélectionnez un plan comptable

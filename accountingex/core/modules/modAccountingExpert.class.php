@@ -19,9 +19,9 @@
  */
 
 /**
- * \file accountingex/core/modules/modAccountingExpert.class.php
- * \ingroup Accounting Expert
- * \brief Module to activate Accounting Expert module
+ * \file		accountingex/core/modules/modAccountingExpert.class.php
+ * \ingroup		Accounting Expert
+ * \brief		Module to activate Accounting Expert module
  */
 dol_include_once("/core/modules/DolibarrModules.class.php");
 
@@ -45,7 +45,7 @@ class modAccountingExpert extends DolibarrModules {
 		$this->description = "Advanced manage of accounting";
 		
 		// Possible values for version are: 'development', 'experimental', 'dolibarr' or version
-		$this->version = '3.6.x beta 20150124';
+		$this->version = '3.6.x beta 20150201';
 		$this->revision = '3.0.0';
 		
 		$this->const_name = 'MAIN_MODULE_' . strtoupper($this->name);

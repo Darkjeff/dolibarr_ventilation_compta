@@ -3,7 +3,7 @@
  * Copyright (C) 2007-2010	Jean Heimburger		<jean@tiaris.info>
  * Copyright (C) 2011		Juanjo Menent		<jmenent@2byte.es>
  * Copyright (C) 2012		Regis Houssin		<regis@dolibarr.fr>
- * Copyright (C) 2013-2014  Alexandre Spangaro	<alexandre.spangaro@gmail.com>
+ * Copyright (C) 2013-2015  Alexandre Spangaro	<alexandre.spangaro@gmail.com>
  * Copyright (C) 2013-2014  Olivier Geffroy		<jeff@jeffinfo.com>
  * Copyright (C) 2013-2014  Florian Henry	    <florian.henry@open-concept.pro>
  *
@@ -97,12 +97,12 @@ $sql = "SELECT f.rowid, f.ref, f.type, f.datef as df, f.libelle,";
 $sql .= " fd.rowid as fdid, fd.description, fd.total_ttc, fd.tva_tx, fd.total_ht, fd.tva as total_tva, fd.product_type,";
 $sql .= " s.rowid as socid, s.nom as name, s.code_compta_fournisseur, s.fournisseur,";
 $sql .= " s.code_compta_fournisseur, p.accountancy_code_buy , ct.accountancy_code_buy as account_tva, aa.rowid as fk_compte, aa.account_number as compte, aa.label as label_compte";
-$sql .= " FROM " . MAIN_DB_PREFIX . "facture_fourn_det fd";
-$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "c_tva ct ON fd.tva_tx = ct.taux AND ct.fk_pays = '" . $idpays . "'";
-$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "product p ON p.rowid = fd.fk_product";
-$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "accountingaccount aa ON aa.rowid = fd.fk_code_ventilation";
-$sql .= " JOIN " . MAIN_DB_PREFIX . "facture_fourn f ON f.rowid = fd.fk_facture_fourn";
-$sql .= " JOIN " . MAIN_DB_PREFIX . "societe s ON s.rowid = f.fk_soc";
+$sql .= " FROM " . MAIN_DB_PREFIX . "facture_fourn_det as fd";
+$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "c_tva as ct ON fd.tva_tx = ct.taux AND ct.fk_pays = '" . $idpays . "'";
+$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "product as p ON p.rowid = fd.fk_product";
+$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "accountingaccount as aa ON aa.rowid = fd.fk_code_ventilation";
+$sql .= " JOIN " . MAIN_DB_PREFIX . "facture_fourn as f ON f.rowid = fd.fk_facture_fourn";
+$sql .= " JOIN " . MAIN_DB_PREFIX . "societe as s ON s.rowid = f.fk_soc";
 $sql .= " WHERE f.fk_statut > 0 ";
 if (! empty($conf->multicompany->enabled)) {
 	$sql .= " AND f.entity = " . $conf->entity;
@@ -132,7 +132,7 @@ if ($result) {
 	$i = 0;
 	while ( $i < $num ) {
 		$obj = $db->fetch_object($result);
-		// contrôles
+		// Controls
 		$compta_soc = (! empty($obj->code_compta_fournisseur)) ? $obj->code_compta_fournisseur : $cptfour;
 		$compta_prod = $obj->compte;
 		if (empty($compta_prod)) {
@@ -253,27 +253,33 @@ if ($action == 'writebookkeeping') {
 
 $companystatic = new Societe($db);
 
-// export csv
+// Export
 if ($action == 'export_csv') {
 	$sep = $conf->global->ACCOUNTINGEX_SEPARATORCSV;
 	
 	header('Content-Type: text/csv');
 	header('Content-Disposition: attachment;filename=journal_achats.csv');
 	
-	if ($conf->global->ACCOUNTINGEX_MODELCSV == 1) 	// Modèle Export Cegid Expert
+	if ($conf->global->ACCOUNTINGEX_MODELCSV == 2) 	// Model Cegid Expert Export
 	{
-		foreach ( $tabfac as $key => $val ) {
+		$sep = ";";
+		$purchases_journal = $conf->global->ACCOUNTINGEX_PURCHASE_JOURNAL;
+
+		foreach ( $tabfac as $key => $val )
+		{
 			$date = dol_print_date($db->jdate($val["date"]), '%d%m%Y');
-			
+
 			// Product / Service
-			foreach ( $tabht[$key] as $k => $mt ) {
+			foreach ( $tabht[$key] as $k => $mt )
+			{
 				$companystatic->id = $tabcompany[$key]['id'];
 				$companystatic->name = $tabcompany[$key]['name'];
 				$companystatic->client = $tabcompany[$key]['code_client'];
-				
-				if ($mt) {
+
+				if ($mt)
+				{
 					print $date . $sep;
-					print $conf->global->ACCOUNTINGEX_PURCHASE_JOURNAL . $sep;
+					print $purchases_journal . $sep;
 					print length_accountg(html_entity_decode($k)) . $sep;
 					print $sep;
 					print ($mt < 0 ? 'C' : 'D') . $sep;
@@ -283,13 +289,14 @@ if ($action == 'export_csv') {
 					print "\n";
 				}
 			}
-			
+					
 			// VAT
-			// var_dump($tabtva);
-			foreach ( $tabtva[$key] as $k => $mt ) {
-				if ($mt) {
+			foreach ( $tabtva[$key] as $k => $mt )
+			{
+				if ($mt)
+				{
 					print $date . $sep;
-					print $conf->global->ACCOUNTINGEX_PURCHASE_JOURNAL . $sep;
+					print $purchases_journal . $sep;
 					print length_accountg(html_entity_decode($k)) . $sep;
 					print $sep;
 					print ($mt < 0 ? 'C' : 'D') . $sep;
@@ -299,20 +306,23 @@ if ($action == 'export_csv') {
 					print "\n";
 				}
 			}
-			print $date . $sep;
-			print $conf->global->ACCOUNTINGEX_PURCHASE_JOURNAL . $sep;
-			print length_accountg($conf->global->COMPTA_ACCOUNT_SUPPLIER) . $sep;
 			
-			foreach ( $tabttc[$key] as $k => $mt ) {
+			// Thirdparty
+			foreach ( $tabttc[$key] as $k => $mt )
+			{
+				print $date . $sep;
+				print $purchases_journal . $sep;
+				print length_accountg($conf->global->COMPTA_ACCOUNT_SUPPLIER) . $sep;
 				print length_accounta(html_entity_decode($k)) . $sep;
 				print ($mt < 0 ? 'D' : 'C') . $sep;
 				print ($mt <= 0 ? price(- $mt) : $mt) . $sep;
 				print utf8_decode($companystatic->name) . $sep;
 				print $val["ref"];
+				print "\n";
 			}
-			print "\n";
-		}
-	} else 	// Modèle Export Classique
+		}	
+	}
+	else 	// Model Classic Export
 	{
 		foreach ( $tabfac as $key => $val ) {
 			$date = dol_print_date($db->jdate($val["date"]), 'day');
@@ -322,21 +332,22 @@ if ($action == 'export_csv') {
 			$companystatic->client = $tabcompany[$key]['code_client'];
 			
 			// Product / Service
-			foreach ( $tabht[$key] as $k => $mt ) {
-				if ($mt) {
-				$accountingaccount = new AccountingAccount($db);
-		    $accountingaccount->fetch(null, $k);				
+			foreach ( $tabht[$key] as $k => $mt )
+			{
+				if ($mt)
+				{
+					$accountingaccount = new AccountingAccount($db);
+					$accountingaccount->fetch(null, $k);				
 					print '"' . $date . '"' . $sep;
 					print '"' . $val["ref"] . '"' . $sep;
 					print '"' . length_accountg(html_entity_decode($k)) . '"' . $sep;
-						print '"' . dol_trunc($accountingaccount->label, 32) . '"' . $sep;
+					print '"' . dol_trunc($accountingaccount->label, 32) . '"' . $sep;
 					print '"' . ($mt >= 0 ? price($mt) : '') . '"' . $sep;
 					print '"' . ($mt < 0 ? price(- $mt) : '') . '"';
 					print "\n";
 				}
 			}
 			// VAT
-			// var_dump($tabtva);
 			foreach ( $tabtva[$key] as $k => $mt ) {
 				if ($mt) {
 					print '"' . $date . '"' . $sep;
@@ -350,15 +361,16 @@ if ($action == 'export_csv') {
 			}
 			
 			// Third party
-			print '"' . $date . '"' . $sep;
-			print '"' . $val["ref"] . '"' . $sep;
-			foreach ( $tabttc[$key] as $k => $mt ) {
+			foreach ( $tabttc[$key] as $k => $mt )
+			{
+				print '"' . $date . '"' . $sep;
+				print '"' . $val["ref"] . '"' . $sep;
 				print '"' . length_accounta(html_entity_decode($k)) . '"' . $sep;
 				print '"' . utf8_decode($companystatic->name) . '"' . $sep;
 				print '"' . ($mt < 0 ? price(- $mt) : '') . '"' . $sep;
 				print '"' . ($mt >= 0 ? price($mt) : '') . '"';
+				print "\n";
 			}
-			print "\n";
 		}
 	}
 } else {

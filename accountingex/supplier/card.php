@@ -36,7 +36,7 @@ if (! $res && file_exists("../../../main.inc.php"))
 if (! $res)
 	die("Include of main fails");
 	
-	// Class
+// Class
 dol_include_once("/fourn/class/fournisseur.facture.class.php");
 dol_include_once("/accountingex/class/html.formventilation.class.php");
 

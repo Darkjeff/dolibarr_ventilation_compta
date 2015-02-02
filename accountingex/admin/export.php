@@ -1,6 +1,6 @@
 <?php
 /* Copyright (C) 2013-2014 Olivier Geffroy		<jeff@jeffinfo.com>
- * Copyright (C) 2013-2014 Alexandre Spangaro	<alexandre.spangaro@gmail.com>
+ * Copyright (C) 2013-2015 Alexandre Spangaro	<alexandre.spangaro@gmail.com>
  * Copyright (C) 2014	   Florian Henry		<florian.henry@open-concept.pro>
  * Copyright (C) 2014      Marcos García        <marcosgdf@gmail.com>
  *
@@ -67,24 +67,30 @@ $list = array (
 /*
  * Actions
  */
-if ($action == 'update') {
+if ($action == 'update')
+{
 	$error = 0;
 	
 	$modelcsv = GETPOST('modelcsv', 'int');
 	
-	if (! empty($modelcsv)) {
-		
-		if (! dolibarr_set_const($db, 'ACCOUNTINGEX_MODELCSV', $modelcsv, 'chaine', 0, '', $conf->entity)) {
+	if (! empty($modelcsv))
+	{
+		if (! dolibarr_set_const($db, 'ACCOUNTINGEX_MODELCSV', $modelcsv, 'chaine', 0, '', $conf->entity))
+		{
 			$error ++;
 		}
-	} else {
+	}
+	else
+	{
 		$error ++;
 	}
 	
-	foreach ( $list as $constname ) {
+	foreach ( $list as $constname )
+	{
 		$constvalue = GETPOST($constname, 'alpha');
-		
-		if (! dolibarr_set_const($db, $constname, $constvalue, 'chaine', 0, '', $conf->entity)) {
+			
+		if (! dolibarr_set_const($db, $constname, $constvalue, 'chaine', 0, '', $conf->entity))
+		{
 			$error ++;
 		}
 	}
@@ -148,27 +154,29 @@ print "</table>";
 print "<br>\n";
 
 /*
- *  Params
- *
+ *  Parameters
  */
 
 $num = count($list);
-if ($num) {
+if ($num)
+{
 	print '<table class="noborder" width="100%">';
 	print '<tr class="liste_titre">';
 	print '<td colspan="3">' . $langs->trans('OtherOptions') . '</td>';
 	print "</tr>\n";
+	if ($conf->global->ACCOUNTINGEX_MODELCSV > 1) print '<tr><td colspan="2" bgcolor="red"><b>' . $langs->trans('OptionsDeactivated') . '</b></td></tr>';   
 }
 
-foreach ( $list as $key ) {
+foreach ( $list as $key )
+{
 	$var = ! $var;
 	
 	print '<tr ' . $bc[$var] . ' class="value">';
-	
+		
 	// Param
 	$label = $langs->trans($key);
 	print '<td width="50%">' . $label . '</td>';
-	
+		
 	// Value
 	print '<td>';
 	print '<input type="text" size="20" name="' . $key . '" value="' . $conf->global->$key . '">';
@@ -178,7 +186,7 @@ foreach ( $list as $key ) {
 print '</form>';
 print "</table>\n";
 
-print '<br /><div style="text-align:center"><input type="submit" class="button" value="' . $langs->trans('Modify') . '" name="button"></div>';
+print '<br /><div align="center"><input type="submit" class="button" value="' . $langs->trans('Modify') . '" name="button"></div>';
 
 llxFooter();
 $db->close();
