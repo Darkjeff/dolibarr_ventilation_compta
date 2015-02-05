@@ -394,7 +394,7 @@ if ($action == 'export_csv') {
 			'action' => '' 
 	));
 	
-	print '<input type="button" class="button" style="float: right;" value="Export CSV" onclick="launch_export();" />';
+	print '<input type="button" class="button" style="float: right;" value="'.$langs->trans("Export").'" onclick="launch_export();" />';
 	
 	print '<input type="button" class="button" value="' . $langs->trans("WriteBookKeeping") . '" onclick="writebookkeeping();" />';
 	

@@ -122,7 +122,7 @@ report_header($nom, $nomlink, $period, $periodlink, $description, $builddate, $e
 		'action' => '' 
 ));
 
-print '<input type="button" class="button" style="float: right;" value="Export CSV" onclick="launch_export();" />';
+print '<input type="button" class="button" style="float: right;" value="'.$langs->trans("Export").'" onclick="launch_export();" />';
 
 print '
 	<script type="text/javascript">
@@ -170,7 +170,7 @@ if ($resql) {
 	$num = $db->num_rows($resql);
 	$i = 0;
 	
-	// export csv
+	// Export
 	if (GETPOST('action') == 'export_csv') {
 		
 		header('Content-Type: text/csv');

@@ -84,7 +84,7 @@ if ($action == 'delbookkeeping') {
 			setEventMessage($object->errors, 'errors');
 		}
 	}
-} // export csv
+} // Export
 else if ($action == 'export_csv') {
 	
 	header('Content-Type: text/csv');
@@ -169,7 +169,7 @@ else {
 		print '<form name="add" action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
 		print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 		print '<input type="hidden" name="action" value="export_csv">';
-		print '<input type="submit" class="button" style="float: right;" value="Export CSV" />';
+		print '<input type="submit" class="button" style="float: right;" value="'.$langs->trans("Export").'" />';
 		print '</form>';
 		
 		print '<table class="noborder" width="100%">';
@@ -180,10 +180,10 @@ else {
 		print_liste_field_titre($langs->trans("Numerocompte"), $_SERVER['PHP_SELF'], "bk.numero_compte", "", "", "", $sortfield, $sortorder);
 		print_liste_field_titre($langs->trans("Code_tiers"), $_SERVER['PHP_SELF'], "bk.code_tiers", "", "", "", $sortfield, $sortorder);
 		print_liste_field_titre($langs->trans("Labelcompte"), $_SERVER['PHP_SELF'], "bk_label_compte", "", "", "", $sortfield, $sortorder);
-		print_liste_field_titre($langs->trans("Debit"), $_SERVER['PHP_SELF'], "bk.debit", "", "", align="center"', $sortfield, $sortorder);
-		print_liste_field_titre($langs->trans("Credit"), $_SERVER['PHP_SELF'], "bk.credit", "", "", align="center"', $sortfield, $sortorder);
-		print_liste_field_titre($langs->trans("Amount"), $_SERVER['PHP_SELF'], "bk.montant", "", "", align="center"', $sortfield, $sortorder);
-		print_liste_field_titre($langs->trans("Sens"), $_SERVER['PHP_SELF'], "bk.sens", "", "", align="center"', $sortfield, $sortorder);
+		print_liste_field_titre($langs->trans("Debit"), $_SERVER['PHP_SELF'], "bk.debit", "", "", 'align="center"', $sortfield, $sortorder);
+		print_liste_field_titre($langs->trans("Credit"), $_SERVER['PHP_SELF'], "bk.credit", "", "", 'align="center"', $sortfield, $sortorder);
+		print_liste_field_titre($langs->trans("Amount"), $_SERVER['PHP_SELF'], "bk.montant", "", "", 'align="center"', $sortfield, $sortorder);
+		print_liste_field_titre($langs->trans("Sens"), $_SERVER['PHP_SELF'], "bk.sens", "", "", 'align="center"', $sortfield, $sortorder);
 		print_liste_field_titre($langs->trans("Codejournal"), $_SERVER['PHP_SELF'], "bk.code_journal", "", "", "", $sortfield, $sortorder);
 		print_liste_field_titre($langs->trans("Action"),$_SERVER["PHP_SELF"],"",$param,"",'width="60" align="center"',$sortfield,$sortorder);
 		print "</tr>\n";
@@ -200,7 +200,7 @@ else {
 		print '<td>&nbsp;</td>';
 		print '<td>&nbsp;</td>';
 		print '<td>&nbsp;</td>';
-		print '<td><input type="text" name="search_journal" size="3" value="' . $GETPOST("search_journal") . '"></td>';
+		print '<td><input type="text" name="search_journal" size="3" value="' . $search_journal . '"></td>';
 		print '<td align="right" colspan="2" class="liste_titre">';
 		print '<input type="image" class="liste_titre" src="'.img_picto($langs->trans("Search"),'search.png','','',1).'" name="button_search" value="'.dol_escape_htmltag($langs->trans("Search")).'" title="'.dol_escape_htmltag($langs->trans("Search")).'">';
 		print '&nbsp;';

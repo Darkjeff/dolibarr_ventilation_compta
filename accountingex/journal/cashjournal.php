@@ -378,7 +378,7 @@ if ($action == 'writeBookKeeping') {
 		setEventMessage($langs->trans('Success'), 'mesgs');
 	}
 }
-// export csv
+// Export
 if ($action == 'export_csv') {
 	$sep = $conf->global->ACCOUNTINGEX_SEPARATORCSV;
 	
@@ -508,7 +508,7 @@ if ($action == 'export_csv') {
 			'action' => '' 
 	));
 	
-	print '<input type="button" class="button" style="float: right;" value="Export CSV" onclick="launch_export();" />';
+	print '<input type="button" class="button" style="float: right;" value="'.$langs->trans("Export").'" onclick="launch_export();" />';
 	
 	print '<input type="button" class="button" value="' . $langs->trans("WriteBookKeeping") . '" onclick="writeBookKeeping();" />';
 	

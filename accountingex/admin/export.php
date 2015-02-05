@@ -121,7 +121,7 @@ print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">'
 print '<input type="hidden" name="action" value="update">';
 
 print '<table class="noborder" width="100%">';
-$var = True;
+$var = true;
 
 print '<tr class="liste_titre">';
 print '<td colspan="2">' . $langs->trans("Modelcsv") . '</td>';
@@ -142,7 +142,7 @@ else
 	print '<td>';
 	$listmodelcsv=array(
 		'1'=>$langs->trans("Modelcsv_normal"),
-		'2'=>$langs->trans("Modelcsv_CEGID"),
+		'2'=>$langs->trans("Modelcsv_CEGID")
 	);
 	print $form->selectarray("modelcsv",$listmodelcsv,$conf->global->ACCOUNTINGEX_MODELCSV,0);
 	print '</td>';

@@ -137,7 +137,7 @@ if (! empty($conf->global->ACCOUNTINGEX_LIMIT_LIST_VENTILATION)) {
 $offset = $limit * $page;
 
 $sql = "SELECT f.ref, f.rowid as facid, f.ref_supplier, l.fk_product, l.description, l.total_ht as price, l.rowid, l.fk_code_ventilation, ";
-$sql .= " p.rowid as product_id, p.ref as product_ref, p.label as product_label, p.product_type as type, p.accountancy_code_buy as code_buy";
+$sql .= " p.rowid as product_id, p.ref as product_ref, p.label as product_label, l.product_type as type, p.accountancy_code_buy as code_buy";
 $sql .= " , aa.rowid as aarowid";
 $sql .= " FROM " . MAIN_DB_PREFIX . "facture_fourn as f";
 $sql .= " INNER JOIN " . MAIN_DB_PREFIX . "facture_fourn_det as l ON f.rowid = l.fk_facture_fourn";

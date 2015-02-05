@@ -4,7 +4,7 @@
  * Copyright (C) 2011		Juanjo Menent		<jmenent@2byte.es>
  * Copyright (C) 2012		Regis Houssin		<regis@dolibarr.fr>
  * Copyright (C) 2013		Christophe Battarel	<christophe.battarel@altairis.fr>
- * Copyright (C) 2013-2014  Alexandre Spangaro	<alexandre.spangaro@gmail.com>
+ * Copyright (C) 2013-2015  Alexandre Spangaro	<alexandre.spangaro@gmail.com>
  * Copyright (C) 2013-2014  Florian Henry		<florian.henry@open-concept.pro>
  * Copyright (C) 2013-2014  Olivier Geffroy		<jeff@jeffinfo.com>
  *
@@ -128,7 +128,7 @@ $result = $db->query($sql);
 if ($result) {
 	
 	$num = $db->num_rows($result);
-	// les variables
+	// Variables
 	$cptfour = (! empty($conf->global->COMPTA_ACCOUNT_SUPPLIER) ? $conf->global->COMPTA_ACCOUNT_SUPPLIER : $langs->trans("CodeNotDef"));
 	$cptcli = (! empty($conf->global->COMPTA_ACCOUNT_CUSTOMER) ? $conf->global->COMPTA_ACCOUNT_CUSTOMER : $langs->trans("CodeNotDef"));
 	$cpttva = (! empty($conf->global->ACCOUNTINGEX_ACCOUNT_SUSPENSE) ? $conf->global->ACCOUNTINGEX_ACCOUNT_SUSPENSE : $langs->trans("CodeNotDef"));
@@ -213,7 +213,7 @@ if ($result) {
 					$tabpay[$obj->rowid]["soclib"] = $chargestatic->getNomUrl(1, 30);
 
 					$sqlmid = 'SELECT cchgsoc.accountancy_code';
-					$sqlmid .= " FROM " . MAIN_DB_PREFIX . "c_chargesociales cchgsoc ";
+					$sqlmid .= " FROM " . MAIN_DB_PREFIX . "c_chargesociales as cchgsoc ";
 					$sqlmid .= " INNER JOIN " . MAIN_DB_PREFIX . "chargesociales as chgsoc ON  chgsoc.fk_type=cchgsoc.id";
 					$sqlmid .= " INNER JOIN " . MAIN_DB_PREFIX . "paiementcharge as paycharg ON  paycharg.fk_charge=chgsoc.rowid";
 					$sqlmid .= " INNER JOIN " . MAIN_DB_PREFIX . "bank_url as bkurl ON  bkurl.url_id=paycharg.rowid";
@@ -266,7 +266,7 @@ if ($result) {
 if ($action == 'writeBookKeeping') {
 	$error = 0;
 	foreach ( $tabpay as $key => $val ) {
-		// bank
+		// Bank
 		foreach ( $tabbq[$key] as $k => $mt ) {
 			$bookkeeping = new BookKeeping($db);
 			$bookkeeping->doc_date = $val["date"];
@@ -286,7 +286,7 @@ if ($action == 'writeBookKeeping') {
 			if ($tabtype[$key] == 'payment') {
 				
 				$sqlmid = 'SELECT fac.facnumber';
-				$sqlmid .= " FROM " . MAIN_DB_PREFIX . "facture fac ";
+				$sqlmid .= " FROM " . MAIN_DB_PREFIX . "facture as fac ";
 				$sqlmid .= " INNER JOIN " . MAIN_DB_PREFIX . "paiement_facture as payfac ON  payfac.fk_facture=fac.rowid";
 				$sqlmid .= " INNER JOIN " . MAIN_DB_PREFIX . "paiement as pay ON  payfac.fk_paiement=pay.rowid";
 				$sqlmid .= " WHERE pay.fk_bank=" . $key;
@@ -299,7 +299,7 @@ if ($action == 'writeBookKeeping') {
 			} else if ($tabtype[$key] == 'payment_supplier') {
 				
 				$sqlmid = 'SELECT facf.facnumber';
-				$sqlmid .= " FROM " . MAIN_DB_PREFIX . "facture_fourn facf ";
+				$sqlmid .= " FROM " . MAIN_DB_PREFIX . "facture_fourn as facf ";
 				$sqlmid .= " INNER JOIN " . MAIN_DB_PREFIX . "paiementfourn_facturefourn as payfacf ON  payfacf.fk_facturefourn=facf.rowid";
 				$sqlmid .= " INNER JOIN " . MAIN_DB_PREFIX . "paiementfourn as payf ON  payfacf.fk_paiementfourn=payf.rowid";
 				$sqlmid .= " WHERE payf.fk_bank=" . $key;
@@ -339,7 +339,7 @@ if ($action == 'writeBookKeeping') {
 			} else if ($tabtype[$key] == 'payment') {
 				
 				$sqlmid = 'SELECT fac.facnumber';
-				$sqlmid .= " FROM " . MAIN_DB_PREFIX . "facture fac ";
+				$sqlmid .= " FROM " . MAIN_DB_PREFIX . "facture as fac ";
 				$sqlmid .= " INNER JOIN " . MAIN_DB_PREFIX . "paiement_facture as payfac ON  payfac.fk_facture=fac.rowid";
 				$sqlmid .= " INNER JOIN " . MAIN_DB_PREFIX . "paiement as pay ON  payfac.fk_paiement=pay.rowid";
 				$sqlmid .= " WHERE pay.fk_bank=" . $key;
@@ -354,7 +354,7 @@ if ($action == 'writeBookKeeping') {
 			} else if ($tabtype[$key] == 'payment_supplier') {
 				
 				$sqlmid = 'SELECT facf.facnumber';
-				$sqlmid .= " FROM " . MAIN_DB_PREFIX . "facture_fourn facf ";
+				$sqlmid .= " FROM " . MAIN_DB_PREFIX . "facture_fourn as facf ";
 				$sqlmid .= " INNER JOIN " . MAIN_DB_PREFIX . "paiementfourn_facturefourn as payfacf ON  payfacf.fk_facturefourn=facf.rowid";
 				$sqlmid .= " INNER JOIN " . MAIN_DB_PREFIX . "paiementfourn as payf ON  payfacf.fk_paiementfourn=payf.rowid";
 				$sqlmid .= " WHERE payf.fk_bank=" . $key;
@@ -369,7 +369,7 @@ if ($action == 'writeBookKeeping') {
 			} else if ($tabtype[$key] == 'company') {
 				
 				$sqlmid = 'SELECT fac.facnumber';
-				$sqlmid .= " FROM " . MAIN_DB_PREFIX . "facture fac ";
+				$sqlmid .= " FROM " . MAIN_DB_PREFIX . "facture as fac ";
 				$sqlmid .= " INNER JOIN " . MAIN_DB_PREFIX . "paiement_facture as payfac ON  payfac.fk_facture=fac.rowid";
 				$sqlmid .= " INNER JOIN " . MAIN_DB_PREFIX . "paiement as pay ON  payfac.fk_paiement=pay.rowid";
 				$sqlmid .= " WHERE pay.fk_bank=" . $key;
@@ -429,9 +429,9 @@ if ($action == 'export_csv')
 				print $bank_journal . $sep;
 				print length_accountg(html_entity_decode($k)) . $sep;
 				print $sep;
-				print $langs->trans("Bank") . $sep;
 				print ($mt < 0 ? 'C' : 'D') . $sep;
 				print ($mt <= 0 ? price(- $mt) : $mt) . $sep;
+				print $langs->trans("Bank") . $sep;
 				print $val["ref"] . $sep;
 				print "\n";
 			}
@@ -454,10 +454,10 @@ if ($action == 'export_csv')
 							print length_accountg($conf->global->COMPTA_ACCOUNT_CUSTOMER) . $sep;
 						}
 						print length_accounta(html_entity_decode($k)) . $sep;
-						print $companystatic->name . $sep;
 						print ($mt < 0 ? 'D' : 'C') . $sep;
 						print ($mt <= 0 ? price(- $mt) : $mt) . $sep;
-						print $val["ref"] . '"' . $sep;
+						print $companystatic->name . $sep;
+						print $val["ref"] . $sep;
 						print "\n";
 					}
 				}
@@ -472,9 +472,9 @@ if ($action == 'export_csv')
 						print $bank_journal . $sep;
 						print $conf->global->ACCOUNTINGEX_ACCOUNT_SUSPENSE . $sep;
 						print $sep;
-						print $langs->trans("Bank") . $sep;
 						print ($mt < 0 ? 'D' : 'C') . $sep;
 						print ($mt <= 0 ? price(- $mt) : $mt) . $sep;
+						print $langs->trans("Bank") . $sep;
 						print $val["ref"] . $sep;
 						print "\n";
 					}
@@ -509,7 +509,6 @@ if ($action == 'export_csv')
 					if ($mt) {
 						print '"' . $date . '"' . $sep;
 						print '"' . $val["ref"] . '"' . $sep;
-						
 						print '"' . length_accounta(html_entity_decode($k)) . '"' . $sep;
 						print '"' . $companystatic->name . '"' . $sep;
 						print '"' . ($mt < 0 ? price(- $mt) : '') . '"' . $sep;
@@ -555,7 +554,7 @@ else
 			'action' => '' 
 	));
 	
-	print '<input type="button" class="button" style="float: right;" value="Export CSV" onclick="launch_export();" />';
+	print '<input type="button" class="button" style="float: right;" value="'.$langs->trans("Export").'" onclick="launch_export();" />';
 	
 	print '<input type="button" class="button" value="' . $langs->trans("WriteBookKeeping") . '" onclick="writeBookKeeping();" />';
 	
