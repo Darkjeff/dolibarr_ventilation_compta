@@ -1,0 +1,91 @@
+//productaccount modif sql to report product with a defined account that does not exist in accountancy accountsystem
+//only for pcg99-base while it should support any account system
+
+3.7.1 sql query
+
+//$sql = "SELECT p.rowid, p.ref , p.label, p.description , p.accountancy_code_sell, p.accountancy_code_buy, p.tms, p.fk_product_type as product_type , p.tosell , p.tobuy ";
+$sql = "SELECT p.rowid, p.ref , p.label, p.description , p.accountancy_code_sell, p.accountancy_code_buy, p.tms, p.fk_product_type as product_type ,";
+//do we really need to exclude old product not tosell / tobuy ?
+$sql .= " FROM " . MAIN_DB_PREFIX . "product as p";
+//$sql .= " WHERE p.accountancy_code_sell IS NULL  AND p.tosell = 1  OR p.accountancy_code_buy IS NULL AND p.tobuy = 1";
+//$sql .= " WHERE p.accountancy_code_sell ='' AND p.tosell = 1  OR p.accountancy_code_buy ='' AND p.tobuy = 1";
+$sql .= " WHERE (p.accountancy_code_sell =''  || p.accountancy_code_buy ='')";
+$sql .= " OR (p.accountancy_code_sell IS NOT NULL & p.accountancy_code_sell != '' & p.accountancy_code_sell NOT IN (SELECT account_number FROM llx_accountingaccount WHERE fk_pcg_version='PCG99-BASE'))";
+$sql .= " OR (p.accountancy_code_buy  IS NOT NULL & p.accountancy_code_buy  != '' & p.accountancy_code_buy  NOT IN (SELECT account_number FROM llx_accountingaccount WHERE fk_pcg_version='PCG99-BASE'))";
+
+
+http://www.dolibarr.fr/forum/11-suggestionsnouvelles-fonctionnalites/38674-module-ventilation-comptable?start=240
+[03/07/2015 16:41:53] Olivier Geffroy:
+
+ok SELECT p.ref,p.label,p.accountancy_code_sell,p.accountancy_code_buy
+ok FROM llx_product as p
+WHERE
+(p.accountancy_code_sell IS NOT NULL AND p.accountancy_code_sell!='' AND p.accountancy_code_sell NOT IN (SELECT account_number FROM llx_accountingaccount WHERE fk_pcg_version='PCG99-BASE'))
+OR
+(p.accountancy_code_buy IS NOT NULL AND p.accountancy_code_buy!='' AND p.accountancy_code_buy NOT IN (SELECT account_number FROM llx_accountingaccount WHERE fk_pcg_version='PCG99-BASE'))
+
+
+
+
+
+
+	print '<td width="33%">';
+	print '<div class="inline-block divButAction">' . $langs->trans("ChangeAccount") . $langs->trans("Accountancy_code_buy") . '<br />';
+	print $form->select_account($account_number_sell, 'account_number_buy', 1);
+	print '<input type="submit" class="butAction" value="' . $langs->trans("Validate") . '"/></div>';
+	print '</td>';
+
+
+/////////////////////////////////////////////////////////////
+20150707
+//////////////////add support multi pcg asy
+Original
+$sql .= " OR (p.accountancy_code_sell IS NOT NULL AND p.accountancy_code_sell != '' AND p.accountancy_code_sell 
+NOT IN (
+SELECT account_number FROM " . MAIN_DB_PREFIX . "accountingaccount as aa WHERE fk_pcg_version='PCG99-BASE')
+)";
+
+EDITED
+$pcgver = $conf->global->CHARTOFACCOUNTS;
+$sql .= " OR (p.accountancy_code_sell IS NOT NULL AND p.accountancy_code_sell != '' AND p.accountancy_code_sell NOT IN
+	  (SELECT aa.account_number FROM " . MAIN_DB_PREFIX . "accountingaccount as aa , " . MAIN_DB_PREFIX . "accounting_system as asy" WHERE fk_pcg_version=asy.pcg_version AND asy.rowid = " . $pcgver))";
+
+
+
+
+
+
+
+
+
+
+
+
+
+$sql = "SELECT aa.rowid, aa.fk_pcg_version, aa.pcg_type, aa.pcg_subtype, aa.account_number, aa.account_parent , aa.label, aa.active ";
+$sql .= " FROM " . MAIN_DB_PREFIX . "accountingaccount as aa, " . MAIN_DB_PREFIX . "accounting_system as asy";
+$sql .= " WHERE aa.fk_pcg_version = asy.pcg_version";
+$sql .= " AND asy.rowid = " . $pcgver;
+
+if (strlen(trim($search_account))) {
+	$sql .= " AND aa.account_number like '%" . $search_account . "%'";
+}
+if (strlen(trim($search_label))) {
+	$sql .= " AND aa.label like '%" . $search_label . "%'";
+}
+if (strlen(trim($search_accountparent))) {
+	$sql .= " AND aa.account_parent like '%" . $search_accountparent . "%'";
+}
+if (strlen(trim($search_pcgtype))) {
+	$sql .= " AND aa.pcg_type like '%" . $search_pcgtype . "%'";
+}
+if (strlen(trim($search_pcgsubtype))) {
+	$sql .= " AND aa.pcg_subtype like '%" . $search_pcgsubtype . "%'";
+}
+
+
+$sql = 'SELECT pcg_version FROM ' . MAIN_DB_PREFIX . 'accounting_system WHERE rowid=' . $conf->global->CHARTOFACCOUNTS;
+
+
+
+
