@@ -4,9 +4,9 @@
  * Copyright (C) 2011		Juanjo Menent		<jmenent@2byte.es>
  * Copyright (C) 2012		Regis Houssin		<regis@dolibarr.fr>
  * Copyright (C) 2013		Christophe Battarel	<christophe.battarel@altairis.fr>
- * Copyright (C) 2013-2016  Alexandre Spangaro	<aspangaro.dolibarr@gmail.com>
- * Copyright (C) 2013-2014  Florian Henry		<florian.henry@open-concept.pro>
- * Copyright (C) 2013-2014  Olivier Geffroy		<jeff@jeffinfo.com>
+ * Copyright (C) 2013-2016	Alexandre Spangaro	<aspangaro.dolibarr@gmail.com>
+ * Copyright (C) 2013-2014	Florian Henry		<florian.henry@open-concept.pro>
+ * Copyright (C) 2013-2014	Olivier Geffroy		<jeff@jeffinfo.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ $langs->load("other");
 $langs->load("compta");
 $langs->load("banks");
 $langs->load('bills');
-$langs->load("donations");
+$langs->load('donations');
 $langs->load("accountancy");
 
 $id_bank_account = GETPOST('id_account', 'int');
@@ -150,7 +150,8 @@ if ($result) {
 		$tabcompany[$obj->rowid] = array (
 				'id' => $obj->socid,
 				'name' => $obj->name,
-				'code_client' => $obj->code_compta
+				'code_client' => $obj->code_compta,
+				'code_supplier' => $obj->code_compta_fournisseur
 		);
 
 		// Controls
@@ -274,9 +275,7 @@ if ($action == 'writebookkeeping') {
 			$bookkeeping->doc_type = 'bank';
 			$bookkeeping->fk_doc = $key;
 			$bookkeeping->fk_docdet = $val["fk_bank"];
-			$bookkeeping->code_tiers = $tabcompany[$key]['code_client'];
 			$bookkeeping->numero_compte = $k;
-			$bookkeeping->label_compte = $compte->label;
 			$bookkeeping->montant = ($mt < 0 ? - $mt : $mt);
 			$bookkeeping->sens = ($mt >= 0) ? 'D' : 'C';
 			$bookkeeping->debit = ($mt >= 0 ? $mt : 0);
@@ -298,6 +297,8 @@ if ($action == 'writebookkeeping') {
 					$objmid = $db->fetch_object($resultmid);
 					$bookkeeping->doc_ref = $objmid->facnumber;
 				}
+				$bookkeeping->code_tiers = $tabcompany[$key]['code_client'];
+				$bookkeeping->label_compte = $tabcompany[$key]['name'];
 			} else if ($tabtype[$key] == 'payment_supplier') {
 
 				$sqlmid = 'SELECT facf.ref_supplier,facf.ref';
@@ -311,6 +312,8 @@ if ($action == 'writebookkeeping') {
 					$objmid = $db->fetch_object($resultmid);
 					$bookkeeping->doc_ref = $objmid->ref_supplier . ' (' . $objmid->ref . ')';
 				}
+				$bookkeeping->code_tiers = $tabcompany[$key]['code_supplier'];
+				$bookkeeping->label_compte = $tabcompany[$key]['name'];
 			}
 
 			$result = $bookkeeping->create($user);
@@ -424,7 +427,7 @@ if ($action == 'export_csv') {
 			}
 			if ($reflabel == '(CustomerInvoicePayment)') {
 				$reflabel = $langs->trans('Customer');
-			}		
+			}
 			if ($reflabel == '(SocialContributionPayment)') {
 				$reflabel = $langs->trans('SocialContribution');
 			}
@@ -434,7 +437,7 @@ if ($action == 'export_csv') {
 			if ($reflabel == '(SubscriptionPayment)') {
 				$reflabel = $langs->trans('Donation');
 			}
-
+			
 			$companystatic->id = $tabcompany[$key]['id'];
 			$companystatic->name = $tabcompany[$key]['name'];
 			$companystatic->client = $tabcompany[$key]['code_client'];
@@ -561,7 +564,8 @@ if ($action == 'export_csv') {
 			}
 		}
 	}
-} else {
+}
+else {
 	$form = new Form($db);
 
 	llxHeader('', $langs->trans("FinanceJournal"));
@@ -576,9 +580,13 @@ if ($action == 'export_csv') {
 			'action' => ''
 	), '', $varlink);
 
-	print '<input type="button" class="button" style="float: right;" value="' . $langs->trans("Export") . '" onclick="launch_export();" />';
+	if ($conf->global->ACCOUNTING_EXPORT_MODELCSV != 1 && $conf->global->ACCOUNTING_EXPORT_MODELCSV != 2) {
+		print '<input type="button" class="butActionRefused" style="float: right;" value="' . $langs->trans('Export') . '" disabled="disabled" title="' . $langs->trans('ExportNotSupported') . '"/>';
+	} else {
+		print '<input type="button" class="butAction" style="float: right;" value="' . $langs->trans("Export") . '" onclick="launch_export();" />';
+	}
 
-	print '<input type="button" class="button" value="' . $langs->trans("WriteBookKeeping") . '" onclick="writebookkeeping();" />';
+	print '<input type="button" class="butAction" value="' . $langs->trans("WriteBookKeeping") . '" onclick="writebookkeeping();" />';
 
 	print '
 	<script type="text/javascript">
@@ -629,8 +637,8 @@ if ($action == 'export_csv') {
 		if ($reflabel == '(DonationPayment)') {
 			$reflabel = $langs->trans('Donation');
 		}
-				if ($reflabel == '(SubscriptionPayment)') {
-			$reflabel = $langs->trans('Donation');
+		if ($reflabel == '(SubscriptionPayment)') {
+			$reflabel = $langs->trans('SubscriptionPayment');
 		}
 
 		// Bank
@@ -643,7 +651,7 @@ if ($action == 'export_csv') {
 				print "<td>" . $bank_code_journal->label . " - " . $val["ref"] . "</td>";
 			} else {
 				print "<td>" . $bank_code_journal->label . " - " . $val['soclib'] . "</td>";
-  			}
+			}
 			print "<td>" . $val["type_payment"] . "</td>";
 			print "<td align='right'>" . ($mt >= 0 ? price($mt) : '') . "</td>";
 			print "<td align='right'>" . ($mt < 0 ? price(- $mt) : '') . "</td>";
