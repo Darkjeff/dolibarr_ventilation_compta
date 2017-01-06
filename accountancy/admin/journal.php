@@ -1,31 +1,32 @@
 <?php
 /* Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
  * Copyright (C) 2013-2015 Alexandre Spangaro	<aspangaro.dolibarr@gmail.com>
- * Copyright (C) 2014 	   Florian Henry		<florian.henry@open-concept.pro>
- * Copyright (C) 2014      Marcos García        <marcosgdf@gmail.com>
- * Copyright (C) 2014	   Juanjo Menent		<jmenent@2byte.es>
- * Copyright (C) 2015      Jean-François Ferry  <jfefe@aternatik.fr>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- */
+* Copyright (C) 2014 	   Florian Henry		<florian.henry@open-concept.pro>
+* Copyright (C) 2014      Marcos García        <marcosgdf@gmail.com>
+* Copyright (C) 2014	   Juanjo Menent		<jmenent@2byte.es>
+* Copyright (C) 2015      Jean-François Ferry  <jfefe@aternatik.fr>
+* Copyright (C) 2016      Laurent Destailleur 	<eldy@users.sourceforge.net>
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program. If not, see <http://www.gnu.org/licenses/>.
+*
+*/
 
 /**
- * \file htdocs/accountancy/admin/journal.php
- * \ingroup Accounting Expert
- * \brief Setup page to configure accounting expert module
- */
+ * \file		htdocs/accountancy/admin/journal.php
+* \ingroup		Advanced accountancy
+* \brief		Setup page to configure accounting expert module
+*/
 require '../../main.inc.php';
 
 // Class
@@ -34,11 +35,17 @@ require_once DOL_DOCUMENT_ROOT . '/core/lib/accounting.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/bank.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/compta/bank/class/account.class.php';
 
+$langs->load("compta");
+$langs->load("bills");
+$langs->load("admin");
 $langs->load("accountancy");
+$langs->load("salaries");
 
 // Security check
-if (! $user->admin)
-	accessforbidden();
+if (empty($user->admin) || ! empty($user->rights->accountancy->chartofaccount))
+{
+    accessforbidden();
+}
 
 $action = GETPOST('action', 'alpha');
 
@@ -48,24 +55,26 @@ $list = array (
 		'ACCOUNTING_PURCHASE_JOURNAL',
 		'ACCOUNTING_SOCIAL_JOURNAL',
 		'ACCOUNTING_MISCELLANEOUS_JOURNAL',
-		'ACCOUNTING_EXPENSEREPORT_JOURNAL' 
+		'ACCOUNTING_EXPENSEREPORT_JOURNAL'
 );
 
 /*
  * Actions
- */
+*/
 
 if ($action == 'update') {
 	$error = 0;
-	
-	foreach ( $list as $constname ) {
+
+	// Save vars
+	foreach ($list as $constname)
+	{
 		$constvalue = GETPOST($constname, 'alpha');
-		
+
 		if (! dolibarr_set_const($db, $constname, $constvalue, 'chaine', 0, '', $conf->entity)) {
 			$error ++;
 		}
 	}
-	
+
 	// Save bank account journals
 	$arrayofbankaccount = GETPOST('bank_account', 'array');
 	foreach($arrayofbankaccount as $key => $code)
@@ -93,7 +102,7 @@ if ($action == 'update') {
 
 /*
  * View
- */
+*/
 
 llxHeader();
 
@@ -117,13 +126,13 @@ print "</tr>\n";
 
 foreach ( $list as $key ) {
 	$var = ! $var;
-	
+
 	print '<tr ' . $bc[$var] . ' class="value">';
-	
+
 	// Param
 	$label = $langs->trans($key);
 	print '<td width="50%"><label for="' . $key . '">' . $label . '</label></td>';
-	
+
 	// Value
 	print '<td>';
 	print '<input type="text" size="20" id="' . $key . '" name="' . $key . '" value="' . $conf->global->$key . '">';
@@ -150,35 +159,35 @@ $resql = $db->query($sql);
 if ($resql) {
 	$numr = $db->num_rows($resql);
 	$i = 0;
-	
+
 	if ($numr > 0)
-		
+
 		$bankaccountstatic=new Account($db);
 
-		while ( $i < $numr ) {
-			$objp = $db->fetch_object($resql);
+	while ( $i < $numr ) {
+		$objp = $db->fetch_object($resql);
 			
-			$var = ! $var;
+		$var = ! $var;
 			
 		$bankaccountstatic->id = $objp->rowid;
 		$bankaccountstatic->label = $objp->label;
 		$bankaccountstatic->number = $objp->number;
 		$bankaccountstatic->accountancy_journal = $objp->accountancy_journal;
 			
-			print '<tr ' . $bc[$var] . ' class="value">';
+		print '<tr ' . $bc[$var] . ' class="value">';
 			
-			// Param
+		// Param
 		print '<td width="50%"><label for="' . $objp->rowid . '">' . $langs->trans("Journal");
 		print ' - '.$bankaccountstatic->getNomUrl(1);
 		print '</label></td>';
 			
-			// Value
-			print '<td>';
+		// Value
+		print '<td>';
 		print '<input type="text" size="20" id="' . $objp->rowid . '" name="bank_account['.$objp->rowid.']" value="' . $objp->accountancy_journal . '">';
-			print '</td></tr>';
+		print '</td></tr>';
 			
-			$i ++;
-		}
+		$i ++;
+	}
 	$db->free($resql);
 }
 else

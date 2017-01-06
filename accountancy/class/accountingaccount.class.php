@@ -22,7 +22,7 @@
 /**
  * \file		htdocs/accountancy/class/accountingaccount.class.php
  * \ingroup		Advanced accountancy
- * \brief		Fichier de la classe des comptes comptable
+ * \brief		File of class to manage accounting accounts
  */
 
 /**
@@ -45,7 +45,8 @@ class AccountingAccount extends CommonObject
 	var $label;
 	var $fk_user_author;
 	var $fk_user_modif;
-	var $active;
+	var $active;       // duplicate with status
+	var $status;
 	
 	/**
 	 * Constructor
@@ -59,10 +60,10 @@ class AccountingAccount extends CommonObject
 	/**
 	 * Load record in memory
 	 *
-	 * @param 	int 	$rowid 				Id
-	 * @param 	string 	$account_number 	Account number
-	 * @param 	int 	$limittocurrentchart 1=Do not load record if it is into another accounting system
-	 * @return 	int <0 if KO, >0 if OK
+	 * @param 	int 	$rowid 				   Id
+	 * @param 	string 	$account_number 	   Account number
+	 * @param 	int 	$limittocurrentchart   1=Do not load record if it is into another accounting system
+	 * @return 	int                            <0 if KO, Id of record if OK and found
 	 */
 	function fetch($rowid = null, $account_number = null, $limittocurrentchart = 0) {
 		global $conf;
@@ -81,6 +82,7 @@ class AccountingAccount extends CommonObject
 			if (! empty($limittocurrentchart)) {
 				$sql .= ' AND a.fk_pcg_version IN (SELECT pcg_version FROM ' . MAIN_DB_PREFIX . 'accounting_system WHERE rowid=' . $conf->global->CHARTOFACCOUNTS . ')';
 			}
+
 			dol_syslog(get_class($this) . "::fetch sql=" . $sql, LOG_DEBUG);
 			$result = $this->db->query($sql);
 			if ($result) {
@@ -102,6 +104,7 @@ class AccountingAccount extends CommonObject
 					$this->fk_user_author = $obj->fk_user_author;
 					$this->fk_user_modif = $obj->fk_user_modif;
 					$this->active = $obj->active;
+					$this->status = $obj->active;
 					
 					return $this->id;
 				} else {
@@ -116,7 +119,7 @@ class AccountingAccount extends CommonObject
 	}
 	
 	/**
-	 * Insert line in accounting_account
+	 * Insert new accounting account in chart of accounts
 	 *
 	 * @param User $user Use making action
 	 * @param int $notrigger Disable triggers
@@ -169,16 +172,15 @@ class AccountingAccount extends CommonObject
 		
 		$sql .= " '" . $this->db->idate($now) . "'";
 		$sql .= ", " . $conf->entity;
-		$sql .= ", " . (! isset($this->fk_pcg_version) ? 'NULL' : "'" . $this->db->escape($this->fk_pcg_version) . "'");
-		$sql .= ", " . (! isset($this->pcg_type) ? 'NULL' : "'" . $this->db->escape($this->pcg_type) . "'");
-		$sql .= ", " . (! isset($this->pcg_subtype) ? 'NULL' : "'" . $this->pcg_subtype . "'");
-		$sql .= ", " . (! isset($this->account_number) ? 'NULL' : "'" . $this->account_number . "'");
-		$sql .= ", " . (! isset($this->account_parent) ? 'NULL' : "'" . $this->db->escape($this->account_parent) . "'");
-		$sql .= ", " . (! isset($this->label) ? 'NULL' : "'" . $this->db->escape($this->label) . "'");
-		$sql .= ", " . (! isset($this->account_category) ? 'NULL' : "'" . $this->db->escape($this->account_category) . "'");
+		$sql .= ", " . (empty($this->fk_pcg_version) ? 'NULL' : "'" . $this->db->escape($this->fk_pcg_version) . "'");
+		$sql .= ", " . (empty($this->pcg_type) ? 'NULL' : "'" . $this->db->escape($this->pcg_type) . "'");
+		$sql .= ", " . (empty($this->pcg_subtype) ? 'NULL' : "'" . $this->pcg_subtype . "'");
+		$sql .= ", " . (empty($this->account_number) ? 'NULL' : "'" . $this->account_number . "'");
+		$sql .= ", " . (empty($this->account_parent) ? 'NULL' : "'" . $this->db->escape($this->account_parent) . "'");
+		$sql .= ", " . (empty($this->label) ? 'NULL' : "'" . $this->db->escape($this->label) . "'");
+		$sql .= ", " . (empty($this->account_category) ? 'NULL' : "'" . $this->db->escape($this->account_category) . "'");
 		$sql .= ", " . $user->id;
-		$sql .= ", " . (! isset($this->active) ? 'NULL' : "'" . $this->db->escape($this->active) . "'");
-		
+		$sql .= ", " . (! isset($this->active) ? 'NULL' : $this->db->escape($this->active));
 		$sql .= ")";
 		
 		$this->db->begin();
@@ -463,5 +465,62 @@ class AccountingAccount extends CommonObject
 			$this->db->rollback();
 			return - 1;
 		}
+	}
+	
+	
+	/**
+	 *  Retourne le libelle du statut d'un user (actif, inactif)
+	 *
+	 *  @param	int		$mode          0=libelle long, 1=libelle court, 2=Picto + Libelle court, 3=Picto, 4=Picto + Libelle long, 5=Libelle court + Picto
+	 *  @return	string 			       Label of status
+	 */
+	function getLibStatut($mode=0)
+	{
+	    return $this->LibStatut($this->status,$mode);
+	}
+	
+	/**
+	 *  Renvoi le libelle d'un statut donne
+	 *
+	 *  @param	int		$statut        	Id statut
+	 *  @param  int		$mode          	0=libelle long, 1=libelle court, 2=Picto + Libelle court, 3=Picto, 4=Picto + Libelle long, 5=Libelle court + Picto
+	 *  @return string 			       	Label of status
+	 */
+	function LibStatut($statut,$mode=0)
+	{
+	    global $langs;
+	    $langs->load('users');
+	
+	    if ($mode == 0)
+	    {
+	        $prefix='';
+	        if ($statut == 1) return $langs->trans('Enabled');
+	        if ($statut == 0) return $langs->trans('Disabled');
+	    }
+	    if ($mode == 1)
+	    {
+	        if ($statut == 1) return $langs->trans('Enabled');
+	        if ($statut == 0) return $langs->trans('Disabled');
+	    }
+	    if ($mode == 2)
+	    {
+	        if ($statut == 1) return img_picto($langs->trans('Enabled'),'statut4').' '.$langs->trans('Enabled');
+	        if ($statut == 0) return img_picto($langs->trans('Disabled'),'statut5').' '.$langs->trans('Disabled');
+	    }
+	    if ($mode == 3)
+	    {
+	        if ($statut == 1) return img_picto($langs->trans('Enabled'),'statut4');
+	        if ($statut == 0) return img_picto($langs->trans('Disabled'),'statut5');
+	    }
+	    if ($mode == 4)
+	    {
+	        if ($statut == 1) return img_picto($langs->trans('Enabled'),'statut4').' '.$langs->trans('Enabled');
+	        if ($statut == 0) return img_picto($langs->trans('Disabled'),'statut5').' '.$langs->trans('Disabled');
+	    }
+	    if ($mode == 5)
+	    {
+	        if ($statut == 1) return $langs->trans('Enabled').' '.img_picto($langs->trans('Enabled'),'statut4');
+	        if ($statut == 0) return $langs->trans('Disabled').' '.img_picto($langs->trans('Disabled'),'statut5');
+	    }
 	}
 }

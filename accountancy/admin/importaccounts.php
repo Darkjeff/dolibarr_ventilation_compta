@@ -19,9 +19,9 @@
  */
 
 /**
- * \file htdocs/accountancy/admin/importaccounts.php
- * \ingroup Accounting Expert
- * \brief Page import accounting account
+ * \file 		htdocs/accountancy/admin/importaccounts.php
+ * \ingroup		Advanced accountancy
+ * \brief 		Page import accounting account
  */
 require '../../main.inc.php';
 
@@ -39,6 +39,22 @@ $langs->load("accountancy");
 // Security check
 if (! $user->admin)
 	accessforbidden();
+
+$limit = GETPOST("limit")?GETPOST("limit","int"):(empty($conf->global->ACCOUNTING_LIMIT_LIST_VENTILATION)?$conf->liste_limit:$conf->global->ACCOUNTING_LIMIT_LIST_VENTILATION);
+$sortfield = GETPOST("sortfield",'alpha');
+$sortorder = GETPOST("sortorder",'alpha');
+$page = GETPOST("page",'int');
+if ($page == -1) { $page = 0; }
+$offset = $limit * $page;
+$pageprev = $page - 1;
+$pagenext = $page + 1;
+
+
+
+
+/*
+ * View
+ */
 
 llxHeader('', $langs->trans("ImportAccount"));
 
@@ -90,15 +106,7 @@ if ($_POST["action"] == 'import') {
 	print '<div><font color="red">' . $langs->trans("EndProcessing") . '</font></div>';
 }
 
-/*
- * list accounting account from product 
- *
- */
-$page = GETPOST("page");
-if ($page < 0)
-	$page = 0;
-$limit = $conf->global->ACCOUNTING_LIMIT_LIST_VENTILATION;
-$offset = $limit * $page;
+// list accounting account from product 
 
 $sql = "(SELECT p.rowid as product_id, p.accountancy_code_sell as accounting ";
 $sql .= " FROM  " . MAIN_DB_PREFIX . "product as p ";

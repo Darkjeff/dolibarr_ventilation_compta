@@ -21,9 +21,9 @@
  */
 
 /**
- * \file htdocs/accountancy/admin/export.php
+ * \file 		htdocs/accountancy/admin/export.php
  * \ingroup 	Advanced accountancy
- * \brief Setup page to configure accounting expert module
+ * \brief 		Setup page to configure accounting expert module
  */
 require '../../main.inc.php';
 
@@ -38,14 +38,16 @@ $langs->load("admin");
 $langs->load("accountancy");
 
 // Security check
-if (! $user->admin)
-	accessforbidden();
+if (empty($user->admin) || ! empty($user->rights->accountancy->chartofaccount))
+{
+    accessforbidden();
+}
 
 $action = GETPOST('action', 'alpha');
 
 // Parameters ACCOUNTING_EXPORT_*
 $main_option = array (
-		'ACCOUNTING_EXPORT_PREFIX_SPEC'
+		'ACCOUNTING_EXPORT_PREFIX_SPEC' 
 );
 
 $model_option = array (
@@ -65,10 +67,10 @@ $model_option = array (
  */
 if ($action == 'update') {
 	$error = 0;
-
+	
 	$format = GETPOST('format', 'alpha');
 	$modelcsv = GETPOST('modelcsv', 'int');
-
+	
 	if (! empty($format)) {
 		if (! dolibarr_set_const($db, 'ACCOUNTING_EXPORT_FORMAT', $format, 'chaine', 0, '', $conf->entity)) {
 			$error ++;
@@ -76,7 +78,7 @@ if ($action == 'update') {
 	} else {
 		$error ++;
 	}
-
+	
 	if (! empty($modelcsv)) {
 		if (! dolibarr_set_const($db, 'ACCOUNTING_EXPORT_MODELCSV', $modelcsv, 'chaine', 0, '', $conf->entity)) {
 			$error ++;
@@ -87,23 +89,23 @@ if ($action == 'update') {
 	} else {
 		$error ++;
 	}
-
+	
 	foreach ( $main_option as $constname ) {
 		$constvalue = GETPOST($constname, 'alpha');
-
+		
 		if (! dolibarr_set_const($db, $constname, $constvalue, 'chaine', 0, '', $conf->entity)) {
 			$error ++;
 		}
 	}
-
+	
 	foreach ( $model_option as $constname ) {
 		$constvalue = GETPOST($constname, 'alpha');
-
+		
 		if (! dolibarr_set_const($db, $constname, $constvalue, 'chaine', 0, '', $conf->entity)) {
 			$error ++;
 		}
 	}
-
+	
 	if (! $error) {
 		setEventMessages($langs->trans("SetupSaved"), null, 'mesgs');
 	} else {
@@ -135,42 +137,25 @@ $var = true;
 /*
  * Main Options
  */
+
 print '<table class="noborder" width="100%">';
 print '<tr class="liste_titre">';
-print '<td colspan="3">' . $langs->trans('MainOptions') . '</td>';
+print '<td colspan="3">' . $langs->trans('Options') . '</td>';
 print "</tr>\n";
 
 $var = ! $var;
-
-print '<tr ' . $bc[$var] . '>';
-print '<td width="50%">' . $langs->trans("Selectformat") . '</td>';
-if (! $conf->use_javascript_ajax) {
-	print '<td class="nowrap">';
-	print $langs->trans("NotAvailableWhenAjaxDisabled");
-	print "</td>";
-} else {
-	print '<td>';
-	$listformat = array (
-			'csv' => $langs->trans("csv"),
-			'txt' => $langs->trans("txt")
-	);
-	print $form->selectarray("format", $listformat, $conf->global->ACCOUNTING_EXPORT_FORMAT, 0);
-
-	print '</td>';
-}
-print "</td></tr>";
 
 $num = count($main_option);
 if ($num) {
 	foreach ( $main_option as $key ) {
 		$var = ! $var;
-
+		
 		print '<tr ' . $bc[$var] . ' class="value">';
-
+		
 		// Param
 		$label = $langs->trans($key);
 		print '<td width="50%">' . $label . '</td>';
-
+		
 		// Value
 		print '<td>';
 		print '<input type="text" size="20" name="' . $key . '" value="' . $conf->global->$key . '">';
@@ -203,7 +188,7 @@ if (! $conf->use_javascript_ajax) {
 	print '<td>';
 	$listmodelcsv = AccountancyExport::getType();
 	print $form->selectarray("modelcsv", $listmodelcsv, $conf->global->ACCOUNTING_EXPORT_MODELCSV, 0);
-
+	
 	print '</td>';
 }
 print "</td></tr>";
@@ -221,24 +206,45 @@ if ($num2) {
 	print '<tr class="liste_titre">';
 	print '<td colspan="3">' . $langs->trans('OtherOptions') . '</td>';
 	print "</tr>\n";
+	
 	if ($conf->global->ACCOUNTING_EXPORT_MODELCSV > 1)
+	{
 		print '<tr><td colspan="2" bgcolor="red"><b>' . $langs->trans('OptionsDeactivatedForThisExportModel') . '</b></td></tr>';
-
+	}
+	
+	print '<tr ' . $bc[$var] . '>';
+	print '<td width="50%">' . $langs->trans("Selectformat") . '</td>';
+	if (! $conf->use_javascript_ajax) {
+	    print '<td class="nowrap">';
+	    print $langs->trans("NotAvailableWhenAjaxDisabled");
+	    print "</td>";
+	} else {
+	    print '<td>';
+	    $listformat = array (
+	        'csv' => $langs->trans("csv"),
+	        'txt' => $langs->trans("txt")
+	    );
+	    print $form->selectarray("format", $listformat, $conf->global->ACCOUNTING_EXPORT_FORMAT, 0);
+	
+	    print '</td>';
+	}
+	print "</td></tr>";
+	
 	foreach ( $model_option as $key ) {
 		$var = ! $var;
-
+		
 		print '<tr ' . $bc[$var] . ' class="value">';
-
+		
 		// Param
 		$label = $langs->trans($key);
 		print '<td width="50%">' . $label . '</td>';
-
+		
 		// Value
 		print '<td>';
 		print '<input type="text" size="20" name="' . $key . '" value="' . $conf->global->$key . '">';
 		print '</td></tr>';
 	}
-
+	
 	print "</table>\n";
 }
 

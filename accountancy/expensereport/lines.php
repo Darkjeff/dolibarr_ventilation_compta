@@ -1,9 +1,9 @@
 <?php
-/* Copyright (C) 2013-2016 Olivier Geffroy		<jeff@jeffinfo.com>
- * Copyright (C) 2013-2016 Alexandre Spangaro	<aspangaro.dolibarr@gmail.com>
- * Copyright (C) 2014-2015 Ari Elbaz (elarifr)	<github@accedinfo.com>  
- * Copyright (C) 2013-2016 Florian Henry		<florian.henry@open-concept.pro>
- * Copyright (C) 2014	   Juanjo Menent		<jmenent@2byte.es>
+/* Copyright (C) 2013-2016	Olivier Geffroy		<jeff@jeffinfo.com>
+ * Copyright (C) 2013-2016	Alexandre Spangaro	<aspangaro@zendsi.com>
+ * Copyright (C) 2014-2015	Ari Elbaz (elarifr)	<github@accedinfo.com>  
+ * Copyright (C) 2013-2016	Florian Henry		<florian.henry@open-concept.pro>
+ * Copyright (C) 2014		Juanjo Menent		<jmenent@2byte.es>
  *   
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,16 +20,15 @@
  */
 
 /**
- * \file 		htdocs/accountancy/supplier/lines.php
+ * \file 		htdocs/accountancy/expensereport/lines.php
  * \ingroup 	Advanced accountancy
- * \brief 		Page of detail of the lines of ventilation of invoices suppliers
+ * \brief 		Page of detail of the lines of ventilation of expense reports
  */
 require '../../main.inc.php';
 
 // Class
 require_once DOL_DOCUMENT_ROOT . '/accountancy/class/html.formventilation.class.php';
-require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.facture.class.php';
-require_once DOL_DOCUMENT_ROOT . '/product/class/product.class.php';
+require_once DOL_DOCUMENT_ROOT . '/expensereport/class/expensereport.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/date.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/accounting.lib.php';
 
@@ -39,13 +38,13 @@ $langs->load("bills");
 $langs->load("other");
 $langs->load("main");
 $langs->load("accountancy");
+$langs->load("trips");
 $langs->load("productbatch");
 
 $account_parent = GETPOST('account_parent');
 $changeaccount = GETPOST('changeaccount');
 // Search Getpost
-$search_ref = GETPOST('search_ref', 'alpha');
-$search_invoice = GETPOST('search_invoice', 'alpha');
+$search_expensereport = GETPOST('search_expensereport', 'alpha');
 $search_label = GETPOST('search_label', 'alpha');
 $search_desc = GETPOST('search_desc', 'alpha');
 $search_amount = GETPOST('search_amount', 'alpha');
@@ -62,7 +61,7 @@ $offset = $conf->liste_limit * $page;
 $pageprev = $page - 1;
 $pagenext = $page + 1;
 if (! $sortfield)
-	$sortfield = "f.datef, f.ref, l.rowid";
+	$sortfield = "erd.date, erd.rowid";
 if (! $sortorder) {
 	if ($conf->global->ACCOUNTING_LIST_SORT_VENTILATION_DONE > 0) {
 		$sortorder = "DESC";
@@ -83,10 +82,9 @@ $formventilation = new FormVentilation($db);
  */
 
 // Purge search criteria
-if (GETPOST("button_removefilter_x") || GETPOST("button_removefilter.x") || GETPOST("button_removefilter")) // All tests are required to be compatible with all browsers
+if (GETPOST("button_removefilter_x") || GETPOST("button_removefilter.x") || GETPOST("button_removefilter")) // Both test are required to be compatible with all browsers
 {
-	$search_ref = '';
-	$search_invoice = '';
+	$search_expensereport = '';
 	$search_label = '';
 	$search_desc = '';
 	$search_amount = '';
@@ -99,11 +97,11 @@ if (is_array($changeaccount) && count($changeaccount) > 0) {
 	
 	$db->begin();
 	
-	$sql1 = "UPDATE " . MAIN_DB_PREFIX . "facture_fourn_det as l";
-	$sql1 .= " SET l.fk_code_ventilation=" . GETPOST('account_parent');
-	$sql1 .= ' WHERE l.rowid IN (' . implode(',', $changeaccount) . ')';
+	$sql1 = "UPDATE " . MAIN_DB_PREFIX . "expensereport_det as erd";
+	$sql1 .= " SET erd.fk_code_ventilation=" . GETPOST('account_parent');
+	$sql1 .= ' WHERE erd.rowid IN (' . implode(',', $changeaccount) . ')';
 	
-	dol_syslog('accountancy/supplier/lines.php::changeaccount sql= ' . $sql1);
+	dol_syslog('accountancy/expensereport/lines.php::changeaccount sql= ' . $sql1);
 	$resql1 = $db->query($sql1);
 	if (! $resql1) {
 		$error ++;
@@ -125,7 +123,7 @@ if (is_array($changeaccount) && count($changeaccount) > 0) {
  * View
  */
 
-llxHeader('', $langs->trans("SuppliersVentilation") . ' - ' . $langs->trans("Dispatched"));
+llxHeader('', $langs->trans("ExpenseReportsVentilation") . ' - ' . $langs->trans("Dispatched"));
 
 print '<script type="text/javascript">
 			$(function () {
@@ -145,39 +143,37 @@ print '<script type="text/javascript">
 			 </script>';
 
 /*
- * Supplier Invoice lines
+ * Expense reports lines
  */
-$sql = "SELECT f.rowid as facid, f.ref as facnumber, f.ref_supplier, f.libelle as invoice_label, f.datef,";
-$sql.= " l.fk_product, l.description, l.total_ht , l.qty, l.rowid, l.tva_tx, aa.label, aa.account_number, ";
-$sql.= " p.rowid as product_id, p.ref as product_ref, p.label as product_label, p.fk_product_type as type";
-$sql.= " FROM " . MAIN_DB_PREFIX . "facture_fourn as f";
-$sql.= " , " . MAIN_DB_PREFIX . "accounting_account as aa";
-$sql.= " , " . MAIN_DB_PREFIX . "facture_fourn_det as l";
-$sql.= " LEFT JOIN " . MAIN_DB_PREFIX . "product as p ON p.rowid = l.fk_product";
-$sql.= " WHERE f.rowid = l.fk_facture_fourn and f.fk_statut >= 1 AND l.fk_code_ventilation <> 0 ";
-$sql.= " AND aa.rowid = l.fk_code_ventilation";
-if (strlen(trim($search_invoice))) {
-	$sql .= " AND f.ref like '%" . $search_invoice . "%'";
-}
-if (strlen(trim($search_ref))) {
-	$sql .= " AND p.ref like '%" . $search_ref . "%'";
+$sql = "SELECT er.ref, er.rowid as erid,";
+$sql .= " erd.rowid, erd.fk_c_type_fees, erd.comments, erd.total_ht, erd.fk_code_ventilation, erd.tva_tx, erd.date,";
+$sql .= " aa.label, aa.account_number,";
+$sql .= " f.id as fees_id, f.label as fees_label";
+$sql .= " FROM " . MAIN_DB_PREFIX . "expensereport as er";
+$sql .= " , " . MAIN_DB_PREFIX . "accounting_account as aa";
+$sql .= " , " . MAIN_DB_PREFIX . "expensereport_det as erd";
+$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "c_type_fees as f ON f.id = erd.fk_c_type_fees";
+$sql .= " WHERE er.rowid = erd.fk_expensereport and er.fk_statut >= 5 AND erd.fk_code_ventilation <> 0 ";
+$sql .= " AND aa.rowid = erd.fk_code_ventilation";
+if (strlen(trim($search_expensereport))) {
+	$sql .= " AND er.ref like '%" . $search_expensereport . "%'";
 }
 if (strlen(trim($search_label))) {
-	$sql .= " AND p.label like '%" . $search_label . "%'";
+	$sql .= " AND f.label like '%" . $search_label . "%'";
 }
 if (strlen(trim($search_desc))) {
-	$sql .= " AND l.description like '%" . $search_desc . "%'";
+	$sql .= " AND er.comments like '%" . $search_desc . "%'";
 }
 if (strlen(trim($search_amount))) {
-	$sql .= " AND l.total_ht like '%" . $search_amount . "%'";
+	$sql .= " AND erd.total_ht like '%" . $search_amount . "%'";
 }
 if (strlen(trim($search_account))) {
 	$sql .= " AND aa.account_number like '%" . $search_account . "%'";
 }
 if (strlen(trim($search_vat))) {
-	$sql .= " AND (l.tva_tx like '" . $search_vat . "%')";
+	$sql .= " AND (erd.tva_tx like '" . $search_vat . "%')";
 }
-$sql .= " AND f.entity IN (" . getEntity("facture_fourn", 0) . ")";  // We don't share object for accountancy
+$sql .= " AND er.entity IN (" . getEntity("expensereport", 0) . ")";  // We don't share object for accountancy
 
 $sql .= $db->order($sortfield, $sortorder);
 
@@ -191,7 +187,7 @@ if (empty($conf->global->MAIN_DISABLE_FULL_SCANLIST))
 
 $sql .= $db->plimit($limit + 1, $offset);
 
-dol_syslog('accountancy/supplier/lines.php::list');
+dol_syslog('accountancy/expensereport/lines.php::list');
 $result = $db->query($sql);
 
 if ($result) {
@@ -201,10 +197,8 @@ if ($result) {
 	$param='';
 	if (! empty($contextpage) && $contextpage != $_SERVER["PHP_SELF"]) $param.='&contextpage='.$contextpage;
 	if ($limit > 0 && $limit != $conf->liste_limit) $param.='&limit='.$limit;
-	if ($search_invoice)
-		$param .= "&search_invoice=" . $search_invoice;
-	if ($search_ref)
-		$param .= "&search_ref=" . $search_ref;
+	if ($search_expensereport)
+		$param .= "&search_expensereport=" . $search_expensereport;
 	if ($search_label)
 		$param .= "&search_label=" . $search_label;
 	if ($search_desc)
@@ -225,98 +219,84 @@ if ($result) {
 	print '<input type="hidden" name="formfilteraction" id="formfilteraction" value="list">';
 	print '<input type="hidden" name="sortfield" value="'.$sortfield.'">';
 	print '<input type="hidden" name="sortorder" value="'.$sortorder.'">';
-		
-	print_barre_liste($langs->trans("InvoiceLinesDone"), $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, '', $num_lines, $nbtotalofrecords, 'title_accountancy', 0, '', '', $limit);
-	
-	print $langs->trans("DescVentilDoneSupplier") . '<br>';
-	
+
+	print_barre_liste($langs->trans("ExpenseReportLinesDone"), $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, '', $num_lines, $nbtotalofrecords, 'title_accountancy', 0, '', '', $limit);
+
+	print $langs->trans("DescVentilDoneExpenseReport") . '<br>';
+
 	print '<br><div class="inline-block divButAction">' . $langs->trans("ChangeAccount") . '<br>';
 	print $formventilation->select_account(GETPOST('account_parent'), 'account_parent', 1);
 	print '<input type="submit" class="button valignmiddle" value="' . $langs->trans("ChangeBinding") . '" /></div>';
-	
+
 	$moreforfilter = '';
-	
+
     print '<div class="div-table-responsive">';
 	print '<table class="tagtable liste'.($moreforfilter?" listwithfilterbefore":"").'">'."\n";
-	
+
 	print '<tr class="liste_titre">';
-	print_liste_field_titre($langs->trans("LineId"), $_SERVER["PHP_SELF"], "l.rowid", "", $param, '', $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("Invoice"), $_SERVER["PHP_SELF"], "f.ref", "", $param, '', $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("InvoiceLabel"), $_SERVER["PHP_SELF"], "f.libelle", "", $param, '', $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("Date"), $_SERVER["PHP_SELF"], "f.datef, f.ref, l.rowid", "", $param, 'align="center"', $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("ProductRef"), $_SERVER["PHP_SELF"], "p.ref", "", $param, '', $sortfield, $sortorder);
-	//print_liste_field_titre($langs->trans("ProductLabel"), $_SERVER["PHP_SELF"], "p.label", "", $param, '', $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("Description"), $_SERVER["PHP_SELF"], "l.description", "", $param, '', $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("Amount"), $_SERVER["PHP_SELF"], "l.total_ht", "", $param, 'align="right"', $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("VATRate"), $_SERVER["PHP_SELF"], "l.tva_tx", "", $param, 'align="center"', $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("Account"), $_SERVER["PHP_SELF"], "aa.account_number", "", $param, '', $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("LineId"), $_SERVER["PHP_SELF"], "erd.rowid", "", $param, '', $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("ExpenseReport"), $_SERVER["PHP_SELF"], "er.ref", "", $param, '', $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("Date"), $_SERVER["PHP_SELF"], "erd.date, erd.rowid", "", $param, 'align="center"', $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("TypeFees"), $_SERVER["PHP_SELF"], "f.label", "", $param, '', $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("Description"), $_SERVER["PHP_SELF"], "erd.comments", "", $param, '', $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("Amount"), $_SERVER["PHP_SELF"], "erd.total_ht", "", $param, 'align="right"', $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("VATRate"), $_SERVER["PHP_SELF"], "erd.tva_tx", "", $param, 'align="center"', $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("Account"), $_SERVER["PHP_SELF"], "aa.account_number", "", $param, 'align="center"', $sortfield, $sortorder);
+	print_liste_field_titre('');
 	print_liste_field_titre('', '', '', '', '', 'align="center"');
 	print "</tr>\n";
-	
+
 	print '<tr class="liste_titre">';
-    print '<td class="liste_titre"></td>';
-	print '<td><input type="text" class="flat maxwidth50" name="search_invoice" value="' . dol_escape_htmltag($search_invoice) . '"></td>';
 	print '<td class="liste_titre"></td>';
-	print '<td class="liste_titre"></td>';
-	print '<td class="liste_titre"><input type="text" class="flat maxwidth50" name="search_ref" value="' . dol_escape_htmltag($search_ref) . '"></td>';
-	//print '<td class="liste_titre"><input type="text" class="flat maxwidth50" name="search_label" value="' . dol_escape_htmltag($search_label) . '"></td>';
+	print '<td><input type="text" class="flat maxwidth50" name="search_expensereport" value="' . dol_escape_htmltag($search_expensereport) . '"></td>';
+	print '<td class="liste_titre" align="right"></td>';
+	print '<td class="liste_titre"><input type="text" class="flat maxwidth50" name="search_label" value="' . dol_escape_htmltag($search_label) . '"></td>';
 	print '<td class="liste_titre"><input type="text" class="flat maxwidth50" name="search_desc" value="' . dol_escape_htmltag($search_desc) . '"></td>';
 	print '<td class="liste_titre" align="right"><input type="text" class="flat maxwidth50" name="search_amount" value="' . dol_escape_htmltag($search_amount) . '"></td>';
 	print '<td class="liste_titre" align="center"><input type="text" class="flat maxwidth50" name="search_vat" size="1" value="' . dol_escape_htmltag($search_vat) . '"></td>';
-	print '<td class="liste_titre"><input type="text" class="flat maxwidth50" name="search_account" value="' . dol_escape_htmltag($search_account) . '"></td>';
+	print '<td class="liste_titre" align="center"><input type="text" class="flat maxwidth50" name="search_account" value="' . dol_escape_htmltag($search_account) . '"></td>';
+    print '<td class="liste_titre" align="right"></td>';
     print '<td class="liste_titre" align="right">';
-    $searchpitco=$form->showFilterAndCheckAddButtons(1);
-    print $searchpitco;
+    $searchpicto=$form->showFilterAndCheckAddButtons(1);
+    print $searchpicto;
     print '</td>';
 	print "</tr>\n";
-	
-	$facturefournisseur_static = new FactureFournisseur($db);
-	$product_static = new Product($db);
-	
+
+	$expensereport_static = new ExpenseReport($db);
+
 	$var = True;
 	while ( $i < min($num_lines, $limit) ) {
 		$objp = $db->fetch_object($result);
 		$var = ! $var;
-		$codecompta = length_accountg($objp->account_number) . ' - ' . $objp->label;
-		
-		$facturefournisseur_static->ref = $objp->facnumber;
-		$facturefournisseur_static->id = $objp->facid;
-		
-		$product_static->ref = $objp->product_ref;
-		$product_static->id = $objp->product_id;
-		$product_static->type = $objp->type;
-		$product_static->label = $objp->product_label;
+		$codeCompta = length_accountg($objp->account_number) . ' - ' . $objp->label;
+
+		$expensereport_static->ref = $objp->ref;
+		$expensereport_static->id = $objp->erid;
 		
 		print '<tr '. $bc[$var].'>';
-		
+
 		print '<td>' . $objp->rowid . '</td>';
-		
+
 		// Ref Invoice
-		print '<td>' . $facturefournisseur_static->getNomUrl(1) . '</td>';
+		print '<td>' . $expensereport_static->getNomUrl(1) . '</td>';
+
+		print '<td align="center">' . dol_print_date($db->jdate($objp->date), 'day') . '</td>';
 		
+		print '<td class="tdoverflow">' . $objp->fees_label . '</td>';
+
 		print '<td>';
-		print $objp->invoice_label;
-		print '</td>';
-		
-		print '<td align="center">' . dol_print_date($db->jdate($objp->datef), 'day') . '</td>';
-		
-		// Ref Product
-		print '<td>';
-		if ($product_static->id)
-			print $product_static->getNomUrl(1);
-	    if ($objp->product_label) print '<br>'.$objp->product_label;
-		print '</td>';
-		
-		print '<td>';
-		$text = dolGetFirstLineOfText(dol_string_nohtmltag($objp->description));
+		$text = dolGetFirstLineOfText(dol_string_nohtmltag($objp->comments));
 		$trunclength = defined('ACCOUNTING_LENGTH_DESCRIPTION') ? ACCOUNTING_LENGTH_DESCRIPTION : 32;
-		print $form->textwithtooltip(dol_trunc($text,$trunclength), $objp->description);
+		print $form->textwithtooltip(dol_trunc($text,$trunclength), $objp->comments);
 		print '</td>';
-		
+
 		print '<td align="right">' . price($objp->total_ht) . '</td>';
+
 		print '<td align="center">' . price($objp->tva_tx) . '</td>';
-		print '<td align="left">';
-		print $codecompta . ' <a href="./card.php?id=' . $objp->rowid . '">';
+
+		print '<td>' . $codeCompta . '</td>';
+
+		print '<td align="left"><a href="./card.php?id=' . $objp->rowid . '">';
 		print img_edit();
 		print '</a></td>';
 		
@@ -325,18 +305,18 @@ if ($result) {
 		print "</tr>";
 		$i ++;
 	}
-    print "</table>";
-    print "</div>";
-    
-    if ($nbtotalofrecords > $limit) {
-        print_barre_liste('', $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, '', $num_lines, $nbtotalofrecords, '', 0, '', '', $limit, 1);
-    }
-    
-    print '</form>';
+	
+	print "</table>";
+	print "</div>";
+	
+	if ($nbtotalofrecords > $limit) {
+	    print_barre_liste('', $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, '', $num_lines, $nbtotalofrecords, '', 0, '', '', $limit, 1);
+	}
+	
+	print '</form>';
 } else {
 	print $db->error();
 }
-
 
 
 llxFooter();
