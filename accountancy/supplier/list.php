@@ -177,6 +177,8 @@ $form = new Form($db);
 
 llxHeader('', $langs->trans("SuppliersVentilation"));
 
+$pcgver = $conf->global->CHARTOFACCOUNTS;
+
 // Supplier Invoice Lines
 $sql = "SELECT f.rowid as facid, f.ref, f.ref_supplier, f.libelle as invoice_label, f.datef,";
 $sql.= " l.fk_product, l.description, l.total_ht as price, l.rowid, l.fk_code_ventilation, l.product_type as type_l, l.tva_tx as tva_tx_line, ";
@@ -189,7 +191,8 @@ $sql.= " LEFT JOIN " . MAIN_DB_PREFIX . "accounting_account as aa ON p.accountan
 $sql.= " LEFT JOIN " . MAIN_DB_PREFIX . "accounting_system as accsys ON accsys.pcg_version = aa.fk_pcg_version";
 $sql.= " WHERE f.fk_statut > 0 AND l.fk_code_ventilation <= 0";
 $sql.= " AND product_type <= 2";
-$sql.= " AND (accsys.rowid='" . $conf->global->CHARTOFACCOUNTS . "' OR p.accountancy_code_buy IS NULL OR p.accountancy_code_buy ='')";
+$sql .= " AND (accsys.rowid='" . $conf->global->CHARTOFACCOUNTS . "' OR p.accountancy_code_sell IS NULL OR p.accountancy_code_buy ='' OR p.accountancy_code_buy  NOT IN
+	(SELECT aa.account_number FROM " . MAIN_DB_PREFIX . "accounting_account as aa , " . MAIN_DB_PREFIX . "accounting_system as asy  WHERE fk_pcg_version = asy.pcg_version AND asy.rowid = " . $pcgver . "))";
 // Add search filter like
 if (strlen(trim($search_invoice))) {
     $sql .= natural_search("f.ref",$search_invoice);
