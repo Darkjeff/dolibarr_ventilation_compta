@@ -414,7 +414,7 @@ if (is_array($coll_list)) {
 print '</table>';
 
 if ($special_report) {
-	// Get country 2-letters code
+	// Get country 2-letters code change ; compare country to have better match
 	global $mysoc;
 	$country_id = $mysoc->country_id;
 	$country = new Ccountry($db);
@@ -431,6 +431,7 @@ if ($special_report) {
 	print '<td align="left">' . $langs->trans("Num") . "</td>";
 	print '<td align="left">' . $langs->trans("Customer") . "</td>";
 	print "<td>" . $langs->trans("VATIntra") . "</td>";
+	print "<td>".$langs->trans("Country")."</td>";
 	print "<td align=\"right\">" . $langs->trans("AmountHTVATRealReceived") . "</td>";
 	print "<td align=\"right\">" . $vatcust . "</td>";
 	print "</tr>\n";
@@ -441,7 +442,7 @@ if ($special_report) {
 		$totalamount = 0;
 		$i = 1;
 		foreach ($coll_list as $coll) {
-			if (substr($coll->tva_intra, 0, 2) == $country->code) {
+			if (($coll->country) == $country->label) {
 				// Only use different-country VAT codes
 				continue;
 			}
@@ -466,6 +467,7 @@ if ($special_report) {
 				$find = array(' ', '.');
 				$replace = array('', '');
 				print '<td class="nowrap">' . $intra . "</td>";
+				print '<td class="nowrap">'.$coll->country."</td>";
 				print "<td class=\"nowrap\" align=\"right\">" . price($coll->amount) . "</td>";
 				print "<td class=\"nowrap\" align=\"right\">" . price($coll->tva) . "</td>";
 				$totalamount = $totalamount + $coll->amount;
@@ -512,6 +514,7 @@ if ($special_report) {
 	print '<td align="left">' . $langs->trans("Num") . "</td>";
 	print '<td align="left">' . $langs->trans("Customer") . "</td>";
 	print "<td>" . $langs->trans("VATIntra") . "</td>";
+	print "<td>".$langs->trans("Country")."</td>";
 	print "<td align=\"right\">" . $langs->trans("AmountHTVATRealReceived") . "</td>";
 	print "<td align=\"right\">" . $vatcust . "</td>";
 	print "</tr>\n";
@@ -522,7 +525,7 @@ if ($special_report) {
 		$totalamount = 0;
 		$i = 1;
 		foreach ($coll_list as $coll) {
-			if (substr($coll->tva_intra, 0, 2) != $country->code) {
+			if (($coll->country) != $country->label) {
 				// Only use same-country VAT codes
 				continue;
 			}
@@ -546,6 +549,7 @@ if ($special_report) {
 				$find = array(' ', '.');
 				$replace = array('', '');
 				print '<td class="nowrap">' . $intra . "</td>";
+				print '<td class="nowrap">'.$coll->country."</td>";
 				print "<td class=\"nowrap\" align=\"right\">" . price($coll->amount) . "</td>";
 				print "<td class=\"nowrap\" align=\"right\">" . price($coll->tva) . "</td>";
 				$totalamount = $totalamount + $coll->amount;
