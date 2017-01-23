@@ -362,6 +362,12 @@ if (! $error && $action == 'writebookkeeping') {
     					$bookkeeping->doc_ref = $objmid->ref_supplier . ' (' . $objmid->ref . ')'; // Ref on invoice
     				}
     			}
+    			
+    			if ($tabtype[$key] == 'sc') {
+    			$bookkeeping->doc_ref = $chargestatic->ref ;
+    			}
+    			
+    			
     
     			$result = $bookkeeping->create($user);
     			if ($result < 0) {
@@ -439,6 +445,11 @@ if (! $error && $action == 'writebookkeeping') {
     				//$bookkeeping->numero_compte = $conf->global->ACCOUNTING_ACCOUNT_CUSTOMER;
     				$bookkeeping->numero_compte = 'CodeNotDef';
     			}
+    			
+    			if ($tabtype[$key] == 'sc') {
+    			$bookkeeping->doc_ref = $chargestatic->ref ;
+    			}
+    			
     
     			$result = $bookkeeping->create($user);
     			if ($result < 0) {
