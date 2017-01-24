@@ -324,7 +324,7 @@ if (! $error && $action == 'writebookkeeping') {
     			$bookkeeping->fk_doc = $key;
     			$bookkeeping->fk_docdet = $val["fk_bank"];
     			$bookkeeping->numero_compte = $k;
-    			$bookkeeping->label_compte = $compte->label;
+    			$bookkeeping->label_compte = $val["type_payment"]. ' ' . $val["num_chq"] . ' ';
     			$bookkeeping->montant = ($mt < 0 ? - $mt : $mt);
     			$bookkeeping->sens = ($mt >= 0) ? 'D' : 'C';
     			$bookkeeping->debit = ($mt >= 0 ? $mt : 0);
@@ -335,6 +335,7 @@ if (! $error && $action == 'writebookkeeping') {
     
     			if ($tabtype[$key] == 'payment') {
     			    $bookkeeping->code_tiers = $tabcompany[$key]['code_compta'];
+    			    
     			    	
     				$sqlmid = 'SELECT fac.facnumber';
     				$sqlmid .= " FROM " . MAIN_DB_PREFIX . "facture fac ";
@@ -349,6 +350,7 @@ if (! $error && $action == 'writebookkeeping') {
     				}
     			} else if ($tabtype[$key] == 'payment_supplier') {
     			    $bookkeeping->code_tiers = $tabcompany[$key]['code_compta'];
+    			    
     			    	
     				$sqlmid = 'SELECT facf.ref_supplier, facf.ref';
     				$sqlmid .= " FROM " . MAIN_DB_PREFIX . "facture_fourn facf ";
@@ -423,7 +425,7 @@ if (! $error && $action == 'writebookkeeping') {
     					$bookkeeping->doc_ref = $objmid->facnumber;
     				}
     				$bookkeeping->code_tiers = $tabcompany[$key]['code_compta'];
-    				$bookkeeping->numero_compte = $k;
+    				$bookkeeping->numero_compte = $conf->global->ACCOUNTING_ACCOUNT_CUSTOMER;
     			} else if ($tabtype[$key] == 'payment_supplier') {           // If payment is payment of supplier invoice, we get ref of invoice
     
     				$sqlmid = 'SELECT facf.ref_supplier,facf.ref';
@@ -438,7 +440,7 @@ if (! $error && $action == 'writebookkeeping') {
     					$bookkeeping->doc_ref = $objmid->ref_supplier . ' (' . $objmid->ref . ')';
     				}
                     $bookkeeping->code_tiers = $tabcompany[$key]['code_compta'];
-    				$bookkeeping->numero_compte = $k;
+    				$bookkeeping->numero_compte = $conf->global->ACCOUNTING_ACCOUNT_SUPPLIER;
     			} else {
     			    // FIXME Should be a temporary account ???
     				$bookkeeping->doc_ref = $k;
