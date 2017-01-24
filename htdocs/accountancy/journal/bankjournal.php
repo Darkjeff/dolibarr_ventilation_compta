@@ -175,6 +175,7 @@ if ($result) {
 		$tabpay[$obj->rowid]["type_payment"] = $obj->fk_type;
 		$tabpay[$obj->rowid]["ref"] = $obj->label;
 		$tabpay[$obj->rowid]["fk_bank"] = $obj->rowid;
+		$tabpay[$obj->rowid]["num_chq"] = $obj->num_chq;
 		if (preg_match('/^\((.*)\)$/i', $obj->label, $reg)) {
 			$tabpay[$obj->rowid]["lib"] = $langs->trans($reg[1]);
 		} else {
@@ -393,6 +394,10 @@ if (! $error && $action == 'writebookkeeping') {
 		if (! $errorforline)
 		{
 		    // Line into thirdparty account
+		    
+		    if (is_array($tabtp[$key])) {
+		    
+		    
     		foreach ( $tabtp[$key] as $k => $mt ) {
     			$bookkeeping = new BookKeeping($db);
     			$bookkeeping->doc_date = $val["date"];
@@ -400,7 +405,6 @@ if (! $error && $action == 'writebookkeeping') {
     			$bookkeeping->doc_type = 'bank';
     			$bookkeeping->fk_doc = $key;
     			$bookkeeping->fk_docdet = $val["fk_bank"];
-    			$bookkeeping->label_compte = $tabcompany[$key]['name'];
     			$bookkeeping->montant = ($mt < 0 ? - $mt : $mt);
     			$bookkeeping->sens = ($mt < 0) ? 'D' : 'C';
     			$bookkeeping->debit = ($mt < 0 ? - $mt : 0);
@@ -412,6 +416,8 @@ if (! $error && $action == 'writebookkeeping') {
     			if (in_array($tabtype[$key], array('sc', 'payment_sc'))) {   // If payment is payment of social contribution
     				$bookkeeping->code_tiers = '';
     				$bookkeeping->numero_compte = $k;
+    				$bookkeeping->doc_ref = $chargestatic->ref ;
+    				$bookkeeping->label_compte = $chargestatic->ref ;
     			} else if ($tabtype[$key] == 'payment') {    // If payment is payment of customer invoice, we get ref of invoice
     				$sqlmid = 'SELECT fac.facnumber';
     				$sqlmid .= " FROM " . MAIN_DB_PREFIX . "facture fac ";
@@ -426,6 +432,7 @@ if (! $error && $action == 'writebookkeeping') {
     				}
     				$bookkeeping->code_tiers = $tabcompany[$key]['code_compta'];
     				$bookkeeping->numero_compte = $conf->global->ACCOUNTING_ACCOUNT_CUSTOMER;
+    				$bookkeeping->label_compte = $tabcompany[$key]['name'];
     			} else if ($tabtype[$key] == 'payment_supplier') {           // If payment is payment of supplier invoice, we get ref of invoice
     
     				$sqlmid = 'SELECT facf.ref_supplier,facf.ref';
@@ -441,17 +448,33 @@ if (! $error && $action == 'writebookkeeping') {
     				}
                     $bookkeeping->code_tiers = $tabcompany[$key]['code_compta'];
     				$bookkeeping->numero_compte = $conf->global->ACCOUNTING_ACCOUNT_SUPPLIER;
+    				$bookkeeping->label_compte = $tabcompany[$key]['name'];
     			} else {
     			    // FIXME Should be a temporary account ???
     				$bookkeeping->doc_ref = $k;
     				//$bookkeeping->numero_compte = $conf->global->ACCOUNTING_ACCOUNT_CUSTOMER;
     				$bookkeeping->numero_compte = 'CodeNotDef';
     			}
-    			
-    			if ($tabtype[$key] == 'sc') {
-    			$bookkeeping->doc_ref = $chargestatic->ref ;
     			}
-    			
+    		} else {
+    			foreach ( $tabbq[$key] as $k => $mt ) {
+    			$bookkeeping->doc_date = $val["date"];
+    			$bookkeeping->doc_ref = $val["ref"];
+    			$bookkeeping->doc_type = 'bank';
+    			$bookkeeping->fk_doc = $key;
+    			$bookkeeping->fk_docdet = $val["fk_bank"];
+    			$bookkeeping->numero_compte = $conf->global->ACCOUNTING_ACCOUNT_SUSPENSE;
+    			$bookkeeping->label_compte = $val["type_payment"]. ' ' . $val["num_chq"] . ' ';
+    			// todo change - with montant
+    			$bookkeeping->montant = ($mt < 0 ? - $mt : $mt);
+    			$bookkeeping->sens = ($mt >= 0) ? 'D' : 'C';
+    			$bookkeeping->debit = ($mt <= 0 ? $mt : 0);
+    			$bookkeeping->credit = ($mt > 0 ? - $mt : 0);
+    			$bookkeeping->code_journal = $journal;
+    			$bookkeeping->fk_user_author = $user->id;
+    			$bookkeeping->date_create = $now;
+    			}
+    			}
     
     			$result = $bookkeeping->create($user);
     			if ($result < 0) {
@@ -459,7 +482,7 @@ if (! $error && $action == 'writebookkeeping') {
     				$errorforline++;
     				setEventMessages($bookkeeping->error, $bookkeeping->errors, 'errors');
     			}
-    		}
+    		//}
 		}
 		
 		if (! $errorforline)
