@@ -299,6 +299,7 @@ if ($result) {
 var_dump($tabpay);
 var_dump($tabbq);
 var_dump($tabtp);
+var_dump($tabtp);
 */
 
 // Write bookkeeping
@@ -367,7 +368,7 @@ if (! $error && $action == 'writebookkeeping') {
     			}
     			
     			if ($tabtype[$key] == 'sc') {
-    			$bookkeeping->doc_ref = $chargestatic->ref ;
+    			$bookkeeping->doc_ref = $langs->trans('SocialContribution') ;
     			}
     			
     			
@@ -414,10 +415,22 @@ if (! $error && $action == 'writebookkeeping') {
     			$bookkeeping->date_create = $now;
     
     			if (in_array($tabtype[$key], array('sc', 'payment_sc'))) {   // If payment is payment of social contribution
+    				$sqlmid = 'SELECT ch.libelle';
+    				$sqlmid .= " FROM " . MAIN_DB_PREFIX . "chargesociales ch ";
+    				$sqlmid .= " INNER JOIN " . MAIN_DB_PREFIX . "paiementcharge as paych ON  paych.fk_charge=ch.rowid";
+    				$sqlmid .= " WHERE paych.fk_bank=" . $key;
+    				dol_syslog("accountancy/journal/bankjournal.php:: sqlmid=" . $sqlmid, LOG_DEBUG);
+    				$resultmid = $db->query($sqlmid);
+    				if ($resultmid) {
+    					$objmid = $db->fetch_object($resultmid);
+    					$bookkeeping->label_compte = $objmid->libelle;
+    				}
     				$bookkeeping->code_tiers = '';
     				$bookkeeping->numero_compte = $k;
-    				$bookkeeping->doc_ref = $chargestatic->ref ;
-    				$bookkeeping->label_compte = $chargestatic->ref ;
+    				$bookkeeping->doc_ref = $langs->trans('SocialContribution') ;
+    				
+    				
+    				
     			} else if ($tabtype[$key] == 'payment') {    // If payment is payment of customer invoice, we get ref of invoice
     				$sqlmid = 'SELECT fac.facnumber';
     				$sqlmid .= " FROM " . MAIN_DB_PREFIX . "facture fac ";
