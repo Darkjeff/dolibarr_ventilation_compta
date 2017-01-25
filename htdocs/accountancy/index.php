@@ -1,6 +1,7 @@
 <?php
 /* Copyright (C) 2016     Laurent Destailleur      <eldy@users.sourceforge.net>
  * Copyright (C) 2016     Alexandre Spangaro       <aspangaro@zendsi.com>
+ * Copyright (C) 2017     Elarifr                  <github@accedinfo.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,6 +58,20 @@ $langs->load("loans");
 llxHeader('', $langs->trans("AccountancyArea"));
 
 print load_fiche_titre($langs->trans("AccountancyArea"), '', 'title_accountancy');
+
+//ALERT FOR SQL UPDATE
+$filename="./sql/update.sql";
+if (file_exists($filename))
+{
+    echo "<b>ok i have found an update.sql file to run for accountancy !</b>";
+    print "<br>\n";
+    print "SQL Update provided to Dolibarr Accountancy Subscription 2017 by <a href='http://accedinfo.com'>Elbaz Ari - Accedinfo.com</a>.<br />Take contact with Olivier to get a free copy of ExtraBackup and Extract update module to manage easy update. Elarifr";
+    print "<br>\n";
+    print '<a class="butAction" href="../accountancy/sql/index.php">' . $langs->trans("UpdateSql") . '</a>';
+    print "<br>\n";
+    print "<br>\n";
+}
+
 
 $step = 0;
 
