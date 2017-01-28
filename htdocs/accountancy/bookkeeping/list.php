@@ -103,7 +103,44 @@ if ($action != 'export_csv' && ! isset($_POST['begin']) && ! isset($_GET['begin'
     $search_date_end = dol_mktime(0, 0, 0, 12, 31, dol_print_date(dol_now(), '%Y'));
 }
 
+// Get object canvas (By default, this is not defined, so standard usage of dolibarr)
+$canvas=GETPOST("canvas");
+$objcanvas=null;
+if (! empty($canvas))
+{
+    require_once DOL_DOCUMENT_ROOT.'/core/class/canvas.class.php';
+    $objcanvas = new Canvas($db,$action);
+    $objcanvas->getCanvas('bookkeeping','list',$canvas);
+}
 
+// Security check : todo
+
+// Definition of fields for lists
+
+$arrayfields=array(
+    't.piece_num'=>array('label'=>$langs->trans("TransactionNumShort"), 'checked'=>1),
+    't.doc_date'=>array('label'=>$langs->trans("Docdate"), 'checked'=>1),
+    't.doc_type'=>array('label'=>$langs->trans("Doctype"), 'checked'=>0),
+    't.doc_ref'=>array('label'=>$langs->trans("Docref"), 'checked'=>1),
+    't.numero_compte'=>array('label'=>$langs->trans("AccountAccountingShort"), 'checked'=>1),
+    't.code_tiers'=>array('label'=>$langs->trans("Code_tiers"), 'checked'=>1),
+    't.label_compte'=>array('label'=>$langs->trans("Labelcompte"), 'checked'=>1),
+    't.debit'=>array('label'=>$langs->trans("Debit"), 'checked'=>1),
+    't.credit'=>array('label'=>$langs->trans("Credit"), 'checked'=>1),
+    't.montant'=>array('label'=>$langs->trans("Amount"), 'checked'=>0),
+    't.sens'=>array('label'=>$langs->trans("Sens"), 'checked'=>0),
+    't.code_journal'=>array('label'=>$langs->trans("Codejournal"), 'checked'=>1),
+    't.validated'=>array('label'=>$langs->trans("validated"), 'checked'=>0)
+);
+
+// Extra fields
+if (is_array($extrafields->attribute_label) && count($extrafields->attribute_label))
+{
+   foreach($extrafields->attribute_label as $key => $val) 
+   {
+       $arrayfields["ef.".$key]=array('label'=>$extrafields->attribute_label[$key], 'checked'=>$extrafields->attribute_list[$key], 'position'=>$extrafields->attribute_pos[$key]);
+   }
+}
 
 
 /*
@@ -112,6 +149,8 @@ if ($action != 'export_csv' && ! isset($_POST['begin']) && ! isset($_GET['begin'
 
 if (GETPOST('cancel')) { $action='list'; $massaction=''; }
 if (! GETPOST('confirmmassaction') && $massaction != 'presend' && $massaction != 'confirm_presend') { $massaction=''; }
+
+include DOL_DOCUMENT_ROOT.'/core/actions_changeselectedfields.inc.php';
 
 if (GETPOST("button_removefilter_x") || GETPOST("button_removefilter.x") || GETPOST("button_removefilter")) // All tests are required to be compatible with all browsers
 {
@@ -130,6 +169,7 @@ if (GETPOST("button_removefilter_x") || GETPOST("button_removefilter.x") || GETP
 	$search_ledger_code = '';
 	$search_date_start = '';
 	$search_date_end = '';
+	$search_array_options=array();
 }
 
 if ($action == 'delbookkeeping') {
