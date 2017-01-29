@@ -34,6 +34,9 @@ require_once DOL_DOCUMENT_ROOT . '/core/lib/date.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/accountancy/class/html.formventilation.class.php';
 require_once DOL_DOCUMENT_ROOT . '/accountancy/class/accountingaccount.class.php';
 require_once DOL_DOCUMENT_ROOT . '/product/class/product.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/class/html.formother.class.php';
+if (! empty($conf->categorie->enabled))
+	require_once DOL_DOCUMENT_ROOT.'/categories/class/categorie.class.php';
 
 // Langs
 $langs->load("companies");
@@ -65,7 +68,7 @@ $search_desc = GETPOST('search_desc', 'alpha');
 $search_current_account = GETPOST('search_current_account', 'alpha');
 $search_current_account_valid = GETPOST('search_current_account_valid', 'alpha');
 if ($search_current_account_valid == '') $search_current_account_valid='withoutvalidaccount';
-
+$search_categ = GETPOST("search_categ",'int');
 $accounting_product_mode = GETPOST('accounting_product_mode', 'alpha');
 $btn_changeaccount = GETPOST('changeaccount');
 $btn_changetype = GETPOST('changetype');
@@ -183,6 +186,7 @@ if ($action == 'update') {
 /*
  * View
  */
+$htmlother=new FormOther($db);
 
 $form = new FormVentilation($db);
 
@@ -210,6 +214,7 @@ if (empty($pcgvercode)) $pcgvercode=$pcgverid;
 $sql = "SELECT p.rowid, p.ref, p.label, p.description, p.tosell, p.tobuy, p.accountancy_code_sell, p.accountancy_code_buy, p.tms, p.fk_product_type as product_type,";
 $sql.= " aa.rowid as aaid";
 $sql.= " FROM " . MAIN_DB_PREFIX . "product as p";
+    if (! empty($search_categ) || ! empty($catid)) $sql.= ' LEFT JOIN '.MAIN_DB_PREFIX."categorie_product as cp ON p.rowid = cp.fk_product"; // We'll need this table joined to the select in order to filter by categ
 $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."accounting_account as aa ON";
 if ($accounting_product_mode == 'ACCOUNTANCY_BUY') {
     $sql.=" p.accountancy_code_buy = aa.account_number AND aa.fk_pcg_version = '" . $pcgvercode . "'";
@@ -236,6 +241,12 @@ if ($search_current_account_valid == 'withvalidaccount')
 {
     $sql .= " AND aa.account_number IS NOT NULL";
 }
+    if ($catid > 0)    $sql.= " AND cp.fk_categorie = ".$catid;
+    if ($catid == -2)  $sql.= " AND cp.fk_categorie IS NULL";
+    if ($search_categ > 0)   $sql.= " AND cp.fk_categorie = ".$db->escape($search_categ);
+    if ($search_categ == -2) $sql.= " AND cp.fk_categorie IS NULL";
+
+
 // Add search filter like
 if (strlen(trim($search_ref))) {
 	$sql .= natural_search("p.ref",$search_ref);
@@ -271,6 +282,10 @@ if ($result)
     if ($search_desc > 0) $param.="&search_desc=".urlencode($search_desc);
     if ($search_current_account > 0) $param.="&search_current_account=".urlencode($search_current_account);
     if ($search_current_account_valid && $search_current_account_valid != '-1') $param.="&search_current_account_valid=".urlencode($search_current_account_valid);
+    if ($search_categ > 0) $param.="&amp;search_categ=".$search_categ;
+    if ($seach_categ) $param.=($search_categ?"&amp;search_categ=".$search_categ:"");
+
+    
     
     print '<form action="' . $_SERVER["PHP_SELF"] . '" method="post">';
     if ($optioncss != '') print '<input type="hidden" name="optioncss" value="'.$optioncss.'">';
@@ -309,7 +324,35 @@ if ($result)
 	$selectedfields=$form->multiSelectArrayWithCheckbox('selectedfields', $arrayfields, $varpage);	// This also change content of $arrayfields
 	
 	$texte=$langs->trans("ListOfProductsServices");
+		
 	print_barre_liste($texte, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, '', $num, $nbtotalofrecords, '', 0, '', '', $limit);
+	
+	if (! empty($catid))
+    	{
+    		print "<div id='ways'>";
+    		$c = new Categorie($db);
+    		$ways = $c->print_all_ways(' &gt; ','accountancy/admin/productaccount.php');
+    		print " &gt; ".$ways[0]."<br>\n";
+    		print "</div><br>";
+    	}
+	$moreforfilter='';
+	if (! empty($conf->categorie->enabled))
+    	{
+            $moreforfilter.='<div class="divsearchfield">';
+			$moreforfilter.=$langs->trans('Categories'). ': ';
+    		$moreforfilter.=$htmlother->select_categories(Categorie::TYPE_PRODUCT,$search_categ,'search_categ',1);
+    		$moreforfilter.='</div>';
+    	}
+	if ($moreforfilter)
+    		{
+        		print '<div class="liste_titre liste_titre_bydiv centpercent">';
+    		    print $moreforfilter;
+            	$parameters=array();
+            	$reshook=$hookmanager->executeHooks('printFieldPreListTitle',$parameters);    // Note that $action and $object may have been modified by hook
+        	    print $hookmanager->resPrint;
+    		    print '</div>';
+    		}
+	
 	
 	print '<table class="liste '.($moreforfilter?"listwithfilterbefore":"").'">';
 	print '<tr class="liste_titre">';
