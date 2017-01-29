@@ -367,8 +367,19 @@ if (! $error && $action == 'writebookkeeping') {
     				}
     			}
     			
-    			if ($tabtype[$key] == 'sc') {
-    			$bookkeeping->doc_ref = $langs->trans('SocialContribution') ;
+    				if (in_array($tabtype[$key], array('sc', 'payment_sc'))) {   // If payment is payment of social contribution
+    				$sqlmid = 'SELECT ch.libelle';
+    				$sqlmid .= " FROM " . MAIN_DB_PREFIX . "chargesociales ch ";
+    				$sqlmid .= " INNER JOIN " . MAIN_DB_PREFIX . "paiementcharge as paych ON  paych.fk_charge=ch.rowid";
+    				$sqlmid .= " WHERE paych.fk_bank=" . $key;
+    				dol_syslog("accountancy/journal/bankjournal.php:: sqlmid=" . $sqlmid, LOG_DEBUG);
+    				$resultmid = $db->query($sqlmid);
+    				if ($resultmid) {
+    					$objmid = $db->fetch_object($resultmid);
+    					$bookkeeping->doc_ref =$objmid->libelle ;
+    				}
+    				
+    				
     			}
     			
     			
@@ -415,19 +426,21 @@ if (! $error && $action == 'writebookkeeping') {
     			$bookkeeping->date_create = $now;
     
     			if (in_array($tabtype[$key], array('sc', 'payment_sc'))) {   // If payment is payment of social contribution
-    				$sqlmid = 'SELECT ch.libelle';
+    				$sqlmid = 'SELECT ch.libelle, t.libelle as labelc';
     				$sqlmid .= " FROM " . MAIN_DB_PREFIX . "chargesociales ch ";
     				$sqlmid .= " INNER JOIN " . MAIN_DB_PREFIX . "paiementcharge as paych ON  paych.fk_charge=ch.rowid";
+    				$sqlmid .= " INNER JOIN " . MAIN_DB_PREFIX . "c_chargesociales as t ON  ch.fk_type=t.id";
     				$sqlmid .= " WHERE paych.fk_bank=" . $key;
     				dol_syslog("accountancy/journal/bankjournal.php:: sqlmid=" . $sqlmid, LOG_DEBUG);
     				$resultmid = $db->query($sqlmid);
     				if ($resultmid) {
     					$objmid = $db->fetch_object($resultmid);
-    					$bookkeeping->label_compte = $objmid->libelle;
+    					$bookkeeping->label_compte = $objmid->labelc;
+    					$bookkeeping->doc_ref = $objmid->libelle ;
     				}
     				$bookkeeping->code_tiers = '';
     				$bookkeeping->numero_compte = $k;
-    				$bookkeeping->doc_ref = $langs->trans('SocialContribution') ;
+    				
     				
     				
     				
@@ -829,7 +842,9 @@ if (empty($action) || $action == 'view') {
 			} else {
 				print "<td>" . $bank_code_journal->label . " - " . $val['soclib'] . "</td>";
 			}
-			print "<td>" . $val["type_payment"] . "</td>";
+			//print "<td>" . $val["type_payment"] . "</td>";
+			print "<td>" .$val["type_payment"]. "-" . $val["num_chq"] .  "</td>";
+			
 			print "<td align='right'>" . ($mt >= 0 ? price($mt) : '') . "</td>";
 			print "<td align='right'>" . ($mt < 0 ? price(- $mt) : '') . "</td>";
 			print "</tr>";
@@ -852,7 +867,8 @@ if (empty($action) || $action == 'view') {
         			else print $accountoshow;
 					print "</td>";
 					print "<td>" . $reflabel . ' ' . $val['soclib'] . "</td>";
-					print "<td>" . $val["type_payment"] . "</td>";
+					//print "<td>" . $val["type_payment"] . "</td>";
+					print "<td>"  .$val["type_payment"]. "-" . $val["num_chq"] .  "</td>";
 					print "<td align='right'>" . ($mt < 0 ? price(- $mt) : '') . "</td>";
 					print "<td align='right'>" . ($mt >= 0 ? price($mt) : '') . "</td>";
 					print "</tr>";
