@@ -159,11 +159,14 @@ if ($result) {
 
 		// Set accountancy code (for bank and thirdparty)
 		$compta_bank = $obj->account_number;
-		if ($obj->label == '(SupplierInvoicePayment)')
+		$labelst = substr($obj->label, 0 ,14);
+		if ($obj->label == '(SupplierInvoicePayment)' or $labelst == 'facture fourni')
+		//if ($obj->label == '(SupplierInvoicePayment)' )
 			$compta_soc = (! empty($obj->code_compta_fournisseur) ? $obj->code_compta_fournisseur : $account_supplier);
-		if ($obj->label == '(CustomerInvoicePayment)')
+		if ($obj->label == '(CustomerInvoicePayment)' or $labelst == 'facture client')
+		//if ($obj->label == '(CustomerInvoicePayment)' )
 			$compta_soc = (! empty($obj->code_compta) ? $obj->code_compta : $account_customer);
-
+		
 		$tabcompany[$obj->rowid] = array (
 				'id' => $obj->socid,
 				'name' => $obj->name,
