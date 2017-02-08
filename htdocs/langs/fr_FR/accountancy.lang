@@ -209,6 +209,7 @@ Modelcsv_ciel=Export vers Sage Ciel Compta ou Compta Evolution
 Modelcsv_quadratus=Export vers Quadratus QuadraCompta
 Modelcsv_ebp=Export vers EBP
 Modelcsv_cogilog=Export vers Cogilog
+ChartofaccountsId=Plan comptable Id
 
 ## Tools - Init accounting account on product / service
 InitAccountancy=Initialisation comptabilité
