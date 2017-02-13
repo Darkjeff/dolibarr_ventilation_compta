@@ -1,11 +1,12 @@
-<?php
+﻿<?php
 /*
  * Copyright (C) 2007-2012	Laurent Destailleur	<eldy@users.sourceforge.net>
  * Copyright (C) 2014		Juanjo Menent		<jmenent@2byte.es>
  * Copyright (C) 2015		Florian Henry		<florian.henry@open-concept.pro>
  * Copyright (C) 2015		Raphaël Doursenaud	<rdoursenaud@gpcsolutions.fr>
  * Copyright (C) 2016		Pierre-Henry Favre	<phf@atm-consulting.fr>
- * Copyright (C) 2016		Alexandre Spangaro	<aspangaro.dolibarr@gmail.com>
+ * Copyright (C) 2016-2017	Alexandre Spangaro	<aspangaro@zendsi.com>
+ * Copyright (C) 2013-2017 Olivier Geffroy		<jeff@jeffinfo.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,6 +48,7 @@ class AccountancyExport
 	public static $EXPORT_TYPE_QUADRATUS = 6;
 	public static $EXPORT_TYPE_EBP = 7;
 	public static $EXPORT_TYPE_COGILOG = 8;
+	public static $EXPORT_TYPE_FEC = 9;
 
 	/**
 	 *
@@ -96,6 +98,7 @@ class AccountancyExport
 				self::$EXPORT_TYPE_QUADRATUS => $langs->trans('Modelcsv_quadratus'),
 				self::$EXPORT_TYPE_EBP => $langs->trans('Modelcsv_ebp'),
 				self::$EXPORT_TYPE_COGILOG => $langs->trans('Modelcsv_cogilog'),
+				self::$EXPORT_TYPE_FEC => $langs->trans('Modelcsv_fec'),
 		);
 	}
 
@@ -144,6 +147,9 @@ class AccountancyExport
 				break;
 			case self::$EXPORT_TYPE_COGILOG :
 				$this->exportCogilog($TData);
+				break;
+			case self::$EXPORT_TYPE_FEC :
+				$this->exportFEC($TData);
 				break;
 			default:
 				$this->errors[] = $langs->trans('accountancy_error_modelnotfound');
@@ -218,12 +224,14 @@ class AccountancyExport
 			print $line->label_compte . $this->separator;
 			print $date . $this->separator;
 			if ($line->sens=='D') {
-				print price($line->montant) . $this->separator;
-				print '' . $this->separator;
-			}elseif ($line->sens=='C') {
-				print '' . $this->separator;
-				print price($line->montant) . $this->separator;
-			}
+                print '"'.price($line->montant).'"'. $this->separator;
+                print '' . $this->separator;
+            }elseif ($line->sens=='C') {
+                print '' . $this->separator;
+                print '"'.price($line->montant)/'"'. $this->separator;
+            }
+
+
 			print $line->doc_ref . $this->separator;
 			print $line->label_compte . $this->separator;
 			print $this->end_line;
@@ -411,7 +419,61 @@ class AccountancyExport
 		}
 	}
 
+/**
++	 * Export format : FEC L.47A
++	 *
++	 * @param array $objectLines data
++	 *
++	 * @return void
++	 */
+	public function exportFEC($objectLines) {
 
+		$this->separator = '|';
+
+		print "JournalCode" . $this->separator;
+		print "JournalLib" . $this->separator;
+		print "EcritureNum" . $this->separator;
+		print "EcritureDate" . $this->separator;
+		print "CompteNum" . $this->separator;
+		print "CompteLib" . $this->separator;
+		print "CompAuxNum" . $this->separator;
+		print "CompAuxLib" . $this->separator;
+		print "PieceRef" . $this->separator;
+		print "PieceDate" . $this->separator;
+		print "EcritureLib" . $this->separator;
+		print "Debit" . $this->separator;
+		print "Credit" . $this->separator;
+		print "EcritureLet" . $this->separator;
+		print "DateLet" . $this->separator;
+		print "ValidDate" . $this->separator;
+		print "Montantdevise" . $this->separator;
+		print "Idevise" . $this->separator;
+
+		foreach ( $objectLines as $line ) {
+
+			$date = dol_print_date($line->doc_date, 'yyyymmdd');
+ 
+			print $line->code_journal . $this->separator;
+			print "Intitulé journal" . $this->separator; // Need works
+			print $line->id . $this->separator;
+			print "20170101" . $this->separator; // Need works
+			print length_accountg($line->numero_compte) . $this->separator;
+			print dol_trunc($line->label_compte,64,'right','UTF-8',1) . $this->separator;
+			print length_accounta($line->code_tiers) . $this->separator;
+			print dol_trunc("Compte auxiliaire",64,'right','UTF-8',1) . $this->separator; // Need works
+			print '"'.dol_trunc($line->piece_num,15,'right','UTF-8',1).'"'.$this->separator;
+			print $date . $this->separator;
+			print "Intitulé écriture" . $this->separator; // Need works
+			print price($line->debit) . $this->separator;
+			print price($line->credit) . $this->separator;
+			print $this->separator; // Need works Lettrage
+			print $this->separator; // Need works Lettrage
+			print $this->separator; // Need works Lettrage
+			print $this->separator; // Need works Multicurrency
+			print $this->separator; // Need works Multicurrency
+			print $this->end_line;
+		}
+	}
 
 	/**
 	 *
