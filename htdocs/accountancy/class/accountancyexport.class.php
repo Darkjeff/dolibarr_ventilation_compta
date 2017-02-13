@@ -101,11 +101,8 @@ class AccountancyExport
 				self::$EXPORT_TYPE_QUADRATUS => $langs->trans('Modelcsv_quadratus'),
 				self::$EXPORT_TYPE_EBP => $langs->trans('Modelcsv_ebp'),
 				self::$EXPORT_TYPE_COGILOG => $langs->trans('Modelcsv_cogilog'),
-<<<<<<< HEAD
 				self::$EXPORT_TYPE_FEC => $langs->trans('Modelcsv_fec'),
-=======
-				self::$EXPORT_TYPE_FEC => $langs->trans('Modelcsv_fec')
->>>>>>> origin/4.0
+
 		);
 	}
 
@@ -426,15 +423,7 @@ class AccountancyExport
 		}
 	}
 
-<<<<<<< HEAD
-/**
-+	 * Export format : FEC L.47A
-+	 *
-+	 * @param array $objectLines data
-+	 *
-+	 * @return void
-+	 */
-=======
+
 	/**
 	 * Export format : FEC L.47A
 	 *
@@ -442,7 +431,7 @@ class AccountancyExport
 	 *
 	 * @return void
 	 */
->>>>>>> origin/4.0
+
 	public function exportFEC($objectLines) {
 
 		$this->separator = '|';
@@ -465,19 +454,14 @@ class AccountancyExport
 		print "ValidDate" . $this->separator;
 		print "Montantdevise" . $this->separator;
 		print "Idevise" . $this->separator;
-<<<<<<< HEAD
 
-		foreach ( $objectLines as $line ) {
-
-			$date = dol_print_date($line->doc_date, 'yyyymmdd');
  
-=======
+
 
 		foreach ( $objectLines as $line ) {
 
 			$date = dol_print_date($line->doc_date, 'yyyymmdd');
 
->>>>>>> origin/4.0
 			print $line->code_journal . $this->separator;
 			print "Intitulé journal" . $this->separator; // Need works
 			print $line->id . $this->separator;
