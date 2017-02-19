@@ -137,14 +137,14 @@ class AccountancyCategory
 	 * @param array $cpts list of accounts array
 	 *
 	 * @return int <0 if KO, >0 if OK
-	 */
+	 
 	public function updateAccAcc($id_cat, $cpts = array()) {
 		global $conf;
 		$error = 0;
 
 		require_once DOL_DOCUMENT_ROOT.'/core/lib/accounting.lib.php';
 
-		$sql = "SELECT aa.rowid,aa.account_number ";
+		$sql = "SELECT aa.rowid, aa.account_number ";
 		$sql .= " FROM " . MAIN_DB_PREFIX . "accounting_account as aa";
 		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "accounting_system as asy ON aa.fk_pcg_version = asy.pcg_version";
 		$sql .= " AND asy.rowid = " . $conf->global->CHARTOFACCOUNTS;
@@ -188,7 +188,46 @@ class AccountancyCategory
 			return 1;
 		}
 	}
+*/
 
+public function updateAccAcc($id_cat, $cpts = array()) {
+		
+		global $conf, $langs;
+		$error = 0;
+
+
+		$sql = "UPDATE " . MAIN_DB_PREFIX . "accounting_account aa";
+		$sql.= " INNER JOIN " . MAIN_DB_PREFIX . "accounting_system as asy ON aa.fk_pcg_version = asy.pcg_version";
+		$sql.= " AND asy.rowid = " . $conf->global->CHARTOFACCOUNTS;
+		$sql.= " AND aa.active = 1";
+		$sql.= " SET fk_accounting_category=" . $id_cat;
+		$sql.= " WHERE aa.account_number IN (" . join(',',$cpts) .")";
+		
+		$this->db->begin();
+
+		dol_syslog(__METHOD__ . " sql=" . $sql, LOG_DEBUG);
+		$resql = $this->db->query($sql);
+		if (! $resql) {
+			$error ++;
+			$this->errors[] = "Error " . $this->db->lasterror();
+		}
+
+		// Commit or rollback
+		if ($error) {
+			foreach ($this->errors as $errmsg) {
+				dol_syslog(__METHOD__ . " " . $errmsg, LOG_ERR);
+				$this->error.=($this->error ? ', ' . $errmsg : $errmsg);
+			}
+			$this->db->rollback();
+
+			return -1 * $error;
+		} else {
+			$this->db->commit();
+
+			return 1;
+		}
+
+}
 	/**
 	 * Function to delete an accounting account from an accounting category
 	 *
