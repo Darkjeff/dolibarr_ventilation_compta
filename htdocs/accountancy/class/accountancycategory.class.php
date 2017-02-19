@@ -105,7 +105,7 @@ class AccountancyCategory
 		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "accounting_system as asy ON aa.fk_pcg_version = asy.pcg_version";
 		$sql .= " AND asy.rowid = " . $conf->global->CHARTOFACCOUNTS;
 		$sql .= " AND aa.active = 1)";
-		$sql .= " GROUP BY t.numero_compte, t.label_compte, t.doc_ref";
+		$sql .= " GROUP BY t.numero_compte";
 		$sql .= " ORDER BY t.numero_compte";
 
 		$this->lines_CptBk = array ();

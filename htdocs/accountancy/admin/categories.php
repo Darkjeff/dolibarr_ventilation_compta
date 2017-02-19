@@ -1,5 +1,5 @@
 <?php
-/* Copyright (C) 2016	   Jamal Elbaz		<jamelbaz@gmail.pro>
+/* Copyright (C) 2016	   Jamal Elbaz		<jamelbaz@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ require '../../main.inc.php';
 // Class
 require_once DOL_DOCUMENT_ROOT . '/core/lib/accounting.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/accountancy/class/accountancycategory.class.php';
+require_once DOL_DOCUMENT_ROOT . '/accountancy/class/bookkeeping.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.formaccounting.class.php';
 
 $error = 0;
@@ -91,45 +92,67 @@ $form = new Form($db);
 
 print load_fiche_titre($langs->trans('Categories'));
 
+
+
+dol_fiche_head();
+
+
+
+print '<table class="border" width="100%">';
+// Category
+
 print '<form name="add" action="' . $_SERVER["PHP_SELF"] . '" method="POST">' . "\n";
 print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 print '<input type="hidden" name="action" value="display">';
 
-dol_fiche_head();
-
-print '<table class="border" width="100%">';
-// Category
 print '<tr><td>' . $langs->trans("AccountingCategory") . '</td>';
 print '<td>';
 $formaccounting->select_accounting_category($cat_id, 'account_category', 1);
+
 print '<input class="button" type="submit" value="' . $langs->trans("Display") . '">';
+
+
 print '</td></tr>';
 
+print '</form>';
+
+// liste de comptes depuis BK
 if (! empty($cat_id)) {
 	$return = $AccCat->getCptBK($cat_id);
 	if ($return < 0) {
 		setEventMessages(null, $AccCat->errors, 'errors');
 	}
+	
+	print '<form name="add" action="' . $_SERVER["PHP_SELF"] . '" method="POST">' . "\n";
+	print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
+	print '<input type="hidden" name="action" value="addToCat">';
+	print '<input type="hidden" name="account_category" value="' . $cat_id . '">';
+	
 	print '<tr><td>' . $langs->trans("AddCompteFromBK") . '</td>';
 	print '<td>';
 	if (is_array($AccCat->lines_cptbk) && count($AccCat->lines_cptbk) > 0) {
-		print '<select size="' . count($obj) . '" name="cpt_bk[]" multiple>';
+		print '<select size="10" name="cpt_bk[]" multiple>';
 		foreach ( $AccCat->lines_cptbk as $cpt ) {
-			print '<option value="' . length_accountg($cpt->numero_compte) . '">' . length_accountg($cpt->numero_compte) . ' (' . $cpt->label_compte . ' ' . $cpt->doc_ref . ')</option>';
+		$object = new BookKeeping($db);
+		$description = $object->get_compte_desc($cpt->numero_compte); // Search description of the account
+		
+			print '<option value="' . length_accountg($cpt->numero_compte) . '">' . length_accountg($cpt->numero_compte) . ' '.$description.'</option>';
 		}
 		print '</select> - <input class="button" type="submit" id="" class="action-delete" value="' . $langs->trans("add") . '"> ';
 	}
 	print '</td></tr>';
+	
+	print '</form>';
 }
 
 print '</table>';
 
 dol_fiche_end();
 
-print '</form>';
 
 
-if ($action == 'display' || $action == 'delete') {
+
+if ($action == 'display' || $action == 'delete'  || $action == 'addToCat') {
 
 	print '<table class="noborder" width="100%">';
 
