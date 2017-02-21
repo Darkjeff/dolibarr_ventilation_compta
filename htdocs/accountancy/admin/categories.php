@@ -103,7 +103,7 @@ print '<tr><td>' . $langs->trans("AccountingCategory") . '</td>';
 print '<td>';
 $formaccounting->select_accounting_category($cat_id, 'account_category', 1, 0, 0, 1);
 
-print '<input class="button" type="submit" value="' . $langs->trans("Show") . '">';
+print '<input class="button" type="submit" value="' . $langs->trans("Select") . '">';
 
 
 print '</td></tr>';
@@ -125,7 +125,7 @@ if (! empty($cat_id)) {
 	print '<tr><td>' . $langs->trans("AddCompteFromBK") . '</td>';
 	print '<td>';
 	if (is_array($accountingcategory->lines_cptbk) && count($accountingcategory->lines_cptbk) > 0) {
-		print '<select size="10" name="cpt_bk[]" multiple>';
+		print '<select class="flat minwidth200" size="10" name="cpt_bk[]" multiple>';
 		foreach ( $accountingcategory->lines_cptbk as $cpt ) {
 		$object = new BookKeeping($db);
 		$description = $object->get_compte_desc($cpt->numero_compte); // Search description of the account

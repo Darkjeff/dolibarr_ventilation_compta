@@ -1,7 +1,7 @@
 <?php
 /* Copyright (C) 2013-2016	Olivier Geffroy		<jeff@jeffinfo.com>
  * Copyright (C) 2013-2016	Florian Henry		<florian.henry@open-concept.pro>
- * Copyright (C) 2013-2016	Alexandre Spangaro	<aspangaro.dolibarr@gmail.com>
+ * Copyright (C) 2013-2017	Alexandre Spangaro	<aspangaro@zendsi.com>
  * Copyright (C) 2016	  	Laurent Destailleur <eldy@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -90,13 +90,11 @@ $pagenext = $page + 1;
 if ($sortorder == "") $sortorder = "ASC";
 if ($sortfield == "") $sortfield = "t.rowid";
 
-
 $object = new BookKeeping($db);
 
 $formventilation = new FormVentilation($db);
 $formother = new FormOther($db);
 $form = new Form($db);
-
 
 if ($action != 'export_csv' && ! isset($_POST['begin']) && ! isset($_GET['begin']) && ! isset($_POST['formfilteraction'])) {
     $search_date_start = dol_mktime(0, 0, 0, 1, 1, dol_print_date(dol_now(), '%Y'));
@@ -172,74 +170,7 @@ if (GETPOST("button_removefilter_x") || GETPOST("button_removefilter.x") || GETP
 	$search_array_options=array();
 }
 
-if ($action == 'delbookkeeping') {
-
-	$import_key = GETPOST('importkey', 'alpha');
-
-	if (! empty($import_key)) {
-		$result = $object->deleteByImportkey($import_key);
-		if ($result < 0) {
-			setEventMessages($object->error, $object->errors, 'errors');
-		}
-		Header("Location: list.php");
-		exit();
-	}
-}
-if ($action == 'delbookkeepingyearconfirm') {
-
-	$delyear = GETPOST('delyear', 'int');
-	if ($delyear==-1) {
-		$delyear=0;
-	}
-	$deljournal = GETPOST('deljournal','alpha');
-	if ($deljournal==-1) {
-		$deljournal=0;
-	}
-
-	if (! empty($delyear) || ! empty($deljournal)) 
-	{
-		$result = $object->deleteByYearAndJournal($delyear,$deljournal);
-		if ($result < 0) {
-			setEventMessages($object->error, $object->errors, 'errors');
-		}
-		else
-		{
-		    setEventMessages("RecordDeleted", null, 'mesgs');
-		}
-		Header("Location: list.php");
-		exit;
-	}
-	else
-	{
-	    setEventMessages("NoRecordDeleted", null, 'warnings');
-	    Header("Location: list.php");
-	    exit;
-	}
-}
-if ($action == 'delmouvconfirm') {
-
-	$mvt_num = GETPOST('mvt_num', 'int');
-
-	if (! empty($mvt_num)) {
-		$result = $object->deleteMvtNum($mvt_num);
-		if ($result < 0) {
-		    setEventMessages($object->error, $object->errors, 'errors');
-		}
-		else
-		{
-		    setEventMessages($langs->trans("RecordDeleted"), null, 'mesgs');
-		}
-		Header("Location: list.php");
-		exit;
-	}
-}
-
-
-
-/*
- * View
- */
-
+// Must be after the remove filter action, before the export.
 $param = '';
 $filter = array ();
 if (! empty($search_date_start)) {
@@ -306,6 +237,68 @@ if (! empty($search_mvt_num)) {
     $param .= '&search_mvt_num=' . $search_mvt_num;
 }
 
+if ($action == 'delbookkeeping') {
+
+	$import_key = GETPOST('importkey', 'alpha');
+
+	if (! empty($import_key)) {
+		$result = $object->deleteByImportkey($import_key);
+		if ($result < 0) {
+			setEventMessages($object->error, $object->errors, 'errors');
+		}
+		Header("Location: list.php");
+		exit();
+	}
+}
+if ($action == 'delbookkeepingyearconfirm') {
+
+	$delyear = GETPOST('delyear', 'int');
+	if ($delyear==-1) {
+		$delyear=0;
+	}
+	$deljournal = GETPOST('deljournal','alpha');
+	if ($deljournal==-1) {
+		$deljournal=0;
+	}
+
+	if (! empty($delyear) || ! empty($deljournal)) 
+	{
+		$result = $object->deleteByYearAndJournal($delyear,$deljournal);
+		if ($result < 0) {
+			setEventMessages($object->error, $object->errors, 'errors');
+		}
+		else
+		{
+		    setEventMessages("RecordDeleted", null, 'mesgs');
+		}
+		Header("Location: list.php");
+		exit;
+	}
+	else
+	{
+	    setEventMessages("NoRecordDeleted", null, 'warnings');
+	    Header("Location: list.php");
+	    exit;
+	}
+}
+if ($action == 'delmouvconfirm') {
+
+	$mvt_num = GETPOST('mvt_num', 'int');
+
+	if (! empty($mvt_num)) {
+		$result = $object->deleteMvtNum($mvt_num);
+		if ($result < 0) {
+		    setEventMessages($object->error, $object->errors, 'errors');
+		}
+		else
+		{
+		    setEventMessages($langs->trans("RecordDeleted"), null, 'mesgs');
+		}
+		Header("Location: list.php");
+		exit;
+	}
+}
+
 if ($action == 'export_csv') {
 
     include DOL_DOCUMENT_ROOT . '/accountancy/class/accountancyexport.class.php';
@@ -326,6 +319,10 @@ if ($action == 'export_csv') {
         exit;
     }
 }
+
+/*
+ * View
+ */
 
 $title_page = $langs->trans("Bookkeeping");
 
