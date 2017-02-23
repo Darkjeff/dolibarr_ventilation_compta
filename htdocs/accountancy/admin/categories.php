@@ -130,7 +130,7 @@ if (! empty($cat_id)) {
 		$object = new BookKeeping($db);
 		$description = $object->get_compte_desc($cpt->numero_compte); // Search description of the account
 		
-			print '<option value="' . length_accountg($cpt->numero_compte) . '">' . length_accountg($cpt->numero_compte) . ' '.$description.'</option>';
+			print '<option value="' . $cpt->numero_compte . '">' . length_accountg($cpt->numero_compte) . ' '.$description.'</option>';
 		}
 		print '</select><br><input class="button" type="submit" id="" class="action-delete" value="' . $langs->trans("add") . '"> ';
 	}
@@ -148,11 +148,12 @@ dol_fiche_end();
 
 if ($action == 'display' || $action == 'delete'  || $action == 'addToCat') {
 
-	print '<table class="noborder" width="100%">\n';
+	print '<table class="noborder" width="100%">';
 	print '<tr class="liste_titre">';
 	print '<td>' . $langs->trans("AccountAccounting") . '</td>';
-	print '<td colspan="2">' . $langs->trans("Label") . '</td';
-	print '</tr>\n';
+	print '<td>' . $langs->trans("Label") . '</td>';
+	print '<td></td>';
+	print '</tr>';
 
 	if (! empty($cat_id)) {
 		$return = $accountingcategory->display($cat_id);
@@ -171,7 +172,7 @@ if ($action == 'display' || $action == 'delete'  || $action == 'addToCat') {
 				print img_delete($langs->trans("DeleteFromCat")).' ';
 				print $langs->trans("DeleteFromCat")."</a>";
 				print "</td>";
-				print "</tr>\n";
+				print "</tr>";
 				$j ++;
 			}
 		}
