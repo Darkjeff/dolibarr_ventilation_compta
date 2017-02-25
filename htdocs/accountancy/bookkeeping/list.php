@@ -39,6 +39,16 @@ $page = GETPOST("page");
 $sortorder = GETPOST("sortorder");
 $sortfield = GETPOST("sortfield");
 $action = GETPOST('action', 'alpha');
+$massaction=GETPOST('massaction','alpha');
+$cancel = GETPOST('cancel');
+$id = GETPOST('id', 'int');
+$rowid = GETPOST('rowid', 'int');
+
+$mesg = '';
+
+// Security check
+
+
 $search_mvt_num = GETPOST('search_mvt_num', 'int');
 $search_doc_type = GETPOST("search_doc_type");
 $search_doc_ref = GETPOST("search_doc_ref");
@@ -328,6 +338,12 @@ $title_page = $langs->trans("Bookkeeping");
 
 llxHeader('', $title_page);
 
+$sql = "SELECT t.rowid, t.doc_date, t.doc_type, t.doc_ref, t.fk_doc, t.fk_doctet, t.code_tiers, t.numero_compte, t.label_compte,";
+$sql .= "t.debit, t.credit, t.montant, t.sens, t.code_journal, t.piece_num, t.validated";
+$sql .= "FROM" . MAIN_DB_PREFIX . "accounting_bookkeeping as t";
+
+$sql .= $db->order($sortfield, $sortorder);
+
 // List
 
 $nbtotalofrecords = -1;
@@ -385,6 +401,8 @@ if ($action == 'delbookkeepingyear') {
 if (! empty($contextpage) && $contextpage != $_SERVER["PHP_SELF"]) $param.='&contextpage='.$contextpage;
 if ($limit > 0 && $limit != $conf->liste_limit) $param.='&limit='.$limit;
 
+
+
 print '<form method="POST" id="searchFormList" action="' . $_SERVER["PHP_SELF"] . '">';
 print '<input type="hidden" name="action" value="list">';
 if ($optioncss != '') print '<input type="hidden" name="optioncss" value="'.$optioncss.'">';
@@ -397,62 +415,79 @@ $button = '<a class="butAction" name="button_export_csv" href="'.$_SERVER["PHP_S
 if (count($filter)) $button.= $langs->trans("ExportFilteredList");
 else $button.= $langs->trans("ExportList");
 $button.= '</a>';
+$button.= '<a class="butAction" href="./card.php?action=create">' . $langs->trans("NewAccountingMvt") . '</a>';
+$button.= '<a class="butActionDelete" name="button_delmvt" href="'.$_SERVER["PHP_SELF"].'?action=delbookkeepingyear'.($param?'&'.$param:'').'">' . $langs->trans("DelBookKeeping") . '</a>';
 
 $groupby = ' <a href="./listbyaccount.php">' . $langs->trans("GroupByAccountAccounting") . '</a>';
 
 print_barre_liste($title_page, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $button, $result, $nbtotalofrecords, 'title_accountancy', 0, $groupby, '', $limit);
 
-print '<div class="tabsAction">' . "\n";
-print '<div class="inline-block divButAction"><a class="butAction" href="./card.php?action=create">' . $langs->trans("NewAccountingMvt") . '</a></div>';
-print '<div class="inline-block divButAction"><a class="butActionDelete" name="button_delmvt" href="'.$_SERVER["PHP_SELF"].'?action=delbookkeepingyear'.($param?'&'.$param:'').'">' . $langs->trans("DelBookKeeping") . '</a></div>';
+$varpage=empty($contextpage)?$_SERVER["PHP_SELF"]:$contextpage;
+	$selectedfields=$form->multiSelectArrayWithCheckbox('selectedfields', $arrayfields, $varpage);	// This also change content of $arrayfields
 
-print '</div>';
+    print '<div class="div-table-responsive">';
+    print '<table class="tagtable liste'.($moreforfilter?" listwithfilterbefore":"").'">'."\n";
+	print '<tr class="liste_titre">';
+	if (! empty($arrayfields['t.piece_num']['checked']))			print_liste_field_titre($arrayfields['t.piece_num']['label'], $_SERVER["PHP_SELF"],"t.piece_num","",$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.doc_date']['checked']))			print_liste_field_titre($arrayfields['t.doc_date']['label'], $_SERVER["PHP_SELF"],"t.doc_date","",$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.doc_type']['checked']))			print_liste_field_titre($arrayfields['t.doc_type']['label'], $_SERVER["PHP_SELF"],"t.doc_type", "", $param,'align="left"',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.doc_ref']['checked']))			print_liste_field_titre($arrayfields['t.doc_ref']['label'],$_SERVER["PHP_SELF"],'t.doc_ref','',$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.numero_compte']['checked']))		print_liste_field_titre($arrayfields['t.numero_compte']['label'],$_SERVER["PHP_SELF"],'t.numero_compte','',$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.code_tiers']['checked']))		print_liste_field_titre($arrayfields['t.code_tiers']['label'],$_SERVER["PHP_SELF"],'t.code_tiers','',$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.label_compte']['checked']))		print_liste_field_titre($arrayfields['t.label_compte']['label'],$_SERVER["PHP_SELF"],'t.label_compte','',$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.debit']['checked']))			print_liste_field_titre($arrayfields['t.debit']['label'],$_SERVER["PHP_SELF"],'t.debit','',$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.credit']['checked']))			print_liste_field_titre($arrayfields['t.credit']['label'],$_SERVER["PHP_SELF"],'t.credit','',$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.montant']['checked']))			print_liste_field_titre($arrayfields['t.montant']['label'],$_SERVER["PHP_SELF"],'t.montant','',$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.sens']['checked']))				print_liste_field_titre($arrayfields['t.sens']['label'],$_SERVER["PHP_SELF"],'t.sens','',$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.code_journal']['checked']))		print_liste_field_titre($arrayfields['t.code_journal']['label'],$_SERVER["PHP_SELF"],'t.code_journal','',$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.validated']['checked']))			print_liste_field_titre($arrayfields['t.validated']['label'],$_SERVER["PHP_SELF"],'t.validated','',$param,'',$sortfield,$sortorder);
+	print_liste_field_titre($selectedfields, $_SERVER["PHP_SELF"],"",'','','align="right"',$sortfield,$sortorder,'maxwidthsearch ');
+	print "</tr>\n";
 
-print '<table class="noborder" width="100%">';
+	// Filters
+	
 print '<tr class="liste_titre">';
-print_liste_field_titre($langs->trans("TransactionNumShort"), $_SERVER['PHP_SELF'], "t.piece_num", "", $param, "", $sortfield, $sortorder);
-print_liste_field_titre($langs->trans("Docdate"), $_SERVER['PHP_SELF'], "t.doc_date", "", $param, 'align="center"', $sortfield, $sortorder);
-print_liste_field_titre($langs->trans("Docref"), $_SERVER['PHP_SELF'], "t.doc_ref", "", $param, "", $sortfield, $sortorder);
-print_liste_field_titre($langs->trans("AccountAccountingShort"), $_SERVER['PHP_SELF'], "t.numero_compte", "", $param, "", $sortfield, $sortorder);
-print_liste_field_titre($langs->trans("Code_tiers"), $_SERVER['PHP_SELF'], "t.code_tiers", "", $param, "", $sortfield, $sortorder);
-print_liste_field_titre($langs->trans("Labelcompte"), $_SERVER['PHP_SELF'], "t.label_compte", "", $param, "", $sortfield, $sortorder);
-print_liste_field_titre($langs->trans("Debit"), $_SERVER['PHP_SELF'], "t.debit", "", $param, 'align="right"', $sortfield, $sortorder);
-print_liste_field_titre($langs->trans("Credit"), $_SERVER['PHP_SELF'], "t.credit", "", $param, 'align="right"', $sortfield, $sortorder);
-print_liste_field_titre($langs->trans("Codejournal"), $_SERVER['PHP_SELF'], "t.code_journal", "", $param, 'align="right"', $sortfield, $sortorder);
-print_liste_field_titre('', $_SERVER["PHP_SELF"], "", $param, "", 'width="60" align="center"', $sortfield, $sortorder);
-print "</tr>\n";
-
-print '<tr class="liste_titre">';
-print '<td class="liste_titre center"><input type="text" name="search_mvt_num" size="6" value="' . $search_mvt_num . '"></td>';
-print '<td class="liste_titre center">';
+if (! empty($arrayfields['t.piece_num']['checked']))			print '<td class="liste_titre center"><input type="text" name="search_mvt_num" size="6" value="' . $search_mvt_num . '"></td>';
+if (! empty($arrayfields['t.doc_date']['checked']))		{
+print '<td>';	
 print $langs->trans('From') . ': ';
 print $form->select_date($search_date_start, 'date_start', 0, 0, 1);
 print '<br>';
 print $langs->trans('to') . ': ';
 print $form->select_date($search_date_end, 'date_end', 0, 0, 1);
 print '</td>';
-print '<td class="liste_titre center"><input type="text" name="search_doc_ref" size="8" value="' . $search_doc_ref . '"></td>';
-print '<td class="liste_titre center">';
+}
+if (! empty($arrayfields['t.doc_type']['checked']))			print '<td class="liste_titre">&nbsp;</td>';
+if (! empty($arrayfields['t.doc_ref']['checked']))			print '<td class="liste_titre center"><input type="text" name="search_doc_ref" size="8" value="' . $search_doc_ref . '"></td>';
+if (! empty($arrayfields['t.numero_compte']['checked']))	{
+print '<td>';	
 print $langs->trans('From');
 print $formventilation->select_account($search_accountancy_code_start, 'search_accountancy_code_start', 1, array (), 1, 1, '');
 print '<br>';
 print $langs->trans('to');
 print $formventilation->select_account($search_accountancy_code_end, 'search_accountancy_code_end', 1, array (), 1, 1, '');
 print '</td>';
-print '<td class="liste_titre center">';
+}
+if (! empty($arrayfields['t.code_tiers']['checked']))
+print '<td>';
 print $langs->trans('From');
 print $formventilation->select_auxaccount($search_accountancy_aux_code_start, 'search_accountancy_aux_code_start', 1);
 print '<br>';
 print $langs->trans('to');
 print $formventilation->select_auxaccount($search_accountancy_aux_code_end, 'search_accountancy_aux_code_end', 1);
 print '</td>';
-print '<td class="liste_titre">';
-print '<input type="text" size="7" class="flat" name="search_mvt_label" value="' . $search_mvt_label . '"/>';
-print '</td>';
-print '<td class="liste_titre center">&nbsp;</td>';
-print '<td class="liste_titre center">&nbsp;</td>';
-print '<td class="liste_titre center" align="right"><input type="text" name="search_ledger_code" size="3" value="' . $search_ledger_code . '"></td>';
+if (! empty($arrayfields['t.label_compte']['checked']))		print '<td class="liste_titre center"><input type="text" name="search_mvt_label" size="15" value="' .  $search_mvt_label . '"></td>';
+if (! empty($arrayfields['t.debit']['checked']))			print '<td class="liste_titre">&nbsp;</td>';
+if (! empty($arrayfields['t.credit']['checked']))			print '<td class="liste_titre">&nbsp;</td>';
+if (! empty($arrayfields['t.montant']['checked']))			print '<td class="liste_titre">&nbsp;</td>';
+if (! empty($arrayfields['t.sens']['checked']))				print '<td class="liste_titre">&nbsp;</td>';
+if (! empty($arrayfields['t.code_journal']['checked']))		print '<td class="liste_titre center" align="right"><input type="text" name="search_ledger_code" size="3" value="' . $search_ledger_code . '"></td>';
+if (! empty($arrayfields['t.validated']['checked']))			print '<td class="liste_titre">&nbsp;</td>';
+
+
+// Action column
 print '<td class="liste_titre center" align="right">';
+//$searchpicto=$form->showFilterAndCheckAddButtons($massactionbutton?1:0, 'checkforselect', 1);
 $searchpitco=$form->showFilterAndCheckAddButtons(0);
 print $searchpitco;
 print '</td>';
@@ -470,18 +505,46 @@ foreach ($object->lines as $line ) {
 	$total_credit += $line->credit;
 
 	print '<tr '. $bc[$var].'>';
-
+if (! empty($arrayfields['t.piece_num']['checked'])) {
 	print '<td><a href="./card.php?piece_num=' . $line->piece_num . '">' . $line->piece_num . '</a></td>';
+	}
+if (! empty($arrayfields['t.doc_date']['checked'])) {
 	print '<td align="center">' . dol_print_date($line->doc_date, 'day') . '</td>';
+	}
+if (! empty($arrayfields['t.doc_type']['checked'])) {
+	print '<td>' . $line->doc_type . '</td>';	
+	}
+if (! empty($arrayfields['t.doc_ref']['checked'])) {	
 	print '<td>' . $line->doc_ref . '</td>';
+	}
+if (! empty($arrayfields['t.numero_compte']['checked'])) {	
 	print '<td>' . length_accountg($line->numero_compte) . '</td>';
+	}
+if (! empty($arrayfields['t.code_tiers']['checked'])) {	
 	print '<td>' . length_accounta($line->code_tiers) . '</td>';
+	}
+if (! empty($arrayfields['t.label_compte']['checked'])) {	
 	print '<td>' . $line->label_compte . '</td>';
+	}
+if (! empty($arrayfields['t.debit']['checked'])) {	
 	print '<td align="right">' . price($line->debit) . '</td>';
+	}
+if (! empty($arrayfields['t.credit']['checked'])) {	
 	print '<td align="right">' . price($line->credit) . '</td>';
+	}
+if (! empty($arrayfields['t.montant']['checked'])) {	
+	print '<td align="right">' . price($line->montant) . '</td>';
+	}	
+if (! empty($arrayfields['t.sens']['checked'])) {		
+	print '<td align="center">' . $line->sens . '</td>';
+	}
+if (! empty($arrayfields['t.code_journal']['checked'])) {
 	print '<td align="center">' . $line->code_journal . '</td>';
+	}
+if (! empty($arrayfields['t.validated']['checked'])) {
+	print '<td align="center">' . $line->validated . '</td>';
+	}
 	print '<td align="center">';
-	print '<a href="./card.php?piece_num=' . $line->piece_num . '">' . img_edit() . '</a>&nbsp;';
 	print '<a href="' . $_SERVER['PHP_SELF'] . '?action=delmouv&mvt_num=' . $line->piece_num . $param . '&page=' . $page . '">' . img_delete() . '</a>';
 	print '</td>';
 	print "</tr>\n";
