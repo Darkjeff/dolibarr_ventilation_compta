@@ -341,6 +341,15 @@ llxHeader('', $title_page);
 $sql = "SELECT t.rowid, t.doc_date, t.doc_type, t.doc_ref, t.fk_doc, t.fk_doctet, t.code_tiers, t.numero_compte, t.label_compte,";
 $sql .= "t.debit, t.credit, t.montant, t.sens, t.code_journal, t.piece_num, t.validated";
 $sql .= "FROM" . MAIN_DB_PREFIX . "accounting_bookkeeping as t";
+if ($search_mvt_num)				$sql .= natural_search("t.piece_num", $search_mvt_num);
+if ($search_doc_type)				$sql .= natural_search("t.doc_type", $search_doc_type);
+if ($search_doc_ref)				$sql .= natural_search("t.doc_ref", $search_doc_ref);
+if ($search_doc_date)				$sql .= natural_search("t.doc_date", $search_doc_date);
+if ($search_accountancy_code)		$sql .= natural_search("t.numero_compte", $search_accountancy_code);
+if ($search_accountancy_aux_code)	$sql .= natural_search("t.code_tiers", $search_accountancy_aux_code);
+if ($search_mvt_label)				$sql .= natural_search("t.label_compte", $search_mvt_label);
+if ($search_direction)				$sql .= natural_search("t.sens", $search_direction);
+if ($search_ledger_code)			$sql .= natural_search("t.code_journal", $search_ledger_code);
 
 $sql .= $db->order($sortfield, $sortorder);
 
@@ -456,7 +465,7 @@ print '<br>';
 print $langs->trans('to') . ': ';
 print $form->select_date($search_date_end, 'date_end', 0, 0, 1);
 print '</td>';
-}
+} 
 if (! empty($arrayfields['t.doc_type']['checked']))			print '<td class="liste_titre">&nbsp;</td>';
 if (! empty($arrayfields['t.doc_ref']['checked']))			print '<td class="liste_titre center"><input type="text" name="search_doc_ref" size="8" value="' . $search_doc_ref . '"></td>';
 if (! empty($arrayfields['t.numero_compte']['checked']))	{
@@ -468,7 +477,7 @@ print $langs->trans('to');
 print $formventilation->select_account($search_accountancy_code_end, 'search_accountancy_code_end', 1, array (), 1, 1, '');
 print '</td>';
 }
-if (! empty($arrayfields['t.code_tiers']['checked']))
+if (! empty($arrayfields['t.code_tiers']['checked'])) {
 print '<td>';
 print $langs->trans('From');
 print $formventilation->select_auxaccount($search_accountancy_aux_code_start, 'search_accountancy_aux_code_start', 1);
@@ -476,6 +485,7 @@ print '<br>';
 print $langs->trans('to');
 print $formventilation->select_auxaccount($search_accountancy_aux_code_end, 'search_accountancy_aux_code_end', 1);
 print '</td>';
+}
 if (! empty($arrayfields['t.label_compte']['checked']))		print '<td class="liste_titre center"><input type="text" name="search_mvt_label" size="15" value="' .  $search_mvt_label . '"></td>';
 if (! empty($arrayfields['t.debit']['checked']))			print '<td class="liste_titre">&nbsp;</td>';
 if (! empty($arrayfields['t.credit']['checked']))			print '<td class="liste_titre">&nbsp;</td>';
@@ -541,9 +551,22 @@ if (! empty($arrayfields['t.sens']['checked'])) {
 if (! empty($arrayfields['t.code_journal']['checked'])) {
 	print '<td align="center">' . $line->code_journal . '</td>';
 	}
-if (! empty($arrayfields['t.validated']['checked'])) {
-	print '<td align="center">' . $line->validated . '</td>';
-	}
+if (! empty($arrayfields['t.validated']['checked'])) 
+{
+			print '<td>';
+			if (empty($line->validated)) {
+				print '<a href="' . $_SERVER["PHP_SELF"] . '?id=' . $line->rowid . '&action=enable">';
+				print img_picto($langs->trans("Disabled"), 'switch_off');
+				print '</a>';
+			} else {
+				print '<a href="' . $_SERVER["PHP_SELF"] . '?id=' . $line->rowid . '&action=disable">';
+				print img_picto($langs->trans("Activated"), 'switch_on');
+				print '</a>';
+			}
+			print '</td>';
+}
+
+
 	print '<td align="center">';
 	print '<a href="' . $_SERVER['PHP_SELF'] . '?action=delmouv&mvt_num=' . $line->piece_num . $param . '&page=' . $page . '">' . img_delete() . '</a>';
 	print '</td>';

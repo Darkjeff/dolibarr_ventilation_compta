@@ -159,7 +159,7 @@ $acct->fetch($id);
 $now=dol_now();
 
 $sql = "SELECT b.rowid, b.dateo as do, b.datev as dv, b.amount, b.label, b.rappro, b.num_releve, b.num_chq, b.fk_type as type";
-$sql.= ", b.fk_bordereau, bc.amount , bc.nbcheque, bc.date_bordereau ";
+$sql.= ", b.fk_bordereau, b.amount , bc.nbcheque, bc.date_bordereau ";
 $sql.= ", bc.ref";
 $sql.= " FROM ".MAIN_DB_PREFIX."bank as b";
 $sql.= ' LEFT JOIN '.MAIN_DB_PREFIX.'bordereau_cheque as bc ON bc.rowid=b.fk_bordereau';
