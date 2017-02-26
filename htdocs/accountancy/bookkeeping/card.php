@@ -210,17 +210,6 @@ llxHeader();
 $html = new Form($db);
 $formventilation = new FormVentilation($db);
 
-/*
- *  Confirmation to delete the command
- */
-if ($action == 'delete') {
-	$formconfirm = $html->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $id, $langs->trans('DeleteMvt'), $langs->trans('ConfirmDeleteMvt'), 'confirm_delete', '', 0, 1);
-	print $formconfirm;
-}
-
-if ($action == 'create') {
-	print load_fiche_titre($langs->trans("CreateMvts"));
-
 	$code_journal_array = array (
 			$conf->global->ACCOUNTING_SELL_JOURNAL => $conf->global->ACCOUNTING_SELL_JOURNAL,
 			$conf->global->ACCOUNTING_PURCHASE_JOURNAL => $conf->global->ACCOUNTING_PURCHASE_JOURNAL,
@@ -228,7 +217,6 @@ if ($action == 'create') {
 			$conf->global->ACCOUNTING_MISCELLANEOUS_JOURNAL => $conf->global->ACCOUNTING_MISCELLANEOUS_JOURNAL,
 			$conf->global->ACCOUNTING_EXPENSEREPORT_JOURNAL => $conf->global->ACCOUNTING_EXPENSEREPORT_JOURNAL
 	);
-
 	$sql = 'SELECT DISTINCT accountancy_journal FROM ' . MAIN_DB_PREFIX . 'bank_account WHERE clos=0';
 	$resql = $db->query($sql);
 	if (! $resql) {
@@ -240,6 +228,20 @@ if ($action == 'create') {
 			}
 		}
 	}
+/*
+ *  Confirmation to delete the command
+ */
+if ($action == 'delete') {
+	$formconfirm = $html->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $id, $langs->trans('DeleteMvt'), $langs->trans('ConfirmDeleteMvt'), 'confirm_delete', '', 0, 1);
+	print $formconfirm;
+}
+
+if ($action == 'create') {
+	print load_fiche_titre($langs->trans("CreateMvts"));
+
+
+
+
 
 	$book = new BookKeeping($db);
 	$next_num_mvt = $book->getNextNumMvt();
@@ -309,12 +311,24 @@ if ($action == 'create') {
 		print '<td>' . $book->piece_num . '</td>';
 		print '</tr>';
 		print '<tr class="impair">';
-		print '<td>' . $langs->trans("Docdate") . '</td>';
+		print '<td>' . $langs->trans("Docdate") ;
+		print '<a href="'.$_SERVER["PHP_SELF"].'?action=editdate&amp;piece_num='.$book->piece_num.'">'.img_edit($langs->transnoentitiesnoconv('Edit'),1).'</a></td>';
+		if ($action == 'editdate') {
+		print '<td>' . $html->select_date('', 'doc_date', '', '', '', "create_mvt", 1, 1) . '</td>';
+		}
+		else {
 		print '<td>' . dol_print_date($book->doc_date, 'daytextshort') . '</td>';
+		}
 		print '</tr>';
 		print '<tr class="pair">';
-		print '<td>' . $langs->trans("Codejournal") . '</td>';
+		print '<td>' . $langs->trans("Codejournal")  ;
+		print '<a href="'.$_SERVER["PHP_SELF"].'?action=editjournal&amp;piece_num='.$book->piece_num.'">'.img_edit($langs->transnoentitiesnoconv('Edit'),1).'</a></td>';
+		if ($action == 'editjournal') {
+		print '<td>' . $html->selectarray('code_journal', $code_journal_array) . '</td>';
+		}
+		else {
 		print '<td>' . $book->code_journal . '</td>';
+		}
 		print '</tr>';
 		print '<tr class="impair">';
 		print '<td>' . $langs->trans("Docref") . '</td>';
