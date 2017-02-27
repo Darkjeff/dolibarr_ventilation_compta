@@ -1,5 +1,5 @@
 <?php
-/* Copyright (C) 2016		Jamal Elbaz			<jamelbaz@gmail.pro>
+/* Copyright (C) 2016/17		Jamal Elbaz			<jamelbaz@gmail.com>
  * Copyright (C) 2016 		Alexandre Spangaro	<aspangaro.dolibarr@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -108,17 +108,131 @@ foreach($months as $k => $v){
 }
 print	'</tr>';
 
-$cats = $AccCat->getCatsCpts();
-if ($cats < 0) dol_print_error($db, $AccCat->error, $AccCat->errors);
+// $cats = $AccCat->getCatsCpts();
+// if ($cats < 0) dol_print_error($db, $AccCat->error, $AccCat->errors);
 
-$catsCalcule = $AccCat->getCatsCal();
+//All categories
+$cats = $AccCat->getCats();
 if ($catsCalcule < 0) dol_print_error($db, $AccCat->error, $AccCat->errors);
 
 $j=1;
 $sommes = array();
 
-if (!empty($cats))
-{
+foreach($cats as $cat ){
+	if(!empty($cat['category_type'])){ // category calculed
+	
+		$formula = $cat['formula'];
+
+		print "<tr class='liste_titre'>";
+		print '<td colspan="2">' . $cat['label'] . '</td>';
+
+		$vars = array();
+
+		// Previous Fiscal year (N-1)
+		foreach($sommes as $code => $det){
+			$vars[$code] = $det['NP'];
+		}
+		
+		
+		$result = strtr($formula, $vars);
+		
+		
+		$r = $AccCat->calculate($result);
+		
+		print '<td align="right">' . price($r) . '</td>';
+		$code = $cat['code']; // code categorie de calcule
+		$sommes[$code]['NP'] += $r;
+
+		// Current fiscal year (N)
+		foreach($sommes as $code => $det){
+			$vars[$code] = $det['N'];
+		}
+		
+		$result = strtr($formula, $vars);
+		
+		$r = $AccCat->calculate($result);
+		
+		print '<td align="right">' . price($r) . '</td>';
+		$sommes[$code]['N'] += $r;
+
+		// Detail by month
+		foreach($months as $k => $v){
+			foreach($sommes as $code => $det){
+				$vars[$code] = $det['M'][$k];
+			}
+			$result = strtr($formula, $vars);
+			$r = $AccCat->calculate($result);
+			print '<td align="right">' . price($r) . '</td>';
+			$sommes[$code]['M'][$k] += $r;
+		}
+
+		//print '<td colspan="15">' . $catsCalcule[$p]['formula'] . '</td>';
+		print "</tr>\n";
+		//unset($catsCalcule[$p]); // j'élimine la catégorie calculée après affichage
+		
+	}else{ // normal category
+	
+		print "<tr class='liste_titre'>";
+		print '<td colspan="17">' . $cat['label'] . '</td>';
+		print "</tr>\n";
+	
+	
+		// get cpts of category
+		$cpts = $AccCat->getCptsCat($cat['rowid']);
+		//print_r($cpts);
+		
+		foreach($cpts as $i => $cpt){
+			$var = ! $var;
+
+			$code = $cat['code'];
+			
+			// N-1
+			$return = $AccCat->getResult($cpt['account_number'], 0, $year_current -1, $cpt['dc']);
+			
+			if ($return < 0) {
+				setEventMessages(null, $AccCat->errors, 'errors');
+				$resultNP=0;
+			} else {
+				$resultNP=$AccCat->sdc;
+			}
+			
+			//N
+			$return = $AccCat->getResult($cpt['account_number'], 0, $year_current, $cpt['dc']);
+			if ($return < 0) {
+				setEventMessages(null, $AccCat->errors, 'errors');
+				$resultN=0;
+			} else {
+				$resultN=$AccCat->sdc;
+			}
+			
+			$sommes[$code]['NP'] += $resultNP;
+			$sommes[$code]['N'] += $resultN;
+			print '<tr'. $bc[$var].'>';
+			print '<td>' . $cpt['account_number'] . '</td>';
+			print '<td>' . $cpt['name_cpt'] . '</td>';
+			print '<td>' . price($resultNP)  . '</td>';
+			print '<td>' . price($resultN) . '</td>';
+
+			foreach($months as $k => $v){
+				$return = $AccCat->getResult($cpt['account_number'], $k+1, $year_current, $cpt['dc']);
+				if ($return < 0) {
+					setEventMessages(null, $AccCat->errors, 'errors');
+					$resultM=0;
+				} else {
+					$resultM=$AccCat->sdc;
+				}
+				$sommes[$code]['M'][$k] += $resultM;
+				print '<td align="right">' . price($resultM) . '</td>';
+			}
+
+			print "</tr>\n";
+		}
+	}
+	
+}
+
+/*
+if (!empty($cats)){
 	foreach ($cats as $name_cat => $cpts)
 	{
 		print "<tr class='liste_titre'>";
@@ -261,7 +375,7 @@ if (!empty($cats))
 		print "</tr>\n";
 	}
 }
-
+*/
 print "</table>";
 print '</div>';
 

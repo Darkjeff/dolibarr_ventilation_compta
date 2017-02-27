@@ -1,5 +1,5 @@
 <?php
-/* Copyright (C) 2016		Jamal Elbaz			<jamelbaz@gmail.pro>
+/* Copyright (C) 2016/17		Jamal Elbaz			<jamelbaz@gmail.com>
  * Copyright (C) 2016 		Alexandre Spangaro	<aspangaro.dolibarr@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -190,7 +190,7 @@ class AccountancyCategory
 	}
 */
 
-public function updateAccAcc($id_cat, $cpts = array()) {
+	public function updateAccAcc($id_cat, $cpts = array()) {
 		
 		global $conf, $langs;
 		$error = 0;
@@ -227,7 +227,7 @@ public function updateAccAcc($id_cat, $cpts = array()) {
 			return 1;
 		}
 
-}
+	}
 	/**
 	 * Function to delete an accounting account from an accounting category
 	 *
@@ -267,11 +267,11 @@ public function updateAccAcc($id_cat, $cpts = array()) {
 	}
 
 	/**
-	 * Function to know all category from accounting account
+	 * get cpts of category
 	 *
 	 * @return array       Result in table
 	 */
-	public function getCatsCpts() {
+	public function getCptsCat($cat_id) {
 		global $mysoc;
 		$sql = "";
 
@@ -280,22 +280,11 @@ public function updateAccAcc($id_cat, $cpts = array()) {
 			exit();
 		}
 
-		if (! empty($mysoc->country_id)) {
-			$sql = "SELECT t.rowid, t.account_number, t.label as name_cpt, cat.code, cat.position, cat.label as name_cat, cat.sens ";
-			$sql .= " FROM " . MAIN_DB_PREFIX . "accounting_account as t, " . MAIN_DB_PREFIX . "c_accounting_category as cat";
-			$sql .= " WHERE t.fk_accounting_category IN ( SELECT c.rowid ";
-			$sql .= " FROM " . MAIN_DB_PREFIX . "c_accounting_category as c";
-			$sql .= " WHERE c.active = 1";
-			$sql .= " AND c.fk_country = " . $mysoc->country_id . ")";
-			$sql .= " AND cat.rowid = t.fk_accounting_category";
-			$sql .= " ORDER BY cat.position ASC";
-		} else {
-			$sql = "SELECT c.rowid, c.code, c.label, c.category_type ";
-			$sql .= " FROM " . MAIN_DB_PREFIX . "c_accounting_category as c, " . MAIN_DB_PREFIX . "c_country as co";
-			$sql .= " WHERE c.active = 1 AND c.fk_country = co.rowid";
-			$sql .= " AND co.code = '" . $mysoc->country_code . "'";
-			$sql .= " ORDER BY c.position ASC";
-		}
+		$sql = "SELECT t.rowid, t.account_number, t.label as name_cpt";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "accounting_account as t";
+		$sql .= " WHERE t.fk_accounting_category = ".$cat_id;
+		
+		//echo $sql;
 
 		$resql = $this->db->query($sql);
 		if ($resql) {
@@ -306,13 +295,10 @@ public function updateAccAcc($id_cat, $cpts = array()) {
 			if ($num) {
 				while ( $obj = $this->db->fetch_object($resql) ) {
 					$name_cat = $obj->name_cat;
-					$data[$name_cat][$i] = array (
+					$data[] = array (
 							'id' => $obj->rowid,
-							'code' => $obj->code,
-							'position' => $obj->position,
 							'account_number' => $obj->account_number,
 							'name_cpt' => $obj->name_cpt,
-							'sens' => $obj->sens
 					);
 					$i ++;
 				}
@@ -374,7 +360,7 @@ public function updateAccAcc($id_cat, $cpts = array()) {
 	 *
 	 * @return array Result in table
 	 */
-	public function getCatsCal() {
+	public function getCats() {
 		global $db, $langs, $user, $mysoc;
 
 		if (empty($mysoc->country_id) && empty($mysoc->country_code)) {
@@ -383,15 +369,15 @@ public function updateAccAcc($id_cat, $cpts = array()) {
 		}
 
 		if (! empty($mysoc->country_id)) {
-			$sql = "SELECT c.rowid, c.code, c.label, c.formula, c.position";
+			$sql = "SELECT c.rowid, c.code, c.label, c.formula, c.position, c.category_type";
 			$sql .= " FROM " . MAIN_DB_PREFIX . "c_accounting_category as c";
-			$sql .= " WHERE c.active = 1 AND c.category_type = 1 ";
+			$sql .= " WHERE c.active = 1 ";
 			$sql .= " AND c.fk_country = " . $mysoc->country_id;
 			$sql .= " ORDER BY c.position ASC";
 		} else {
-			$sql = "SELECT c.rowid, c.code, c.label, c.formula, c.position";
+			$sql = "SELECT c.rowid, c.code, c.label, c.formula, c.position, c.category_type";
 			$sql .= " FROM " . MAIN_DB_PREFIX . "c_accounting_category as c, " . MAIN_DB_PREFIX . "c_country as co";
-			$sql .= " WHERE c.active = 1 AND c.category_type = 1 AND c.fk_country = co.rowid";
+			$sql .= " WHERE c.active = 1 AND c.fk_country = co.rowid";
 			$sql .= " AND co.code = '" . $mysoc->country_code . "'";
 			$sql .= " ORDER BY c.position ASC";
 		}
@@ -406,11 +392,14 @@ public function updateAccAcc($id_cat, $cpts = array()) {
 			if ($num) {
 				while ( $i < $num ) {
 					$obj = $this->db->fetch_object($resql);
-					$position = $obj->position;
-					$data[$position] = array (
+					
+					$data[] = array (
+							'rowid' => $obj->rowid,
 							'code' => $obj->code,
+							'position' => $obj->position,
 							'label' => $obj->label,
-							'formula' => $obj->formula
+							'formula' => $obj->formula,
+							'category_type' => $obj->category_type
 					);
 					$i ++;
 				}
@@ -424,4 +413,59 @@ public function updateAccAcc($id_cat, $cpts = array()) {
 			return - 1;
 		}
 	}
+	
+	
+	// calcule 
+	
+	const PATTERN = '/(?:\-?\d+(?:\.?\d+)?[\+\-\*\/])+\-?\d+(?:\.?\d+)?/';
+
+	const PARENTHESIS_DEPTH = 10;
+
+	public function calculate($input){
+		if(strpos($input, '+') != null || strpos($input, '-') != null || strpos($input, '/') != null || strpos($input, '*') != null){
+			//  Remove white spaces and invalid math chars
+			$input = str_replace(',', '.', $input);
+			$input = preg_replace('[^0-9\.\+\-\*\/\(\)]', '', $input);
+
+			//  Calculate each of the parenthesis from the top
+			$i = 0;
+			while(strpos($input, '(') || strpos($input, ')')){
+				$input = preg_replace_callback('/\(([^\(\)]+)\)/', 'self::callback', $input);
+
+				$i++;
+				if($i > self::PARENTHESIS_DEPTH){
+					break;
+				}
+			}
+
+			//  Calculate the result
+			if(preg_match(self::PATTERN, $input, $match)){
+				return $this->compute($match[0]);
+			}
+
+			return 0;
+		}
+
+		return $input;
+	}
+
+	private function compute($input){
+		$compute = create_function('', 'return '.$input.';');
+
+		return 0 + $compute();
+	}
+
+	private function callback($input){
+		if(is_numeric($input[1])){
+			return $input[1];
+		}
+		elseif(preg_match(self::PATTERN, $input[1], $match)){
+			return $this->compute($match[0]);
+		}
+
+		return 0;
+	}
+		
+
+
 }
