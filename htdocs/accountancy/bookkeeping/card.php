@@ -204,33 +204,31 @@ else if ($action == "confirm_create") {
 
 if ($action == 'setdate') {
 
-$datedoc = dol_mktime(0, 0, 0, GETPOST('date_month'), GETPOST('date_day'), GETPOST('date_year'));
+$datedoc = dol_mktime(0, 0, 0, GETPOST('doc_datemonth'), GETPOST('doc_dateday'), GETPOST('doc_dateyear'));
 
 $error = 0;
 
 $db->begin();
 
-$sql = 'UPDATE ' . MAIN_DB_PREFIX . ' accounting_bookkeeping SET';
-$sql .= ' doc_date = ' .$datedoc ;
-$sql .= ' WHERE piece_num=' . $piece_num ;
+	$sql1 = "UPDATE " . MAIN_DB_PREFIX . "accounting_bookkeeping as ab";
+	$sql1 .= " SET ab.doc_date=" . $db->idate($datedoc);
+	$sql1 .= ' WHERE ab.piece_num=' . $piece_num ;
 
 
-		
-		$resql1 = $db->query($sql);
-		if (! $resql1) {
-			$error ++;
-			$errors[] = 'Error ' . $db->lasterror();
-			dol_syslog(__METHOD__ . ' ' . join(',', $errors), LOG_ERR);
-		}
-	if ($error) {
-			$db->rollback();
-			
-			return - 1 * $error;
-		} else {
-			$db->commit();
-			
-			setEventMessage('EditDateOk', 'mesgs');
-		}
+
+	dol_syslog('accountancy/bookkeeping/card.php::setdate sql= ' . $sql1);
+	$resql1 = $db->query($sql1);
+	if (! $resql1) {
+		$error ++;
+		setEventMessages($db->lasterror(), null, 'errors');
+	}
+	if (! $error) {
+		$db->commit();
+		setEventMessages($langs->trans('Save'), null, 'mesgs');
+	} else {
+		$db->rollback();
+		setEventMessages($db->lasterror(), null, 'errors');
+	}
 	}
 /*
  * View
@@ -356,7 +354,7 @@ if ($action == 'create') {
 			print '<form name="setdate" action="' . $_SERVER["PHP_SELF"] . '?piece_num=' . $book->piece_num . '" method="post">';
 			print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '">';
 			print '<input type="hidden" name="action" value="setdate">';
-			$form->select_date($book->doc_date ? $book->doc_date : - 1, 'date_', '', '', '', "setdate");
+			$form->select_date($book->doc_date ? $book->doc_date : - 1, 'doc_date', '', '', '', "setdate");
 			print '<input type="submit" class="button" value="' . $langs->trans('Modify') . '">';
 			print '</form>';
 		//print '<td>' . $html->select_date('', 'doc_date', '', '', '', "create_mvt", 1, 1) . '</td>';
