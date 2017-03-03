@@ -372,9 +372,9 @@ class AccountancyExport
 			$Tab['montant'] = str_pad(abs($data->montant), 12, '0', STR_PAD_LEFT); // TODO manage negative amount
 			$Tab['contrepartie'] = str_repeat(' ', 8);
 			if (! empty($data->doc_date))
-				$Tab['date_date'] = dol_print_date($data->date_echeance, $conf->global->ACCOUNTING_EXPORT_DATE);
+				$Tab['doc_date'] = dol_print_date($data->doc_date, $conf->global->ACCOUNTING_EXPORT_DATE);
 			else
-				$Tab['date_date'] = '000000';
+				$Tab['doc_date'] = '000000';
 			$Tab['lettrage'] = str_repeat(' ', 5);
 			$Tab['num_piece'] = str_pad(self::trunc($data->piece_num, 5), 5);
 			$Tab['filler2'] = str_repeat(' ', 20);
