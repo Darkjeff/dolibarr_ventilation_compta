@@ -371,10 +371,10 @@ class AccountancyExport
 			$Tab['signe_montant'] = '+';
 			$Tab['montant'] = str_pad(abs($data->montant), 12, '0', STR_PAD_LEFT); // TODO manage negative amount
 			$Tab['contrepartie'] = str_repeat(' ', 8);
-			if (! empty($data->date_echeance))
-				$Tab['date_echeance'] = dol_print_date($data->date_echeance, $conf->global->ACCOUNTING_EXPORT_DATE);
+			if (! empty($data->doc_date))
+				$Tab['date_date'] = dol_print_date($data->date_echeance, $conf->global->ACCOUNTING_EXPORT_DATE);
 			else
-				$Tab['date_echeance'] = '000000';
+				$Tab['date_date'] = '000000';
 			$Tab['lettrage'] = str_repeat(' ', 5);
 			$Tab['num_piece'] = str_pad(self::trunc($data->piece_num, 5), 5);
 			$Tab['filler2'] = str_repeat(' ', 20);
@@ -413,8 +413,8 @@ class AccountancyExport
 			print $line->code_journal . $this->separator;
 			print length_accountg($line->numero_compte) . $this->separator;
 			print substr(length_accountg($line->numero_compte),0,2) . $this->separator;
-			print '"'.dol_trunc($line->label_compte,40,'right','UTF-8',1).'"' . $this->separator;
-			print '"'.dol_trunc($line->piece_num,15,'right','UTF-8',1).'"'.$this->separator;
+			print dol_trunc($line->label_compte,40,'right','UTF-8',1) . $this->separator;
+			print dol_trunc($line->piece_num,15,'right','UTF-8',1) . $this->separator;
 			print price2num($line->montant).$this->separator;
 			print $line->sens.$this->separator;
 			print $date . $this->separator;
