@@ -202,6 +202,36 @@ else if ($action == "confirm_create") {
 	}
 }
 
+if ($action == 'setdate') {
+
+$datedoc = dol_mktime(0, 0, 0, GETPOST('date_month'), GETPOST('date_day'), GETPOST('date_year'));
+
+$error = 0;
+
+$db->begin();
+
+$sql = 'UPDATE ' . MAIN_DB_PREFIX . ' accounting_bookkeeping SET';
+$sql .= ' doc_date = ' .$datedoc ;
+$sql .= ' WHERE piece_num=' . $piece_num ;
+
+
+		
+		$resql1 = $db->query($sql);
+		if (! $resql1) {
+			$error ++;
+			$errors[] = 'Error ' . $db->lasterror();
+			dol_syslog(__METHOD__ . ' ' . join(',', $errors), LOG_ERR);
+		}
+	if ($error) {
+			$db->rollback();
+			
+			return - 1 * $error;
+		} else {
+			$db->commit();
+			
+			setEventMessage('EditDateOk', 'mesgs');
+		}
+	}
 /*
  * View
  */
@@ -304,22 +334,42 @@ if ($action == 'create') {
 		print load_fiche_titre($langs->trans("UpdateMvts"), '<a href="list.php">' . $langs->trans('BackToList') . '</a>');
 
 		dol_fiche_head();
-		
+		// account mouvment
 		print '<table class="border" width="100%">';
 		print '<tr class="pair">';
 		print '<td class="titlefield">' . $langs->trans("NumMvts") . '</td>';
 		print '<td>' . $book->piece_num . '</td>';
 		print '</tr>';
-		print '<tr class="impair">';
-		print '<td>' . $langs->trans("Docdate") ;
-		print '<a href="'.$_SERVER["PHP_SELF"].'?action=editdate&amp;piece_num='.$book->piece_num.'">'.img_edit($langs->transnoentitiesnoconv('Edit'),1).'</a></td>';
+		//print '<tr class="impair">';
+		
+		// date
+		//print '<td>' . $langs->trans("Docdate") ;
+		print '<tr class="impair"><td>';
+		print '<table class="nobordernopadding" width="100%"><tr><td>';
+		print $langs->trans('Docdate');
+		print '</td>';
+		if ($action != 'editdate')
+		print '<a href="'.$_SERVER["PHP_SELF"].'?action=editdate&amp;piece_num='. $book->piece_num .'">'.img_edit($langs->transnoentitiesnoconv('SetDate'),1).'</a></td>';
+		print '</tr></table>';
+		print '</td><td colspan="3">';
 		if ($action == 'editdate') {
-		print '<td>' . $html->select_date('', 'doc_date', '', '', '', "create_mvt", 1, 1) . '</td>';
+			print '<form name="setdate" action="' . $_SERVER["PHP_SELF"] . '?piece_num=' . $book->piece_num . '" method="post">';
+			print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '">';
+			print '<input type="hidden" name="action" value="setdate">';
+			$form->select_date($book->doc_date ? $book->doc_date : - 1, 'date_', '', '', '', "setdate");
+			print '<input type="submit" class="button" value="' . $langs->trans('Modify') . '">';
+			print '</form>';
+		//print '<td>' . $html->select_date('', 'doc_date', '', '', '', "create_mvt", 1, 1) . '</td>';
+		} else {
+		//print '<td>' . dol_print_date($book->doc_date, 'daytextshort') . '</td>';
+		print $book->doc_date ? dol_print_date($book->doc_date, 'daytext') : '&nbsp;';
 		}
-		else {
-		print '<td>' . dol_print_date($book->doc_date, 'daytextshort') . '</td>';
-		}
+		print '</td>';
 		print '</tr>';
+		
+		
+		//journal
+		
 		print '<tr class="pair">';
 		print '<td>' . $langs->trans("Codejournal")  ;
 		print '<a href="'.$_SERVER["PHP_SELF"].'?action=editjournal&amp;piece_num='.$book->piece_num.'">'.img_edit($langs->transnoentitiesnoconv('Edit'),1).'</a></td>';
@@ -330,10 +380,19 @@ if ($action == 'create') {
 		print '<td>' . $book->code_journal . '</td>';
 		}
 		print '</tr>';
+		
+		
 		print '<tr class="impair">';
-		print '<td>' . $langs->trans("Docref") . '</td>';
+		print '<td>' . $langs->trans("Docref") ;
+		print '<a href="'.$_SERVER["PHP_SELF"].'?action=editdocref&amp;piece_num='.$book->piece_num.'">'.img_edit($langs->transnoentitiesnoconv('Edit'),1).'</a></td>';
+		if ($action == 'editdocref') {
+		print '<td><input type="text" size="20" name="doc_ref" value=""/></td>';
+		}
+		else {
 		print '<td>' . $book->doc_ref . '</td>';
+		}
 		print '</tr>';
+		
 		print '<tr class="pair">';
 		print '<td>' . $langs->trans("Doctype") . '</td>';
 		print '<td>' . $book->doc_type . '</td>';
