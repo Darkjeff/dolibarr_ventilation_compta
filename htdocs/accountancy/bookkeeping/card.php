@@ -214,8 +214,6 @@ $db->begin();
 	$sql1 .= " SET ab.doc_date=" . $db->idate($datedoc);
 	$sql1 .= ' WHERE ab.piece_num=' . $piece_num ;
 
-
-
 	dol_syslog('accountancy/bookkeeping/card.php::setdate sql= ' . $sql1);
 	$resql1 = $db->query($sql1);
 	if (! $resql1) {
@@ -230,6 +228,36 @@ $db->begin();
 		setEventMessages($db->lasterror(), null, 'errors');
 	}
 	}
+	
+
+	
+if ($action == 'setjournal') {
+
+$journaldoc = trim(GETPOST('code_journal'));
+
+$error = 0;
+
+$db->begin();
+
+	$sql2 = "UPDATE " . MAIN_DB_PREFIX . "accounting_bookkeeping as ab";
+	$sql2 .= ' SET ab.code_journal='  . $journaldoc  ;
+	$sql2 .= ' WHERE ab.piece_num=' . $piece_num ;
+
+	dol_syslog('accountancy/bookkeeping/card.php::setjournal sql= ' . $sql2);
+	$resql2 = $db->query($sql2);
+	if (! $resql2) {
+		$error ++;
+		setEventMessages($db->lasterror(), null, 'errors');
+	}
+	if (! $error) {
+		$db->commit();
+		setEventMessages($langs->trans('Save'), null, 'mesgs');
+	} else {
+		$db->rollback();
+		setEventMessages($db->lasterror(), null, 'errors');
+	}
+	}
+	
 /*
  * View
  */
@@ -341,7 +369,6 @@ if ($action == 'create') {
 		//print '<tr class="impair">';
 		
 		// date
-		//print '<td>' . $langs->trans("Docdate") ;
 		print '<tr class="impair"><td>';
 		print '<table class="nobordernopadding" width="100%"><tr><td>';
 		print $langs->trans('Docdate');
@@ -357,9 +384,7 @@ if ($action == 'create') {
 			$form->select_date($book->doc_date ? $book->doc_date : - 1, 'doc_date', '', '', '', "setdate");
 			print '<input type="submit" class="button" value="' . $langs->trans('Modify') . '">';
 			print '</form>';
-		//print '<td>' . $html->select_date('', 'doc_date', '', '', '', "create_mvt", 1, 1) . '</td>';
-		} else {
-		//print '<td>' . dol_print_date($book->doc_date, 'daytextshort') . '</td>';
+			} else {
 		print $book->doc_date ? dol_print_date($book->doc_date, 'daytext') : '&nbsp;';
 		}
 		print '</td>';
@@ -367,19 +392,28 @@ if ($action == 'create') {
 		
 		
 		//journal
-		
-		print '<tr class="pair">';
-		print '<td>' . $langs->trans("Codejournal")  ;
+		print '<tr class="pair"><td>';
+		print '<table class="nobordernopadding" width="100%"><tr><td>';
+		print $langs->trans('Codejournal');
+		print '</td>';
+		if ($action != 'editjournal')
 		print '<a href="'.$_SERVER["PHP_SELF"].'?action=editjournal&amp;piece_num='.$book->piece_num.'">'.img_edit($langs->transnoentitiesnoconv('Edit'),1).'</a></td>';
+		print '</tr></table>';
+		print '</td><td>';
 		if ($action == 'editjournal') {
-		print '<td>' . $html->selectarray('code_journal', $code_journal_array) . '</td>';
+			print '<form name="setjournal" action="' . $_SERVER["PHP_SELF"] . '?piece_num=' . $book->piece_num . '" method="post">';
+			print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '">';
+			print '<input type="hidden" name="action" value="setjournal">';
+			print $html->selectarray('code_journal', $code_journal_array) ;
+			print '<input type="submit" class="button" value="' . $langs->trans('Modify') . '">';
+			print '</form>';
+		} else {
+		print $book->code_journal ;
 		}
-		else {
-		print '<td>' . $book->code_journal . '</td>';
-		}
+		print '</td>';
 		print '</tr>';
 		
-		
+		//docref
 		print '<tr class="impair">';
 		print '<td>' . $langs->trans("Docref") ;
 		print '<a href="'.$_SERVER["PHP_SELF"].'?action=editdocref&amp;piece_num='.$book->piece_num.'">'.img_edit($langs->transnoentitiesnoconv('Edit'),1).'</a></td>';
