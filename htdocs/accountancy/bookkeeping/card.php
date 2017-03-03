@@ -240,7 +240,7 @@ $error = 0;
 $db->begin();
 
 	$sql2 = "UPDATE " . MAIN_DB_PREFIX . "accounting_bookkeeping as ab";
-	$sql2 .= ' SET ab.code_journal='  . $journaldoc  ;
+	$sql2 .= " SET ab.code_journal='" .  $journaldoc . "'";
 	$sql2 .= ' WHERE ab.piece_num=' . $piece_num ;
 
 	dol_syslog('accountancy/bookkeeping/card.php::setjournal sql= ' . $sql2);
@@ -257,7 +257,33 @@ $db->begin();
 		setEventMessages($db->lasterror(), null, 'errors');
 	}
 	}
-	
+
+if ($action == 'setdocref') {
+
+$refdoc = trim(GETPOST('doc_ref'));
+
+$error = 0;
+
+$db->begin();
+
+	$sql3 = "UPDATE " . MAIN_DB_PREFIX . "accounting_bookkeeping as ab";
+	$sql3 .= " SET ab.doc_ref='" .  $refdoc . "'";
+	$sql3 .= ' WHERE ab.piece_num=' . $piece_num ;
+
+	dol_syslog('accountancy/bookkeeping/card.php::setjournal sql= ' . $sql3);
+	$resql3 = $db->query($sql3);
+	if (! $resql3) {
+		$error ++;
+		setEventMessages($db->lasterror(), null, 'errors');
+	}
+	if (! $error) {
+		$db->commit();
+		setEventMessages($langs->trans('Save'), null, 'mesgs');
+	} else {
+		$db->rollback();
+		setEventMessages($db->lasterror(), null, 'errors');
+	}
+	}	
 /*
  * View
  */
@@ -414,15 +440,25 @@ if ($action == 'create') {
 		print '</tr>';
 		
 		//docref
-		print '<tr class="impair">';
-		print '<td>' . $langs->trans("Docref") ;
+		print '<tr class="pair"><td>';
+		print '<table class="nobordernopadding" width="100%"><tr><td>';
+		print $langs->trans('Docref');
+		print '</td>';
+		if ($action != 'editdocref')
 		print '<a href="'.$_SERVER["PHP_SELF"].'?action=editdocref&amp;piece_num='.$book->piece_num.'">'.img_edit($langs->transnoentitiesnoconv('Edit'),1).'</a></td>';
+		print '</tr></table>';
+		print '</td><td>';
 		if ($action == 'editdocref') {
-		print '<td><input type="text" size="20" name="doc_ref" value=""/></td>';
+			print '<form name="setdocref" action="' . $_SERVER["PHP_SELF"] . '?piece_num=' . $book->piece_num . '" method="post">';
+			print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '">';
+			print '<input type="hidden" name="action" value="setdocref">';
+			print '<input type="text" size="20" name="doc_ref" value="">';
+			print '<input type="submit" class="button" value="' . $langs->trans('Modify') . '">';
+			print '</form>';
+		} else {
+		print $book->doc_ref ;
 		}
-		else {
-		print '<td>' . $book->doc_ref . '</td>';
-		}
+		print '</td>';
 		print '</tr>';
 		
 		print '<tr class="pair">';
