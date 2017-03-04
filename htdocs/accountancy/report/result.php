@@ -171,15 +171,63 @@ foreach($cats as $cat ){
 		//unset($catsCalcule[$p]); // j'élimine la catégorie calculée après affichage
 		
 	}else{ // normal category
-	
-		print "<tr class='liste_titre'>";
-		print '<td colspan="17">' . $cat['label'] . '</td>';
-		print "</tr>\n";
-	
+		
+		$totCat = array();
 	
 		// get cpts of category
 		$cpts = $AccCat->getCptsCat($cat['rowid']);
 		//print_r($cpts);
+		
+		print "<tr class='liste_titre'>";
+		print '<td colspan="2">' . $cat['label'] . '</td>';
+		
+		foreach($cpts as $i => $cpt){
+			$var = ! $var;
+
+			$code = $cat['code'];
+			
+			// N-1
+			$return = $AccCat->getResult($cpt['account_number'], 0, $year_current -1, $cpt['dc']);
+			
+			if ($return < 0) {
+				setEventMessages(null, $AccCat->errors, 'errors');
+				$resultNP=0;
+			} else {
+				$resultNP=$AccCat->sdc;
+			}
+			
+			//N
+			$return = $AccCat->getResult($cpt['account_number'], 0, $year_current, $cpt['dc']);
+			if ($return < 0) {
+				setEventMessages(null, $AccCat->errors, 'errors');
+				$resultN=0;
+			} else {
+				$resultN=$AccCat->sdc;
+			}
+			
+			$totCat['NP'] += $resultNP;
+			$totCat['N'] += $resultN;
+
+			foreach($months as $k => $v){
+				$return = $AccCat->getResult($cpt['account_number'], $k+1, $year_current, $cpt['dc']);
+				if ($return < 0) {
+					setEventMessages(null, $AccCat->errors, 'errors');
+					$resultM=0;
+				} else {
+					$resultM=$AccCat->sdc;
+				}
+				$totCat['M'][$k] += $resultM;
+				//print '<td align="right">' . price($resultM) . '</td>';
+			}
+		}
+		
+		print '<td>' . price($totCat['NP'])  . '</td>';
+		print '<td>' . price($totCat['N']) . '</td>';
+		
+		foreach($totCat['M'] as $k => $v){
+			print '<td align="right">' . price($v) . '</td>';
+		}		
+		print "</tr>\n";
 		
 		foreach($cpts as $i => $cpt){
 			$var = ! $var;
