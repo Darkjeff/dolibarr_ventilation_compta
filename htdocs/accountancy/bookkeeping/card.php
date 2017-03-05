@@ -386,13 +386,17 @@ if ($action == 'create') {
 		print load_fiche_titre($langs->trans("UpdateMvts"), '<a href="list.php">' . $langs->trans('BackToList') . '</a>');
 
 		dol_fiche_head();
-		// account mouvment
+		
+		print '<div class="fichehalfleft">';
+		print '<div class="underbanner clearboth"></div>';
 		print '<table class="border" width="100%">';
+		// account mouvment
+		
 		print '<tr class="pair">';
 		print '<td class="titlefield">' . $langs->trans("NumMvts") . '</td>';
 		print '<td>' . $book->piece_num . '</td>';
 		print '</tr>';
-		//print '<tr class="impair">';
+		
 		
 		// date
 		print '<tr class="impair"><td>';
@@ -440,7 +444,7 @@ if ($action == 'create') {
 		print '</tr>';
 		
 		//docref
-		print '<tr class="pair"><td>';
+		print '<tr class="impair"><td>';
 		print '<table class="nobordernopadding" width="100%"><tr><td>';
 		print $langs->trans('Docref');
 		print '</td>';
@@ -461,11 +465,47 @@ if ($action == 'create') {
 		print '</td>';
 		print '</tr>';
 		
+		//doctype
 		print '<tr class="pair">';
 		print '<td>' . $langs->trans("Doctype") . '</td>';
 		print '<td>' . $book->doc_type . '</td>';
 		print '</tr>';
+		
 		print '</table>';
+		print '</div>';
+		print '<div class="fichehalfright"><div class="ficheaddleft">';
+		  
+		print '<div class="underbanner clearboth"></div>';
+		print '<table class="border tableforfield" width="100%">';
+
+		//Validate
+		print '<tr class="pair">';
+		print '<td class="titlefield">' . $langs->trans("Status") . '</td>';
+		print '<td>';
+			if (empty($book->validated)) {
+				print '<a href="' . $_SERVER["PHP_SELF"] . '?piece_num=' . $line->rowid . '&action=enable">';
+				print img_picto($langs->trans("Disabled"), 'switch_off');
+				print '</a>';
+			} else {
+				print '<a href="' . $_SERVER["PHP_SELF"] . '?piece_num=' . $line->rowid . '&action=disable">';
+				print img_picto($langs->trans("Activated"), 'switch_on');
+				print '</a>';
+			}
+			print '</td>';
+		print '</tr>';
+		
+		// check data
+		print '<tr class="impair">';
+		print '<td class="titlefield">' . $langs->trans("Control") . '</td>';
+		print '<td>' . $book->fk_doc . '</td>';
+		
+		
+		print "</table>\n";
+		print '</div>';
+				
+		print '</div></div>';
+		print '<div style="clear:both"></div>';
+
 		
 		dol_fiche_end();
 

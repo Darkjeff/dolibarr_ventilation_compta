@@ -1193,7 +1193,7 @@ class BookKeeping extends CommonObject
 	public function fetchPerMvt($piecenum) {
 		global $conf;
 		
-	    $sql = "SELECT piece_num,doc_date,code_journal,doc_ref,doc_type";
+	    $sql = "SELECT piece_num,doc_date,code_journal,doc_ref,doc_type, validated,fk_doc";
 		$sql .= " FROM " . MAIN_DB_PREFIX . $this->table_element;
 		$sql .= " WHERE piece_num = " . $piecenum;
 	    $sql .= " AND entity IN (" . getEntity("accountancy", 1) . ")";
@@ -1208,6 +1208,8 @@ class BookKeeping extends CommonObject
 			$this->doc_date = $this->db->jdate($obj->doc_date);
 			$this->doc_ref = $obj->doc_ref;
 			$this->doc_type = $obj->doc_type;
+			$this->validated = $obj->validated;
+			$this->fk_doc = $obj->fk_doc;
 		} else {
 			$this->error = "Error " . $this->db->lasterror();
 			dol_syslog(get_class($this) . "::" . __METHOD__ . $this->error, LOG_ERR);
@@ -1507,6 +1509,9 @@ class BookKeeping extends CommonObject
 			return -1;
 		}
 	}
+	
+	
+	
 	
 }
 
