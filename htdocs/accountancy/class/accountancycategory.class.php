@@ -283,6 +283,7 @@ class AccountancyCategory
 		$sql = "SELECT t.rowid, t.account_number, t.label as name_cpt";
 		$sql .= " FROM " . MAIN_DB_PREFIX . "accounting_account as t";
 		$sql .= " WHERE t.fk_accounting_category = ".$cat_id;
+		$sql .= " ORDER BY t.account_number ";
 		
 		//echo $sql;
 
