@@ -316,10 +316,10 @@ if ($action == 'writebookkeeping') {
 
     }
 
-    if (empty($error) && count($tabpay) > 0) {
+    if (empty($error) && count($tabttc) > 0) {
         setEventMessages($langs->trans("GeneralLedgerIsWritten"), null, 'mesgs');
     }
-    elseif (count($tabpay) == $error)
+    elseif (count($tabttc) == $error)
     {
         setEventMessages($langs->trans("NoNewRecordSaved"), null, 'warnings');
     }
