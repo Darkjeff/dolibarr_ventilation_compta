@@ -480,9 +480,9 @@ if (! $error && $action == 'writebookkeeping') {
     				$bookkeeping->label_compte = $tabcompany[$key]['name'];
     			} else {
     			    // FIXME Should be a temporary account ???
-    				$bookkeeping->doc_ref = $k;
+    				$bookkeeping->doc_ref = $val["ref"];
     				//$bookkeeping->numero_compte = $conf->global->ACCOUNTING_ACCOUNT_CUSTOMER;
-    				$bookkeeping->numero_compte = 'CodeNotDef';
+    				$bookkeeping->numero_compte = $k;
     			}
     			}
     		} else {
