@@ -125,6 +125,7 @@ AnnualByCompaniesDueDebtMode=Bilan des recettes et dépenses, détail par tiers
 AnnualByCompaniesInputOutputMode=Bilan des recettes et dépenses, détail par tiers
 SeeReportInInputOutputMode=Cliquer sur <b>%sRecettes-Dépenses%s</b> dit <b>comptabilité de caisse</b> pour un calcul sur les paiements effectivement réalisés
 SeeReportInDueDebtMode=Cliquer sur <b>%sCréances-Dettes%s</b> dit <b>comptabilité d'engagement</b> pour un calcul sur les factures émises
+SeeReportInBookkeepingMode=Cliquer sur <b>%sGrand-Livre%s</b> dit <b>comptabilité avancé</b> pour un calcul sur les factures dans le grand livre
 RulesAmountWithTaxIncluded=- Les montants affichés sont les montants taxe incluse
 RulesResultDue=- Il comprend les factures impayées, les dépenses, la TVA, les dons qu'elles soient payées ou non. Il comprend également les salaires versés. <br> - Il est basé sur la date de validation de factures et de la TVA et à la date prévue pour les dépenses. Pour les salaires définis avec le module de salaire, la date de paiement de la valeur est utilisée.
 RulesResultInOut=- Il comprend les paiements réels effectués sur les factures, les dépenses, la TVA et les salaires. <br> - Il est basé sur les dates de paiement des factures, les dépenses, la TVA et les salaires. La date du don pour le don.
@@ -187,12 +188,12 @@ ACCOUNTING_VAT_BUY_ACCOUNT=Code comptable par défaut pour le paiement de la TVA
 ACCOUNTING_VAT_PAY_ACCOUNT=Code comptable par défaut pour le paiement de la TVA
 ACCOUNTING_ACCOUNT_CUSTOMER=Code comptable par défaut des tiers clients
 ACCOUNTING_ACCOUNT_SUPPLIER=Code comptable par défaut des tiers fournisseurs
-#MODIF CCA - TVA à l'encaissement sur produit
+
 TAX_CASHING_PROD_PAYMENT=La TVA est exigible à l'encaissement/décaissement des produits
 TAX_CASHING_CHOIIX0=Sans objet
 TAX_CASHING_CHOIIX1=Oui
 TAX_CASHING_CHOIIX2=Non (standard en France)
-#Fin Modif CCA
+
 
 CloneTax=Cloner une charge sociale/fiscale
 ConfirmCloneTax=Confirmez le clone du paiement de charge sociale/fiscale
