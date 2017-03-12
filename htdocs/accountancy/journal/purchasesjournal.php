@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /* Copyright (C) 2007-2010	Laurent Destailleur	<eldy@users.sourceforge.net>
  * Copyright (C) 2007-2010	Jean Heimburger		<jean@tiaris.info>
  * Copyright (C) 2011		Juanjo Menent		<jmenent@2byte.es>
@@ -50,6 +50,7 @@ $date_startyear = GETPOST('date_startyear');
 $date_endmonth = GETPOST('date_endmonth');
 $date_endday = GETPOST('date_endday');
 $date_endyear = GETPOST('date_endyear');
+$in_bookkeeping = GETPOST('in_bookkeeping');
 
 $now = dol_now();
 
@@ -103,6 +104,8 @@ else
 	$sql .= " AND f.type IN (0,1,2,3)";
 if ($date_start && $date_end)
 	$sql .= " AND f.datef >= '" . $db->idate($date_start) . "' AND f.datef <= '" . $db->idate($date_end) . "'";
+if ($in_bookkeeping == 'yes')    
+	$sql .= " AND (f.rowid NOT IN (SELECT fk_doc FROM " . MAIN_DB_PREFIX . "accounting_bookkeeping as ab  WHERE ab.doc_type='supplier_invoice') )";	
 $sql .= " ORDER BY f.datef";
 
 dol_syslog('accountancy/journal/purchasesjournal.php:: $sql=' . $sql);
@@ -295,10 +298,10 @@ if ($action == 'writebookkeeping') {
 		
 	}
 
-	if (empty($error) && count($tabpay)) {
+	if (empty($error) && count($tabttc)) {
 	    setEventMessages($langs->trans("GeneralLedgerIsWritten"), null, 'mesgs');
 	}
-	elseif (count($tabpay) == $error)
+	elseif (count($tabttc) == $error)
 	{
 	    setEventMessages($langs->trans("NoNewRecordSaved"), null, 'warnings');
 	}
@@ -455,7 +458,7 @@ if (empty($action) || $action == 'view') {
 		$description .= $langs->trans("DepositsAreIncluded");
 	}
 
-	$period = $form->select_date($date_start, 'date_start', 0, 0, 0, '', 1, 0, 1) . ' - ' . $form->select_date($date_end, 'date_end', 0, 0, 0, '', 1, 0, 1);
+	$period = $form->select_date($date_start, 'date_start', 0, 0, 0, '', 1, 0, 1) . ' - ' . $form->select_date($date_end, 'date_end', 0, 0, 0, '', 1, 0, 1). ' -  ' .$langs->trans("AlreadyInGeneralLedger").' '. $form->selectyesno('in_bookkeeping',$in_bookkeeping,0);
 	report_header($nom, $nomlink, $period, $periodlink, $description, $builddate, $exportlink, array (
 			'action' => ''
 	));
