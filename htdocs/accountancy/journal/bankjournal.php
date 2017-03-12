@@ -66,6 +66,7 @@ $date_startyear = GETPOST('date_startyear');
 $date_endmonth = GETPOST('date_endmonth');
 $date_endday = GETPOST('date_endday');
 $date_endyear = GETPOST('date_endyear');
+$in_bookkeeping = GETPOST('in_bookkeeping');
 $action = GETPOST('action');
 
 $now = dol_now();
@@ -112,6 +113,8 @@ $sql .= " WHERE ba.rowid=" . $id_bank_account;
 $sql .= ' AND ba.entity IN ('.getEntity('bank_account', 0).')';        // We don't share object for accountancy
 if ($date_start && $date_end)
 	$sql .= " AND b.dateo >= '" . $db->idate($date_start) . "' AND b.dateo <= '" . $db->idate($date_end) . "'";
+if ($in_bookkeeping == 'yes')    
+	$sql .= " AND (b.rowid NOT IN (SELECT fk_doc FROM " . MAIN_DB_PREFIX . "accounting_bookkeeping as ab  WHERE ab.doc_type='bank') )";	
 $sql .= " ORDER BY b.datev";
 
 $object = new Account($db);
@@ -718,7 +721,7 @@ if (empty($action) || $action == 'view') {
 	$builddate = time();
 	//$description = $langs->trans("DescFinanceJournal") . '<br>';
 	$description.= $langs->trans("DescJournalOnlyBindedVisible").'<br>';
-	$period = $form->select_date($date_start, 'date_start', 0, 0, 0, '', 1, 0, 1) . ' - ' . $form->select_date($date_end, 'date_end', 0, 0, 0, '', 1, 0, 1);
+	$period = $form->select_date($date_start, 'date_start', 0, 0, 0, '', 1, 0, 1) . ' - ' . $form->select_date($date_end, 'date_end', 0, 0, 0, '', 1, 0, 1). ' -  ' .$langs->trans("AlreadyInGeneralLedger").' '. $form->selectyesno('in_bookkeeping',$in_bookkeeping,0);
 
 	$varlink = 'id_account=' . $id_bank_account;
 	report_header($nom, $nomlink, $period, $periodlink, $description, $builddate, $exportlink, array (
