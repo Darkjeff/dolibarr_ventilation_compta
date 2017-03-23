@@ -144,8 +144,10 @@ ConfirmRejectCheck=Are you sure you want to mark this check as rejected ?
 RejectCheckDate=Date the check was returned
 CheckRejected=Check returned
 CheckRejectedAndInvoicesReopened=Check returned and invoices reopened
-
-
+NewVariousPayment=New various payment
+VariousPayment=Various payment
+VariousPayments=Various payments
+ShowVariousPayment=Show various payment
 TiCheckReceipt=Check receipt
 BdRef=Réf.
 BdMontant=Amount

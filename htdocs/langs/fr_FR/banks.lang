@@ -142,8 +142,10 @@ ConfirmRejectCheck=Êtes-vous sûr de vouloir marquer ce chèque comme rejeté ?
 RejectCheckDate=Date du rejet du chèque
 CheckRejected=Chèque rejeté
 CheckRejectedAndInvoicesReopened=Chèque rejeté et factures réouvertes
-
-
+NewVariousPayment=Nouveau règlement divers 
+VariousPayment=Règlement divers
+VariousPayments=Règlements divers
+ShowVariousPayment=Voir règlement divers
 TiCheckReceipt=Bordereau de remise de chèques
 BdRef=Réf.
 BdMontant=Montant
