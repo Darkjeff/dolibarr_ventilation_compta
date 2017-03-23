@@ -5,6 +5,8 @@
  * Copyright (C) 2015      Jean-François Ferry	<jfefe@aternatik.fr>
  * Copyright (C) 2016      Marcos García        <marcosgdf@gmail.com>
  *
+ * MODIF CCA 18/1/2017 - Rapprochement global par borderau de remise de chèque
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -44,28 +46,33 @@ if (! $user->rights->banque->consolidate) accessforbidden();
 
 $action=GETPOST('action', 'alpha');
 $id=GETPOST('account', 'int');
+$bordereau=GETPOST('bordereau', 'int');
 
 $sortfield = GETPOST("sortfield",'alpha');
 $sortorder = GETPOST("sortorder",'alpha');
+
 if (! $sortorder) $sortorder="ASC";
 if (! $sortfield) $sortfield="dateo";
-
 
 /*
  * Actions
  */
 
-// Conciliation
-if ($action == 'rappro' && $user->rights->banque->consolidate)
-{
-	$error=0;
 
+//	(GETPOST("button_search_x") || GETPOST("button_search.x") ||GETPOST("button_search"))
+	
 	// Definition, nettoyage parametres
     $num_releve=trim($_POST["num_releve"]);
-
-    if ($num_releve)
-    {
-        $bankline=new AccountLine($db);
+if (GETPOST('button_search_x', 'int') || GETPOST('button_search', 'int') || GETPOST('button_search.x', 'int'))
+{
+	$affichedepot = true;
+}
+elseif (!empty(GETPOST('button_rappro', 'alpha')))
+{
+	$error=0;
+	if ($num_releve )
+	{
+		$bankline=new AccountLine($db);
 
 		if (isset($_POST['rowid']) && is_array($_POST['rowid']))
 		{
@@ -84,20 +91,24 @@ if ($action == 'rappro' && $user->rights->banque->consolidate)
 					}
 				}
 			}
-        }
-    }
-    else
-    {
-    	$error++;
-    	$langs->load("errors");
-	    setEventMessages($langs->trans("ErrorPleaseTypeBankTransactionReportName"), null, 'errors');
-    }
-
-    if (! $error)
-    {
-		header('Location: '.DOL_URL_ROOT.'/compta/bank/rappro.php?account='.$id);	// To avoid to submit twice and allow back
-    	exit;
-    }
+		}
+	}
+	else
+	{
+		$error++;
+		$langs->load("errors");
+		setEventMessages($langs->trans("ErrorPleaseTypeBankTransactionReportName"), null, 'errors');
+	}
+	if (! $error  )
+	{
+			header('Location: '.DOL_URL_ROOT.'/compta/bank/rappro.php?account='.$id);	// To avoid to submit twice and allow back
+			exit;
+	}
+	
+}
+elseif (GETPOST('button_removefilter_x', 'int') || GETPOST('button_removefilter', 'int') || GETPOST('button_removefilter.x', 'int'))
+{
+	$bordereau = '';
 }
 
 /*
@@ -107,7 +118,8 @@ if ($action == 'del')
 {
 	$bankline=new AccountLine($db);
 
-    if ($bankline->fetch($_GET["rowid"]) > 0) {
+ //   if ($bankline->fetch($_GET["rowid"]) > 0) {
+	    if ($bankline->fetch($POST["rowid"]) > 0) {
         $result = $bankline->delete($user);
         if ($result < 0) {
             dol_print_error($db, $bankline->error);
@@ -147,11 +159,12 @@ $acct->fetch($id);
 $now=dol_now();
 
 $sql = "SELECT b.rowid, b.dateo as do, b.datev as dv, b.amount, b.label, b.rappro, b.num_releve, b.num_chq, b.fk_type as type";
-$sql.= ", b.fk_bordereau";
+$sql.= ", b.fk_bordereau, b.amount , bc.nbcheque, bc.date_bordereau ";
 $sql.= ", bc.ref";
 $sql.= " FROM ".MAIN_DB_PREFIX."bank as b";
 $sql.= ' LEFT JOIN '.MAIN_DB_PREFIX.'bordereau_cheque as bc ON bc.rowid=b.fk_bordereau';
 $sql.= " WHERE rappro=0 AND fk_account=".$acct->id;
+if (!empty($bordereau)) $sql.= " and b.fk_bordereau=".$bordereau;
 $sql.= " ORDER BY $sortfield $sortorder";
 $sql.= " LIMIT 1000";	// Limit to avoid page overload
 
@@ -217,6 +230,22 @@ if ($resql)
     {
         dol_print_error($db);
     }
+    // Prépare le js pour mettre tous les ecritures d'un borderau à Actif ou / Non Actif
+	print '
+        <script language="javascript" type="text/javascript">
+        jQuery(document).ready(function()
+        {
+            jQuery("#checkall_'.$bid.'").click(function()
+            {
+                jQuery(".checkforconciliate_'.$bid.'").prop(\'checked\', true);
+            });
+            jQuery("#checknone_'.$bid.'").click(function()
+            {
+                jQuery(".checkforconciliate_'.$bid.'").prop(\'checked\', false);
+            });
+        });
+        </script>
+        ';
 
 
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?account='.$acct->id.'">';
@@ -224,6 +253,10 @@ if ($resql)
 	print '<input type="hidden" name="action" value="rappro">';
 	print '<input type="hidden" name="account" value="'.$acct->id.'">';
 
+	print '<table id="tbentete" width=100%><tbody><tr><td width=72% rowspan = 4>';
+	
+	print '<table id="tbentete_releve" ><tbody><tr><td>';
+	// Numéro de releves bancaires
     print '<strong>'.$langs->trans("InputReceiptNumber").'</strong>: ';
     print '<input class="flat" name="num_releve" type="text" value="'.(GETPOST('num_releve')?GETPOST('num_releve'):'').'" size="10">';  // The only default value is value we just entered
     print '<br>';
@@ -234,10 +267,31 @@ if ($resql)
 	}
     print '<br>'.$langs->trans("ThenCheckLinesAndConciliate").' "'.$langs->trans("Conciliate").'"<br>';
 
+	print '</td></tr></tbody></table id="tbentete_releve">';
+	print '</td>';
+	print '<td >';
+	print '<table id="tbentete_depotbord" border=1><tbody><tr><td>';
+	print '<table id="tbentete_depot" ><tbody>';
+	
+    $objp = $db->fetch_object($resql);
+		// Bordereaude dépotif
+		if ($affichedepot)
+		{			
+			print '<tr><td colspan=2 align=center><b>'.$langs->trans( "TiCheckReceipt").'</b></td></tr>';
+			print '<tr><td><b><i>'.$langs->trans( "BdRef").'</i></b></td><td align=right>'.$objp->ref.'</td></tr>';
+			print '<tr><td> <b><i>'.$langs->trans( "BdMontant").'</i></b></td><td align=right>'.price($objp->amount).'</td></tr>';
+			print '<tr><td> <b><i>'.$langs->trans( "NumberOfCheques").'</i></b></td><td align=right>'.$objp->nbcheque.'</td></tr>';
+			print '<tr><td><b><i>'.$langs->trans( "DateCheckReceipt").'</i></b></td><td align=right>'.$objp->date_bordereau.'</td></tr>';
+			if ($conf->use_javascript_ajax) print '<tr><td colspan=2 align=center><a href="#" id="checkall_'.$bid.'">'.$langs->trans("All").'</a> / <a href="#" id="checknone_'.$bid.'">'.$langs->trans("None").'</a></td></tr>';
+		}
+	print '</tbody></table id="tbentete_depot"></td></tr>';
+	print '</tbody></table id="tbentete_depotbord">';
+	print '</td></tr>';
+	print '</td></tr></tbody></table id="tbentete">';
     print '<br>';
 
    	$paramlist='';
-	$paramlist.="&account=".$acct->id;
+	$paramlist.="&account=".$acct->id.'&bordereau='.$bordereau;
 	
 	print '<table class="liste" width="100%">';
 	print '<tr class="liste_titre">'."\n";
@@ -245,18 +299,30 @@ if ($resql)
 	print_liste_field_titre($langs->trans("DateValueShort"),$_SERVER["PHP_SELF"],"b.datev","",$paramlist,'align="center"',$sortfield,$sortorder);
 	print_liste_field_titre($langs->trans("Type"),$_SERVER["PHP_SELF"],"b.fk_type","",$paramlist,'align="left"',$sortfield,$sortorder);
 	print_liste_field_titre($langs->trans("Description"),$_SERVER["PHP_SELF"],"b.label","",$paramlist,'align="left"',$sortfield,$sortorder);
+	print_liste_field_titre($langs->trans("Dépôt"),$_SERVER["PHP_SELF"],"bc.ref","",$paramlist,'align="left"',$sortfield,$sortorder);
 	print_liste_field_titre($langs->trans("Debit"),$_SERVER["PHP_SELF"],"b.amount","",$paramlist,' width="60 align="right"',$sortfield,$sortorder);
 	print_liste_field_titre($langs->trans("Credit"),$_SERVER["PHP_SELF"],"b.amount","",$paramlist,' width="60 align="right"',$sortfield,$sortorder);
 	print_liste_field_titre('',$_SERVER["PHP_SELF"],"","",$paramlist,' width="80 align="center"',$sortfield,$sortorder);
 	print_liste_field_titre($langs->trans("ToConciliate"),$_SERVER["PHP_SELF"],"","",$paramlist,' align="center" width="80" ',$sortfield,$sortorder);
     print "</tr>\n";
+	
+	print '<tr class="liste_titre">';
+	print '<td colspan="4"></td>';
+	print '<td>';
+	$filtertype='';
+	print select_bordereau_non_rapproches($id, $bordereau, 'bordereau',1);
+	print '</td>';
+	print '<td colspan="3"></td>';
+    print '<td class="liste_titre" align="right">';
+    $searchpitco=$form->showFilterAndCheckAddButtons(0);
+    print $searchpitco;
+    print '</td>';
+   print "</tr>\n";
 
 
     $i = 0;
     while ($i < $num)
     {
-        $objp = $db->fetch_object($resql);
-
         $var=!$var;
         print "<tr ".$bc[$var].">\n";
 //         print '<form method="post" action="rappro.php?account='.$_GET["account"].'">';
@@ -385,6 +451,11 @@ if ($resql)
             }
         }
         print '</td>';
+		// Bordereau
+        print '<td valign="center"><a href="'.DOL_URL_ROOT.'/compta/paiement/cheque/card.php?id='.$objp->fk_bordereau.'">';
+		$reg=array();
+		print $objp->ref;
+        print '</a>';
 
         if ($objp->amount < 0)
         {
@@ -434,7 +505,12 @@ if ($resql)
         {
 
             print '<td align="center" class="nowrap">';
-            print '<input class="flat" name="rowid['.$objp->rowid.']" type="checkbox" value="'.$objp->rowid.'" size="1"'.(! empty($_POST['rowid'][$objp->rowid])?' checked':'').'>';
+			//print '<input id="'.$value["id"].'" class="flat checkforremise_'.$bid.'" checked type="checkbox" name="toRemise[]" value="'.$value["id"].'">';
+			if ($affichedepot or (!($affichedepot) and ! empty($_POST['rowid'][$objp->rowid]) ))
+				$checkaff ='checked';
+			else
+				$checkaff ='';
+            print '<input class="flat checkforconciliate_" name="rowid['.$objp->rowid.']" type="checkbox" value="'.$objp->rowid.'" size="1"'.$checkaff.'>';
             print "</td>";
         }
         else
@@ -446,13 +522,15 @@ if ($resql)
 
         print "</tr>\n";
 
+        $objp = $db->fetch_object($resql);
+
         $i++;
     }
     $db->free($resql);
 
     print "</table><br>\n";
 
-    print '<div align="right"><input class="button" type="submit" value="'.$langs->trans("Conciliate").'"></div><br>';
+    print '<div align="right"><input class="button" name="button_rappro" type="submit" value="'.$langs->trans("Conciliate").'"></div><br>';
 
     print "</form>\n";
 
@@ -466,3 +544,35 @@ else
 llxFooter();
 
 $db->close();
+function select_bordereau_non_rapproches($idaccount, $selected, $htmlname,$showempty = 1 )
+{
+	     global $langs, $db;
+        $return= '<select class="flat" id="'.$htmlname.'" name="'.$htmlname.'">';
+
+        $sql = 'SELECT distinct bc.rowid, bc.ref ';
+		$sql .= 'from '.MAIN_DB_PREFIX.'bordereau_cheque as bc ';
+		$sql.= ' , '.MAIN_DB_PREFIX."bank as b  ";
+        $sql.= ' WHERE bc.rowid=b.fk_bordereau  ';
+		$sql.= '  AND b.rappro = 0';
+		$sql.= '  AND b.fk_account = '.$idaccount;
+		$sql.= ' ORDER BY  bc.ref';
+        $resql = $db->query($sql);
+        if($resql && $db->num_rows($resql) > 0)
+        {
+	        if ($showempty) $return .= '<option value="none"></option>';
+
+            while($res = $db->fetch_object($resql))
+            {
+                if ($selected == $res->rowid)
+                {
+                    $return.='<option value="'.$res->rowid.'" selected>'.$langs->trans($res->ref).'</option>';
+                }
+                else
+                {
+                    $return.='<option value="'.$res->rowid.'">'.$langs->trans($res->ref).'</option>';
+                }
+            }
+            $return.='</select>';
+        }
+        return $return;
+} // select_bordereau_non_rapproches

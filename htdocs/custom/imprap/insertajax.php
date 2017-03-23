@@ -16,6 +16,7 @@ $debit 		= $_SESSION['arrayfilecsv']['trait'][$ligne][2];
 $crdit 		= $_SESSION['arrayfilecsv']['trait'][$ligne][3];
 $idAccount 	= $_SESSION['arrayfilecsv']['bank'];
 
+$error = '';
 
 $idfourn 	= 0;
 $idclient 	= 0;
@@ -28,7 +29,7 @@ if($crdit == 0){
 }
 
 
-if($typeG == 'facture'){
+if(isset($_POST['montant']) AND $typeG == 'facture'){
 
 	$montantF 	= GETPOST('montant');
 	$rowidF 	= GETPOST('rowidmontant');
@@ -46,10 +47,16 @@ if($typeG == 'facture'){
 	}
 
 	if(empty($montantF)){
-		echo ($langs->trans("addMontant"));
-
+		
+		$error = $langs->trans("addMontant");
+		header("Location: index.php?errorinsert=".$error);
+		exit;
+		
 	}elseif($compteMontant != $amount){
-		echo ($langs->trans("lesMantantInvalid"));
+		
+		$error = $langs->trans("lesMantantInvalid");
+		header("Location: index.php?errorinsert=".$error);
+		exit;
 		
 	}else{
 
@@ -105,8 +112,6 @@ if($typeG == 'facture'){
 			$sql.= " VALUES (".$ide.",".$idclient.",'','(Client)','company')";
 			$resql = $db->query($sql);
 
-			echo ($langs->trans("success"));
-			
 			header("Location: index.php");
 			exit;
 			
@@ -165,4 +170,9 @@ if($typeG == 'facture'){
 		}
 		
 	}
+}else{
+	
+	$error = $langs->trans("notFacture");
+	header("Location: index.php?errorinsert=".$error);
+	exit;
 }

@@ -26,7 +26,18 @@
 if (false === (@include '../main.inc.php')) {  // From htdocs directory
 	require '../../main.inc.php'; // From "custom" directory
 }
+require_once DOL_DOCUMENT_ROOT.'/core/lib/bank.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
+require_once DOL_DOCUMENT_ROOT.'/compta/sociales/class/chargesociales.class.php';
+require_once DOL_DOCUMENT_ROOT.'/compta/paiement/class/paiement.class.php';
+require_once DOL_DOCUMENT_ROOT.'/compta/tva/class/tva.class.php';
+require_once DOL_DOCUMENT_ROOT.'/fourn/class/paiementfourn.class.php';
+require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
+require_once DOL_DOCUMENT_ROOT.'/compta/paiement/cheque/class/remisecheque.class.php';
+require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/bankcateg.class.php';
 include_once(DOL_DOCUMENT_ROOT.'/custom/imprap/class/repartition.class.php');
+require_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
+require_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.facture.class.php';
 
 // Load traductions files requiredby by page
 $langs->load("other");
@@ -48,18 +59,22 @@ if($action == 'deleterow'){
 $form = new Form($db);
 
 llxHeader();
-/* 
+
 $societestatic = new Societe($db);
 $chargestatic = new ChargeSociales($db);
 $paymentstatic = new Paiement($db);
 $paymentsupplierstatic = new PaiementFourn($db);
 $paymentvatstatic = new TVA($db);
 $remisestatic = new RemiseCheque($db);
- */
+
+$acct = new Account($db);
 
 $now = dol_now();
 
-	
+if(isset($_GET['errorinsert'])){
+	$langs->load("errors");
+	setEventMessages($_GET['errorinsert'], null, 'errors');
+}
 //start verify of file
 
 $error = 0;
@@ -234,6 +249,7 @@ if(!empty($_SESSION['arrayfilecsv'])){
 				
 				foreach($_SESSION['arrayfilecsv']['trait'] as $key => $val){
 					if($val[0] == $obj->do AND $val[1] == $obj->dv AND $val[5] == $obj->amount ){
+						$_SESSION['arrayfilecsv']['trait'][$key][] = $obj->rowid;
 						$_SESSION['arrayfilecsv']['reg'][] = $_SESSION['arrayfilecsv']['trait'][$key];
 						unset($_SESSION['arrayfilecsv']['trait'][$key]);
 					}
@@ -248,6 +264,7 @@ if(!empty($_SESSION['arrayfilecsv'])){
 	// print_r($_SESSION['arrayfilecsv']);
 	// print"</pre>";
 	
+	$thirdparty_static = new Societe($db);
 	
 	print '<form method="POST" action="insertajax.php">';
 	print '<table class="liste" width="100%">';
@@ -265,7 +282,67 @@ if(!empty($_SESSION['arrayfilecsv'])){
 		print "<tr ".$bc[$var].">\n";
 		print '<td align="">'.$val[0].'</td>';
 		print '<td align="">'.$val[1].'</td>';
-		print '<td align="">dd</td>';
+		
+		print '<td align="">';
+		
+		if($val[2] != 0){
+			print'<a href='.DOL_URL_ROOT.'/compta/bank/ligne.php?rowid='.$val[6].'&account='.$_SESSION['arrayfilecsv']['bank'].'>'.$langs->trans("Règlement fournisseur").'</a><br>';
+		}else{
+			print'<a href='.DOL_URL_ROOT.'/compta/bank/ligne.php?rowid='.$val[6].'&account='.$_SESSION['arrayfilecsv']['bank'].'>'.$langs->trans("Règlement client").'</a><br>';
+		
+			$sql = "SELECT url_id FROM `llx_bank_url` WHERE fk_bank = ".$val[6]." AND `label` = '(Client)'";
+			$result = $db->query($sql);
+			$obj = $db->fetch_object($result);
+			
+			$sql = " SELECT s.rowid, s.nom as name, s.client, s.fournisseur";
+			$sql.= ", s.code_client";
+			$sql.= ", s.code_fournisseur";
+			$sql.= ", s.logo";
+			$sql.= ", s.canvas, s.tms as datem, s.status as status ";
+			$sql.= " FROM ".MAIN_DB_PREFIX."societe as s";
+			$sql.= " WHERE s.rowid =".$obj->url_id;
+			$result1 = $db->query($sql);
+			$objp = $db->fetch_object($result1);
+			
+			$thirdparty_static->id=$objp->rowid;
+			$thirdparty_static->name=$objp->name;
+			$thirdparty_static->client=$objp->client;
+			$thirdparty_static->fournisseur=$objp->fournisseur;
+			$thirdparty_static->logo = $objp->logo;
+			$thirdparty_static->datem=$db->jdate($objp->datem);
+			$thirdparty_static->status=$objp->status;
+			$thirdparty_static->code_client = $objp->code_client;
+			$thirdparty_static->code_fournisseur = $objp->code_fournisseur;
+			$thirdparty_static->canvas=$objp->canvas;
+			
+			print $thirdparty_static->getNomUrl(1);
+			
+			//start get facture
+			
+			$sql = "SELECT url_id FROM `llx_bank_url` WHERE fk_bank = ".$val[6]." AND `label` = '(paiement)'";
+			$result = $db->query($sql);
+			$obj = $db->fetch_object($result);
+			
+			
+			$paymentstatic = new Paiement($db);
+			
+			$sql = 'SELECT `rowid`, `ref`, `datep`,  `fk_paiement`, `num_paiement`, `fk_bank` FROM `llx_paiement` WHERE `fk_bank` = '.$val[6];
+
+			$result = $db->query($sql);
+
+			$objp = $db->fetch_object($result);
+			$paymentstatic->id=$objp->rowid;
+			$paymentstatic->datepaye=$db->jdate($objp->dp);
+			$paymentstatic->ref=$objp->ref;
+			$paymentstatic->num_paiement=$objp->num_paiement;
+			$paymentstatic->payment_code=$objp->payment_code;
+			print $paymentstatic->getNomUrl(1);
+	
+			//end get facture
+			
+		}
+		print '</td>';
+		
 		print '<td align="">'.$val[4].'</td>';
 		print '<td align="">'.$val[2].'</td>';
 		print '<td align="">'.$val[3].'</td>';
@@ -369,7 +446,8 @@ print"
 					// pour chaque noeud JSON
 					$.each(json, function(index, value) {
 						// on ajoute l option dans la liste
-					$('#factures').append('<h6 style=\'margin:0;padding:0;\'>'+ value[testName] +'&nbsp;->&nbsp;'+ value['total_ttc'] +'<input name=\'rowidmontant[]\' type=\'hidden\' value ='+ value['rowid'] +'><input type=\'text\' name=\'montant[]\' style=\'width:60px;\'></h6>');
+						var ttc = parseFloat(value['total_ttc']);
+					$('#factures').append('<h6 style=\'margin:0;padding:0;\'>'+ value[testName] +'&nbsp;->&nbsp;'+ ttc.toFixed(2) +'&nbsp;&nbsp;<input name=\'rowidmontant[]\' type=\'hidden\' value ='+ value['rowid'] +'><input type=\'text\' name=\'montant[]\' style=\'width:60px;\'></h6>');
 					});
 				}
 			});	
