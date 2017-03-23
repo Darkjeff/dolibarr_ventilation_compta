@@ -29,150 +29,169 @@ if($crdit == 0){
 }
 
 
-if(isset($_POST['montant']) AND $typeG == 'facture'){
+if($typeG == 'facture'){
+	if(isset($_POST['montant'])){
+		$montantF 	= GETPOST('montant');
+		$rowidF 	= GETPOST('rowidmontant');
 
-	$montantF 	= GETPOST('montant');
-	$rowidF 	= GETPOST('rowidmontant');
+		$amount  	= $debit + $crdit ;
+		$compteMontant = 0;
 
-	$amount  	= $debit + $crdit ;
-	$compteMontant = 0;
-
-	foreach($montantF as $key => $val){
-		if(empty(trim($val))){
-			unset($montantF[$key]);
-			unset($rowidF[$key]);
-		}else{
-			$compteMontant = $compteMontant + $val;
+		foreach($montantF as $key => $val){
+			if(empty(trim($val))){
+				unset($montantF[$key]);
+				unset($rowidF[$key]);
+			}else{
+				$compteMontant = $compteMontant + $val;
+			}
 		}
-	}
 
-	if(empty($montantF)){
-		
-		$error = $langs->trans("addMontant");
-		header("Location: index.php?errorinsert=".$error);
-		exit;
-		
-	}elseif($compteMontant != $amount){
-		
-		$error = $langs->trans("lesMantantInvalid");
-		header("Location: index.php?errorinsert=".$error);
-		exit;
-		
+		if(empty($montantF)){
+			
+			$error = $langs->trans("addMontant");
+			header("Location: index.php?errorinsert=".$error);
+			exit;
+			
+		}elseif($compteMontant != $amount){
+			
+			$error = $langs->trans("lesMantantInvalid");
+			header("Location: index.php?errorinsert=".$error);
+			exit;
+			
+		}else{
+
+			if($idclient != 0){
+				//get type paiement 
+				$sql = " SELECT `code` FROM " . MAIN_DB_PREFIX . "c_paiement ";
+				$sql.= " Where id = ".$idpaiment;
+				$resql = $db->query($sql);
+				$obj = $db->fetch_object($resql);
+				$db->free($resql);
+				$codeP = $obj->code;
+
+
+				//Add new ecritur in table bank et return id
+				$sql = " INSERT INTO `llx_bank`(`rowid`, `datec`, `tms`, `datev`, `dateo`, `amount`, `label`, `fk_account`, `fk_user_author`, `fk_user_rappro`, `fk_type`, `num_releve`, `num_chq`, `rappro`, `note`, `fk_bordereau`, `banque`, `emetteur`, `author`)" ;
+				$sql.= " VALUES ('',NOW(),NOW(),'".$datev."','".$dateo."',".$amount.",'(CustomerInvoicePayment)',".$idAccount.",1,'','".$codeP."','','','','','','','','')";
+				$resql = $db->query($sql);
+				$ide = $db->last_insert_id(MAIN_DB_PREFIX . "bank");
+
+
+				//Add new paiment in table paiment
+				$sql = " SELECT rowid FROM llx_paiement ORDER BY rowid DESC LIMIT 1";
+				$resql = $db->query($sql);
+				$objlastselect = $db->fetch_object($resql);
+				$db->free($resql);
+				$idp = $objlastselect->rowid + 1;
+
+				$year =  date("y");
+				$month =  date("m");
+				$year = substr( $year, -2);
+				$idpc = str_pad($idp, 4, '0', STR_PAD_LEFT);
+				$idpc = 'PAY'.$year.$month.'-'.$idpc;
+
+				$sql = " INSERT INTO `llx_paiement`(`rowid`, `ref`, `entity`, `datec`, `tms`, `datep`, `amount`, `multicurrency_amount`, `fk_paiement`, `num_paiement`, `note`, `fk_bank`, `fk_user_creat`, `fk_user_modif`, `statut`, `fk_export_compta`) ";
+				$sql.= " VALUES (".$idp.",'".$idpc."',1,NOW(),NOW(),NOW(),".$amount.",".$amount.",".$idpaiment.",'','',".$ide.",1,'',0,0)";
+				$resql = $db->query($sql);
+
+
+				//Add new relation paiment avec facture in table paiment_facture
+				foreach($montantF as $key => $val){
+					$idfactura = $rowidF[$key];
+					$sql = " INSERT INTO `llx_paiement_facture`(`rowid`, `fk_paiement`, `fk_facture`, `amount`, `multicurrency_code`, `multicurrency_tx`, `multicurrency_amount`) ";
+					$sql.= " VALUES ('',".$idp.",".$idfactura.",".$val.",'',1,".$val.")";
+					$resql = $db->query($sql);
+				}
+
+
+				//Ajouter url bank
+				$sql = " INSERT INTO `llx_bank_url`( `fk_bank`, `url_id`, `url`, `label`, `type`) ";
+				$sql.= " VALUES (".$ide.",".$idp.",'','(paiement)','payment')";
+				$resql = $db->query($sql);
+				$sql = " INSERT INTO `llx_bank_url`( `fk_bank`, `url_id`, `url`, `label`, `type`) ";
+				$sql.= " VALUES (".$ide.",".$idclient.",'','(Client)','company')";
+				$resql = $db->query($sql);
+
+				header("Location: index.php");
+				exit;
+				
+			}else{
+				
+				//get type paiement 
+				$sql = " SELECT `code` FROM " . MAIN_DB_PREFIX . "c_paiement ";
+				$sql.= " Where id = ".$idpaiment;
+				$resql = $db->query($sql);
+				$obj = $db->fetch_object($resql);
+				$db->free($resql);
+				$codeP = $obj->code;
+
+
+				//Add new ecritur in table bank et return id
+				$sql = " INSERT INTO `llx_bank`(`rowid`, `datec`, `tms`, `datev`, `dateo`, `amount`, `label`, `fk_account`, `fk_user_author`, `fk_user_rappro`, `fk_type`, `num_releve`, `num_chq`, `rappro`, `note`, `fk_bordereau`, `banque`, `emetteur`, `author`)" ;
+				$sql.= " VALUES ('',NOW(),NOW(),'".$datev."','".$dateo."',".$amount.",'(SupplierInvoicePayment)',".$idAccount.",1,'','".$codeP."','','','','','','','','')";
+				$resql = $db->query($sql);
+				$ide = $db->last_insert_id(MAIN_DB_PREFIX . "bank");
+
+
+
+				//Add new paiment in table paiment
+				$sql = " SELECT rowid FROM llx_paiementfourn ORDER BY rowid DESC LIMIT 1";
+				$resql = $db->query($sql);
+				$objlastselect = $db->fetch_object($resql);
+				$db->free($resql);
+				$idp = $objlastselect->rowid + 1;
+
+				$year =  date("y");
+				$month =  date("m");
+				$year = substr( $year, -2);
+				$idpc = str_pad($idp, 4, '0', STR_PAD_LEFT);
+				$idpc = 'SPAY'.$year.$month.'-'.$idpc;
+
+				$sql = " INSERT INTO `llx_paiementfourn`(`rowid`, `ref`, `entity`, `tms`, `datec`, `datep`, `amount`, `multicurrency_amount`, `fk_user_author`, `fk_paiement`, `num_paiement`, `note`, `fk_bank`, `statut`) ";
+				$sql.= " VALUES (".$idp.",'".$idpc."',1,NOW(),NOW(),NOW(),".$amount.",".$amount.",1,".$idpaiment.",'','',".$ide.",0) ";
+				$resql = $db->query($sql);
+				
+				
+				//Add new relation paiment avec facture in table paiment_facture
+				foreach($montantF as $key => $val){
+					$idfactura = $rowidF[$key];
+					
+					$sql = " INSERT INTO `llx_paiementfourn_facturefourn`(`rowid`, `fk_paiementfourn`, `fk_facturefourn`, `amount`, `multicurrency_code`, `multicurrency_tx`, `multicurrency_amount`) ";
+					
+					$sql.= " VALUES ('',".$idp.",".$idfactura.",".$val.",'',1,".$val.")";
+					
+					$resql = $db->query($sql);
+				}
+				
+				header("Location: index.php");
+				exit;
+				
+				
+			}
+			
+		}
 	}else{
-
-		if($idclient != 0){
-			//get type paiement 
-			$sql = " SELECT `code` FROM " . MAIN_DB_PREFIX . "c_paiement ";
-			$sql.= " Where id = ".$idpaiment;
-			$resql = $db->query($sql);
-			$obj = $db->fetch_object($resql);
-			$db->free($resql);
-			$codeP = $obj->code;
-
-
-			//Add new ecritur in table bank et return id
-			$sql = " INSERT INTO `llx_bank`(`rowid`, `datec`, `tms`, `datev`, `dateo`, `amount`, `label`, `fk_account`, `fk_user_author`, `fk_user_rappro`, `fk_type`, `num_releve`, `num_chq`, `rappro`, `note`, `fk_bordereau`, `banque`, `emetteur`, `author`)" ;
-			$sql.= " VALUES ('',NOW(),NOW(),'".$datev."','".$dateo."',".$amount.",'(CustomerInvoicePayment)',".$idAccount.",1,'','".$codeP."','','','','','','','','')";
-			$resql = $db->query($sql);
-			$ide = $db->last_insert_id(MAIN_DB_PREFIX . "bank");
-
-
-			//Add new paiment in table paiment
-			$sql = " SELECT rowid FROM llx_paiement ORDER BY rowid DESC LIMIT 1";
-			$resql = $db->query($sql);
-			$objlastselect = $db->fetch_object($resql);
-			$db->free($resql);
-			$idp = $objlastselect->rowid + 1;
-
-			$year =  date("y");
-			$month =  date("m");
-			$year = substr( $year, -2);
-			$idpc = str_pad($idp, 4, '0', STR_PAD_LEFT);
-			$idpc = 'PAY'.$year.$month.'-'.$idpc;
-
-			$sql = " INSERT INTO `llx_paiement`(`rowid`, `ref`, `entity`, `datec`, `tms`, `datep`, `amount`, `multicurrency_amount`, `fk_paiement`, `num_paiement`, `note`, `fk_bank`, `fk_user_creat`, `fk_user_modif`, `statut`, `fk_export_compta`) ";
-			$sql.= " VALUES (".$idp.",'".$idpc."',1,NOW(),NOW(),NOW(),".$amount.",".$amount.",".$idpaiment.",'','',".$ide.",1,'',0,0)";
-			$resql = $db->query($sql);
-
-
-			//Add new relation paiment avec facture in table paiment_facture
-			foreach($montantF as $key => $val){
-				$idfactura = $rowidF[$key];
-				$sql = " INSERT INTO `llx_paiement_facture`(`rowid`, `fk_paiement`, `fk_facture`, `amount`, `multicurrency_code`, `multicurrency_tx`, `multicurrency_amount`) ";
-				$sql.= " VALUES ('',".$idp.",".$idfactura.",".$val.",'',1,".$val.")";
-				$resql = $db->query($sql);
-			}
-
-
-			//Ajouter url bank
-			$sql = " INSERT INTO `llx_bank_url`( `fk_bank`, `url_id`, `url`, `label`, `type`) ";
-			$sql.= " VALUES (".$ide.",".$idp.",'','(paiement)','payment')";
-			$resql = $db->query($sql);
-			$sql = " INSERT INTO `llx_bank_url`( `fk_bank`, `url_id`, `url`, `label`, `type`) ";
-			$sql.= " VALUES (".$ide.",".$idclient.",'','(Client)','company')";
-			$resql = $db->query($sql);
-
-			header("Location: index.php");
-			exit;
-			
-		}else{
-			
-			//get type paiement 
-			$sql = " SELECT `code` FROM " . MAIN_DB_PREFIX . "c_paiement ";
-			$sql.= " Where id = ".$idpaiment;
-			$resql = $db->query($sql);
-			$obj = $db->fetch_object($resql);
-			$db->free($resql);
-			$codeP = $obj->code;
-
-
-			//Add new ecritur in table bank et return id
-			$sql = " INSERT INTO `llx_bank`(`rowid`, `datec`, `tms`, `datev`, `dateo`, `amount`, `label`, `fk_account`, `fk_user_author`, `fk_user_rappro`, `fk_type`, `num_releve`, `num_chq`, `rappro`, `note`, `fk_bordereau`, `banque`, `emetteur`, `author`)" ;
-			$sql.= " VALUES ('',NOW(),NOW(),'".$datev."','".$dateo."',".$amount.",'(SupplierInvoicePayment)',".$idAccount.",1,'','".$codeP."','','','','','','','','')";
-			$resql = $db->query($sql);
-			$ide = $db->last_insert_id(MAIN_DB_PREFIX . "bank");
-
-
-
-			//Add new paiment in table paiment
-			$sql = " SELECT rowid FROM llx_paiementfourn ORDER BY rowid DESC LIMIT 1";
-			$resql = $db->query($sql);
-			$objlastselect = $db->fetch_object($resql);
-			$db->free($resql);
-			$idp = $objlastselect->rowid + 1;
-
-			$year =  date("y");
-			$month =  date("m");
-			$year = substr( $year, -2);
-			$idpc = str_pad($idp, 4, '0', STR_PAD_LEFT);
-			$idpc = 'SPAY'.$year.$month.'-'.$idpc;
-
-			$sql = " INSERT INTO `llx_paiementfourn`(`rowid`, `ref`, `entity`, `tms`, `datec`, `datep`, `amount`, `multicurrency_amount`, `fk_user_author`, `fk_paiement`, `num_paiement`, `note`, `fk_bank`, `statut`) ";
-			$sql.= " VALUES (".$idp.",'".$idpc."',1,NOW(),NOW(),NOW(),".$amount.",".$amount.",1,".$idpaiment.",'','',".$ide.",0) ";
-			$resql = $db->query($sql);
-			
-			
-			//Add new relation paiment avec facture in table paiment_facture
-			foreach($montantF as $key => $val){
-				$idfactura = $rowidF[$key];
-				
-				$sql = " INSERT INTO `llx_paiementfourn_facturefourn`(`rowid`, `fk_paiementfourn`, `fk_facturefourn`, `amount`, `multicurrency_code`, `multicurrency_tx`, `multicurrency_amount`) ";
-				
-				$sql.= " VALUES ('',".$idp.",".$idfactura.",".$val.",'',1,".$val.")";
-				
-				$resql = $db->query($sql);
-			}
-			
-			header("Location: index.php");
-			exit;
-			
-			
-		}
 		
+		$error = $langs->trans("ErrorFactur");
+		header("Location: index.php?errorinsert=".$error);
+		exit;
 	}
 }else{
 	
+	foreach($_POST['rapp'] as $key => $val){
+		$sql = " UPDATE `llx_bank` SET `num_releve`=".$_SESSION['arrayfilecsv']['releve'].",`rappro`=1 WHERE `rowid`= ".$_SESSION['arrayfilecsv']['reg'][$key][6] ;
+		$resql = $db->query($sql);
+	}
+	
+	// session_destroy();
+	unset($_SESSION['arrayfilecsv']);
+	
+	header("Location: index.php");
+	exit;
+	
+	/* 
 	$error = $langs->trans("notFacture");
 	header("Location: index.php?errorinsert=".$error);
 	exit;
+	*/
 }

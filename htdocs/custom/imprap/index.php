@@ -49,6 +49,9 @@ $langs->load("bills");
 $action=GETPOST('action', 'alpha');
 $compteBank=GETPOST('choix', 'int');
 $newFile=GETPOST('newFile', 'int');
+$relevebancair=GETPOST('relevebancair', 'int');
+
+$separateur=GETPOST('separateur');
 
 
 if($action == 'deleterow'){
@@ -75,83 +78,122 @@ if(isset($_GET['errorinsert'])){
 	$langs->load("errors");
 	setEventMessages($_GET['errorinsert'], null, 'errors');
 }
-//start verify of file
+
 
 $error = 0;
-
 $arrayfilecsv = array(
-					'bank' => '',
-					'reg' => array(),
-					'trait' => array(),
+					'releve' => '',
+					'separateur' => '',
+					'bank'   => '',
+					'reg'    => array(),
+					'trait'  => array(),
 					);
 
 if(!empty($newFile)){
+
+	// $_SESSION['arrayfilecsv'] = '';
 	if (isset($_FILES['fcsv']) AND $_FILES['fcsv']['error'] == 0)
 	{	
-		// Testons si le fichier n'est pas trop gros
-		if ($_FILES['fcsv']['size'] <= 1000000)
-		{
-			if ( !empty($_POST['dated']) AND !preg_match( "/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $_POST['dated'] ) ){ 
-				
-				$error++;
-				$langs->load("errors");
-				setEventMessages($langs->trans("dateStartInvalid"), null, 'errors');
+		$dateStart1 = '';
+		$dateEnd1   = '';
+		if ( !empty($_POST['dated']) AND !preg_match( "/^(0[1-9]|[1-2][0-9]|3[0-1])[\/-](0[1-9]|1[0-2])[\/-][0-9]{4}$/", $_POST['dated'] ) ){ 
 			
+			$error++;
+			$langs->load("errors");
+			setEventMessages($langs->trans("dateStartInvalid"), null, 'errors');
+			
+		}elseif(!empty($_POST['dated'])){
+			
+			$source = str_replace("/","-",$_POST['dated']);
+			$dateStart1 = date("Y-m-d", strtotime($source));
+			
+		}
+		
+		if ( !empty($_POST['datef']) AND !preg_match( "/^(0[1-9]|[1-2][0-9]|3[0-1])[\/-](0[1-9]|1[0-2])[\/-][0-9]{4}$/", $_POST['datef'] ) ){
+			
+			$error++;
+			$langs->load("errors");
+			setEventMessages($langs->trans("dateEndInvalid"), null, 'errors');
+			
+		}elseif(!empty($_POST['datef'])){
+			
+			$source = str_replace("/","-",$_POST['datef']);
+			$dateEnd1 = date("Y-m-d", strtotime($source));
+			
+		}
+
+		// Testons si l'extension est autorisie
+		$infosfichier = pathinfo($_FILES['fcsv']['name']);
+		$extension_upload = $infosfichier['extension'];
+		$extensions_autorisees = array('csv');
+		
+		if (in_array($extension_upload, $extensions_autorisees))
+		{
+			// On peut valider le fichier et le stocker definitivement
+			// move_uploaded_file($_FILES['fcsv']['tmp_name'], 'uploads/' . basename($_FILES['fcsv']['name']));
+			// $lines = file('uploads/'.$_FILES['fcsv']['name'], FILE_IGNORE_NEW_LINES);
+			
+			$lines = file($_FILES['fcsv']['tmp_name'], FILE_IGNORE_NEW_LINES);
+			
+			if(!empty($_POST['entete'])){
+				unset($lines[0]);
 			}
-			if ( !empty($_POST['datef']) AND !preg_match( "/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $_POST['datef'] ) ){
-				
+			
+			if( empty($_POST['relevebancair']) OR !is_numeric($_POST['relevebancair'])){
 				$error++;
 				$langs->load("errors");
-				setEventMessages($langs->trans("dateEndInvalid"), null, 'errors');
-				
+				setEventMessages($langs->trans("ReleveRequired"), null, 'errors');
 			}
-
-			// Testons si l'extension est autorisie
-			$infosfichier = pathinfo($_FILES['fcsv']['name']);
-			$extension_upload = $infosfichier['extension'];
-			$extensions_autorisees = array('csv');
-			if (in_array($extension_upload, $extensions_autorisees))
-			{
-				// On peut valider le fichier et le stocker definitivement
-				move_uploaded_file($_FILES['fcsv']['tmp_name'], 'uploads/' . basename($_FILES['fcsv']['name']));
-				
-				$lines = file('uploads/'.$_FILES['fcsv']['name'], FILE_IGNORE_NEW_LINES);
-				
-				
-				if(!empty($_POST['entete'])){
-					unset($lines[0]);
+			
+			if(!empty(trim($separateur))){
+				if(strlen($separateur) > 1){
+					$error++;
+					$langs->load("errors");
+					setEventMessages($langs->trans("ErrorSeparateur"), null, 'errors');
 				}
-				
+			}else{	$separateur = ';'; }
+			
+			if($error == 0){
 				foreach ($lines as $key => $value)
 				{
 					$tableligne  = array();
-					$cs = split(";",$value);
+					$cs = split(trim($separateur),$value);
 					
-					if ( (!empty($cs[0]) AND preg_match( "/^[0-9]{4}([-.\\/])(0[1-9]|1[0-2])([-.\\/])(0[1-9]|[1-2][0-9]|3[0-1])$/", $cs[0] )) OR (!empty($cs[0]) AND preg_match( "/^(0[1-9]|[1-2][0-9]|3[0-1])([-.\\/])(0[1-9]|1[0-2])([-.\\/])[0-9]{4}$/", $cs[0] )) ){ 
-						$originalDate1 = $cs[0];
+					if ( (!empty($cs[0]) AND preg_match( "/^(0[1-9]|[1-2][0-9]|3[0-1])[\/-](0[1-9]|1[0-2])[\/-][0-9]{4}$/", $cs[0] )) OR (!empty($cs[0]) AND preg_match( "/^[0-9]{4}[\/-](0[1-9]|1[0-2])[\/-](0[1-9]|[1-2][0-9]|3[0-1])$/", $cs[0] )) ){ 
+						
+						$originalDate1 = str_replace("/","-",$cs[0]);
 						$dateOperation = date("Y-m-d", strtotime($originalDate1));
 						$tableligne[] = $dateOperation;
+					
 					}else{ 				
 						$error++;
 						$langs->load("errors");
 						setEventMessages($langs->trans("dateOperationInvalid"), null, 'errors');
 					}
 					
-					if ( (!empty($cs[1]) AND preg_match( "/^[0-9]{4}([-.\\/])(0[1-9]|1[0-2])([-.\\/])(0[1-9]|[1-2][0-9]|3[0-1])$/", $cs[1] )) OR (!empty($cs[1]) AND preg_match( "/^(0[1-9]|[1-2][0-9]|3[0-1])([-.\\/])(0[1-9]|1[0-2])([-.\\/])[0-9]{4}$/", $cs[1] )) ){ 
-						$originalDate1 = $cs[1];
-						$dateOperation = date("Y-m-d", strtotime($originalDate1));
-						$tableligne[] = $dateOperation;
-					}else{ $tableligne[] = ''; }
+					if ( (!empty($cs[1]) AND preg_match( "/^(0[1-9]|[1-2][0-9]|3[0-1])[\/-](0[1-9]|1[0-2])[\/-][0-9]{4}$/", $cs[1] )) OR (!empty($cs[1]) AND preg_match( "/^[0-9]{4}[\/-](0[1-9]|1[0-2])[\/-](0[1-9]|[1-2][0-9]|3[0-1])$/", $cs[1] )) ){ 
+						
+						$originalDate1 = str_replace("/","-",$cs[1]);
+						$datevaleur = date("Y-m-d", strtotime($originalDate1));
+						$tableligne[] = $datevaleur;
+						
+					}else{ 
+						$error++;
+						$langs->load("errors");
+						setEventMessages($langs->trans("dateValeurInvalid"), null, 'errors');
+					}
 					
 					$cs[2] = (float)(trim(str_replace(",",".",$cs[2])));
-					if ( !empty($cs[2]) AND is_float($cs[2]) ){ 
-						$tableligne[] = $cs[2];
-					}else{ $tableligne[] = 0; }
-					
 					$cs[3] = (float)(trim(str_replace(",",".",$cs[3])));
-					if ( !empty($cs[3]) AND is_float($cs[3]) ){ 
-						$tableligne[] = $cs[3];
-					}else{ $tableligne[] = 0 ; }
+					
+					$tableligne[] = $cs[2];
+					$tableligne[] = $cs[3];
+					
+					if ( $cs[2] != 0 AND $cs[3] != 0 ){ 
+						$error++;
+						$langs->load("errors");
+						setEventMessages($langs->trans("ErrorCreditDebit"), null, 'errors');
+					}
 					
 					$tableligne[] = trim($cs[4]);
 					
@@ -159,80 +201,136 @@ if(!empty($newFile)){
 					
 					$arrayfilecsv['trait'][] = $tableligne;
 				}
+			}			
+			
+			if($error == 0){
 				
 				foreach($arrayfilecsv['trait'] as $key => $arrayfilecs){ 
+				
 					if(!empty($_POST['dated']) AND empty($_POST['datef'])){
-						if($arrayfilecs[0] < $_POST['dated']){
-							unset($arrayfilecsv[$key]);
+						if($arrayfilecs[0] < $dateStart1){
+							unset($arrayfilecsv['trait'][$key]);
 						}
 					}elseif(empty($_POST['dated']) AND !empty($_POST['datef'])){
-						if($arrayfilecs[0] > $_POST['datef']){
-							unset($arrayfilecsv[$key]);
+						if($arrayfilecs[0] > $dateEnd1){
+							unset($arrayfilecsv['trait'][$key]);
 						}
 					}elseif(!empty($_POST['dated']) AND !empty($_POST['datef'])){
-						if($arrayfilecs[0] < $_POST['dated'] OR $arrayfilecs[0] > $_POST['datef']){
-							unset($arrayfilecsv[$key]);
+						if($arrayfilecs[0] < $dateStart1 OR $arrayfilecs[0] > $dateEnd1){
+							unset($arrayfilecsv['trait'][$key]);
 						}
 					}					
 				}
+				
+				$arrayfilecsv['releve'] = $relevebancair;
 				$arrayfilecsv['bank'] = $compteBank;
+			
 				$_SESSION['arrayfilecsv'] = $arrayfilecsv;
-			}
-			else
-			{
-				$error++;
-				$langs->load("errors");
-				setEventMessages($langs->trans("extentionInvalid"), null, 'errors');
+				
+			}else{
+				$_SESSION['arrayfilecsv'] = '';
 			}
 		}
 		else
 		{
 			$error++;
 			$langs->load("errors");
-			setEventMessages($langs->trans("bigSize"), null, 'errors');
+			setEventMessages($langs->trans("extentionInvalid"), null, 'errors');
 		}
-		
+	}
+	else
+	{
+		$error++;
+		$langs->load("errors");
+		setEventMessages($langs->trans("CsvFileEmpty"), null, 'errors');
 	}
 }
 
 
-	print '<form method="POST" action="" enctype="multipart/form-data">';
-	print '<input type="hidden" name="action" value="uploadcsv">';
-	print '<input type="hidden" name="backtopage" value="'.$backtopage.'">';
-	print '<input type="hidden" name="newFile" value="1">';
-		dol_fiche_head();
-		print load_fiche_titre($langs->trans("Import fichier CSV"));
-		
-			print ' <table id="tb1" class="liste" width="100%">
-				  <tr>
-					<td>Compte bancaire</td>
-					<td>
-						<select name="choix">';
-						   $account_bank = new repartition($db);
-							foreach ($account_bank->getaccount() as $key => $value) {
-								print '<option value="'.$value->rowid.'">'.$value->label.'</option>';
-							}
-						print '</select>
-					</td>
-					<td>Date début</td>
-					<td><input type="date" name="dated"/></td>
-					<td>Le fichier contient une ligne d\'en-téte : <input type="checkbox" name="entete" value="1"></td>
-				  </tr>
-				  <tr>
-					<td>Fichier à importer</td>
-					<td><input class="flat" type="file" size="33" name="fcsv"/></td>
-					<td>Date fin</td>
-					<td><input type="date" name="datef"/></td>
-					<td style="text-align:right;"><input type="submit" class="button" name="add" value="Comparer les écritures >>"/></td>
-				  </tr>
-			</table>';
-		dol_fiche_end();
-	print '</form>';
+
+print '<form method="POST" action="index.php" enctype="multipart/form-data">';
+print '<input type="hidden" name="action" value="uploadcsv">';
+print '<input type="hidden" name="backtopage" value="'.$backtopage.'">';
+print '<input type="hidden" name="newFile" value="1">';
+	dol_fiche_head();
+	print load_fiche_titre($langs->trans("Import fichier CSV"));
 	
-//end verify of file
+		print ' <table id="tb1" class="liste" width="100%">
+			  <tr>
+				<td>Compte bancaire</td>
+				<td>
+					<select name="choix">';
+					   $account_bank = new repartition($db);
+						foreach ($account_bank->getaccount() as $key => $value) {
+							print '<option value="'.$value->rowid.'">'.$value->label.'</option>';
+						}
+					print '</select>
+				</td>';
+				
+					// Date start
+					print '<td class="fieldrequired">' . $langs->trans('Dated') . '</td><td>';
+					$dated = $form->select_date(
+								$set_time = '',
+								$prefix = 'dated',
+								$h = 0,
+								$m = 0,
+								$empty = 1,
+								$form_name = "",
+								$d = 1,
+								$addnowlink = 0,
+								$nooutput = 0,
+								$disabled = 0,
+								$fullday = '',
+								$addplusone = '',
+								$adddateof = '' 
+							);
+					print $dated;
+					print '</td>';
+				
+				print'<td>Le fichier contient une ligne d\'en-téte : <input type="checkbox" name="entete" value="1"></td>
+			  
+			  </tr>
+			  <tr>
+				<td>Fichier à importer</td>
+				<td><input class="flat" type="file" size="33" name="fcsv"/></td>';
+					// <td>Date fin</td>
+					// <td><input type="date" name="datef"/></td>
+					// Date start
+					print '<td class="fieldrequired">' . $langs->trans('Datef') . '</td><td>';
+					$datef = $form->select_date(
+								$set_time = '',
+								$prefix = 'datef',
+								$h = 0,
+								$m = 0,
+								$empty = 1,
+								$form_name = "",
+								$d = 1,
+								$addnowlink = 0,
+								$nooutput = 0,
+								$disabled = 0,
+								$fullday = '',
+								$addplusone = '',
+								$adddateof = '' 
+							);
+					print $datef;
+					print '</td>';
+					
+				print'<td>relevé bancaire : <input type="number" name="relevebancair" style="width:130px;"></td>
+			  </tr>
+			  <tr>
+				<td>Séparateur des données du fichier : </td>
+				<td><input type="text" name="separateur"/></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			  </tr>
+		</table>';
+	print'<div width=100% style="text-align:center;"><input type="submit" class="button" name="add" value="Comparer les écritures >>"></div>';
+	dol_fiche_end();
+print '</form>';
 	
-	
-if(!empty($_SESSION['arrayfilecsv'])){
+
+if(!empty($_SESSION['arrayfilecsv']) AND $error == 0){
 	
 	$sql = "SELECT b.rowid, b.dateo as do, b.datev as dv, b.amount, b.label, b.rappro, b.num_releve, b.num_chq, b.fk_type as type";
 	$sql.= " FROM ".MAIN_DB_PREFIX."bank as b ";
@@ -280,8 +378,20 @@ if(!empty($_SESSION['arrayfilecsv'])){
 	
 	foreach($_SESSION['arrayfilecsv']['reg'] as $key => $val){
 		print "<tr ".$bc[$var].">\n";
-		print '<td align="">'.$val[0].'</td>';
-		print '<td align="">'.$val[1].'</td>';
+		print '<td class="nowrap" align="">'.$val[0].'</td>';
+		print '<td class="nowrap" align="">'.$val[1].'</td>';
+		print '<td align="">';
+		
+			$sql = "SELECT fk_type FROM `llx_bank` WHERE rowid=".$val[6];
+			$result = $db->query($sql);
+			$obj = $db->fetch_object($result);
+		
+			$sql = "SELECT `libelle` FROM `llx_c_paiement` WHERE code = '".$obj->fk_type."'";
+			$result = $db->query($sql);
+			$obj = $db->fetch_object($result);
+			echo $obj->libelle;
+		
+		print '</td>';
 		
 		print '<td align="">';
 		
@@ -343,10 +453,10 @@ if(!empty($_SESSION['arrayfilecsv'])){
 		}
 		print '</td>';
 		
-		print '<td align="">'.$val[4].'</td>';
+		
 		print '<td align="">'.$val[2].'</td>';
 		print '<td align="">'.$val[3].'</td>';
-		print '<td align=""><input type="checkbox" name="rapp" value="'.$key.'" checked></td>';
+		print '<td align=""><input type="checkbox" name="rapp[]" value="'.$key.'" checked></td>';
 		print "</tr>\n";
 	}
 	
@@ -377,6 +487,7 @@ if(!empty($_SESSION['arrayfilecsv'])){
 		print "<tr ".$bc[$var].">\n";
 		print "<td class='dateo'>".$val[0]."</td>";
 		print "<td class='datev'>".$val[1]."</td>";
+		print "<td class='desct'><span style='font-weight:bold;'>Libellé : </span>".$val[4]."</td>";
 		print "<td width='25%'>
 					<select name='typeG' id='typeG'>;
 						<option value='facture' selected=''>Facture</option>
@@ -391,7 +502,6 @@ if(!empty($_SESSION['arrayfilecsv'])){
 					</select>
 					<div id='factures'></div>
 				</td>";
-		print "<td class='desct'>".$val[4]."</td>";
 		print "<td class='debit'>".$val[2]."</td>";
 		print "<td class='crdit'>".$val[3]."</td>";
 		print "<td>";
@@ -411,8 +521,10 @@ if(!empty($_SESSION['arrayfilecsv'])){
 	}
 
     print "</table><br>\n";
-	// print '<div align="right"><input class="button" type="submit" value="'.$langs->trans("Conciliate").'"></div><br>';
-    print "</form>";
+	if(empty($_SESSION['arrayfilecsv']['trait'])){
+		print '<div align="right"><input class="button" type="submit" value="'.$langs->trans("Conciliate").'"></div><br>';
+    }
+	print "</form>";
 }
 
 print"
