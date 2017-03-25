@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /* Copyright (C) 2016/17		Jamal Elbaz			<jamelbaz@gmail.com>
  * Copyright (C) 2016 		Alexandre Spangaro	<aspangaro.dolibarr@gmail.com>
  *
@@ -155,8 +155,10 @@ foreach($cats as $cat ){
 		$sommes[$code]['NP'] += $r;
 
 		// Current fiscal year (N)
-		foreach($sommes as $code => $det){
-			$vars[$code] = $det['N'];
+		if (is_array($sommes) && ! empty($sommes)){
+			foreach($sommes as $code => $det){
+				$vars[$code] = $det['N'];
+			}
 		}
 		
 		$result = strtr($formula, $vars);
@@ -184,6 +186,7 @@ foreach($cats as $cat ){
 	}else{ // normal category
 		
 		$totCat = array();
+		$totCat['M'] = array();
 	
 		// get cpts of category
 		$cpts = $AccCat->getCptsCat($cat['rowid']);
