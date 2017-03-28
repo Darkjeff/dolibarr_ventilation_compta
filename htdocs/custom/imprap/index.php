@@ -82,11 +82,11 @@ if(isset($_GET['errorinsert'])){
 
 $error = 0;
 $arrayfilecsv = array(
-					'releve' => '',
+					'releve'     => '',
 					'separateur' => '',
-					'bank'   => '',
-					'reg'    => array(),
-					'trait'  => array(),
+					'bank'       => '',
+					'reg'        => array(),
+					'trait'      => array(),
 					);
 
 if(!empty($newFile)){
@@ -142,7 +142,7 @@ if(!empty($newFile)){
 			if( empty($_POST['relevebancair']) OR !is_numeric($_POST['relevebancair'])){
 				$error++;
 				$langs->load("errors");
-				setEventMessages($langs->trans("ReleveRequired"), null, 'errors');
+				setEventMessages($langs->trans("choixReleveOblig"), null, 'errors');
 			}
 			
 			if(!empty(trim($separateur))){
@@ -189,7 +189,7 @@ if(!empty($newFile)){
 					$tableligne[] = $cs[2];
 					$tableligne[] = $cs[3];
 					
-					if ( $cs[2] != 0 AND $cs[3] != 0 ){ 
+					if ( ($cs[2] != 0 AND $cs[3] != 0) OR ($cs[2] == 0 AND $cs[3] == 0) ){ 
 						$error++;
 						$langs->load("errors");
 						setEventMessages($langs->trans("ErrorCreditDebit"), null, 'errors');
@@ -242,7 +242,7 @@ if(!empty($newFile)){
 	{
 		$error++;
 		$langs->load("errors");
-		setEventMessages($langs->trans("CsvFileEmpty"), null, 'errors');
+		setEventMessages($langs->trans("notFileScv"), null, 'errors');
 	}
 }
 
@@ -377,6 +377,7 @@ if(!empty($_SESSION['arrayfilecsv']) AND $error == 0){
     print "</tr>\n";
 	
 	foreach($_SESSION['arrayfilecsv']['reg'] as $key => $val){
+		$var=!$var;
 		print "<tr ".$bc[$var].">\n";
 		print '<td class="nowrap" align="">'.$val[0].'</td>';
 		print '<td class="nowrap" align="">'.$val[1].'</td>';

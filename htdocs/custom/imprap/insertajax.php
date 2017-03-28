@@ -183,10 +183,12 @@ if($typeG == 'facture'){
 		$resql = $db->query($sql);
 	}
 	
-	// session_destroy();
+	$bbank = $_SESSION['arrayfilecsv']['bank'] ;
+	$aacompt = $_SESSION['arrayfilecsv']['releve'] ;
+	
 	unset($_SESSION['arrayfilecsv']);
 	
-	header("Location: index.php");
+	header("Location: ".DOL_URL_ROOT."/compta/bank/releve.php?account=".$bbank."&num=".$aacompt );
 	exit;
 	
 	/* 
