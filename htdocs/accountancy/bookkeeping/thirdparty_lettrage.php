@@ -123,7 +123,7 @@ llxHeader ( '', 'Compta - Grand Livre' );
         print '<tr><td>'.$langs->trans('Prefix').'</td><td colspan="3">'.$object->prefix_comm.'</td></tr>';
     }
 
-	if ($object->fournisseur)
+	if ($object->fournisseur == 1)
 	{
 		print '<tr>';
         print '<td class="nowrap">'.$langs->trans("SupplierCode"). '</td><td colspan="3">';
@@ -138,6 +138,25 @@ llxHeader ( '', 'Compta - Grand Livre' );
         print $form->editfieldkey("SupplierAccountancyCode",'supplieraccountancycode',$object->code_compta_fournisseur,$object,$user->rights->societe->creer);
         print '</td><td colspan="3">';
         print $form->editfieldval("SupplierAccountancyCode",'supplieraccountancycode',$object->code_compta_fournisseur,$object,$user->rights->societe->creer);
+        print '</td>';
+        print '</tr>';
+	}
+	
+	if ($object->client == 1)
+	{
+		print '<tr>';
+        print '<td class="nowrap">'.$langs->trans("CustomerCode"). '</td><td colspan="3">';
+        print $object->code_client;
+        if ($object->check_codeclient() <> 0) print ' <font class="error">('.$langs->trans("WrongCustomerCode").')</font>';
+        print '</td>';
+        print '</tr>';
+
+		$langs->load('compta');
+        print '<tr>';
+        print '<td>';
+        print $form->editfieldkey("CustomerAccountancyCode",'customeraccountancycode',$object->code_compta,$object,$user->rights->societe->creer);
+        print '</td><td colspan="3">';
+        print $form->editfieldval("CustomerAccountancyCode",'customeraccountancycode',$object->code_compta,$object,$user->rights->societe->creer);
         print '</td>';
         print '</tr>';
 	}
@@ -175,12 +194,13 @@ llxHeader ( '', 'Compta - Grand Livre' );
 	
 	$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal , bk.piece_num, bk.lettering ";
 	$sql .= " FROM " . MAIN_DB_PREFIX . "accounting_bookkeeping as bk";
-	//$sql .= " WHERE (bk.numero_compte = '" . $object->code_compta . "' AND bk.numero_compte <> '411' ) OR ( bk.numero_compte = '" . $object->code_compta_fournisseur . "' AND bk.numero_compte <>'401'  )";
-	//if ( $object->fournisseur){
+	//$sql .= " WHERE (bk.code_tiers = '" . $object->code_compta . "' AND bk.numero_compte = '411' ) OR ( bk.code_tiers = '" . $object->code_compta_fournisseur . "' AND bk.numero_compte = '401'  )";
+	if ( $object->fournisseur == 1){
 	$sql .= " WHERE (bk.code_tiers =  '" . $object->code_compta_fournisseur . "' AND bk.numero_compte = '401' )" ;
-	//} else {
-	//$sql .= " WHERE (bk.code_tiers =  '" . $object->code_compta . "' AND bk.numero_compte = '411' )" ;
-	//}
+	} 
+	if ( $object->client == 1) {
+	$sql .= " WHERE (bk.code_tiers =  '" . $object->code_compta . "' AND bk.numero_compte = '411' )" ;
+	}
 	
 
 	if (dol_strlen ( $search_year  )) {
