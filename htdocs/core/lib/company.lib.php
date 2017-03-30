@@ -113,17 +113,21 @@ function societe_prepare_head(Societe $object)
     	$head[$h][2] = 'project';
     	$h++;
     }
-	/*
-	if (! empty($conf->accounting->enabled) && (!empty($user->rights->accountancy->lire) ))
+	
+	if (($object->client==1 || $object->client==2 || $object->client==3) && ($conf->accounting->enabled))
     {
-	*/
 	$head[$h][0] = DOL_URL_ROOT.'/accountancy/bookkeeping/thirdparty_lettrage.php?socid='.$object->id;
-    $head[$h][1] = $langs->trans("Accounting");
-	$head[$h][2] = 'TabAccounting';
+    $head[$h][1] = $langs->trans("AccountingLetteringCustomer");
+	$head[$h][2] = 'TabAccountingCustomer';
     $h++;
-	/*
 	}
-	*/
+	if (! empty($conf->fournisseur->enabled) && $object->fournisseur && ! empty($conf->accounting->enabled))
+	{
+	$head[$h][0] = DOL_URL_ROOT.'/accountancy/bookkeeping/thirdparty_lettrage_supplier.php?socid='.$object->id;
+    $head[$h][1] = $langs->trans("AccountingLetteringSupplier");
+	$head[$h][2] = 'TabAccountingSupplier';
+    $h++;
+	}
 	
 	
     //show categorie tab

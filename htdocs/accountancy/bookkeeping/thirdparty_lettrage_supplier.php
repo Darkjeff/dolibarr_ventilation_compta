@@ -125,18 +125,18 @@ llxHeader ( '', 'Compta - Grand Livre' );
 
 
 		print '<tr>';
-        print '<td class="nowrap">'.$langs->trans("CustomerCode"). '</td><td colspan="3">';
-        print $object->code_client;
-        if ($object->check_codeclient() <> 0) print ' <font class="error">('.$langs->trans("WrongCustomerCode").')</font>';
+        print '<td class="nowrap">'.$langs->trans("SupplierCode"). '</td><td colspan="3">';
+        print $object->code_fournisseur;
+        if ($object->check_codefournisseur() <> 0) print ' <font class="error">('.$langs->trans("WrongSupplierCode").')</font>';
         print '</td>';
         print '</tr>';
 
 		$langs->load('compta');
         print '<tr>';
         print '<td>';
-        print $form->editfieldkey("CustomerAccountancyCode",'customeraccountancycode',$object->code_compta,$object,$user->rights->societe->creer);
+        print $form->editfieldkey("SupplierAccountancyCode",'supplieraccountancycode',$object->code_compta_fournisseur,$object,$user->rights->societe->creer);
         print '</td><td colspan="3">';
-        print $form->editfieldval("CustomerAccountancyCode",'customeraccountancycode',$object->code_compta,$object,$user->rights->societe->creer);
+        print $form->editfieldval("SupplierAccountancyCode",'supplieraccountancycode',$object->code_compta_fournisseur,$object,$user->rights->societe->creer);
         print '</td>';
         print '</tr>';
 	
@@ -160,14 +160,22 @@ llxHeader ( '', 'Compta - Grand Livre' );
 	
 	print '</table>';
 	
-
+// 	print_r($soc); 
+// exit; 
+//   [code_compta] => 411DOUA
+//     [code_compta_fournisseur] => 401SUPPCODE
     
-
+/*
+ * Mode Liste
+ *
+ *
+ *
+ */
 	
 	$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal , bk.piece_num, bk.lettering ";
 	$sql .= " FROM " . MAIN_DB_PREFIX . "accounting_bookkeeping as bk";
-	$sql .= " WHERE (bk.code_tiers =  '" . $object->code_compta . "' AND bk.numero_compte = '411' )" ;
-
+	$sql .= " WHERE (bk.code_tiers =  '" . $object->code_compta_fournisseur . "' AND bk.numero_compte = '401' )" ;
+	
 	
 
 	if (dol_strlen ( $search_year  )) {
