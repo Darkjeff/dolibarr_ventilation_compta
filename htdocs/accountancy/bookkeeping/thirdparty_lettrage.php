@@ -173,12 +173,14 @@ llxHeader ( '', 'Compta - Grand Livre' );
  *
  */
 	
-	//$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal , bk.piece_num, bk.lettering ";
-	$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal , bk.piece_num ";
-	
-	$sql .= " FROM " . MAIN_DB_PREFIX . "bookkeeping as bk";
-	
-	$sql .= " WHERE (bk.numero_compte = '" . $object->code_compta . "' AND bk.numero_compte <> '411' ) OR ( bk.numero_compte = '" . $object->code_compta_fournisseur . "' AND bk.numero_compte <>'401'  )";
+	$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal , bk.piece_num, bk.lettering ";
+	$sql .= " FROM " . MAIN_DB_PREFIX . "accounting_bookkeeping as bk";
+	//$sql .= " WHERE (bk.numero_compte = '" . $object->code_compta . "' AND bk.numero_compte <> '411' ) OR ( bk.numero_compte = '" . $object->code_compta_fournisseur . "' AND bk.numero_compte <>'401'  )";
+	//if ( $object->fournisseur){
+	$sql .= " WHERE (bk.code_tiers =  '" . $object->code_compta_fournisseur . "' AND bk.numero_compte = '401' )" ;
+	//} else {
+	//$sql .= " WHERE (bk.code_tiers =  '" . $object->code_compta . "' AND bk.numero_compte = '411' )" ;
+	//}
 	
 
 	if (dol_strlen ( $search_year  )) {
@@ -186,8 +188,7 @@ llxHeader ( '', 'Compta - Grand Livre' );
 	}
 
 	
-	//$sql .= " ORDER BY bk.lettering ASC, bk.doc_date ASC" ;//. $db->plimit ( $conf->liste_limit + 1, $offset );
-	$sql .= " ORDER BY  bk.doc_date ASC" ;//. $db->plimit ( $conf->liste_limit + 1, $offset );
+	$sql .= " ORDER BY bk.lettering ASC, bk.doc_date ASC" ;//. $db->plimit ( $conf->liste_limit + 1, $offset );
 	
 // 	echo $sql; 
 // 	dol_syslog ( "bookkeping:liste:create sql=" . $sql, LOG_DEBUG );
