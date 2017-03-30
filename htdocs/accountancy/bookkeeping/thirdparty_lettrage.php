@@ -32,9 +32,9 @@ if (! $res && file_exists ( "../main.inc.php" )) $res = @include ("../main.inc.p
 if (! $res && file_exists ( "../../main.inc.php" )) $res = @include ("../../main.inc.php");
 if (! $res && file_exists ( "../../../main.inc.php" )) $res = @include ("../../../main.inc.php");
 
-dol_include_once ( "/accountingex/class/html.formventilation.class.php");
-dol_include_once ( "/accountingex/class/bookkeeping.class.php");
-dol_include_once ( "/accountingex/class/lettrage.class.php");
+dol_include_once ( "/accountancy/class/html.formventilation.class.php");
+dol_include_once ( "/accountancy/class/bookkeeping.class.php");
+dol_include_once ( "/accountancy/class/lettering.class.php");
 dol_include_once ( "/societe/class/societe.class.php");
 dol_include_once ( "/core/lib/company.lib.php");
 // require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
@@ -60,7 +60,7 @@ $object->id = $socid;
 $object->fetch($socid);
 $form = new Form($db);
 
-$BookKeeping = new Lettrage($db); 
+$BookKeeping = new lettering($db); 
 
 if ($sortorder == "") $sortorder = "ASC";
 if ($sortfield == "") $sortfield = "bk.rowid";
@@ -72,7 +72,7 @@ $formventilation = new FormVentilation ( $db );
 /*
  * Action
  */
-if ($action == 'lettrage') {
+if ($action == 'lettering') {
 
 	$result =  $BookKeeping->updatelettrage($_POST['ids']);
 	
@@ -173,7 +173,8 @@ llxHeader ( '', 'Compta - Grand Livre' );
  *
  */
 	
-	$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal , bk.piece_num, bk.lettrage ";
+	//$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal , bk.piece_num, bk.lettering ";
+	$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal , bk.piece_num ";
 	
 	$sql .= " FROM " . MAIN_DB_PREFIX . "bookkeeping as bk";
 	
@@ -185,7 +186,9 @@ llxHeader ( '', 'Compta - Grand Livre' );
 	}
 
 	
-	$sql .= " ORDER BY bk.lettrage ASC, bk.doc_date ASC" ;//. $db->plimit ( $conf->liste_limit + 1, $offset );
+	//$sql .= " ORDER BY bk.lettering ASC, bk.doc_date ASC" ;//. $db->plimit ( $conf->liste_limit + 1, $offset );
+	$sql .= " ORDER BY  bk.doc_date ASC" ;//. $db->plimit ( $conf->liste_limit + 1, $offset );
+	
 // 	echo $sql; 
 // 	dol_syslog ( "bookkeping:liste:create sql=" . $sql, LOG_DEBUG );
 	$resql = $db->query ( $sql );
@@ -195,7 +198,7 @@ llxHeader ( '', 'Compta - Grand Livre' );
 		
 
 		print '<form name="add" action="?socid='.$object->id.'" method="POST">';
-		print '<input type="hidden" name="action" value="lettrage">';
+		print '<input type="hidden" name="action" value="lettering">';
 		print '<input type="hidden" name="socid" value="'.$object->id.'">';
 		
 		print "<table class=\"noborder\" width=\"100%\">";
@@ -247,10 +250,10 @@ llxHeader ( '', 'Compta - Grand Livre' );
 		while ( $i < $num ) {
 			$obj = $db->fetch_object ( $resql );
 			
-			if($tmp !=$obj->lettrage || empty($tmp) )
-				$tmp =$obj->lettrage;
+			if($tmp !=$obj->lettering || empty($tmp) )
+				$tmp =$obj->lettering;
 				
-			if($tmp !=$obj->lettrage || empty($obj->lettrage)) 
+			if($tmp !=$obj->lettering || empty($obj->lettering)) 
 				$var = ! $var;
 				
 				
@@ -261,8 +264,8 @@ llxHeader ( '', 'Compta - Grand Livre' );
 			print "<tr $bc[$var]>";
 			
 			print '<td>' . $obj->rowid . '</td>';
-			if(empty($obj->lettrage)){
-				print '<td><a href="'.dol_buildpath('/accountingex/bookkeeping/fiche.php', 1).'?piece_num=' . $obj->piece_num . '">';
+			if(empty($obj->lettering)){
+				print '<td><a href="'.dol_buildpath('/accountancy/bookkeeping/card.php', 1).'?piece_num=' . $obj->piece_num . '">';
 				print img_edit ();
 				print '</a>&nbsp;' . $obj->doc_type . '</td>' . "\n";
 			}
@@ -283,11 +286,11 @@ llxHeader ( '', 'Compta - Grand Livre' );
 			print '<td>' . $obj->code_journal . '</td>';
 			print '<td>' . round($solde, 2) . '</td>';
 			
-			if(empty($obj->lettrage)){
+			if(empty($obj->lettering)){
 				print '<td><input type="checkbox" name="ids[]" value="' . $obj->rowid . '" /></td>';
 			}
 			else
-				print '<td>' . $obj->lettrage . '</td>';
+				print '<td>' . $obj->lettering . '</td>';
 				
 			print "</tr>\n";
 			
@@ -326,8 +329,8 @@ llxHeader ( '', 'Compta - Grand Livre' );
 			
 		print "</table>";
 		
-		print '<input class="butAction" type="submit" value="Lettrage">';
-		print '<a class="butAction" href="?socid='.$object->id.'&action=autolettrage">auto lettrage</a>';
+		print '<input class="butAction" type="submit" value="lettering">';
+		print '<a class="butAction" href="?socid='.$object->id.'&action=autolettrage">auto lettering</a>';
 		print "</form>";
 		$db->free ( $resql );
 	} else {
