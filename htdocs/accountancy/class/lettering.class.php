@@ -53,15 +53,15 @@ class lettering
 
 			
 		$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.lettrage_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal , bk.piece_num, bk.lettering, lettrage_ref ";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "bookkeeping as bk";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "accounting_bookkeeping as bk";
 	// 	$sql .= " WHERE (bk.numero_compte = '" . $object->code_compta . "' OR  bk.numero_compte = '" . $object->code_compta_fournisseur . "') AND lettering ='' ";
 			$sql .= " WHERE code_journal = 'BQ' AND  ( ";
 		if(!empty($object->code_compta)  )
-			$sql .= "  bk.numero_compte = '" . $object->code_compta . "'  ";
+			$sql .= "  bk.code_tiers = '" . $object->code_compta . "'  ";
 		if(!empty($object->code_compta) &&  !empty($object->code_compta_fournisseur) )
 			$sql .= "  OR  ";
 		if(!empty($object->code_compta_fournisseur)  )
-		$sql .= "   bk.numero_compte = '" . $object->code_compta_fournisseur . "' ";
+		$sql .= "   bk.code_tiers = '" . $object->code_compta_fournisseur . "' ";
 		
 		$sql .= " ) AND ( lettering ='' OR lettering IS NULL ) AND bk.lettrage_ref  !='' ";
 		
@@ -81,15 +81,15 @@ class lettering
 				$i++;
 
 					$sql = "SELECT  bk.rowid  ";
-					$sql .= " FROM " . MAIN_DB_PREFIX . "bookkeeping as bk";
+					$sql .= " FROM " . MAIN_DB_PREFIX . "accounting_bookkeeping as bk";
 					$sql .= " WHERE  bk.lettrage_ref = '".$obj->lettrage_ref."' ";
 										$sql .= " AND ( ";
 						if(!empty($object->code_compta)  )
-							$sql .= "  bk.numero_compte = '" . $object->code_compta . "'  ";
+							$sql .= "  bk.code_tiers = '" . $object->code_compta . "'  ";
 						if(!empty($object->code_compta) &&  !empty($object->code_compta_fournisseur) )
 							$sql .= "  OR  ";
 						if(!empty($object->code_compta_fournisseur)  )
-							$sql .= "   bk.numero_compte = '" . $object->code_compta_fournisseur . "' ";
+							$sql .= "   bk.code_tiers = '" . $object->code_compta_fournisseur . "' ";
 						$sql .= " )  ";
 // echo $sql; 
 					$resql2 = $db->query ( $sql );
@@ -123,15 +123,15 @@ class lettering
 			Prise en charge des lettering complexe avec prelevment , virement 
 		*/
 		$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal , bk.piece_num, bk.lettering, bu.url_id , bu.type ";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "bookkeeping as bk";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "accounting_bookkeeping as bk";
 		$sql .= " LEFT JOIN  " . MAIN_DB_PREFIX . "bank_url as bu ON(bk.fk_doc = bu.fk_bank AND bu.type IN ('payment', 'payment_supplier') ) ";
 		$sql .= " WHERE code_journal = 'BQ' AND  ( ";
 		if(!empty($object->code_compta)  )
-			$sql .= "  bk.numero_compte = '" . $object->code_compta . "'  ";
+			$sql .= "  bk.code_tiers = '" . $object->code_compta . "'  ";
 		if(!empty($object->code_compta) &&  !empty($object->code_compta_fournisseur) )
 			$sql .= "  OR  ";
 		if(!empty($object->code_compta_fournisseur)  )
-		$sql .= "   bk.numero_compte = '" . $object->code_compta_fournisseur . "' ";
+		$sql .= "   bk.code_tiers = '" . $object->code_compta_fournisseur . "' ";
 		
 		$sql .= " ) AND lettering ='' ";
 		$sql .= " GROUP BY bk.lettrage_ref  ";
@@ -159,7 +159,7 @@ class lettering
 					$sql.= " FROM " . MAIN_DB_PREFIX . "facture_fourn facf ";
 					$sql.= " INNER JOIN " . MAIN_DB_PREFIX . "paiementfourn_facturefourn as payfacf ON  payfacf.fk_facturefourn=facf.rowid";
 					$sql.= " INNER JOIN " . MAIN_DB_PREFIX . "paiementfourn as payf ON  payfacf.fk_paiementfourn=payf.rowid";
-					$sql.= " INNER JOIN " .MAIN_DB_PREFIX .  "bookkeeping as bk ON(  bk.fk_doc = facf.ref) ";
+					$sql.= " INNER JOIN " .MAIN_DB_PREFIX .  "accounting_bookkeeping as bk ON(  bk.fk_doc = facf.ref) ";
 	// 				$sqlmid.= " LEFT JOIN " . MAIN_DB_PREFIX . "societe as soc ON  soc.rowid=facf.fk_soc";
 	// 				$sqlmid.= " INNER JOIN " . MAIN_DB_PREFIX . "c_paiement as payc ON  payc.id=payf.fk_paiement";
 						$sql .= " WHERE 1   ";
@@ -167,11 +167,11 @@ class lettering
 	// 					$sql .= " AND (bk.numero_compte = '" . $object->code_compta . "' OR  bk.numero_compte = '" . $object->code_compta_fournisseur . "') ";
 						$sql .= " AND ( ";
 						if(!empty($object->code_compta)  )
-							$sql .= "  bk.numero_compte = '" . $object->code_compta . "'  ";
+							$sql .= "  bk.code_tiers = '" . $object->code_compta . "'  ";
 						if(!empty($object->code_compta) &&  !empty($object->code_compta_fournisseur) )
 							$sql .= "  OR  ";
 						if(!empty($object->code_compta_fournisseur)  )
-							$sql .= "   bk.numero_compte = '" . $object->code_compta_fournisseur . "' ";
+							$sql .= "   bk.code_tiers = '" . $object->code_compta_fournisseur . "' ";
 						$sql .= " )  ";
 	// 					echo $sql; 
 	// 					exit; 
@@ -183,16 +183,16 @@ class lettering
 						$sql.= " FROM " . MAIN_DB_PREFIX . "facture fac ";
 						$sql.= " INNER JOIN " . MAIN_DB_PREFIX . "paiement_facture as payfac ON  payfac.fk_facture=fac.rowid";
 						$sql.= " INNER JOIN " . MAIN_DB_PREFIX . "paiement as pay ON  payfac.fk_paiement=pay.rowid";
-						$sql.= " INNER JOIN " .MAIN_DB_PREFIX .  "bookkeeping as bk ON(  bk.fk_doc = fac.rowid) ";
+						$sql.= " INNER JOIN " .MAIN_DB_PREFIX .  "accounting_bookkeeping as bk ON(  bk.fk_doc = fac.rowid) ";
 						$sql .= " WHERE 1   ";
 						$sql .= "   AND   payfac.fk_paiement = '".$obj->url_id."' ";
 						$sql .= " AND ( ";
 						if(!empty($object->code_compta)  )
-							$sql .= "  bk.numero_compte = '" . $object->code_compta . "'  ";
+							$sql .= "  bk.code_tiers = '" . $object->code_compta . "'  ";
 						if(!empty($object->code_compta) &&  !empty($object->code_compta_fournisseur) )
 							$sql .= "  OR  ";
 						if(!empty($object->code_compta_fournisseur)  )
-							$sql .= "   bk.numero_compte = '" . $object->code_compta_fournisseur . "' ";
+							$sql .= "   bk.code_tiers = '" . $object->code_compta_fournisseur . "' ";
 						$sql .= " )  ";
 
 	// 					echo $sql; 
@@ -236,7 +236,7 @@ class lettering
 	public function updatelettrage($ids, $notrigger=false){
 		$error = 0; 
 		
-		$sql = "SELECT lettering FROM " . MAIN_DB_PREFIX . "bookkeeping WHERE ";
+		$sql = "SELECT lettering FROM " . MAIN_DB_PREFIX . "accounting_bookkeeping WHERE ";
 		$sql .= " lettering != '' GROUP BY lettering ORDER BY lettering DESC limit 1;  ";
 // 		echo $sql; 
 		$result = $this->db->query ( $sql );
@@ -252,7 +252,7 @@ class lettering
 		}
 // 			var_dump(__line__, $error); 
 		
-		$sql = "SELECT SUM(ABS(debit)) as deb, SUM(ABS(credit)) as cred   FROM " . MAIN_DB_PREFIX . "bookkeeping WHERE ";
+		$sql = "SELECT SUM(ABS(debit)) as deb, SUM(ABS(credit)) as cred   FROM " . MAIN_DB_PREFIX . "accounting_bookkeeping WHERE ";
 		$sql .= " rowid IN (".implode(',', $ids).") ";
 		$result = $this->db->query ( $sql );
 		if ($result) {
@@ -272,7 +272,7 @@ class lettering
 
 		
 		// Update request
-		$sql = "UPDATE ".MAIN_DB_PREFIX."bookkeeping SET";
+		$sql = "UPDATE ".MAIN_DB_PREFIX."accounting_bookkeeping SET";
 		$sql.= " lettering='".$lettre."'";
 		$sql.= " WHERE rowid IN (".implode(',', $ids).") ";
 // 		echo $sql ; 
