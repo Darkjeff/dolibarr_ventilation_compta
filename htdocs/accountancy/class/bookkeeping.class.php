@@ -89,6 +89,7 @@ class BookKeeping extends CommonObject
 	public $import_key;
 	public $code_journal;
 	public $piece_num;
+	public $lettering;
 	
 	/**
 	 */
@@ -576,7 +577,8 @@ class BookKeeping extends CommonObject
 		$sql .= " t.fk_user_author,";
 		$sql .= " t.import_key,";
 		$sql .= " t.code_journal,";
-		$sql .= " t.piece_num";
+		$sql .= " t.piece_num,";
+		$sql .= " t.lettering";
 		// Manage filter
 		$sqlwhere = array ();
 		if (count($filter) > 0) {
@@ -639,6 +641,7 @@ class BookKeeping extends CommonObject
 				$line->import_key = $obj->import_key;
 				$line->code_journal = $obj->code_journal;
 				$line->piece_num = $obj->piece_num;
+				$line->lettering = $obj->lettering;
 				
 				$this->lines[] = $line;
 			}
@@ -688,7 +691,8 @@ class BookKeeping extends CommonObject
 		$sql .= " t.fk_user_author,";
 		$sql .= " t.import_key,";
 		$sql .= " t.code_journal,";
-		$sql .= " t.piece_num";
+		$sql .= " t.piece_num,";
+		$sql .= " t.lettering";
 		$sql .= ' FROM ' . MAIN_DB_PREFIX . $this->table_element . ' as t';
 		// Manage filter
 		$sqlwhere = array ();
@@ -748,6 +752,7 @@ class BookKeeping extends CommonObject
 				$line->import_key = $obj->import_key;
 				$line->code_journal = $obj->code_journal;
 				$line->piece_num = $obj->piece_num;
+				$line->lettering = $obj->lettering;
 				
 				$this->lines[] = $line;
 			}

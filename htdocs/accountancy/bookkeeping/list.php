@@ -55,6 +55,7 @@ $search_doc_ref = GETPOST("search_doc_ref");
 $search_date_start = dol_mktime(0, 0, 0, GETPOST('date_startmonth', 'int'), GETPOST('date_startday', 'int'), GETPOST('date_startyear', 'int'));
 $search_date_end = dol_mktime(0, 0, 0, GETPOST('date_endmonth', 'int'), GETPOST('date_endday', 'int'), GETPOST('date_endyear', 'int'));
 $search_doc_date = dol_mktime(0, 0, 0, GETPOST('doc_datemonth', 'int'), GETPOST('doc_dateday', 'int'), GETPOST('doc_dateyear', 'int'));
+$search_lettering = GETPOST("search_lettering");
 
 if (GETPOST("button_delmvt_x") || GETPOST("button_delmvt")) {
 	$action = 'delbookkeepingyear';
@@ -138,7 +139,8 @@ $arrayfields=array(
     't.montant'=>array('label'=>$langs->trans("Amount"), 'checked'=>0),
     't.sens'=>array('label'=>$langs->trans("Sens"), 'checked'=>0),
     't.code_journal'=>array('label'=>$langs->trans("Codejournal"), 'checked'=>1),
-    't.validated'=>array('label'=>$langs->trans("validated"), 'checked'=>0)
+    't.validated'=>array('label'=>$langs->trans("validated"), 'checked'=>0),
+    't.lettering'=>array('label'=>$langs->trans("lettering"), 'checked'=>0)
 );
 
 // Extra fields
@@ -177,6 +179,7 @@ if (GETPOST("button_removefilter_x") || GETPOST("button_removefilter.x") || GETP
 	$search_ledger_code = '';
 	$search_date_start = '';
 	$search_date_end = '';
+	$search_lettering = '';
 	$search_array_options=array();
 }
 
@@ -245,6 +248,10 @@ if (! empty($search_ledger_code)) {
 if (! empty($search_mvt_num)) {
     $filter['t.piece_num'] = $search_mvt_num;
     $param .= '&search_mvt_num=' . $search_mvt_num;
+}
+if (! empty($search_lettering)) {
+    $filter['t.lettering'] = $search_lettering;
+    $param .= '&search_lettering=' . $search_lettering;
 }
 
 if ($action == 'delbookkeeping') {
@@ -339,7 +346,7 @@ $title_page = $langs->trans("Bookkeeping");
 llxHeader('', $title_page);
 
 $sql = "SELECT t.rowid, t.doc_date, t.doc_type, t.doc_ref, t.fk_doc, t.fk_doctet, t.code_tiers, t.numero_compte, t.label_compte,";
-$sql .= "t.debit, t.credit, t.montant, t.sens, t.code_journal, t.piece_num, t.validated";
+$sql .= "t.debit, t.credit, t.montant, t.sens, t.code_journal, t.piece_num, t.validated, t.lettering ";
 $sql .= "FROM" . MAIN_DB_PREFIX . "accounting_bookkeeping as t";
 if ($search_mvt_num)				$sql .= natural_search("t.piece_num", $search_mvt_num);
 if ($search_doc_type)				$sql .= natural_search("t.doc_type", $search_doc_type);
@@ -350,6 +357,7 @@ if ($search_accountancy_aux_code)	$sql .= natural_search("t.code_tiers", $search
 if ($search_mvt_label)				$sql .= natural_search("t.label_compte", $search_mvt_label);
 if ($search_direction)				$sql .= natural_search("t.sens", $search_direction);
 if ($search_ledger_code)			$sql .= natural_search("t.code_journal", $search_ledger_code);
+if ($search_lettering)				$sql .= natural_search("t.lettering", $search_lettering);
 
 $sql .= $db->order($sortfield, $sortorder);
 
@@ -438,18 +446,19 @@ $varpage=empty($contextpage)?$_SERVER["PHP_SELF"]:$contextpage;
     print '<table class="tagtable liste'.($moreforfilter?" listwithfilterbefore":"").'">'."\n";
 	print '<tr class="liste_titre">';
 	if (! empty($arrayfields['t.piece_num']['checked']))			print_liste_field_titre($arrayfields['t.piece_num']['label'], $_SERVER["PHP_SELF"],"t.piece_num","",$param,'',$sortfield,$sortorder);
-	if (! empty($arrayfields['t.doc_date']['checked']))			print_liste_field_titre($arrayfields['t.doc_date']['label'], $_SERVER["PHP_SELF"],"t.doc_date","",$param,'',$sortfield,$sortorder);
-	if (! empty($arrayfields['t.doc_type']['checked']))			print_liste_field_titre($arrayfields['t.doc_type']['label'], $_SERVER["PHP_SELF"],"t.doc_type", "", $param,'align="left"',$sortfield,$sortorder);
-	if (! empty($arrayfields['t.doc_ref']['checked']))			print_liste_field_titre($arrayfields['t.doc_ref']['label'],$_SERVER["PHP_SELF"],'t.doc_ref','',$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.doc_date']['checked']))				print_liste_field_titre($arrayfields['t.doc_date']['label'], $_SERVER["PHP_SELF"],"t.doc_date","",$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.doc_type']['checked']))				print_liste_field_titre($arrayfields['t.doc_type']['label'], $_SERVER["PHP_SELF"],"t.doc_type", "", $param,'align="left"',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.doc_ref']['checked']))				print_liste_field_titre($arrayfields['t.doc_ref']['label'],$_SERVER["PHP_SELF"],'t.doc_ref','',$param,'',$sortfield,$sortorder);
 	if (! empty($arrayfields['t.numero_compte']['checked']))		print_liste_field_titre($arrayfields['t.numero_compte']['label'],$_SERVER["PHP_SELF"],'t.numero_compte','',$param,'',$sortfield,$sortorder);
-	if (! empty($arrayfields['t.code_tiers']['checked']))		print_liste_field_titre($arrayfields['t.code_tiers']['label'],$_SERVER["PHP_SELF"],'t.code_tiers','',$param,'',$sortfield,$sortorder);
-	if (! empty($arrayfields['t.label_compte']['checked']))		print_liste_field_titre($arrayfields['t.label_compte']['label'],$_SERVER["PHP_SELF"],'t.label_compte','',$param,'',$sortfield,$sortorder);
-	if (! empty($arrayfields['t.debit']['checked']))			print_liste_field_titre($arrayfields['t.debit']['label'],$_SERVER["PHP_SELF"],'t.debit','',$param,'',$sortfield,$sortorder);
-	if (! empty($arrayfields['t.credit']['checked']))			print_liste_field_titre($arrayfields['t.credit']['label'],$_SERVER["PHP_SELF"],'t.credit','',$param,'',$sortfield,$sortorder);
-	if (! empty($arrayfields['t.montant']['checked']))			print_liste_field_titre($arrayfields['t.montant']['label'],$_SERVER["PHP_SELF"],'t.montant','',$param,'',$sortfield,$sortorder);
-	if (! empty($arrayfields['t.sens']['checked']))				print_liste_field_titre($arrayfields['t.sens']['label'],$_SERVER["PHP_SELF"],'t.sens','',$param,'',$sortfield,$sortorder);
-	if (! empty($arrayfields['t.code_journal']['checked']))		print_liste_field_titre($arrayfields['t.code_journal']['label'],$_SERVER["PHP_SELF"],'t.code_journal','',$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.code_tiers']['checked']))			print_liste_field_titre($arrayfields['t.code_tiers']['label'],$_SERVER["PHP_SELF"],'t.code_tiers','',$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.label_compte']['checked']))			print_liste_field_titre($arrayfields['t.label_compte']['label'],$_SERVER["PHP_SELF"],'t.label_compte','',$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.debit']['checked']))				print_liste_field_titre($arrayfields['t.debit']['label'],$_SERVER["PHP_SELF"],'t.debit','',$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.credit']['checked']))				print_liste_field_titre($arrayfields['t.credit']['label'],$_SERVER["PHP_SELF"],'t.credit','',$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.montant']['checked']))				print_liste_field_titre($arrayfields['t.montant']['label'],$_SERVER["PHP_SELF"],'t.montant','',$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.sens']['checked']))					print_liste_field_titre($arrayfields['t.sens']['label'],$_SERVER["PHP_SELF"],'t.sens','',$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.code_journal']['checked']))			print_liste_field_titre($arrayfields['t.code_journal']['label'],$_SERVER["PHP_SELF"],'t.code_journal','',$param,'',$sortfield,$sortorder);
 	if (! empty($arrayfields['t.validated']['checked']))			print_liste_field_titre($arrayfields['t.validated']['label'],$_SERVER["PHP_SELF"],'t.validated','',$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.lettering']['checked']))			print_liste_field_titre($arrayfields['t.lettering']['label'],$_SERVER["PHP_SELF"],'t.lettering','',$param,'',$sortfield,$sortorder);
 	print_liste_field_titre($selectedfields, $_SERVER["PHP_SELF"],"",'','','align="right"',$sortfield,$sortorder,'maxwidthsearch ');
 	print "</tr>\n";
 
@@ -492,7 +501,8 @@ if (! empty($arrayfields['t.credit']['checked']))			print '<td class="liste_titr
 if (! empty($arrayfields['t.montant']['checked']))			print '<td class="liste_titre">&nbsp;</td>';
 if (! empty($arrayfields['t.sens']['checked']))				print '<td class="liste_titre">&nbsp;</td>';
 if (! empty($arrayfields['t.code_journal']['checked']))		print '<td class="liste_titre center" align="right"><input type="text" name="search_ledger_code" size="3" value="' . $search_ledger_code . '"></td>';
-if (! empty($arrayfields['t.validated']['checked']))			print '<td class="liste_titre">&nbsp;</td>';
+if (! empty($arrayfields['t.validated']['checked']))		print '<td class="liste_titre">&nbsp;</td>';
+if (! empty($arrayfields['t.lettering']['checked']))		print '<td class="liste_titre center" align="right"><input type="text" name="search_lettering" size="3" value="' . $search_lettering . '"></td>';
 
 
 // Action column
@@ -565,7 +575,9 @@ if (! empty($arrayfields['t.validated']['checked']))
 			}
 			print '</td>';
 }
-
+if (! empty($arrayfields['t.lettering']['checked'])) {
+	print '<td align="center">' . $line->lettering . '</td>';
+	}
 
 	print '<td align="center">';
 	print '<a href="' . $_SERVER['PHP_SELF'] . '?action=delmouv&mvt_num=' . $line->piece_num . $param . '&page=' . $page . '">' . img_delete() . '</a>';
