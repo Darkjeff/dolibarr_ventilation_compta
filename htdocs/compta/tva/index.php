@@ -88,12 +88,12 @@ function pt ($db, $sql, $date)
             print '<td class="nowrap">'.$obj->dm."</td>\n";
             $total = $total + $obj->mm;
 
-            print '<td class="nowrap" align="right">'.price2num($obj->mm,2)."</td><td >&nbsp;</td>\n";
+            print '<td class="nowrap" align="right">'.price(price2num($obj->mm,1))."</td><td >&nbsp;</td>\n";
             print "</tr>\n";
 
             $i++;
         }
-        print '<tr class="liste_total"><td align="right">'.$langs->trans("Total")." :</td><td class=\"nowrap\" align=\"right\"><b>".price2num($total,2)."</b></td><td>&nbsp;</td></tr>";
+        print '<tr class="liste_total"><td align="right">'.$langs->trans("Total")." :</td><td class=\"nowrap\" align=\"right\"><b>".price(price2num($total,1))."</b></td><td>&nbsp;</td></tr>";
 
         print "</table>";
         $db->free($result);
@@ -102,6 +102,7 @@ function pt ($db, $sql, $date)
         dol_print_error($db);
     }
 }
+
 
 
 /*
@@ -181,7 +182,7 @@ for ($m = 1 ; $m < 13 ; $m++ )
         $x_coll+=$val['vat'];
     }
     $subtotalcoll = $subtotalcoll + $x_coll;
-    print "<td class=\"nowrap\" align=\"right\">".price2num($x_coll,2)."</td>";
+    print "<td class=\"nowrap\" align=\"right\">".price(price2num($x_coll,1))."</td>";
 
     $x_paye = 0;
     foreach($coll_listbuy as $vatrate=>$val)
@@ -189,13 +190,13 @@ for ($m = 1 ; $m < 13 ; $m++ )
         $x_paye+=$val['vat'];
     }
     $subtotalpaye = $subtotalpaye + $x_paye;
-    print "<td class=\"nowrap\" align=\"right\">".price2num($x_paye,2)."</td>";
+    print "<td class=\"nowrap\" align=\"right\">".price(price2num($x_paye,1))."</td>";
 
     $diff = $x_coll - $x_paye;
     $total = $total + $diff;
     $subtotal = $subtotal + $diff;
 
-    print "<td class=\"nowrap\" align=\"right\">".price2num($diff,2)."</td>\n";
+    print "<td class=\"nowrap\" align=\"right\">".price(price2num($diff,1))."</td>\n";
     print "<td>&nbsp;</td>\n";
     print "</tr>\n";
 
@@ -203,15 +204,15 @@ for ($m = 1 ; $m < 13 ; $m++ )
     if ($i > 2) {
         print '<tr class="liste_total">';
         print '<td align="right"><a href="quadri_detail.php?leftmenu=tax_vat&q='.($m/3).'&year='.$y.'">'.$langs->trans("SubTotal").'</a>:</td>';
-        print '<td class="nowrap" align="right">'.price2num($subtotalcoll,2).'</td>';
-        print '<td class="nowrap" align="right">'.price2num($subtotalpaye,2).'</td>';
-        print '<td class="nowrap" align="right">'.price2num($subtotal,2).'</td>';
+        print '<td class="nowrap" align="right">'.price(price2num($subtotalcoll,1)).'</td>';
+        print '<td class="nowrap" align="right">'.price(price2num($subtotalpaye,2)).'</td>';
+        print '<td class="nowrap" align="right">'.price(price2num($subtotal,1)).'</td>';
         print '<td>&nbsp;</td></tr>';
         $i = 0;
         $subtotalcoll=0; $subtotalpaye=0; $subtotal=0;
     }
 }
-print '<tr class="liste_total"><td align="right" colspan="3">'.$langs->trans("TotalToPay").':</td><td class="nowrap" align="right">'.price2num($total,2).'</td>';
+print '<tr class="liste_total"><td align="right" colspan="3">'.$langs->trans("TotalToPay").':</td><td class="nowrap" align="right">'.price(price2num($total,1)).'</td>';
 print "<td>&nbsp;</td>\n";
 print '</tr>';
 
@@ -256,12 +257,12 @@ $sql1.= " GROUP BY dm ORDER BY dm ASC";
        		
 			print "<tr>";
 			print '<td align="right">'.$langs->trans("VATDue").'</td>';
-			print '<td class="nowrap" align="right">'.price2num($total,2).'</td>';
+			print '<td class="nowrap" align="right">'.price(price2num($total,1)).'</td>';
 			print "</tr>\n";
 
 			print "<tr>";
 			print '<td align="right">'.$langs->trans("VATPayed").'</td>';
-			print '<td class="nowrap" align="right">'.price2num($obj->mm,2)."</td><td >&nbsp;</td>\n";
+			print '<td class="nowrap" align="right">'.price(price2num($obj->mm,1))."</td><td >&nbsp;</td>\n";
             print "</tr>\n";
 			
 			
@@ -269,18 +270,57 @@ $sql1.= " GROUP BY dm ORDER BY dm ASC";
 			$restopay = $total - $obj->mm ;
 			print "<tr>";
 			print '<td align="right">'.$langs->trans("VATRestopay").'</td>';
-			print '<td class="nowrap" align="right">'.price2num($restopay,2).'</td>';
+			print '<td class="nowrap" align="right">'.price(price2num($restopay,1)).'</td>';
 			print "</tr>\n";
 			
 			print '</table>';
         
 		}
-
-
-
-
-
 print '</div>';
+print '</div>';
+print '<table class="noborder" width="100%">';
+print '<tr class="liste_titre"><td width="200">' . $langs->trans("VATReceived") . '</td>';
+print '<td width="200" align="left">' . $langs->trans("Label") . '</td>';
+for($i = 1; $i <= 12; $i ++) {
+    print '<td width="60" align="right">' . $langs->trans('MonthShort' . str_pad($i, 2, '0', STR_PAD_LEFT)) . '</td>';
+}
+print '<td width="60" align="right"><b>' . $langs->trans("Total") . '</b></td></tr>';
+$coll_listsell = vat_by_date($db, $y, 0, 0, 0, $modetax, 'sell', $m);
+foreach(array_keys($coll_listsell) as $my_coll_rate)
+	{
+		$x_both[$my_coll_rate]['coll']['totalht'] = $x_coll[$my_coll_rate]['totalht'];
+		$x_both[$my_coll_rate]['coll']['vat']     = $x_coll[$my_coll_rate]['vat'];
+		$x_both[$my_coll_rate]['paye']['totalht'] = 0;
+		$x_both[$my_coll_rate]['paye']['vat'] = 0;
+		$x_both[$my_coll_rate]['coll']['links'] = '';
+		$x_both[$my_coll_rate]['coll']['detail'] = array();
+		foreach($coll_listsell[$my_coll_rate]['facid'] as $id=>$dummy)
+		{
+			$x_both[$my_coll_rate]['coll']['detail'][] = array(
+				'id'        =>$coll_listsell[$my_coll_rate]['facid'][$id],
+				'descr'     =>$coll_listsell[$my_coll_rate]['descr'][$id],
+				'pid'       =>$coll_listsell[$my_coll_rate]['pid'][$id],
+				'pref'      =>$coll_listsell[$my_coll_rate]['pref'][$id],
+				'ptype'     =>$coll_listsell[$my_coll_rate]['ptype'][$id],
+				'payment_id'=>$coll_listsell[$my_coll_rate]['payment_id'][$id],
+				'payment_amount'=>$coll_listsell[$my_coll_rate]['payment_amount'][$id],
+				'ftotal_ttc'=>$coll_listsell[$my_coll_rate]['ftotal_ttc'][$id],
+				'dtotal_ttc'=>$coll_listsell[$my_coll_rate]['dtotal_ttc'][$id],
+				'dtype'     =>$coll_listsell[$my_coll_rate]['dtype'][$id],
+				'ddate_start'=>$coll_listsell[$my_coll_rate]['ddate_start'][$id],
+				'ddate_end'  =>$coll_listsell[$my_coll_rate]['ddate_end'][$id],
+				'totalht'   =>$coll_listsell[$my_coll_rate]['totalht_list'][$id],
+				'vat'       =>$coll_listsell[$my_coll_rate]['vat_list'][$id]);
+				
+		}
+	}
+foreach(array_keys($coll_listsell) as $rate)
+	{
 
+print '<td class="tax_rate">'.$langs->trans("Rate").': '.vatrate($rate).'%</td><td colspan="'.$span.'"></td>';
+
+
+
+}
 llxFooter();
 $db->close();
