@@ -225,7 +225,7 @@ if ($action == 'writebookkeeping') {
             $bookkeeping->code_tiers = $tabcompany[$key]['code_client'];
             $bookkeeping->numero_compte = $conf->global->ACCOUNTING_ACCOUNT_CUSTOMER;
             // $bookkeeping->label_compte = $tabcompany[$key]['name'];
-            $bookkeeping->label_compte = dol_trunc($companystatic->name, 16) . ' - ' . $invoicestatic->ref . ' - ' . $langs->trans("Code_tiers");
+            $bookkeeping->label_compte =  dol_trunc($companystatic->name, 16) . ' - ' . $invoicestatic->ref . ' - ' . $langs->trans("Code_tiers");
             $bookkeeping->montant = $mt;
             $bookkeeping->sens = ($mt >= 0) ? 'D' : 'C';
             $bookkeeping->debit = ($mt >= 0) ? $mt : 0;
@@ -256,7 +256,7 @@ if ($action == 'writebookkeeping') {
                     $bookkeeping->fk_docdet = $val["fk_facturedet"];
                     $bookkeeping->code_tiers = '';
                     $bookkeeping->numero_compte = $k;
-                    $bookkeeping->label_compte = dol_trunc($companystatic->name, 16) . ' - ' . $invoicestatic->ref . ' - ' . $accountingaccount->label;
+                    $bookkeeping->label_compte =   dol_trunc($companystatic->name, 16) . ' - ' . $invoicestatic->ref . ' - ' . $accountingaccount->label ;
                     $bookkeeping->montant = $mt;
                     $bookkeeping->sens = ($mt < 0) ? 'D' : 'C';
                     $bookkeeping->debit = ($mt < 0) ? $mt : 0;
@@ -287,7 +287,7 @@ if ($action == 'writebookkeeping') {
                 $bookkeeping->fk_docdet = $val["fk_facturedet"];
                 $bookkeeping->code_tiers = '';
                 $bookkeeping->numero_compte = $k;
-                $bookkeeping->label_compte = dol_trunc($companystatic->name, 16) . ' - ' . $invoicestatic->ref . ' - ' . $langs->trans("VAT").' '.$def_tva[$key];
+                $bookkeeping->label_compte =  dol_trunc($companystatic->name, 16) . ' - ' . $invoicestatic->ref . ' - ' . $langs->trans("VAT").' '.$def_tva[$key] ;
                 $bookkeeping->montant = $mt;
                 $bookkeeping->sens = ($mt < 0) ? 'D' : 'C';
                 $bookkeeping->debit = ($mt < 0) ? $mt : 0;
@@ -413,19 +413,22 @@ if ($action == 'export_csv') {
             $companystatic->id = $tabcompany[$key]['id'];
             $companystatic->name = $tabcompany[$key]['name'];
             $companystatic->client = $tabcompany[$key]['code_client'];
-
-            $invoicestatic->id = $key;
-            $invoicestatic->ref = $val["ref"];
+			$invoicestatic->id = $key;
+            $invoicestatic->ref = (string) $val["ref"];
 
             $date = dol_print_date($val["date"], 'day');
 
             foreach ( $tabttc[$key] as $k => $mt ) {
+				print '"' . $key . '"' . $sep;
                 print '"' . $date . '"' . $sep;
                 print '"' . $val["ref"] . '"' . $sep;
+				print '"' . dol_trunc($companystatic->name, 16) . '"' . $sep;
                 print '"' . length_accounta(html_entity_decode($k)) . '"' . $sep;
+				print '"' . $langs->trans("Code_tiers") . '"' . $sep;
                 print '"' . dol_trunc($companystatic->name, 16) . ' - ' . $invoicestatic->ref . ' - ' . $langs->trans("Code_tiers") . '"' . $sep;
                 print '"' . ($mt >= 0 ? price($mt) : '') . '"' . $sep;
-                print '"' . ($mt < 0 ? price(- $mt) : '') . '"';
+                print '"' . ($mt < 0 ? price(- $mt) : '') . '"' . $sep;
+				print '"' . $sell_journal . '"' ;
                 print "\n";
             }
 
@@ -435,25 +438,33 @@ if ($action == 'export_csv') {
                 $accountingaccount->fetch(null, $k, true);
 
                 if ($mt) {
+					print '"' . $key . '"' . $sep;
                     print '"' . $date . '"' . $sep;
                     print '"' . $val["ref"] . '"' . $sep;
+					print '"' . dol_trunc($companystatic->name, 16) . '"' . $sep;
                     print '"' . length_accountg(html_entity_decode($k)) . '"' . $sep;
+					print '"' . dol_trunc($accountingaccount->label, 32) . '"' . $sep;
                     print '"' . dol_trunc($companystatic->name, 16) . ' - ' . dol_trunc($accountingaccount->label, 32) . '"' . $sep;
                     print '"' . ($mt < 0 ? price(- $mt) : '') . '"' . $sep;
-                    print '"' . ($mt >= 0 ? price($mt) : '') . '"';
+                    print '"' . ($mt >= 0 ? price($mt) : '') . '"' . $sep;
+					print '"' . $sell_journal . '"' ;
                     print "\n";
                 }
             }
 
             // VAT
             foreach ( $tabtva[$key] as $k => $mt ) {
-                if ($mt) {
+                if ($mt) {	
+					print '"' . $key . '"' . $sep;
                     print '"' . $date . '"' . $sep;
                     print '"' . $val["ref"] . '"' . $sep;
+					print '"' . dol_trunc($companystatic->name, 16) . '"' . $sep;
                     print '"' . length_accountg(html_entity_decode($k)) . '"' . $sep;
+					print '"' . $langs->trans("VAT") . '"' . $sep;
                     print '"' . dol_trunc($companystatic->name, 16) . ' - ' . $invoicestatic->ref . ' - ' . $langs->trans("VAT") . '"' . $sep;
                     print '"' . ($mt < 0 ? price(- $mt) : '') . '"' . $sep;
-                    print '"' . ($mt >= 0 ? price($mt) : '') . '"';
+                    print '"' . ($mt >= 0 ? price($mt) : '') . '"' . $sep;
+					print '"' . $sell_journal . '"' ;
                     print "\n";
                 }
             }
