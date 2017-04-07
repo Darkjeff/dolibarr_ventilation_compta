@@ -279,48 +279,94 @@ $sql1.= " GROUP BY dm ORDER BY dm ASC";
 print '</div>';
 print '</div>';
 print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre"><td width="200">' . $langs->trans("VATReceived") . '</td>';
-print '<td width="200" align="left">' . $langs->trans("Label") . '</td>';
+print '<tr class="liste_titre"><td width="200">' . $langs->trans("TurnoverbyVatrate") . '</td>';
+print '<td width="200" align="left">' . $langs->trans("ProductOrService") . '</td>';
 for($i = 1; $i <= 12; $i ++) {
     print '<td width="60" align="right">' . $langs->trans('MonthShort' . str_pad($i, 2, '0', STR_PAD_LEFT)) . '</td>';
 }
 print '<td width="60" align="right"><b>' . $langs->trans("Total") . '</b></td></tr>';
-$coll_listsell = vat_by_date($db, $y, 0, 0, 0, $modetax, 'sell', $m);
-foreach(array_keys($coll_listsell) as $my_coll_rate)
-	{
-		$x_both[$my_coll_rate]['coll']['totalht'] = $x_coll[$my_coll_rate]['totalht'];
-		$x_both[$my_coll_rate]['coll']['vat']     = $x_coll[$my_coll_rate]['vat'];
-		$x_both[$my_coll_rate]['paye']['totalht'] = 0;
-		$x_both[$my_coll_rate]['paye']['vat'] = 0;
-		$x_both[$my_coll_rate]['coll']['links'] = '';
-		$x_both[$my_coll_rate]['coll']['detail'] = array();
-		foreach($coll_listsell[$my_coll_rate]['facid'] as $id=>$dummy)
-		{
-			$x_both[$my_coll_rate]['coll']['detail'][] = array(
-				'id'        =>$coll_listsell[$my_coll_rate]['facid'][$id],
-				'descr'     =>$coll_listsell[$my_coll_rate]['descr'][$id],
-				'pid'       =>$coll_listsell[$my_coll_rate]['pid'][$id],
-				'pref'      =>$coll_listsell[$my_coll_rate]['pref'][$id],
-				'ptype'     =>$coll_listsell[$my_coll_rate]['ptype'][$id],
-				'payment_id'=>$coll_listsell[$my_coll_rate]['payment_id'][$id],
-				'payment_amount'=>$coll_listsell[$my_coll_rate]['payment_amount'][$id],
-				'ftotal_ttc'=>$coll_listsell[$my_coll_rate]['ftotal_ttc'][$id],
-				'dtotal_ttc'=>$coll_listsell[$my_coll_rate]['dtotal_ttc'][$id],
-				'dtype'     =>$coll_listsell[$my_coll_rate]['dtype'][$id],
-				'ddate_start'=>$coll_listsell[$my_coll_rate]['ddate_start'][$id],
-				'ddate_end'  =>$coll_listsell[$my_coll_rate]['ddate_end'][$id],
-				'totalht'   =>$coll_listsell[$my_coll_rate]['totalht_list'][$id],
-				'vat'       =>$coll_listsell[$my_coll_rate]['vat_list'][$id]);
-				
-		}
-	}
-foreach(array_keys($coll_listsell) as $rate)
-	{
 
-print '<td class="tax_rate">'.$langs->trans("Rate").': '.vatrate($rate).'%</td><td colspan="'.$span.'"></td>';
-
-
-
+$sql = "SELECT " . $db->ifsql('fd.tva_tx IS NULL', "'".$langs->trans('NotMatch')."'", 'fd.tva_tx') . " AS vatrate,";
+$sql .= "  " . $db->ifsql('fd.product_type IS NULL', "'".$langs->trans('NotMatch')."'", 'fd.product_type') . " AS product_type,";
+for($i = 1; $i <= 12; $i ++) {
+	$sql .= "  SUM(" . $db->ifsql('MONTH(f.datef)=' . $i, 'fd.total_ht', '0') . ") AS month" . str_pad($i, 2, '0', STR_PAD_LEFT) . ",";
 }
+$sql .= "  SUM(fd.total_ht) as total";
+$sql .= " FROM " . MAIN_DB_PREFIX . "facturedet as fd";
+$sql .= "  LEFT JOIN " . MAIN_DB_PREFIX . "facture as f ON f.rowid = fd.fk_facture";
+$sql .= " WHERE f.datef >= '" . $db->idate(dol_get_first_day($y, 1, false)) . "'";
+$sql .= "  AND f.datef <= '" . $db->idate(dol_get_last_day($y, 12, false)) . "'";
+$sql .= " AND f.entity IN (" . getEntity("facture", 0) . ")"; 
+$sql .= " GROUP BY fd.tva_tx,fd.product_type ";
+
+dol_syslog("htdocs/compta/tva/index.php sql=" . $sql, LOG_DEBUG);
+$resql = $db->query($sql);
+if ($resql) {
+	$num = $db->num_rows($resql);
+
+	while ( $row = $db->fetch_row($resql)) {
+
+		$var = ! $var;
+		print '<tr ' . $bc[$var] . '><td>' . vatrate($row[0]) . '</td>';
+		print '<td align="left">' . $row[1] . '</td>';
+		for($i = 2; $i <= 12; $i ++) {
+			print '<td align="right">' . price($row[$i]) . '</td>';
+		}
+		print '<td align="right">' . price($row[13]) . '</td>';
+		print '<td align="right"><b>' . price($row[14]) . '</b></td>';
+		print '</tr>';
+	}
+	$db->free($resql);
+} else {
+	print $db->lasterror(); // Show last sql error
+}
+print "</table>\n";
+
+print '<table class="noborder" width="100%">';
+print '<tr class="liste_titre"><td width="200">' . $langs->trans("PurchasebyVatrate") . '</td>';
+print '<td width="200" align="left">' . $langs->trans("ProductOrService") . '</td>';
+for($i = 1; $i <= 12; $i ++) {
+    print '<td width="60" align="right">' . $langs->trans('MonthShort' . str_pad($i, 2, '0', STR_PAD_LEFT)) . '</td>';
+}
+print '<td width="60" align="right"><b>' . $langs->trans("Total") . '</b></td></tr>';
+
+$sql2 = "SELECT  ".$db->ifsql('ffd.tva_tx IS NULL', "'".$langs->trans('NotMatch')."'", 'ffd.tva_tx') ." AS vatrate,";
+$sql2 .= "  " . $db->ifsql('ffd.product_type IS NULL', "'".$langs->trans('NotMatch')."'", 'ffd.product_type') . " AS product_type,";
+for($i = 1; $i <= 12; $i ++) {
+	$sql2 .= "  SUM(" . $db->ifsql('MONTH(ff.datef)=' . $i, 'ffd.total_ht', '0') . ") AS month" . str_pad($i, 2, '0', STR_PAD_LEFT) . ",";
+}
+$sql2 .= "  ROUND(SUM(ffd.total_ht),2) as total";
+$sql2 .= " FROM " . MAIN_DB_PREFIX . "facture_fourn_det as ffd";
+$sql2 .= "  LEFT JOIN " . MAIN_DB_PREFIX . "facture_fourn as ff ON ff.rowid = ffd.fk_facture_fourn";
+$sql2 .= " WHERE ff.datef >= '" . $db->idate(dol_get_first_day($y, 1, false)) . "'";
+$sql2 .= "  AND ff.datef <= '" . $db->idate(dol_get_last_day($y, 12, false)) . "'";
+$sql2 .= "  AND ff.fk_statut > 0 ";
+$sql2 .= " AND ff.entity IN (" . getEntity("facture_fourn", 0) . ")";     
+$sql2 .= " GROUP BY ffd.tva_tx,ffd.product_type";
+
+dol_syslog("htdocs/compta/tva/index.php sql=" . $sql, LOG_DEBUG);
+$resql2 = $db->query($sql2);
+if ($resql2) {
+	$num = $db->num_rows($resql2);
+
+	while ( $row = $db->fetch_row($resql2)) {
+
+		$var = ! $var;
+		print '<tr ' . $bc[$var] . '><td>' . vatrate($row[0]) . '</td>';
+		print '<td align="left">' . $row[1] . '</td>';
+		for($i = 2; $i <= 12; $i ++) {
+			print '<td align="right">' . price($row[$i]) . '</td>';
+		}
+		print '<td align="right">' . price($row[13]) . '</td>';
+		print '<td align="right"><b>' . price($row[14]) . '</b></td>';
+		print '</tr>';
+	}
+	$db->free($resql2);
+} else {
+	print $db->lasterror(); // Show last sql error
+}
+print "</table>\n";
+
+
 llxFooter();
 $db->close();
