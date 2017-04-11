@@ -1,6 +1,6 @@
 <?php
 /* <one line to give the program's name and a brief idea of what it does.>
- * Copyright (C) <year>  <name of author>
+ * Copyright (C) <2017> SaaSprov <saasprov@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -84,13 +84,13 @@ class modImpRap extends DolibarrModules
 	 * @var string Module editor name
 	 * @since 4.0
 	 */
-	public $editor_name = "My Company";
+	public $editor_name = "SaaSprov";
 
 	/**
 	 * @var string Module editor website
 	 * @since 4.0
 	 */
-	public $editor_url = "http://www.example.com";
+	public $editor_url = "http://www.saasprov.ma";
 
 	/**
 	 * @var string Module version string

@@ -62,6 +62,7 @@ class repartition // extends CommonObject
 	public $amount = 0;
 	public $num_chq;
 	public $categorie;
+	public $accountid;
 
 	/**
 	 * Constructor
@@ -109,35 +110,33 @@ class repartition // extends CommonObject
 		
 		if (isset($this->amount)) {
 			$this->amount = $this->debut + $this->credit;
-			echo $this->credit."<br>".$this->debut."<br>".$this->amount."<br>";
+			// echo $this->credit."<br>".$this->debut."<br>".$this->amount."<br>";
 		}
 		
-
-		
-
-
 
 		// Check parameters
 		// Put here code to add control on parameters values
 		// Insert request
-		$sql = "INSERT INTO " . MAIN_DB_PREFIX . "bank(";
-		$sql.= " datev,";
-		$sql.= " dateo,";
-		$sql.= " amount,";
-		$sql.= " label,";
-		$sql.= " fk_account,";
-		$sql.= " fk_user_rappro";
+		$sql = "INSERT INTO " . MAIN_DB_PREFIX . "bank_rapprofile(";
+		$sql.= " date_d_operation,";
+		$sql.= " date_de_valeur,";
+		$sql.= " debut,";
+		$sql.= " credit,";
+		$sql.= " libelle,";
+		$sql.= " solde, ";
+		$sql.= " fk_account ";
 
 
 		$sql.= ") VALUES (";
 		$sql.= " '" . $this->date_de_valeur . "',";
 		$sql.= " '" . $this->date_d_operation . "',";
-		$sql.= " " . $this->amount . ",";
+		$sql.= " " . $this->debut . ",";
+		$sql.= " " . $this->credit . ",";
 		$sql.= " '" . $this->libelle . "',";
-		$sql.= " ".$this->fk_account.",";
-		$sql.= " 'Solde'";
+		$sql.= " " . $this->solde . ", ";
+		$sql.= " " . $this->accountid . " ";
 
-		$sql.= ")";
+		$sql.= ")";		
 		
 		$this->db->begin();
 
@@ -149,8 +148,8 @@ class repartition // extends CommonObject
 		}
 
 		if (! $error) {
-			$this->id = $this->db->last_insert_id(MAIN_DB_PREFIX . "mytable");
-
+			$this->id = $this->db->last_insert_id(MAIN_DB_PREFIX . "bank_rapprofile");
+			
 			if (! $notrigger) {
 				// Uncomment this and change MYOBJECT to your own tag if you
 				// want this action call a trigger.
