@@ -166,7 +166,7 @@ llxHeader ( '', 'Compta - Grand Livre' );
 	
 	$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal , bk.piece_num, bk.lettering ";
 	$sql .= " FROM " . MAIN_DB_PREFIX . "accounting_bookkeeping as bk";
-	$sql .= " WHERE (bk.code_tiers =  '" . $object->code_compta . "' AND bk.numero_compte = '411' )" ;
+	$sql .= " WHERE (bk.code_tiers =  '" . $object->code_compta . "' AND bk.numero_compte = '" .$conf->global->ACCOUNTING_ACCOUNT_CUSTOMER. "' )" ;
 
 	
 
