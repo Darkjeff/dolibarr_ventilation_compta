@@ -371,14 +371,9 @@ class modStripe extends DolibarrModules
 
 		// Array to add new pages in new tabs
 		// Example:
-		//$this->tabs = array(
-			//	// To add a new tab identified by code tabname1
-			//	'objecttype:+tabname1:Title1:langfile@Stripe:$user->rights->Stripe->read:/Stripe/mynewtab1.php?id=__ID__',
-			//	// To add another new tab identified by code tabname2
-			//	'objecttype:+tabname2:Title2:langfile@Stripe:$user->rights->othermodule->read:/Stripe/mynewtab2.php?id=__ID__',
-			//	// To remove an existing tab identified by code tabname
-			//	'objecttype:-tabname'
-		//);
+		$this->tabs = array(
+				'invoice:+tabname1:Stripe:stripe@stripe:1:/Stripe/paymnt_link.php?id=__ID__',
+		);
 		// 'categories_x'	  to add a tab in category view (replace 'x' by type of category (0=product, 1=supplier, 2=customer, 3=member)
 		// 'contact'          to add a tab in contact view
 		// 'contract'         to add a tab in contract view
