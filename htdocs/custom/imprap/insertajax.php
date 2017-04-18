@@ -3,18 +3,26 @@
 if (false === (@include '../main.inc.php')) {  // From htdocs directory
 	require '../../main.inc.php'; // From "custom" directory
 }
-
 //tous les variable
-$typeG		= GETPOST('typeG');
-$ligne 		= GETPOST('idrowInSession');
+$typeG		= "facture";
+$ligne 		= GETPOST('row');
 $idpaiment  = GETPOST('paiementtype');
+$idsoc  = GETPOST('idsoc');
 
-$dateo 		= $_SESSION['arrayfilecsv']['trait'][$ligne][0];
-$datev 		= $_SESSION['arrayfilecsv']['trait'][$ligne][1];
-$desct 		= $_SESSION['arrayfilecsv']['trait'][$ligne][4];
-$debit 		= $_SESSION['arrayfilecsv']['trait'][$ligne][2];
-$crdit 		= $_SESSION['arrayfilecsv']['trait'][$ligne][3];
-$idAccount 	= $_SESSION['arrayfilecsv']['bank'];
+
+//get type paiement 
+$sql = " SELECT * FROM " . MAIN_DB_PREFIX . "bank_rapprofile ";
+$sql.= " Where rowid = ".$ligne;
+$resql = $db->query($sql);
+$obj = $db->fetch_object($resql);
+$db->free($resql);
+
+$dateo 		= $obj->date_d_operation;
+$datev 		= $obj->date_de_valeur;
+$desct 		= $obj->libelle;
+$debit 		= $obj->debut;
+$crdit 		= $obj->credit;
+$idAccount 	= $obj->fk_account;
 
 $error = '';
 
@@ -23,17 +31,27 @@ $idclient 	= 0;
 
 
 if($crdit == 0){
-	$idfourn 	= GETPOST('socid');
+	$idfourn 	= $idsoc;
 }else{
-	$idclient 	= GETPOST('socid');
+	$idclient 	= $idsoc;
 }
 
+if(empty($idpaiment)){
+	$error = $langs->trans("addCetegoreiPaiment");
+	header("Location: treatment.php?errorinsert=".$error);
+	exit;
+}
+if(empty($idsoc)){
+	$error = $langs->trans("addTierOrProv");
+	header("Location: treatment.php?errorinsert=".$error);
+	exit;
+}
 
 if($typeG == 'facture'){
 	if(isset($_POST['montant'])){
 		$montantF 	= GETPOST('montant');
 		$rowidF 	= GETPOST('rowidmontant');
-
+		
 		$amount  	= $debit + $crdit ;
 		$compteMontant = 0;
 
@@ -49,13 +67,13 @@ if($typeG == 'facture'){
 		if(empty($montantF)){
 			
 			$error = $langs->trans("addMontant");
-			header("Location: index.php?errorinsert=".$error);
+			header("Location: treatment.php?errorinsert=".$error);
 			exit;
 			
 		}elseif($compteMontant != $amount){
 			
 			$error = $langs->trans("lesMantantInvalid");
-			header("Location: index.php?errorinsert=".$error);
+			header("Location: treatment.php?errorinsert=".$error);
 			exit;
 			
 		}else{
@@ -112,7 +130,7 @@ if($typeG == 'facture'){
 				$sql.= " VALUES (".$ide.",".$idclient.",'','(Client)','company')";
 				$resql = $db->query($sql);
 
-				header("Location: index.php");
+				header("Location: treatment.php");
 				exit;
 				
 			}else{
@@ -163,7 +181,7 @@ if($typeG == 'facture'){
 					$resql = $db->query($sql);
 				}
 				
-				header("Location: index.php");
+				header("Location: treatment.php");
 				exit;
 				
 				
@@ -173,7 +191,7 @@ if($typeG == 'facture'){
 	}else{
 		
 		$error = $langs->trans("ErrorFactur");
-		header("Location: index.php?errorinsert=".$error);
+		header("Location: treatment.php?errorinsert=".$error);
 		exit;
 	}
 }else{
@@ -193,7 +211,7 @@ if($typeG == 'facture'){
 	
 	/* 
 	$error = $langs->trans("notFacture");
-	header("Location: index.php?errorinsert=".$error);
+	header("Location: treatment.php?errorinsert=".$error);
 	exit;
 	*/
 }

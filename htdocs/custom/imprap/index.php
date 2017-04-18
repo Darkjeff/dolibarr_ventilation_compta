@@ -35,7 +35,7 @@ if (false === (@include '../main.inc.php')) {  // From htdocs directory
 	require '../../main.inc.php'; // From "custom" directory
 }
 
-require_once '/lib/bankrapprofile.lib.php';
+include_once(DOL_DOCUMENT_ROOT.'/custom/imprap/lib/bankrapprofile.lib.php');
 include_once(DOL_DOCUMENT_ROOT.'/custom/imprap/class/repartition.class.php');
 
 $form = new Form($db);
@@ -64,6 +64,12 @@ if($action == 'insert'){
 			unset($lines[0]);
 		}
 		
+		if(empty($accountid)){
+			$error++;
+			$langs->load("errors");
+			setEventMessages($langs->trans("ErrorAccount"), null, 'errors');
+		}
+		
 		if(!empty(trim($separateur))){
 			if(strlen($separateur) > 1){
 				
@@ -78,8 +84,9 @@ if($action == 'insert'){
 		
 		
 		foreach ($lines as $key => $value)
-		{
-			$cell = split(trim($separateur),$value);
+		{			
+			$cell = explode(trim($separateur),$value);
+			
 			
 			if ( (!empty($cell[0]) AND preg_match( "/^(0[1-9]|[1-2][0-9]|3[0-1])[\/-](0[1-9]|1[0-2])[\/-][0-9]{4}$/", $cell[0] )) OR (!empty($cell[0]) AND preg_match( "/^[0-9]{4}[\/-](0[1-9]|1[0-2])[\/-](0[1-9]|[1-2][0-9]|3[0-1])$/", $cell[0] )) ){
 				

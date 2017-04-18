@@ -35,8 +35,14 @@ if (false === (@include '../main.inc.php')) {  // From htdocs directory
 	require '../../main.inc.php'; // From "custom" directory
 }
 
-require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
-require_once '/lib/bankrapprofile.lib.php';
+require_once(DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php');
+include_once(DOL_DOCUMENT_ROOT.'/custom/imprap/lib/bankrapprofile.lib.php');
+
+
+if(isset($_GET['errorinsert'])){
+	$langs->load("errors");
+	setEventMessages($_GET['errorinsert'], null, 'errors');
+}
 
 
 $action = GETPOST('action', 'alpha');
@@ -47,9 +53,23 @@ $accountid = GETPOST('accountid');
 
 $error = 0 ;
 $vartest = true;
+if($action == "rappro"){
+	if(isset($_POST['checkbank'])){
+		foreach($_POST['checkbank'] as $key => $val){
+			$sql = "UPDATE `llx_bank` SET `num_releve`='".$numReleve."' ,`rappro`= 1 WHERE rowid = ".$val;
+			$resql = $db->query($sql);
+		}
+	}
+}
 
 if($action == "comparer"){
-			
+		
+		if (empty($numReleve)){
+			$error++;
+			$langs->load("errors");
+			setEventMessages($langs->trans("numReleve"), null, 'errors');		
+		}
+		
 		if (!empty($dated)){
 			if(preg_match("/^(0[1-9]|[1-2][0-9]|3[0-1])[\/-](0[1-9]|1[0-2])[\/-][0-9]{4}$/", $dated )){
 				$originalDate = str_replace("/","-",$dated);
@@ -74,25 +94,30 @@ if($action == "comparer"){
 		
 	if($error == 0){
 		if($dated != '' and $datef == ''){
+			
+			$datef = date('Y-m-d',strtotime($dated) + (24*3600*30));
+			
 			$sql1 = "SELECT `rowid`, `date_d_operation`, `date_de_valeur`, `debut`, `credit`, `libelle`, `solde`";
-			$sql1.= " FROM `llx_bank_rapprofile` WHERE date_d_operation >= '".$dated."' AND fk_account = ".$accountid;
-
+			$sql1.= " FROM `llx_bank_rapprofile` WHERE date_d_operation BETWEEN '".$dated."' AND '".$datef ."' AND fk_account = ".$accountid;
 			$sql2 = "SELECT `rowid`, `datev`, `dateo`, `amount`, `label`, `fk_account`, `fk_type`,`rappro`, `banque`";
-			$sql2.= " FROM " . MAIN_DB_PREFIX . "bank  WHERE dateo >= '".$dated ."' AND fk_account = ".$accountid;	
+			$sql2.= " FROM " . MAIN_DB_PREFIX . "bank  WHERE dateo BETWEEN '".$dated."' AND '".$datef ."' AND fk_account = ".$accountid." AND rappro = 0 ";	
 			
 		}elseif($dated == '' and $datef != ''){
+			
+			$dated = date('Y-m-d',strtotime($datef) - (24*3600*30));
+			
 			$sql1 = "SELECT `rowid`, `date_d_operation`, `date_de_valeur`, `debut`, `credit`, `libelle`, `solde`";
-			$sql1.= " FROM `llx_bank_rapprofile` WHERE date_d_operation <= '".$datef ."' AND fk_account = ".$accountid;
+			$sql1.= " FROM `llx_bank_rapprofile` WHERE date_d_operation BETWEEN '".$dated."' AND '".$datef ."' AND fk_account = ".$accountid;
 
 			$sql2 = "SELECT `rowid`, `datev`, `dateo`, `amount`, `label`, `fk_account`, `fk_type`,`rappro`, `banque`";
-			$sql2.= " FROM " . MAIN_DB_PREFIX . "bank  WHERE dateo <= '".$datef ."' AND fk_account = ".$accountid;	
+			$sql2.= " FROM " . MAIN_DB_PREFIX . "bank  WHERE dateo BETWEEN '".$dated."' AND '".$datef ."' AND fk_account = ".$accountid." AND rappro = 0 ";	
 			
 		}elseif($dated != '' and $datef != ''){
 			$sql1 = "SELECT `rowid`, `date_d_operation`, `date_de_valeur`, `debut`, `credit`, `libelle`, `solde`";
 			$sql1.= " FROM `llx_bank_rapprofile` WHERE date_d_operation BETWEEN '".$dated."' AND '".$datef ."' AND fk_account = ".$accountid;
 
 			$sql2 = "SELECT `rowid`, `datev`, `dateo`, `amount`, `label`, `fk_account`, `fk_type`,`rappro`, `banque`";
-			$sql2.= " FROM " . MAIN_DB_PREFIX . "bank  WHERE dateo BETWEEN '".$dated."' AND '".$datef ."' AND fk_account = ".$accountid;		
+			$sql2.= " FROM " . MAIN_DB_PREFIX . "bank  WHERE dateo BETWEEN '".$dated."' AND '".$datef ."' AND fk_account = ".$accountid." AND rappro = 0 ";		
 		}else{
 			
 			$vartest = false;
@@ -180,7 +205,6 @@ dol_fiche_end();
 
 if($vartest){
 	
-print "<form method='POST' action='treatment.php?action='>";
 print '<div class="fichecenter"><div class="fichethirdleft">';
 
 	$resql = $db->query($sql1);
@@ -192,12 +216,12 @@ print '<div class="fichecenter"><div class="fichethirdleft">';
 
 		print '<table class="noborder" width="100%">';
 		print '<tr class="liste_titre">';
-		print '<td></td>';
 		print '<td>'.$langs->trans("DateOperation").'</td>';
 		print '<td>'.$langs->trans("DateValeur").'</td>';
 		print '<td>'.$langs->trans("Libelle").'</td>';
 		print '<td>'.$langs->trans("Debut").'</td>';
 		print '<td>'.$langs->trans("Credit").'</td>';
+		print '<td></td>';
 		print '</tr>';
 		
 		if ($num)
@@ -227,31 +251,78 @@ print '<div class="fichecenter"><div class="fichethirdleft">';
 								$debut = $objpv->amount;
 							}
 							
-							if($objp->date_d_operation == $objpv->dateo AND $objp->date_de_valeur == $objpv->datev AND $objp->libelle == $objpv->label AND $objp->debut == $debut AND $objp->credit == $credit ){
+							if($objp->date_d_operation == $objpv->dateo AND $objp->date_de_valeur == $objpv->datev AND $objp->debut == $debut AND $objp->credit == $credit ){
 								
 								$test = false ;
 								print '<tr '.$bc[$var].' style="color:green;">';
-								print '<td><input type="checkbox" name="checkbankp" value="'. $objp->rowid .'"/> </td>';
 								print '<td class="nowrap">'. $objp->date_d_operation .'</td>';
 								print '<td class="nowrap">'. $objp->date_de_valeur .'</td>';
 								print '<td class="nowrap">'. substr($objp->libelle,0,30) .'...</td>';
 								print '<td class="nowrap">'. $objp->debut .'</td>';
 								print '<td class="nowrap">'. $objp->credit .'</td>';
+								print '<td></td>';
 								print '</tr>';
 							}
 							$j++;
 						}
 					}
 				}
-				
 				if($test){
 					print '<tr '.$bc[$var].'>';
-					print '<td><input type="checkbox" name="checkbankp" value="'. $objp->rowid .'"/> </td>';
 					print '<td class="nowrap">'. $objp->date_d_operation .'</td>';
 					print '<td class="nowrap">'. $objp->date_de_valeur .'</td>';
-					print '<td class="nowrap">'. substr($objp->libelle,0,30) .'...</td>';
-					print '<td class="nowrap">'. $objp->debut .'</td>';
-					print '<td class="nowrap">'. $objp->credit .'</td>';
+					
+					print '<td class="nowrap">'. substr($objp->libelle,0,30) .'...<br>';
+					
+					print '<form action="insertajax.php" method="POST" >';
+					print '<input type="hidden" name="row" value='. $objp->rowid .'>';
+					print '<div class="info" style="display: none;">';
+					
+						$filter = '';
+						if(!empty($objp->debut)){
+							$filter = "fournisseur = 1";
+						}else if(!empty($objp->credit)){
+							$filter = "client = 1";
+						}
+						
+					print $form->select_thirdparty_list(
+							$selected = '',
+							$htmlname = 'idsoc',
+							$filter = $filter,
+							$showempty = '',
+							$showtype = 0,
+							$forcecombo = 0,
+							$events = array(),
+							$filterkey = '',
+							$outputmode = 0,
+							$limit = 0,
+							$morecss = 'minwidth100 idsoc',
+							$moreparam = '' 
+						);
+						
+					print $form->select_types_paiements	(	 	
+							$selected = '',
+							$htmlname = 'paiementtype',
+							$filtertype = '',
+							$format = 0,
+							$empty = 0,
+							$noadmininfo = 0,
+							$maxlength = 0,
+							$active = 1,
+							$morecss = ''
+						); 
+
+						
+					print "<input type='submit' value='save' ><br><div class='infoform'></div>";
+		
+					print '</div>';
+					print '</form>';
+					
+					print '</td>';
+					
+					print '<td class="nowrap debut">'. $objp->debut .'</td>';
+					print '<td class="nowrap crdit">'. $objp->credit .'</td>';
+					print '<td><input type="button" name="checkbankp" value="&#8595;" class="btntreat" /></td>';
 					print '</tr>';
 				}
 				
@@ -279,6 +350,7 @@ print '</div><div class="fichetwothirdright"><div class="ficheaddleft">';
 		$num = $db->num_rows($resql);
 		$i = 0;
 
+		print '<form method="POST" action="treatment.php?action=rappro">';
 		print '<table class="noborder" width="100%">';
 		print '<tr class="liste_titre">';
 		print '<td></td>';
@@ -296,7 +368,7 @@ print '</div><div class="fichetwothirdright"><div class="ficheaddleft">';
 				$objp = $db->fetch_object($resql);
 				
 				print '<tr '.$bc[$var].'>';
-				print '<td><input type="checkbox" name="checkbank" value="'. $objp->rowid .'"/> </td>';
+				print '<td><input type="checkbox" name="checkbank[]" value="'. $objp->rowid .'"/> </td>';
 				print '<td class="nowrap">'. $objp->dateo .'</td>';
 				print '<td class="nowrap">'. $objp->datev .'</td>';
 				print '<td class="nowrap">'. substr($objp->label,0,30) .'...</td>';
@@ -315,22 +387,91 @@ print '</div><div class="fichetwothirdright"><div class="ficheaddleft">';
 				$i++;
 				$var=!$var;
 			}
-
+			
+			
 			$db->free($resql);
 		}
 		else
 		{
 			print '<tr '.$bc[$var].'><td colspan="5" class="opacitymedium">'.$langs->trans("None").'</td></tr>';
 		}
-		print "</table><br>";
+		print "</table><input type='hidden' name='numReleve' value='".$numReleve."'><input type='submit' value='submit'/></form><br>";
 	}
 
 print '</div></div></div>';
 
-// print "<div><input type='submit'></div>";
-print "</form>";
 
 }
+
+print"
+<script>
+    $(document).ready(function() {
+		
+		
+		$('.btnsaveinfo').click(function() {
+			var info = $(this).closest('tr').find('.infoform');
+			if(info.is(':empty')){
+				alert('error');
+			}else{
+				// var n = $( 'div' ).length;
+				var n = info.find('input').length;
+				alert(n);
+				// $.each(json, function(index, value) {}
+				
+			}
+		});
+		
+		
+		$('.btntreat').click(function() {
+			
+			$('.info').css('display', 'none');
+			
+			var info = $(this).closest('tr').find('.info');
+			info.css('display', 'inline-block');
+			
+		});
+		
+		
+		$('.idsoc').change(function() {
+			
+			var info = $(this).closest('tr').find('.infoform');
+			
+			var debut = $(this).closest('tr').find('.debut').text();
+			var crdit = $(this).closest('tr').find('.crdit').text();
+			
+			var idfourn = 0;
+			var idclt   = 0;
+			
+			var testName = '';
+			
+			if(debut != 0){
+				idfourn = $(this).closest('tr').find('select').val();
+				testName = 'ref';
+			}else{
+				idclt = $(this).closest('tr').find('select').val();
+				testName = 'facnumber';
+			}
+			
+			info.html('');
+			$.ajax({
+				url: 'getajax.php?idclt='+idclt+'&idfourn='+idfourn,
+				data: '',
+				dataType: 'json',
+				success: function(json) {
+					// pour chaque noeud JSON
+					$.each(json, function(index, value) {
+						// on ajoute l option dans la liste
+						var ttc = parseFloat(value['total_ttc']);
+						info.append('<h6 style=\'margin:0;padding:0;\'>'+ value[testName] +'&nbsp;->&nbsp;'+ ttc.toFixed(2) +'&nbsp;&nbsp;<input name=\'rowidmontant[]\' type=\'hidden\' value ='+ value['rowid'] +'><input type=\'text\' name=\'montant[]\' style=\'width:60px;\'></h6>');
+					});
+				}
+			});
+			
+		});
+		
+	});
+</script>
+";
 
 llxFooter();
 
