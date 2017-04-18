@@ -281,7 +281,6 @@ print '</div>';
 print '<table class="noborder" width="100%">';
 print '<tr class="liste_titre"><td width="60">' . $langs->trans("TurnoverbyVatrate") . '</td>';
 print '<td width="60" align="left">' . $langs->trans("ProductOrService") . '</td>';
-print '<td width="60" align="left">' . $langs->trans("Payed") . '</td>';
 print '<td width="60" align="left">' . $langs->trans("Country") . '</td>';
 for($i = 1; $i <= 12; $i ++) {
     print '<td width="60" align="right">' . $langs->trans('MonthShort' . str_pad($i, 2, '0', STR_PAD_LEFT)) . '</td>';
@@ -290,9 +289,8 @@ print '<td width="60" align="right"><b>' . $langs->trans("Total") . '</b></td></
 
 $sql = "SELECT " . $db->ifsql('fd.tva_tx IS NULL', "'".$langs->trans('NotMatch')."'", 'fd.tva_tx') . " AS vatrate,";
 $sql .= "  " . $db->ifsql('fd.product_type IS NULL', "'".$langs->trans('NotMatch')."'", 'fd.product_type') . " AS product_type,";
-$sql .= "  " . $db->ifsql('f.paye IS NULL', "'".$langs->trans('NotMatch')."'", 'f.paye') . " AS paye,";
 $sql .= "  " . $db->ifsql('cc.label IS NULL', "'".$langs->trans('NotMatch')."'", 'cc.label') . " AS country,";
-for($i = 4; $i <= 14; $i ++) {
+for($i = 1; $i <= 12; $i ++) {
 	$sql .= "  SUM(" . $db->ifsql('MONTH(f.datef)=' . $i, 'fd.total_ht', '0') . ") AS month" . str_pad($i, 2, '0', STR_PAD_LEFT) . ",";
 }
 $sql .= "  SUM(fd.total_ht) as total";
@@ -303,7 +301,7 @@ $sql .= "  INNER JOIN " . MAIN_DB_PREFIX . "c_country as cc ON cc.rowid = soc.fk
 $sql .= " WHERE f.datef >= '" . $db->idate(dol_get_first_day($y, 1, false)) . "'";
 $sql .= "  AND f.datef <= '" . $db->idate(dol_get_last_day($y, 12, false)) . "'";
 $sql .= " AND f.entity IN (" . getEntity("facture", 0) . ")"; 
-$sql .= " GROUP BY fd.tva_tx,fd.product_type, f.paye, cc.label ";
+$sql .= " GROUP BY fd.tva_tx,fd.product_type, cc.label ";
 
 dol_syslog("htdocs/compta/tva/index.php sql=" . $sql, LOG_DEBUG);
 $resql = $db->query($sql);
@@ -315,22 +313,15 @@ if ($resql) {
 		$var = ! $var;
 		print '<tr ' . $bc[$var] . '><td>' . vatrate($row[0]) . '</td>';
 		if ($row[1] == 0) {
-		//print '<td align="left">' . $row[1] . '</td>';
 		print '<td align="left">'. $langs->trans("Product") . '</td>';
 		} else {
 		print '<td align="left">'. $langs->trans("Service") . '</td>';
 		}
-		if ($row[2] == 0) {
-		//print '<td align="left">' . $row[1] . '</td>';
-		print '<td align="left">'. $langs->trans("Payed") . '</td>';
-		} else {
-		print '<td align="left">'. $langs->trans("NotPayed") . '</td>';
-		}
-		print '<td align="left">' . $row[3] . '</td>';
-		for($i = 4; $i <= 14; $i ++) {
+		print '<td align="right"><b>' .$row[2] . '</b></td>';
+		
+		for($i = 3; $i <= 14; $i ++) {
 			print '<td align="right">' . price($row[$i]) . '</td>';
 		}
-		print '<td align="right">' . price($row[14]) . '</td>';
 		print '<td align="right"><b>' . price($row[15]) . '</b></td>';
 		print '</tr>';
 	}
@@ -341,8 +332,9 @@ if ($resql) {
 print "</table>\n";
 
 print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre"><td width="200">' . $langs->trans("PurchasebyVatrate") . '</td>';
-print '<td width="200" align="left">' . $langs->trans("ProductOrService") . '</td>';
+print '<tr class="liste_titre"><td width="60">' . $langs->trans("PurchasebyVatrate") . '</td>';
+print '<td width="60" align="left">' . $langs->trans("ProductOrService") . '</td>';
+print '<td width="60" align="left">' . $langs->trans("Country") . '</td>';
 for($i = 1; $i <= 12; $i ++) {
     print '<td width="60" align="right">' . $langs->trans('MonthShort' . str_pad($i, 2, '0', STR_PAD_LEFT)) . '</td>';
 }
@@ -350,18 +342,20 @@ print '<td width="60" align="right"><b>' . $langs->trans("Total") . '</b></td></
 
 $sql2 = "SELECT  ".$db->ifsql('ffd.tva_tx IS NULL', "'".$langs->trans('NotMatch')."'", 'ffd.tva_tx') ." AS vatrate,";
 $sql2 .= "  " . $db->ifsql('ffd.product_type IS NULL', "'".$langs->trans('NotMatch')."'", 'ffd.product_type') . " AS product_type,";
-$sql2 .= "  " . $db->ifsql('ff.paye IS NULL', "'".$langs->trans('NotMatch')."'", 'ff.paye') . " AS paye,";
+$sql2 .= "  " . $db->ifsql('cc.label IS NULL', "'".$langs->trans('NotMatch')."'", 'cc.label') . " AS country,";
 for($i = 1; $i <= 12; $i ++) {
 	$sql2 .= "  SUM(" . $db->ifsql('MONTH(ff.datef)=' . $i, 'ffd.total_ht', '0') . ") AS month" . str_pad($i, 2, '0', STR_PAD_LEFT) . ",";
 }
 $sql2 .= "  ROUND(SUM(ffd.total_ht),2) as total";
 $sql2 .= " FROM " . MAIN_DB_PREFIX . "facture_fourn_det as ffd";
 $sql2 .= "  LEFT JOIN " . MAIN_DB_PREFIX . "facture_fourn as ff ON ff.rowid = ffd.fk_facture_fourn";
+$sql2 .= "  INNER JOIN " . MAIN_DB_PREFIX . "societe as soc ON soc.rowid = ff.fk_soc";
+$sql2 .= "  INNER JOIN " . MAIN_DB_PREFIX . "c_country as cc ON cc.rowid = soc.fk_pays";
 $sql2 .= " WHERE ff.datef >= '" . $db->idate(dol_get_first_day($y, 1, false)) . "'";
 $sql2 .= "  AND ff.datef <= '" . $db->idate(dol_get_last_day($y, 12, false)) . "'";
 $sql2 .= "  AND ff.fk_statut > 0 ";
 $sql2 .= " AND ff.entity IN (" . getEntity("facture_fourn", 0) . ")";     
-$sql2 .= " GROUP BY ffd.tva_tx,ffd.product_type";
+$sql2 .= " GROUP BY ffd.tva_tx,ffd.product_type, cc.label";
 
 dol_syslog("htdocs/compta/tva/index.php sql=" . $sql, LOG_DEBUG);
 $resql2 = $db->query($sql2);
@@ -373,17 +367,15 @@ if ($resql2) {
 		$var = ! $var;
 		print '<tr ' . $bc[$var] . '><td>' . vatrate($row[0]) . '</td>';
 		if ($row[1] == 0) {
-		//print '<td align="left">' . $row[1] . '</td>';
 		print '<td align="left">'. $langs->trans("Product") . '</td>';
 		} else {
 		print '<td align="left">'. $langs->trans("Service") . '</td>';
 		}
-		//print '<td align="left">' . $row[1] . '</td>';
-		for($i = 2; $i <= 12; $i ++) {
+		print '<td align="right"><b>' . $row[2] . '</b></td>';
+		for($i = 3; $i <= 14; $i ++) {
 			print '<td align="right">' . price($row[$i]) . '</td>';
 		}
-		print '<td align="right">' . price($row[13]) . '</td>';
-		print '<td align="right"><b>' . price($row[14]) . '</b></td>';
+		print '<td align="right"><b>' . price($row[15]) . '</b></td>';
 		print '</tr>';
 	}
 	$db->free($resql2);
