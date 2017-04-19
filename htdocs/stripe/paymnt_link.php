@@ -55,7 +55,7 @@ if ($id)
     
 	dol_fiche_head();
 	
-	$link = $dolibarr_main_url_root . '/custom/stripe/checkout.php?source=invoice&ref=' . $object->ref;
+	$link = $dolibarr_main_url_root . '/stripe/checkout.php?source=invoice&ref=' . $object->ref;
 	print '<table class="border centpercent">'."\n";
 	print '<tr><td class="fieldrequired">'.$langs->trans("PaymentLink").'</td><td><input class="flat" type="text" size="100%" name="label" value="'.$link.'"></td></tr>';
 	// LIST_OF_TD_LABEL_FIELDS_VIEW
