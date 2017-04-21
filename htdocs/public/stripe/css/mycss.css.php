@@ -1,6 +1,6 @@
 <?php
 /* <one line to give the program's name and a brief idea of what it does.>
- * Copyright (C) <2016>  <jamelbaz@gmail.com>
+ * Copyright (C) <year>  <name of author>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,25 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
- /**
- *  \file       htdocs/Stripe/config.php
- *  \ingroup    stripe
- *  \brief      Page to configure stripe
+/**
+ * \file    css/mycss.css.php
+ * \ingroup mymodule
+ * \brief   Example CSS.
+ *
+ * Put detailed description here.
  */
- 
 
-// Load Dolibarr environment
-	//require '../../main.inc.php'; 
-
-require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
-dol_include_once('/stripe/lib/stripe.lib.php');
-require_once('stripe/init.php');
-
-//use \Stripe\Stripe as Stripe;
-$stripe = array(
-  "secret_key"      => $conf->global->TEST_SECRET_KEY,
-  "publishable_key" => $conf->global->TEST_PUBLISHABLE_KEY
-);
-
-\Stripe\Stripe::setApiKey($stripe['secret_key']);
-?>
+header('Content-Type: text/css');
