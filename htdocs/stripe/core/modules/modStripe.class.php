@@ -17,15 +17,15 @@
  */
 
 /**
- * \defgroup    Stripe    Stripe module
- * \brief       Stripe module descriptor.
+ * \defgroup    stripe    stripe module
+ * \brief       stripe module descriptor.
  *
  * Put detailed description here.
  */
 
 /**
  * \file        core/modules/modStripe.class.php
- * \ingroup     Stripe
+ * \ingroup     stripe
  * \brief       Example module description and activation file.
  *
  * Put detailed description here.
@@ -37,7 +37,7 @@ include_once DOL_DOCUMENT_ROOT . "/core/modules/DolibarrModules.class.php";
 // so we ignore the Squiz.Classes.ValidClassName.NotCamelCaps rule.
 // @codingStandardsIgnoreStart
 /**
- * Description and activation class for module Stripe
+ * Description and activation class for module stripe
  */
 class modStripe extends DolibarrModules
 {
@@ -51,7 +51,7 @@ class modStripe extends DolibarrModules
 	public $numero = 123456789852;
 
 	/** @var string Text key to reference module (for permissions, menus, etc.) */
-	public $rights_class = 'Stripe';
+	public $rights_class = 'stripe';
 
 	/**
 	 * @var string Module family.
@@ -72,10 +72,10 @@ class modStripe extends DolibarrModules
 	);
 
 	/** @var string Module name */
-	public $name = "Stripe";
+	public $name = "stripe";
 
 	/** @var string Module short description */
-	public $description = "Description of module Stripe";
+	public $description = "Description of module stripe";
 
 	/** @var string Module long description */
 	public $descriptionlong = "A very long description. Can be a full HTML content";
@@ -104,16 +104,16 @@ class modStripe extends DolibarrModules
 
 	/**
 	 * @var string Module logo
-	 * Should be named object_Stripe.png and store under Stripe/img
+	 * Should be named object_Stripe.png and store under stripe/img
 	 */
 	public $picto = 'stripe@stripe';
 
 	/** @var array Define module parts */
 	public $module_parts = array(
-		/** @var bool Module ships triggers in Stripe/core/triggers */
+		/** @var bool Module ships triggers in stripe/core/triggers */
 		'triggers' => true,
 		/**
-		 * @var bool Module ships login in Stripe/core/login
+		 * @var bool Module ships login in stripe/core/login
 		 * @todo: example
 		 */
 		'login' => false,
@@ -128,12 +128,12 @@ class modStripe extends DolibarrModules
 		 */
 		'menus' => false,
 		/**
-		 * @var bool Module ships theme in Stripe/theme
+		 * @var bool Module ships theme in stripe/theme
 		 * @todo example
 		 */
 		'theme' => false,
 		/**
-		 * @var bool Module shipped templates in Stripe/core/tpl overload core ones
+		 * @var bool Module shipped templates in stripe/core/tpl overload core ones
 		 * @todo example
 		 */
 		'tpl' => false,
@@ -149,11 +149,11 @@ class modStripe extends DolibarrModules
 		'models' => false,
 		/** @var string[] List of module shipped custom CSS relative file paths */
 		'css' => array(
-			'Stripe/css/mycss.css.php'
+			'stripe/css/mycss.css.php'
 		),
 		/** @var string[] List of module shipped custom JavaScript relative file paths */
 		'js' => array(
-			'Stripe/js/myjs.js.php'
+			'stripe/js/myjs.js.php'
 		),
 		/**
 		 * @var string[] List of hook contexts managed by the module
@@ -173,11 +173,11 @@ class modStripe extends DolibarrModules
 
 	/** @var string Data directories to create when module is enabled */
 	public $dirs = array(
-		'/Stripe/temp'
+		'/stripe/temp'
 	);
 
 	/** @var array Configuration page declaration */
-	public $config_page_url = 'setup.php@Stripe';
+	public $config_page_url = 'setup.php@stripe';
 
 	/** @var bool Control module visibility */
 	public $hidden = false;
@@ -198,7 +198,7 @@ class modStripe extends DolibarrModules
 	public $need_dolibarr_version = array(3, 2);
 
 	/** @var string[] List of language files */
-	public $langfiles = array('Stripe@Stripe');
+	public $langfiles = array('stripe@stripe');
 
 	/** @var array Indexed list of constants options */
 	public $const = array(
@@ -241,7 +241,7 @@ class modStripe extends DolibarrModules
 	/** @var array Indexed list of boxes options */
 	public $boxes = array(
 		0 => array(
-			'file' => 'mybox@Stripe',
+			'file' => 'mybox@stripe',
 			'note' => '',
 			'enabledbydefaulton' => 'Home'
 		)
@@ -362,7 +362,7 @@ class modStripe extends DolibarrModules
 			// 'workflow' => array(
 			//     'WORKFLOW_MODULE1_YOURACTIONTYPE_MODULE2' => array(
 			//         'enabled' => '! empty($conf->module1->enabled) && ! empty($conf->module2->enabled)',
-			//         'picto' => 'yourpicto@Stripe',
+			//         'picto' => 'yourpicto@stripe',
 			//         'warning' => 'WarningTextTranslationKey',
 			//      ),
 			// ),
@@ -372,7 +372,7 @@ class modStripe extends DolibarrModules
 		// Array to add new pages in new tabs
 		// Example:
 		$this->tabs = array(
-				'invoice:+tabname1:Stripe:stripe@stripe:1:/Stripe/paymnt_link.php?id=__ID__',
+				'invoice:+tabname1:stripe:stripe@stripe:1:/stripe/paymnt_link.php?id=__ID__',
 		);
 		// 'categories_x'	  to add a tab in category view (replace 'x' by type of category (0=product, 1=supplier, 2=customer, 3=member)
 		// 'contact'          to add a tab in contact view
@@ -395,14 +395,14 @@ class modStripe extends DolibarrModules
 		// 'user'             to add a tab in user view
 
 		// Dictionaries
-		if (! isset($conf->Stripe->enabled)) {
-			$conf->Stripe=new stdClass();
-			$conf->Stripe->enabled = 0;
+		if (! isset($conf->stripe->enabled)) {
+			$conf->stripe=new stdClass();
+			$conf->stripe->enabled = 0;
 		}
 		//$this->dictionaries = array();
 		/* Example:
 		  $this->dictionaries=array(
-			  'langs'=>'Stripe@Stripe',
+			  'langs'=>'stripe@stripe',
 			  // List of tables we want to see into dictonary editor
 			  'tabname'=>array(
 				  MAIN_DB_PREFIX."table1",
@@ -432,9 +432,9 @@ class modStripe extends DolibarrModules
 			  'tabrowid'=>array("rowid","rowid","rowid"),
 			  // Condition to show each dictionary
 			  'tabcond'=>array(
-				  $conf->Stripe->enabled,
-				  $conf->Stripe->enabled,
-				  $conf->Stripe->enabled
+				  $conf->stripe->enabled,
+				  $conf->stripe->enabled,
+				  $conf->stripe->enabled
 			  )
 		  );
 		 */
@@ -496,20 +496,20 @@ class modStripe extends DolibarrModules
 		//	// This is a Top menu entry
 		//	'type'=>'top',
 		// Menu's title. FIXME: use a translation key
-		//	'titre'=>'Stripe top menu',
+		//	'titre'=>'stripe top menu',
 		// This menu's mainmenu ID
-		//	'mainmenu'=>'Stripe',
+		//	'mainmenu'=>'stripe',
 		// This menu's leftmenu ID
-		//	'leftmenu'=>'Stripe',
-		//	'url'=>'/Stripe/pagetop.php',
+		//	'leftmenu'=>'stripe',
+		//	'url'=>'/stripe/pagetop.php',
 		//	// Lang file to use (without .lang) by module.
 		//	// File must be in langs/code_CODE/ directory.
 		//	'langs'=>'mylangfile',
 		//	'position'=>100,
 		//	// Define condition to show or hide menu entry.
-		//	// Use '$conf->Stripe->enabled' if entry must be visible if module is enabled.
-		//	'enabled'=>'$conf->Stripe->enabled',
-		//	// Use 'perms'=>'$user->rights->Stripe->level1->level2'
+		//	// Use '$conf->stripe->enabled' if entry must be visible if module is enabled.
+		//	'enabled'=>'$conf->stripe->enabled',
+		//	// Use 'perms'=>'$user->rights->stripe->level1->level2'
 		//	// if you want your menu with a permission rules
 		//	'perms'=>'1',
 		//	'target'=>'',
@@ -523,20 +523,20 @@ class modStripe extends DolibarrModules
 		//	// This is a Left menu entry
 		//	'type'=>'left',
 		// Menu's title. FIXME: use a translation key
-		//	'titre'=>'Stripe left menu',
+		//	'titre'=>'stripe left menu',
 		// This menu's mainmenu ID
-		//	'mainmenu'=>'Stripe',
+		//	'mainmenu'=>'stripe',
 		// This menu's leftmenu ID
-		//	'leftmenu'=>'Stripe',
-		//	'url'=>'/Stripe/pagelevel1.php',
+		//	'leftmenu'=>'stripe',
+		//	'url'=>'/stripe/pagelevel1.php',
 		//	// Lang file to use (without .lang) by module.
 		//	// File must be in langs/code_CODE/ directory.
 		//	'langs'=>'mylangfile',
 		//	'position'=>100,
 		//	// Define condition to show or hide menu entry.
-		//	// Use '$conf->Stripe->enabled' if entry must be visible if module is enabled.
-		//	'enabled'=>'$conf->Stripe->enabled',
-		//	// Use 'perms'=>'$user->rights->Stripe->level1->level2'
+		//	// Use '$conf->stripe->enabled' if entry must be visible if module is enabled.
+		//	'enabled'=>'$conf->stripe->enabled',
+		//	// Use 'perms'=>'$user->rights->stripe->level1->level2'
 		//	// if you want your menu with a permission rules
 		//	'perms'=>'1',
 		//	'target'=>'',
@@ -551,21 +551,21 @@ class modStripe extends DolibarrModules
 		//	// This is a Left menu entry
 		//	'type'=>'left',
 		// Menu's title. FIXME: use a translation key
-		//	'titre'=>'Stripe left menu',
+		//	'titre'=>'stripe left menu',
 		// This menu's mainmenu ID
 		//	'mainmenu'=>'mainmenucode',
 		// This menu's leftmenu ID
-		//	'leftmenu'=>'Stripe',
-		//	'url'=>'/Stripe/pagelevel2.php',
+		//	'leftmenu'=>'stripe',
+		//	'url'=>'/stripe/pagelevel2.php',
 		//	// Lang file to use (without .lang) by module.
 		//	// File must be in langs/code_CODE/ directory.
 		//	'langs'=>'mylangfile',
 		//	'position'=>100,
 		//	// Define condition to show or hide menu entry.
-		//	// Use '$conf->Stripe->enabled' if entry must be visible if module is enabled.
+		//	// Use '$conf->stripe->enabled' if entry must be visible if module is enabled.
 		//	// Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-		//	'enabled'=>'$conf->Stripe->enabled',
-		//	// Use 'perms'=>'$user->rights->Stripe->level1->level2'
+		//	'enabled'=>'$conf->stripe->enabled',
+		//	// Use 'perms'=>'$user->rights->stripe->level1->level2'
 		//	// if you want your menu with a permission rules
 		//	'perms'=>'1',
 		//	'target'=>'',
@@ -687,14 +687,14 @@ class modStripe extends DolibarrModules
 	/**
 	 * Create tables, keys and data required by module
 	 * Files llx_table1.sql, llx_table1.key.sql llx_data.sql with create table, create keys
-	 * and create data commands must be stored in directory /Stripe/sql/
+	 * and create data commands must be stored in directory /stripe/sql/
 	 * This function is called by this->init
 	 *
 	 * @return int <=0 if KO, >0 if OK
 	 */
 	private function loadTables()
 	{
-		return $this->_load_tables('/Stripe/sql/');
+		return $this->_load_tables('/stripe/sql/');
 	}
 
 	/**
