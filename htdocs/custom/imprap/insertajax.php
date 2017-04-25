@@ -3,11 +3,20 @@
 if (false === (@include '../main.inc.php')) {  // From htdocs directory
 	require '../../main.inc.php'; // From "custom" directory
 }
+
+$dated = GETPOST('dated');
+$datef = GETPOST('datef');
+$numReleve = GETPOST('numReleve');
+
 //tous les variable
 $typeG		= "facture";
 $ligne 		= GETPOST('row');
-$idpaiment  = GETPOST('paiementtype');
-$idsoc  = GETPOST('idsoc');
+
+$strnamepaiment = 'paiementtype'.$ligne;
+$idpaiment  = GETPOST($strnamepaiment);
+
+$strnamesoc = 'idsoc'.$ligne;
+$idsoc  = GETPOST($strnamesoc);
 
 
 //get type paiement 
@@ -38,12 +47,12 @@ if($crdit == 0){
 
 if(empty($idpaiment)){
 	$error = $langs->trans("addCetegoreiPaiment");
-	header("Location: treatment.php?errorinsert=".$error);
+	header("Location: treatment.php?action=comparer&dated=".$dated."&datef=".$datef."&numReleve=".$numReleve."&accountid=".$idAccount."&ligne=".$ligne."&idsoc=".$idsoc."&errorinsert=".$error);
 	exit;
 }
 if(empty($idsoc)){
 	$error = $langs->trans("addTierOrProv");
-	header("Location: treatment.php?errorinsert=".$error);
+	header("Location: treatment.php?action=comparer&dated=".$dated."&datef=".$datef."&numReleve=".$numReleve."&accountid=".$idAccount."&ligne=".$ligne."&idpaiment=".$idpaiment."&errorinsert=".$error);
 	exit;
 }
 
@@ -61,19 +70,45 @@ if($typeG == 'facture'){
 				unset($rowidF[$key]);
 			}else{
 				$compteMontant = $compteMontant + $val;
+				
+				if($idclient != 0){
+					$sql = " SELECT `total_ttc` FROM " . MAIN_DB_PREFIX . "facture Where rowid = ".$rowidF[$key];
+					$sqlcmp = " SELECT sum(amount) as amount FROM `llx_paiement_facture` WHERE fk_facture = ".$rowidF[$key] ;
+				}else{
+					$sql = " SELECT `total_ttc` FROM " . MAIN_DB_PREFIX . "facture_fourn Where rowid = ".$rowidF[$key];
+					$sqlcmp = " SELECT sum(amount) as amount FROM `llx_paiementfourn_facturefourn` WHERE fk_facturefourn = ".$rowidF[$key] ;
+				}
+				
+				$resql = $db->query($sql);
+				$obj = $db->fetch_object($resql);
+				$db->free($resql);
+				$total_ttc = $obj->total_ttc;
+				
+				$resqlcmp = $db->query($sqlcmp);
+				$objcmp = $db->fetch_object($resqlcmp);
+				$db->free($resqlcmp);
+				$amountf = $objcmp->amount;
+				if(($montantF[$key] + $amountf) > $total_ttc){
+					
+					$error = $langs->trans("MontantSupérieurDeAmountDeFactur");
+					header("Location: treatment.php?action=comparer&dated=".$dated."&datef=".$datef."&numReleve=".$numReleve."&accountid=".$idAccount."&ligne=".$ligne."&idpaiment=".$idpaiment."&idsoc=".$idsoc."&errorinsert=".$error);
+					exit;
+					
+				}
+				
 			}
 		}
 
 		if(empty($montantF)){
 			
 			$error = $langs->trans("addMontant");
-			header("Location: treatment.php?errorinsert=".$error);
+			header("Location: treatment.php?action=comparer&dated=".$dated."&datef=".$datef."&numReleve=".$numReleve."&accountid=".$idAccount."&ligne=".$ligne."&idpaiment=".$idpaiment."&idsoc=".$idsoc."&errorinsert=".$error);
 			exit;
 			
 		}elseif($compteMontant != $amount){
 			
 			$error = $langs->trans("lesMantantInvalid");
-			header("Location: treatment.php?errorinsert=".$error);
+			header("Location: treatment.php?action=comparer&dated=".$dated."&datef=".$datef."&numReleve=".$numReleve."&accountid=".$idAccount."&ligne=".$ligne."&idpaiment=".$idpaiment."&idsoc=".$idsoc."&errorinsert=".$error);
 			exit;
 			
 		}else{
@@ -116,11 +151,32 @@ if($typeG == 'facture'){
 				//Add new relation paiment avec facture in table paiment_facture
 				foreach($montantF as $key => $val){
 					$idfactura = $rowidF[$key];
-					$sql = " INSERT INTO `llx_paiement_facture`(`rowid`, `fk_paiement`, `fk_facture`, `amount`, `multicurrency_code`, `multicurrency_tx`, `multicurrency_amount`) ";
-					$sql.= " VALUES ('',".$idp.",".$idfactura.",".$val.",'',1,".$val.")";
+					$sql = " INSERT INTO `llx_paiement_facture`(`rowid`, `fk_paiement`, `fk_facture`, `amount`, `multicurrency_amount`) ";
+					$sql.= " VALUES ('',".$idp.",".$idfactura.",".$val.",".$val.")";
 					$resql = $db->query($sql);
+					
+					if($resql){
+						//verify paye ou impaye 
+						//get la somme des paiement
+						$sql = " SELECT `total_ttc` FROM " . MAIN_DB_PREFIX . "facture Where rowid = ".$rowidF[$key];
+						$resql = $db->query($sql);
+						$obj = $db->fetch_object($resql);
+						$db->free($resql);
+						$total_ttc1 = $obj->total_ttc;
+						
+						//get la montant de facture
+						$sqlcmp = " SELECT sum(amount) as amount FROM `llx_paiement_facture` WHERE fk_facture = ".$rowidF[$key] ;
+						$resql = $db->query($sqlcmp);
+						$obj = $db->fetch_object($resql);
+						$db->free($resql);
+						$amount1 = $obj->amount;
+						
+						if($amount1 == $total_ttc1){
+							$sql = " UPDATE `llx_facture` SET paye = 1, fk_statut = 2 WHERE rowid = ".$rowidF[$key];
+							$resql = $db->query($sql);
+						}
+					}
 				}
-
 
 				//Ajouter url bank
 				$sql = " INSERT INTO `llx_bank_url`( `fk_bank`, `url_id`, `url`, `label`, `type`) ";
@@ -129,8 +185,9 @@ if($typeG == 'facture'){
 				$sql = " INSERT INTO `llx_bank_url`( `fk_bank`, `url_id`, `url`, `label`, `type`) ";
 				$sql.= " VALUES (".$ide.",".$idclient.",'','(Client)','company')";
 				$resql = $db->query($sql);
-
-				header("Location: treatment.php");
+				
+				$msg = $langs->trans("lepaimentdeclientbienajouter");
+				header("Location: treatment.php?action=comparer&dated=".$dated."&datef=".$datef."&numReleve=".$numReleve."&accountid=".$idAccount."&idpaiment=".$idpaiment."&idsoc=".$idsoc."&bieninsert=".$msg);
 				exit;
 				
 			}else{
@@ -143,14 +200,11 @@ if($typeG == 'facture'){
 				$db->free($resql);
 				$codeP = $obj->code;
 
-
 				//Add new ecritur in table bank et return id
 				$sql = " INSERT INTO `llx_bank`(`rowid`, `datec`, `tms`, `datev`, `dateo`, `amount`, `label`, `fk_account`, `fk_user_author`, `fk_user_rappro`, `fk_type`, `num_releve`, `num_chq`, `rappro`, `note`, `fk_bordereau`, `banque`, `emetteur`, `author`)" ;
 				$sql.= " VALUES ('',NOW(),NOW(),'".$datev."','".$dateo."',".$amount.",'(SupplierInvoicePayment)',".$idAccount.",1,'','".$codeP."','','','','','','','','')";
 				$resql = $db->query($sql);
 				$ide = $db->last_insert_id(MAIN_DB_PREFIX . "bank");
-
-
 
 				//Add new paiment in table paiment
 				$sql = " SELECT rowid FROM llx_paiementfourn ORDER BY rowid DESC LIMIT 1";
@@ -169,49 +223,48 @@ if($typeG == 'facture'){
 				$sql.= " VALUES (".$idp.",'".$idpc."',1,NOW(),NOW(),NOW(),".$amount.",".$amount.",1,".$idpaiment.",'','',".$ide.",0) ";
 				$resql = $db->query($sql);
 				
-				
 				//Add new relation paiment avec facture in table paiment_facture
 				foreach($montantF as $key => $val){
 					$idfactura = $rowidF[$key];
 					
-					$sql = " INSERT INTO `llx_paiementfourn_facturefourn`(`rowid`, `fk_paiementfourn`, `fk_facturefourn`, `amount`, `multicurrency_code`, `multicurrency_tx`, `multicurrency_amount`) ";
-					
-					$sql.= " VALUES ('',".$idp.",".$idfactura.",".$val.",'',1,".$val.")";
-					
+					$sql = " INSERT INTO `llx_paiementfourn_facturefourn`(`rowid`, `fk_paiementfourn`, `fk_facturefourn`, `amount`, `multicurrency_amount`) ";
+					$sql.= " VALUES ('',".$idp.",".$idfactura.",".$val.",".$val.")";
 					$resql = $db->query($sql);
+					
+					if($resql){
+						//verify paye ou impaye 
+						//get la somme des paiement
+						$sql = " SELECT `total_ttc` FROM " . MAIN_DB_PREFIX . "facture_fourn Where rowid = ".$idfactura;
+						$resql = $db->query($sql);
+						$obj = $db->fetch_object($resql);
+						$db->free($resql);
+						$total_ttc1 = $obj->total_ttc;
+						
+						//get la montant de facture
+						$sqlcmp = " SELECT sum(amount) as amount FROM " . MAIN_DB_PREFIX . "paiementfourn_facturefourn WHERE fk_facturefourn = ".$idfactura ;
+						$resql = $db->query($sqlcmp);
+						$obj = $db->fetch_object($resql);
+						$db->free($resql);
+						$amount1 = $obj->amount;
+						
+						if($amount1 == $total_ttc1){
+							$sql = " UPDATE `llx_facture_fourn` SET paye = 1, fk_statut = 2 WHERE rowid = ".$rowidF[$key];
+							$resql = $db->query($sql);
+						}
+					}
+					
 				}
 				
-				header("Location: treatment.php");
+				$msg = $langs->trans("lepaimentdefourbienajouter");
+				header("Location: treatment.php?action=comparer&dated=".$dated."&datef=".$datef."&numReleve=".$numReleve."&accountid=".$idAccount."&idpaiment=".$idpaiment."&idsoc=".$idsoc."&bieninsert=".$msg);
 				exit;
 				
-				
 			}
-			
 		}
 	}else{
 		
 		$error = $langs->trans("ErrorFactur");
-		header("Location: treatment.php?errorinsert=".$error);
+		header("Location: treatment.php?action=comparer&dated=".$dated."&datef=".$datef."&numReleve=".$numReleve."&accountid=".$idAccount."&ligne=".$ligne."&idpaiment=".$idpaiment."&idsoc=".$idsoc."&errorinsert=".$error);
 		exit;
 	}
-}else{
-	
-	foreach($_POST['rapp'] as $key => $val){
-		$sql = " UPDATE `llx_bank` SET `num_releve`=".$_SESSION['arrayfilecsv']['releve'].",`rappro`=1 WHERE `rowid`= ".$_SESSION['arrayfilecsv']['reg'][$key][6] ;
-		$resql = $db->query($sql);
-	}
-	
-	$bbank = $_SESSION['arrayfilecsv']['bank'] ;
-	$aacompt = $_SESSION['arrayfilecsv']['releve'] ;
-	
-	unset($_SESSION['arrayfilecsv']);
-	
-	header("Location: ".DOL_URL_ROOT."/compta/bank/releve.php?account=".$bbank."&num=".$aacompt );
-	exit;
-	
-	/* 
-	$error = $langs->trans("notFacture");
-	header("Location: treatment.php?errorinsert=".$error);
-	exit;
-	*/
 }

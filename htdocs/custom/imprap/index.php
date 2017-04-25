@@ -112,9 +112,9 @@ if($action == 'insert'){
 				break;
 			}
 			
-			$cell[2] = (float)(trim(str_replace(",",".",$cell[2])));
-			$cell[3] = (float)(trim(str_replace(",",".",$cell[3])));
-			$cell[5] = (float)(trim(str_replace(",",".",$cell[5])));
+			$cell[2] = (float)(trim(str_replace("-","",(str_replace(",",".",$cell[2])))));
+			$cell[3] = (float)(trim(str_replace("-","",(str_replace(",",".",$cell[3])))));
+			$cell[5] = (float)(trim(str_replace("-","",(str_replace(",",".",$cell[5])))));
 			
 			if(! is_float($cell[2])){
 				$error++;

@@ -10,7 +10,7 @@ $idfourn = GETPOST('idfourn','int');
 if(!empty($id)){
 	
 	$sql = " SELECT * FROM " . MAIN_DB_PREFIX . "facture ";
-	$sql.= " Where fk_soc = ".$id." AND facnumber LIKE 'FA%'";
+	$sql.= " Where fk_soc = ".$id." AND fk_statut = 1";
 	
 	$resql = $db->query($sql);
 	if ($resql)
