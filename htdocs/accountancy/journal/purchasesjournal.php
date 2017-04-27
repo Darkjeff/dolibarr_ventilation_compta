@@ -144,7 +144,6 @@ if ($result) {
 		$tabfac[$obj->rowid]["ref"] = $obj->ref_supplier . ' (' . $obj->ref . ')';
 		$tabfac[$obj->rowid]["refsologest"] = $obj->ref;
 		$tabfac[$obj->rowid]["refsuppliersologest"] = $obj->ref_supplier;
-
 		$tabfac[$obj->rowid]["type"] = $obj->type;
 		$tabfac[$obj->rowid]["description"] = $obj->description;
 		$tabfac[$obj->rowid]["fk_facturefourndet"] = $obj->fdid;
@@ -320,6 +319,7 @@ if ($action == 'writebookkeeping') {
 $form = new Form($db);
 
 $companystatic = new Fournisseur($db);
+$invoicestatic = new FactureFournisseur($db);
 
 // Export
 if ($action == 'export_csv') {
@@ -403,40 +403,51 @@ if ($action == 'export_csv') {
 				$accountingaccount = new AccountingAccount($db);
 				$accountingaccount->fetch(null, $k, true);
 				if ($mt) {
+					print '"' . $key . '"' . $sep;
 					print '"' . $date . '"' . $sep;
-					print '"' . $val["ref"] . '"' . $sep;
+					print '"' . $val["refsuppliersologest"] . '"' . $sep;
+					print '"' . utf8_decode ( dol_trunc($companystatic->name, 32) ) . '"' . $sep;
 					print '"' . length_accountg(html_entity_decode($k)) . '"' . $sep;
-					print '"' . dol_trunc($companystatic->name, 16) . ' - ' . $val["refsuppliersologest"] . ' - ' . dol_trunc($accountingaccount->label, 32) . '"' . $sep;
-					// print '"' . dol_trunc($accountingaccount->label, 32) . '"' . $sep;
+					print '"' . utf8_decode ( dol_trunc($accountingaccount->label, 32) ) . '"' . $sep;
+					print '"' . utf8_decode ( dol_trunc($companystatic->name, 16) ) . ' - ' . $val["refsuppliersologest"] . ' - ' . dol_trunc($accountingaccount->label, 32) . '"' . $sep;
 					print '"' . ($mt >= 0 ? price($mt) : '') . '"' . $sep;
-					print '"' . ($mt < 0 ? price(- $mt) : '') . '"';
+					print '"' . ($mt < 0 ? price(- $mt) : '') . '"'. $sep;
+					print '"' . $journal . '"' ;
 					print "\n";
 				}
 			}
 			// VAT
 			foreach ( $tabtva[$key] as $k => $mt ) {
 				if ($mt) {
+					print '"' . $key . '"' . $sep;
 					print '"' . $date . '"' . $sep;
-					print '"' . $val["ref"] . '"' . $sep;
+					print '"' . $val["refsuppliersologest"] . '"' . $sep;
+					print '"' . utf8_decode ( dol_trunc($companystatic->name, 32) ) . '"' . $sep;
 					print '"' . length_accountg(html_entity_decode($k)) . '"' . $sep;
-					// print '"' . $langs->trans("VAT") . '"' . $sep;
-					print '"' . dol_trunc($companystatic->name, 16) . ' - ' . $val["refsuppliersologest"] . ' - ' . $langs->trans("VAT") . '"' . $sep;
+					print '"' . $langs->trans("VAT") . '"' . $sep;
+					print '"' . utf8_decode ( dol_trunc($companystatic->name, 16) ) . ' - ' . $val["refsuppliersologest"] . ' - ' . $langs->trans("VAT") . '"' . $sep;
 					print '"' . ($mt >= 0 ? price($mt) : '') . '"' . $sep;
-					print '"' . ($mt < 0 ? price(- $mt) : '') . '"';
+					print '"' . ($mt < 0 ? price(- $mt) : '') . '"'. $sep;
+					print '"' . $journal . '"' ;
 					print "\n";
 				}
 			}
 
 			// Third party
 			foreach ( $tabttc[$key] as $k => $mt ) {
+				print '"' . $key . '"' . $sep;
 				print '"' . $date . '"' . $sep;
-				print '"' . $val["ref"] . '"' . $sep;
+				print '"' . $val["refsuppliersologest"] . '"' . $sep;
+				print '"' . utf8_decode ( dol_trunc($companystatic->name, 32) ). '"' . $sep;
 				print '"' . length_accounta(html_entity_decode($k)) . '"' . $sep;
-				print '"' . dol_trunc($companystatic->name, 16) . ' - ' . $val["refsuppliersologest"] . ' - ' . $langs->trans("Code_tiers") . '"' . $sep;
+				print '"' . $langs->trans("Code_tiers") . '"' . $sep;
+				print '"' . utf8_decode ( dol_trunc($companystatic->name, 16) ) . ' - ' . $val["refsuppliersologest"] . ' - ' . $langs->trans("Code_tiers") . '"' . $sep;
 				print '"' . ($mt < 0 ? price(- $mt) : '') . '"' . $sep;
-				print '"' . ($mt >= 0 ? price($mt) : '') . '"';
+				print '"' . ($mt >= 0 ? price($mt) : '') . '"'. $sep;
+				print '"' . $journal . '"' ;
+				print "\n";
 			}
-			print "\n";
+			
 		}
 	}
 }
@@ -450,7 +461,6 @@ if (empty($action) || $action == 'view') {
 	$periodlink = '';
 	$exportlink = '';
 	$builddate = time();
-	//$description = $langs->trans("DescPurchasesJournal") . '<br>';
 	$description.= $langs->trans("DescJournalOnlyBindedVisible").'<br>';
 	if (! empty($conf->global->FACTURE_DEPOSITS_ARE_JUST_PAYMENTS)) {
 		$description .= $langs->trans("DepositsAreNotIncluded");
@@ -539,7 +549,6 @@ if (empty($action) || $action == 'view') {
 				$companystatic->id = $tabcompany[$key]['id'];
 				$companystatic->name = $tabcompany[$key]['name'];
 				print "<td>" . $companystatic->getNomUrl(0, 'supplier', 16) . ' - ' . $invoicestatic->refsupplier . ' - ' . $accountingaccount->label . "</td>";
-				// print "<td>" . $accountingaccount->label . "</td>";
 				print '<td align="right">' . ($mt >= 0 ? price($mt) : '') . "</td>";
 				print '<td align="right">' . ($mt < 0 ? price(- $mt) : '') . "</td>";
 				print "</tr>";
@@ -584,9 +593,6 @@ if (empty($action) || $action == 'view') {
 			else print $accountoshow;
             print "</td>";
 			print "<td>" . $companystatic->getNomUrl(0, 'supplier', 16) . ' - ' . $invoicestatic->refsupplier . ' - ' . $langs->trans("Code_tiers") . "</td>";
-			// print "</td><td>" . $langs->trans("ThirdParty");
-			// print ' (' . $companystatic->getNomUrl(0, 'supplier', 16) . ')';
-			// print "</td>";
 			print '<td align="right">' . ($mt < 0 ? - price(- $mt) : '') . "</td>";
 			print '<td align="right">' . ($mt >= 0 ? price($mt) : '') . "</td>";
 		}
