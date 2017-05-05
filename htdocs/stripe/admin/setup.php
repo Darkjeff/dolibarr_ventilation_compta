@@ -55,7 +55,12 @@ if ($action == 'setvalue' && $user->admin)
     if (! $result > 0) $error++;
     $result=dolibarr_set_const($db, "LIVE_PUBLISHABLE_KEY",GETPOST('LIVE_PUBLISHABLE_KEY','alpha'),'chaine',0,'',$conf->entity);
     if (! $result > 0) $error++;
-   
+	// $result=dolibarr_set_const($db, "LIVE_ENABLED",GETPOST('LIVE_ENABLED','alpha'),'chaine',0,'',$conf->entity);
+    // if (! $result > 0) $error++;
+	
+	
+	//Activate Ask For Preferred Shipping Method
+
 	
 	if (! $error)
   	{
@@ -68,7 +73,19 @@ if ($action == 'setvalue' && $user->admin)
 		dol_print_error($db);
     }
 }
-
+if ($action=="setasklive") {
+	$liveenable = GETPOST('value','int');
+	$res = dolibarr_set_const($db, "LIVE_ENABLED", $liveenable,'yesno',0,'',$conf->entity);
+	if (! $res > 0) $error++;
+	if (! $error)
+	{
+		setEventMessages($langs->trans("SetupSaved"), null, 'mesgs');
+	}
+	else
+	{
+		setEventMessages($langs->trans("Error"), null, 'errors');
+	}
+}
 
 // Access control
 if (! $user->admin) {
@@ -152,6 +169,27 @@ print '<tr '.$bc[$var].'><td class="fieldrequired">';
 print $langs->trans("LivePublishableKey").'</td><td>';
 print '<input size="32" type="text" name="LIVE_PUBLISHABLE_KEY" value="'.$conf->global->LIVE_PUBLISHABLE_KEY.'">';
 print ' &nbsp; '.$langs->trans("Example").': pk_live_hFbNtJmKEJb3njN7mSSBUKxX  ';
+print '</td></tr>';
+
+$var=!$var;
+
+
+
+print '<tr '.$bc[$var].'><td class="fieldrequired">';
+print $langs->trans("LiveEnabled").'</td><td>';
+
+if (!empty($conf->global->LIVE_ENABLED))
+{
+	print '<a href="'.$_SERVER['PHP_SELF'].'?action=setasklive&value=0">';
+	print img_picto($langs->trans("Activated"),'switch_on');
+
+}
+else
+{
+	print '<a href="'.$_SERVER['PHP_SELF'].'?action=setasklive&value=1">';
+	print img_picto($langs->trans("Disabled"),'switch_off');
+}
+
 print '</td></tr>';
 
 print '</table>';

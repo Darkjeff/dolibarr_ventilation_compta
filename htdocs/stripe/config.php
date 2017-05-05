@@ -16,25 +16,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
- /**
- *  \file       htdocs/Stripe/config.php
- *  \ingroup    stripe
- *  \brief      Page to configure stripe
- */
- 
 
 // Load Dolibarr environment
-	//require '../../main.inc.php'; 
+if (false === (@include '../main.inc.php')) {  // From htdocs directory
+	require '../../main.inc.php'; // From "custom" directory
+}
 
 require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 dol_include_once('/stripe/lib/stripe.lib.php');
 require_once('stripe/init.php');
 
 //use \Stripe\Stripe as Stripe;
-$stripe = array(
-  "secret_key"      => $conf->global->TEST_SECRET_KEY,
-  "publishable_key" => $conf->global->TEST_PUBLISHABLE_KEY
-);
+
+$stripe = array();
+
+if(empty($conf->global->LIVE_ENABLED)){
+	$stripe = array(
+	  "secret_key"      => $conf->global->TEST_SECRET_KEY,
+	  "publishable_key" => $conf->global->TEST_PUBLISHABLE_KEY
+	);
+
+}else{
+	$stripe = array(
+	  "secret_key"      => $conf->global->LIVE_SECRET_KEY,
+	  "publishable_key" => $conf->global->LIVE_PUBLISHABLE_KEY
+	);	
+}
+	
 
 \Stripe\Stripe::setApiKey($stripe['secret_key']);
 ?>
