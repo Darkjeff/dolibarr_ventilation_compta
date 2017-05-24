@@ -180,7 +180,6 @@ if ($resql)
 	print '<form method="GET" action="' . $_SERVER["PHP_SELF"] . '">';
 	
 	// Box to select active chart of account
-    $var = ! $var;
     print $langs->trans("Selectchartofaccounts") . " : ";
     print '<select class="flat" name="chartofaccounts" id="chartofaccounts">';
     $sql = "SELECT rowid, pcg_version, label, active";
@@ -188,12 +187,10 @@ if ($resql)
     $sql .= " WHERE active = 1";
     dol_syslog('accountancy/admin/account.php:: $sql=' . $sql);
     $resqlchart = $db->query($sql);
-    $var = true;
     if ($resqlchart) {
         $numbis = $db->num_rows($resqlchart);
         $i = 0;
         while ( $i < $numbis ) {
-            $var = ! $var;
             $row = $db->fetch_row($resqlchart);
     
             print '<option value="' . $row[0] . '"';
@@ -204,7 +201,7 @@ if ($resql)
         }
     }
     print "</select>";
-    print '<input type="submit" class="button" name="change_chart" value="'.dol_escape_htmltag($langs->trans("ChangeAndLoad")).'">';
+    print '<input type="submit" class="button" name="change_chart" value="'.dol_string_nohtmltag($langs->trans("ChangeAndLoad")).'">';
     print '<br>';    
     print "<br>\n";
 	print '</form>';
@@ -252,8 +249,7 @@ if ($resql)
 	print $searchpicto;
 	print '</td>';
 	print '</tr>';
-	
-	$var = false;
+
 	
 	$accountstatic = new AccountingAccount($db);
 	$accountparent = new AccountingAccount($db);
@@ -264,7 +260,7 @@ if ($resql)
 		$accountstatic->label = $obj->label;
 		$accountstatic->account_number = $obj->account_number;
 		
-		print '<tr ' . $bc[$var] . '>';
+		print '<tr class="oddeven">';
 		// Account number
 		if (! empty($arrayfields['aa.account_number']['checked']))
 		{
@@ -356,7 +352,6 @@ if ($resql)
 		if (! $i) $totalarray['nbfield']++;
 		
 		print "</tr>\n";
-		$var = ! $var;
 		$i++;
 	}
 	
