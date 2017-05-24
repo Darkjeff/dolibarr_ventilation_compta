@@ -181,7 +181,7 @@ print '<table class="noborder" width="100%">';
 print '<tr class="liste_titre">';
 print '<td>' . $langs->trans('OptionMode') . '</td><td>' . $langs->trans('Description') . '</td>';
 print "</tr>\n";
-print '<tr ' . $bc[false] . '><td width="200"><input type="radio" name="accounting_mode" value="RECETTES-DEPENSES"' . ($accounting_mode != 'CREANCES-DETTES' ? ' checked' : '') . '> ' . $langs->trans('OptionModeTrue') . '</td>';
+print '<tr class="oddeven"><td width="200"><input type="radio" name="accounting_mode" value="RECETTES-DEPENSES"' . ($accounting_mode != 'CREANCES-DETTES' ? ' checked' : '') . '> ' . $langs->trans('OptionModeTrue') . '</td>';
 print '<td colspan="2">' . nl2br($langs->trans('OptionModeTrueDesc'));
 // Write info on way to count VAT
 // if (! empty($conf->global->MAIN_MODULE_COMPTABILITE))
@@ -195,7 +195,7 @@ print '<td colspan="2">' . nl2br($langs->trans('OptionModeTrueDesc'));
 // // print nl2br($langs->trans('OptionModeTrueInfoExpert'));
 // }
 print "</td></tr>\n";
-print '<tr ' . $bc[true] . '><td width="200"><input type="radio" name="accounting_mode" value="CREANCES-DETTES"' . ($accounting_mode == 'CREANCES-DETTES' ? ' checked' : '') . '> ' . $langs->trans('OptionModeVirtual') . '</td>';
+print '<tr class="oddeven"><td width="200"><input type="radio" name="accounting_mode" value="CREANCES-DETTES"' . ($accounting_mode == 'CREANCES-DETTES' ? ' checked' : '') . '> ' . $langs->trans('OptionModeVirtual') . '</td>';
 print '<td colspan="2">' . nl2br($langs->trans('OptionModeVirtualDesc')) . "</td></tr>\n";
 
 print "</table>\n";
@@ -214,8 +214,7 @@ print "</tr>\n";
 if (! empty($user->admin))
 {
     // TO DO Mutualize code for yes/no constants
-    $var = ! $var;
-    print "<tr " . $bc[$var] . ">";
+    print '<tr class="oddeven">';
     print '<td>' . $langs->trans("ACCOUNTING_LIST_SORT_VENTILATION_TODO") . '</td>';
     if (! empty($conf->global->ACCOUNTING_LIST_SORT_VENTILATION_TODO)) {
         print '<td align="right"><a href="' . $_SERVER['PHP_SELF'] . '?action=setlistsorttodo&value=0">';
@@ -228,8 +227,7 @@ if (! empty($user->admin))
     }
     print '</tr>';
 
-    $var = ! $var;
-    print "<tr " . $bc[$var] . ">";
+    print '<tr class="oddeven">';
     print '<td>' . $langs->trans("ACCOUNTING_LIST_SORT_VENTILATION_DONE") . '</td>';
     if (! empty($conf->global->ACCOUNTING_LIST_SORT_VENTILATION_DONE)) {
         print '<td align="right"><a href="' . $_SERVER['PHP_SELF'] . '?action=setlistsortdone&value=0">';
@@ -242,8 +240,7 @@ if (! empty($user->admin))
     }
     print '</tr>';
 
-    $var = ! $var;
-    print "<tr " . $bc[$var] . ">";
+    print '<tr class="oddeven">';
     print '<td>' . $langs->trans("BANK_DISABLE_DIRECT_INPUT") . '</td>';
     if (! empty($conf->global->BANK_DISABLE_DIRECT_INPUT)) {
         print '<td align="right"><a href="' . $_SERVER['PHP_SELF'] . '?action=setdisabledirectinput&value=0">';
@@ -255,9 +252,8 @@ if (! empty($user->admin))
         print '</a></td>';
     }
     print '</tr>';
-    
-    $var = ! $var;
-    print "<tr " . $bc[$var] . ">";
+
+    print '<tr class="oddeven">';
     print '<td>' . $langs->trans("ACCOUNTING_MANAGE_ZERO") . '</td>';
     if (! empty($conf->global->ACCOUNTING_MANAGE_ZERO)) {
         print '<td align="right"><a href="' . $_SERVER['PHP_SELF'] . '?action=setmanagezero&value=0">';
@@ -275,9 +271,7 @@ if (! empty($user->admin))
 // Param a user $user->rights->accountancy->chartofaccount can access
 foreach ($list as $key) 
 {
-    $var = ! $var;
-
-    print '<tr ' . $bc[$var] . ' class="value">';
+    print '<tr class="oddeven value">';
     // Param
     $label = $langs->trans($key);
     print '<td>'.$label.'</td>';
@@ -290,8 +284,6 @@ foreach ($list as $key)
 
 
 print '</table>';
-
-
 
 
 dol_fiche_end();
