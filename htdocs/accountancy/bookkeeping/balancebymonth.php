@@ -2,7 +2,7 @@
 /* Copyright (C) 2013-2014 Olivier Geffroy		<jeff@jeffinfo.com>
  * Copyright (C) 2013-2014 Alexandre Spangaro	<aspangaro.dolibarr@gmail.com>
  * Copyright (C) 2014	   Florian Henry		<florian.henry@open-concept.pro>
- * Copyright (C) 2015	Jean-François Ferry		<jfefe@aternatik.fr>
+ * Copyright (C) 2015	   Jean-François Ferry  <jfefe@aternatik.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -74,8 +74,6 @@ if ($result) {
 }
 
 $y = $year_current;
-
-$var = true;
 
 print '<table class="noborder" width="100%">';
 print '<tr class="liste_titre"><td width=150>' . $langs->trans("Label") . '</td><td align="center">' . $langs->trans("JanuaryMin") . '</td><td align="center">' . $langs->trans("FebruaryMin") . '</td><td align="center">' . $langs->trans("MarchMin") . '</td><td align="center">' . $langs->trans("AprilMin") . '</td><td align="center">' . $langs->trans("MayMin") . '</td><td align="center">' . $langs->trans("JuneMin") . '</td><td align="center">' . $langs->trans("JulyMin") . '</td><td align="center">' . $langs->trans("AugustMin") . '</td><td align="center">' . $langs->trans("SeptemberMin") . '</td><td align="center">' . $langs->trans("OctoberMin") . '</td><td align="center">' . $langs->trans("NovemberMin") . '</td><td align="center">' . $langs->trans("DecemberMin") . '</td><td align="center"><b>Total</b></td></tr>';
