@@ -62,11 +62,11 @@ if (! $sortfield)
 if (! $sortorder)
 	$sortorder = "ASC";
 $arrayfields=array(
-    'aa.account_number'=>array('label'=>$langs->trans("AccountNumber"), 'checked'=>1),
+    'aa.account_number'=>array('label'=>dol_string_nohtmltag($langs->trans("AccountNumber")), 'checked'=>1),
     'aa.label'=>array('label'=>$langs->trans("Label"), 'checked'=>1),
-	'aa.account_parent'=>array('label'=>$langs->trans("Accountparent"), 'checked'=>0),
-    'aa.pcg_type'=>array('label'=>$langs->trans("Pcgtype"), 'checked'=>0),
-    'aa.pcg_subtype'=>array('label'=>$langs->trans("Pcgsubtype"), 'checked'=>0),
+	'aa.account_parent'=>array('label'=>dol_string_nohtmltag($langs->trans("Accountparent")), 'checked'=>0),
+    'aa.pcg_type'=>array('label'=>dol_string_nohtmltag($langs->trans("Pcgtype")), 'checked'=>0),
+    'aa.pcg_subtype'=>array('label'=>dol_string_nohtmltag($langs->trans("Pcgsubtype")), 'checked'=>0),
     'ac.label'=>array('label'=>$langs->trans("Category"), 'checked'=>1),
 	'aa.active'=>array('label'=>$langs->trans("Activated"), 'checked'=>1)
 );
