@@ -211,8 +211,6 @@ else {
     
     print '</tr>';
     
-    $var = True;
-    
     $total_debit = 0;
     $total_credit = 0;
     $sous_total_debit = 0;
@@ -220,7 +218,6 @@ else {
     $displayed_account = "";
     
     foreach ($object->lines as $line) {
-        $var = ! $var;
         $link = '';
         $total_debit += $line->debit;
         $total_credit += $line->credit;
@@ -229,7 +226,7 @@ else {
         if (empty($description)) {
             $link = '<a href="../admin/card.php?action=create&compte=' . length_accountg($line->numero_compte) . '">' . img_edit_add() . '</a>';
         }
-        print '<tr' . $bc[$var] . '>';
+        print '<tr class="oddeven">';
         
         // Permet d'afficher le compte comptable
         if ($root_account_description != $displayed_account) {
