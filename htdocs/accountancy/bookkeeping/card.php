@@ -28,11 +28,14 @@ require '../../main.inc.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/accounting.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/accountancy/class/bookkeeping.class.php';
 require_once DOL_DOCUMENT_ROOT . '/accountancy/class/html.formventilation.class.php';
-require_once DOL_DOCUMENT_ROOT . '/compta/facture/class/facture.class.php';
-require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.facture.class.php';
+require_once DOL_DOCUMENT_ROOT . '/core/class/html.formaccounting.class.php';
+require_once DOL_DOCUMENT_ROOT . '/accountancy/class/accountingjournal.class.php';
 
 // Langs
 $langs->load("accountancy");
+$langs->load("bank");
+$langs->load("bills");
+$langs->load("trips");
 
 // Security check
 $id = GETPOST('id', 'int');
@@ -40,7 +43,7 @@ if ($user->societe_id > 0) {
 	accessforbidden();
 }
 
-$action = GETPOST('action');
+$action = GETPOST('action','aZ09');
 $piece_num = GETPOST("piece_num");
 
 $mesg = '';
@@ -285,14 +288,18 @@ $db->begin();
 		$db->rollback();
 		setEventMessages($db->lasterror(), null, 'errors');
 	}
-	}	
+}
+
+	
 /*
  * View
  */
+ 
 llxHeader();
 
 $html = new Form($db);
 $formventilation = new FormVentilation($db);
+$formaccountancy = new FormAccounting($db);
 
 	$code_journal_array = array (
 			$conf->global->ACCOUNTING_SELL_JOURNAL => $conf->global->ACCOUNTING_SELL_JOURNAL,
@@ -323,10 +330,6 @@ if ($action == 'delete') {
 if ($action == 'create') {
 	print load_fiche_titre($langs->trans("CreateMvts"));
 
-
-
-
-
 	$book = new BookKeeping($db);
 	$next_num_mvt = $book->getNextNumMvt();
     if (empty($next_num_mvt))
@@ -354,18 +357,21 @@ if ($action == 'create') {
 	print '</tr>';
 
 	print '<tr>';
-	print '<td class="fieldrequired">' . $langs->trans("Codejournal") . '</td>';
+	print '<td class="fieldrequired">' . $langs->trans("AccountancyJournal") . '</td>';
 	print '<td>' . $html->selectarray('code_journal', $code_journal_array) . '</td>';
 	print '</tr>';
+	/*print '<td>';
+	print $formaccountancy->select_journal('', 'code_journal', '', 0, '', 1, 1, 1, 1);
+	print '</td></tr>';*/
 
 	print '<tr>';
 	print '<td>' . $langs->trans("Docref") . '</td>';
-	print '<td><input type="text" size="20" name="doc_ref" value=""/></td>';
+	print '<td><input type="text" class="minwidth200" name="doc_ref" value=""/></td>';
 	print '</tr>';
 
 	print '<tr>';
 	print '<td>' . $langs->trans("Doctype") . '</td>';
-	print '<td><input type="text" size="20" name="doc_type" value=""/></td>';
+	print '<td><input type="text" class="minwidth200" name="doc_ref" value=""/></td>';
 	print '</tr>';
 
 	print '</table>';
@@ -392,16 +398,15 @@ if ($action == 'create') {
 		print '<div class="fichehalfleft">';
 		print '<div class="underbanner clearboth"></div>';
 		print '<table class="border" width="100%">';
-		// account mouvment
 		
-		print '<tr class="pair">';
+		// account mouvment		
+		print '<tr class="oddeven">';
 		print '<td class="titlefield">' . $langs->trans("NumMvts") . '</td>';
 		print '<td>' . $book->piece_num . '</td>';
-		print '</tr>';
-		
+		print '</tr>';		
 		
 		// date
-		print '<tr class="impair"><td>';
+		print '<tr class="oddeven"><td>';
 		print '<table class="nobordernopadding" width="100%"><tr><td>';
 		print $langs->trans('Docdate');
 		print '</td>';
@@ -424,7 +429,7 @@ if ($action == 'create') {
 		
 		
 		//journal
-		print '<tr class="pair"><td>';
+		print '<tr class="oddeven"><td>';
 		print '<table class="nobordernopadding" width="100%"><tr><td>';
 		print $langs->trans('Codejournal');
 		print '</td>';
@@ -446,7 +451,7 @@ if ($action == 'create') {
 		print '</tr>';
 		
 		//docref
-		print '<tr class="impair"><td>';
+		print '<tr class="oddeven"><td>';
 		print '<table class="nobordernopadding" width="100%"><tr><td>';
 		print $langs->trans('Docref');
 		print '</td>';
@@ -468,7 +473,7 @@ if ($action == 'create') {
 		print '</tr>';
 		
 		//doctype
-		print '<tr class="pair">';
+		print '<tr class="oddeven">';
 		print '<td>' . $langs->trans("Doctype") . '</td>';
 		print '<td>' . $book->doc_type . '</td>';
 		print '</tr>';
@@ -481,40 +486,39 @@ if ($action == 'create') {
 		print '<table class="border tableforfield" width="100%">';
 
 		//Validate
-		print '<tr class="pair">';
+		print '<tr class="oddeven">';
 		print '<td class="titlefield">' . $langs->trans("Status") . '</td>';
 		print '<td>';
-			if (empty($book->validated)) {
-				print '<a href="' . $_SERVER["PHP_SELF"] . '?piece_num=' . $line->rowid . '&action=enable">';
-				print img_picto($langs->trans("Disabled"), 'switch_off');
-				print '</a>';
-			} else {
-				print '<a href="' . $_SERVER["PHP_SELF"] . '?piece_num=' . $line->rowid . '&action=disable">';
-				print img_picto($langs->trans("Activated"), 'switch_on');
-				print '</a>';
-			}
-			print '</td>';
+		if (empty($book->validated)) {
+			print '<a href="' . $_SERVER["PHP_SELF"] . '?piece_num=' . $line->rowid . '&action=enable">';
+			print img_picto($langs->trans("Disabled"), 'switch_off');
+			print '</a>';
+		} else {
+			print '<a href="' . $_SERVER["PHP_SELF"] . '?piece_num=' . $line->rowid . '&action=disable">';
+			print img_picto($langs->trans("Activated"), 'switch_on');
+			print '</a>';
+		}
+		print '</td>';
 		print '</tr>';
 		
 		// check data
-		print '<tr class="impair">';
+		print '<tr class="oddeven">';
 		print '<td class="titlefield">' . $langs->trans("Control") . '</td>';
 		
 		if ($book->doc_type == 'customer_invoice')
 		{
-		 $sqlmid = 'SELECT rowid as ref';
-		    $sqlmid .= " FROM ".MAIN_DB_PREFIX."facture as fac";
-		    $sqlmid .= " WHERE fac.rowid=" . $book->fk_doc;
-		    dol_syslog("accountancy/bookkeeping/card.php::sqlmid=" . $sqlmid, LOG_DEBUG);
-		    $resultmid = $db->query($sqlmid);
+			$sqlmid = 'SELECT rowid as ref';
+			$sqlmid .= " FROM ".MAIN_DB_PREFIX."facture as fac";
+			$sqlmid .= " WHERE fac.rowid=" . $book->fk_doc;
+			dol_syslog("accountancy/bookkeeping/card.php::sqlmid=" . $sqlmid, LOG_DEBUG);
+			$resultmid = $db->query($sqlmid);
 		    if ($resultmid) {
 		        $objmid = $db->fetch_object($resultmid);
 		        $invoicestatic = new Facture($db);
 		        $invoicestatic->fetch($objmid->ref);
 		        $ref=$langs->trans("Invoice").' '.$invoicestatic->getNomUrl(1);
 		    }
-		    else dol_print_error($db);
-		
+		    else dol_print_error($db);		
 		}
 				
 		print '<td>' . $ref .'</td>';
@@ -565,8 +569,7 @@ if ($action == 'create') {
 				print "</tr>\n";
 
 				foreach ( $book->linesmvt as $line ) {
-					$var = ! $var;
-					print '<tr' . $bc[$var] . '>';
+					print '<tr class="oddeven">';
 
 					$total_debit += $line->debit;
 					$total_credit += $line->credit;
@@ -616,8 +619,7 @@ if ($action == 'create') {
 				}
 
 				if ($action == "" || $action == 'add') {
-					$var = ! $var;
-					print '<tr' . $bc[$var] . '>';
+					print '<tr class="oddeven">';
 					print '<td>';
 					print $formventilation->select_account($account_number, 'account_number', 0, array (), 1, 1, '');
 					print '</td>';
