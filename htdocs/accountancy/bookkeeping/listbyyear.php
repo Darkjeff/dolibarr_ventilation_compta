@@ -264,12 +264,9 @@ print '</td>';
 
 print "</tr>\n";
 
-$var = True;
-
 foreach ( $object->lines as $line ) {
-	$var = ! $var;
 
-	print '<tr '. $bc[$var].'>';
+	print '<tr class="oddeven">>';
 	print '<td>' . $line->piece_num . '</td>' . "\n";
 	print '<td>' . $line->doc_type . '</td>' . "\n";
 	print '<td align="center">' . dol_print_date($line->doc_date) . '</td>';
