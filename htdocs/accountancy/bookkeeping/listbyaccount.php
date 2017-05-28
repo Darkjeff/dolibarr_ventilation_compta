@@ -1,9 +1,9 @@
 <?php
 /*
- * Copyright (C) 2016 Neil Orley	<neil.orley@oeris.fr> largely based on the great work of :
- *  - Copyright (C) 2013-2016 Olivier Geffroy		<jeff@jeffinfo.com>
- *  - Copyright (C) 2013-2016 Florian Henry		<florian.henry@open-concept.pro>
- *  - Copyright (C) 2013-2016 Alexandre Spangaro	<aspangaro.dolibarr@gmail.com>
+ * Copyright (C) 2016 		Neil Orley			<neil.orley@oeris.fr> largely based on the great work of :
+ * Copyright (C) 2013-2016  Olivier Geffroy		<jeff@jeffinfo.com>
+ * Copyright (C) 2013-2016  Florian Henry		<florian.henry@open-concept.pro>
+ * Copyright (C) 2013-2016  Alexandre Spangaro	<aspangaro.dolibarr@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -99,26 +99,26 @@ if (! empty($search_doc_date)) {
 
 if (!GETPOST("button_removefilter_x") && !GETPOST("button_removefilter")) // Both test are required to be compatible with all browsers
 {
-  if (! empty($search_accountancy_code_start)) {
-  	$filter['t.numero_compte'] = $search_accountancy_code_start;
-  	$options .= '&amp;search_accountancy_code_start=' . $search_accountancy_code_start;
-  }
-  if (! empty($search_label_account)) {
-  	$filter['t.label_compte'] = $search_label_account;
-  	$options .= '&amp;search_label_account=' . $search_label_account;
-  }
-  if (! empty($search_mvt_label)) {
-  	$filter['t.label_compte'] = $search_mvt_label;
-  	$options .= '&amp;search_mvt_label=' . $search_mvt_label;
-  }
-  if (! empty($search_direction)) {
-  	$filter['t.sens'] = $search_direction;
-  	$options .= '&amp;search_direction=' . $search_direction;
-  }
-  if (! empty($search_ledger_code)) {
-  	$filter['t.code_journal'] = $search_ledger_code;
-  	$options .= '&amp;search_ledger_code=' . $search_ledger_code;
-  }
+	if (! empty($search_accountancy_code_start)) {
+	$filter['t.numero_compte'] = $search_accountancy_code_start;
+	$options .= '&amp;search_accountancy_code_start=' . $search_accountancy_code_start;
+	}
+	if (! empty($search_label_account)) {
+	$filter['t.label_compte'] = $search_label_account;
+	$options .= '&amp;search_label_account=' . $search_label_account;
+	}
+	if (! empty($search_mvt_label)) {
+	$filter['t.label_compte'] = $search_mvt_label;
+	$options .= '&amp;search_mvt_label=' . $search_mvt_label;
+	}
+	if (! empty($search_direction)) {
+	$filter['t.sens'] = $search_direction;
+	$options .= '&amp;search_direction=' . $search_direction;
+	}
+	if (! empty($search_ledger_code)) {
+	$filter['t.code_journal'] = $search_ledger_code;
+	$options .= '&amp;search_ledger_code=' . $search_ledger_code;
+	}
 }
 
 
@@ -203,13 +203,11 @@ if ($action == 'delbookkeepingyear') {
 }
 
 
-
-
 print '<form method="GET" id="searchFormList" action="' . $_SERVER["PHP_SELF"] . '">';
 
 $viewflat = ' <a href="./list.php">' . $langs->trans("ViewFlatList") . '</a>';
 
-print_barre_liste($title_page, $page, $_SERVER["PHP_SELF"], $options, $sortfield, $sortorder, '', $result, $nbtotalofrecords,'title_accountancy',0,$viewflat,'',$limit);
+print_barre_liste($title_page, $page, $_SERVER["PHP_SELF"], $options, $sortfield, $sortorder, '', $result, $nbtotalofrecords, 'title_accountancy', 0, $viewflat, '', $limit);
 
 // Reverse sort order
 if ( preg_match('/^asc/i', $sortorder) )
@@ -251,13 +249,10 @@ print '<td>&nbsp;</td>';
 print '<td>&nbsp;</td>';
 print '<td  align="right"><input type="text" name="search_ledger_code" size="3" value="' . $search_ledger_code . '"></td>';
 print '<td align="right" colspan="2" class="liste_titre">';
-$searchpitco=$form->showFilterAndCheckAddButtons(0);
-print $searchpitco;
+$searchpicto=$form->showFilterAndCheckAddButtons(0);
+print $searchpicto;
 print '</td>';
-
 print '</tr>';
-
-$var = True;
 
 $total_debit = 0;
 $total_credit = 0;
@@ -266,7 +261,6 @@ $sous_total_credit = 0;
 $displayed_account_number = null;       // Start with undefined to be able to distinguish with empty 
 
 foreach ( $object->lines as $line ) {
-	$var = ! $var;
 
 	$total_debit += $line->debit;
 	$total_credit += $line->credit;
@@ -279,9 +273,9 @@ foreach ( $object->lines as $line ) {
         
         // Affiche un Sous-Total par compte comptable
         if (isset($displayed_account_number)) {
-          print '<tr class="liste_total"><td align="right" colspan="4">'.$langs->trans("SubTotal").':</td><td class="nowrap" align="right">'.price($sous_total_debit).'</td><td class="nowrap" align="right">'.price($sous_total_credit).'</td>';
-          print "<td>&nbsp;</td>\n";
-          print '</tr>';
+			print '<tr class="liste_total"><td align="right" colspan="4">'.$langs->trans("SubTotal").':</td><td class="nowrap" align="right">'.price($sous_total_debit).'</td><td class="nowrap" align="right">'.price($sous_total_credit).'</td>';
+			print "<td>&nbsp;</td>\n";
+			print '</tr>';
         }
         
         // Show the break account
@@ -299,7 +293,7 @@ foreach ( $object->lines as $line ) {
         $sous_total_credit = 0;
     }
 
-	print '<tr '. $bc[$var].'>';
+	print '<tr class="oddeven">';
 	print '<td>&nbsp;</td>';
 	print '<td align="right">'.$line->piece_num.'</td>';
 	print '<td align="center">' . dol_print_date($line->doc_date, 'day') . '</td>';
@@ -308,7 +302,7 @@ foreach ( $object->lines as $line ) {
     // Affiche un lien vers la facture client/fournisseur
     $doc_ref = preg_replace('/\(.*\)/', '', $line->doc_ref);
     if ($line->doc_type == 'supplier_invoice')
-     print strlen(length_accounta($line->code_tiers)) == 0 ? '<td><a href="/fourn/facture/list.php?search_ref_supplier=' . $doc_ref . '">' . $line->label_compte . '</a></td>' : '<td><a href="/fourn/facture/list.php?search_ref_supplier=' . $doc_ref . '">' . $line->label_compte . '</a><br /><span style="font-size:0.8em">(' . length_accounta($line->code_tiers) . ')</span></td>';
+    print strlen(length_accounta($line->code_tiers)) == 0 ? '<td><a href="/fourn/facture/list.php?search_ref_supplier=' . $doc_ref . '">' . $line->label_compte . '</a></td>' : '<td><a href="/fourn/facture/list.php?search_ref_supplier=' . $doc_ref . '">' . $line->label_compte . '</a><br /><span style="font-size:0.8em">(' . length_accounta($line->code_tiers) . ')</span></td>';
     elseif ($line->doc_type == 'customer_invoice')
     print strlen(length_accounta($line->code_tiers)) == 0 ? '<td><a href="/compta/facture/list.php?search_ref=' . $doc_ref . '">' . $line->label_compte . '</a></td>' : '<td><a href="/compta/facture/list.php?search_ref=' . $doc_ref . '">' . $line->label_compte . '</a><br /><span style="font-size:0.8em">(' . length_accounta($line->code_tiers) . ')</span></td>';
     else
@@ -324,9 +318,9 @@ foreach ( $object->lines as $line ) {
 	print '</td>';
 	print "</tr>\n";
 
-  // Comptabilise le sous-total
-  $sous_total_debit += $line->debit;
-  $sous_total_credit += $line->credit;
+    // Comptabilise le sous-total
+    $sous_total_debit += $line->debit;
+    $sous_total_credit += $line->credit;
 
 }
 
@@ -353,6 +347,5 @@ print "</table>";
 print '</form>';
 
 llxFooter();
-
 
 $db->close();
