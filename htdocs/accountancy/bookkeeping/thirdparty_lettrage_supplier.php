@@ -2,7 +2,7 @@
 /* Copyright (C) 2004-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2005      Laurent Destailleur  <eldy@users.sourceforge.net>
  * Copyright (C) 2013      Olivier Geffroy      <jeff@jeffinfo.com>
- * Copyright (C) 2013      Florian Henry	      <florian.henry@open-concept.pro>
+ * Copyright (C) 2013      Florian Henry	    <florian.henry@open-concept.pro>
  * Copyright (C) 2013      Alexandre Spangaro   <alexandre.spangaro@gmail.com> 
  *
  * This program is free software; you can redistribute it and/or modify
@@ -39,9 +39,6 @@ dol_include_once ( "/societe/class/societe.class.php");
 dol_include_once ( "/core/lib/company.lib.php");
 // require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 if (! $res) die ( "Include of main fails" );
-
-
-
 
 
 $page = GETPOST ( "page" );
@@ -89,11 +86,9 @@ if ($action == 'autolettrage') {
 	$result = $BookKeeping->LettrageTiers($socid);
 	
 	if( $result < 0 ){
-							setEventMessages('', $BookKeeping->errors, 'errors' );
-							$error++; 
-
-						}
-						
+		setEventMessages('', $BookKeeping->errors, 'errors' );
+		$error++; 
+	}						
 }
 
 
@@ -109,9 +104,6 @@ llxHeader ( '', 'Compta - Grand Livre' );
 	 
 	dol_fiche_head($head, 'TabAccounting', $langs->trans("ThirdParty"),0,'company');
 	
-	
-
-
 	print '<table width="100%" class="border">';
 	print '<tr><td width="30%">'.$langs->trans("ThirdPartyName").'</td><td width="70%" colspan="3">';
 	$object->next_prev_filter="te.fournisseur = 1";
@@ -123,23 +115,21 @@ llxHeader ( '', 'Compta - Grand Livre' );
         print '<tr><td>'.$langs->trans('Prefix').'</td><td colspan="3">'.$object->prefix_comm.'</td></tr>';
     }
 
+	print '<tr>';
+	print '<td class="nowrap">'.$langs->trans("SupplierCode"). '</td><td colspan="3">';
+	print $object->code_fournisseur;
+	if ($object->check_codefournisseur() <> 0) print ' <font class="error">('.$langs->trans("WrongSupplierCode").')</font>';
+	print '</td>';
+	print '</tr>';
 
-		print '<tr>';
-        print '<td class="nowrap">'.$langs->trans("SupplierCode"). '</td><td colspan="3">';
-        print $object->code_fournisseur;
-        if ($object->check_codefournisseur() <> 0) print ' <font class="error">('.$langs->trans("WrongSupplierCode").')</font>';
-        print '</td>';
-        print '</tr>';
-
-		$langs->load('compta');
-        print '<tr>';
-        print '<td>';
-        print $form->editfieldkey("SupplierAccountancyCode",'supplieraccountancycode',$object->code_compta_fournisseur,$object,$user->rights->societe->creer);
-        print '</td><td colspan="3">';
-        print $form->editfieldval("SupplierAccountancyCode",'supplieraccountancycode',$object->code_compta_fournisseur,$object,$user->rights->societe->creer);
-        print '</td>';
-        print '</tr>';
-	
+	$langs->load('compta');
+	print '<tr>';
+	print '<td>';
+	print $form->editfieldkey("SupplierAccountancyCode",'supplieraccountancycode',$object->code_compta_fournisseur,$object,$user->rights->societe->creer);
+	print '</td><td colspan="3">';
+	print $form->editfieldval("SupplierAccountancyCode",'supplieraccountancycode',$object->code_compta_fournisseur,$object,$user->rights->societe->creer);
+	print '</td>';
+	print '</tr>';	
 
 	// Address
 	print '<tr><td valign="top">'.$langs->trans("Address").'</td><td colspan="3">';
@@ -177,11 +167,9 @@ llxHeader ( '', 'Compta - Grand Livre' );
 	$sql .= " WHERE (bk.code_tiers =  '" . $object->code_compta_fournisseur . "' AND bk.numero_compte = '" .$conf->global->ACCOUNTING_ACCOUNT_SUPPLIER. "' )" ;
 	
 	
-
 	if (dol_strlen ( $search_year  )) {
 		$sql .= " AND ( bk.doc_date BETWEEN  '" . $search_year . "-0-0' AND  '" . ($search_year+1). "-0-0' )";
 	}
-
 	
 	$sql .= " ORDER BY bk.lettering ASC, bk.doc_date ASC" ;//. $db->plimit ( $conf->liste_limit + 1, $offset );
 	
@@ -192,14 +180,13 @@ llxHeader ( '', 'Compta - Grand Livre' );
 		$num = $db->num_rows ( $resql );
 		$i = 0;
 		
-
 		print '<form name="add" action="?socid='.$object->id.'" method="POST">';
 		print '<input type="hidden" name="action" value="lettering">';
 		print '<input type="hidden" name="socid" value="'.$object->id.'">';
 		
 		print "<table class=\"noborder\" width=\"100%\">";
 		print '<tr class="liste_titre">';
-			print '<td></td>'; 
+		print '<td></td>'; 
 		print_liste_field_titre ( $langs->trans ( "Doctype" ), "liste.php", "bk.doc_type" );
 		print_liste_field_titre ( $langs->trans ( "Docdate" ), "liste.php", "bk.doc_date" );
 		print_liste_field_titre ( $langs->trans ( "Docref" ), "liste.php", "bk.doc_ref" );
@@ -237,8 +224,6 @@ llxHeader ( '', 'Compta - Grand Livre' );
 		print '</form>';
 		print '</tr>';
 		
-		$var = false;
-		
 		$debit = 0; 
 		$credit = 0; 
 		$solde = 0; 
@@ -249,16 +234,14 @@ llxHeader ( '', 'Compta - Grand Livre' );
 			if($tmp !=$obj->lettering || empty($tmp) )
 				$tmp =$obj->lettering;
 				
-			if($tmp !=$obj->lettering || empty($obj->lettering)) 
-				$var = ! $var;
-				
+			if($tmp !=$obj->lettering || empty($obj->lettering)) 				
 				
 			$debit+= $obj->debit; 
 			$credit+= $obj->credit; 
 		
-			$solde+=($obj->credit-$obj->debit);
-			print "<tr $bc[$var]>";
+			$solde+=($obj->credit-$obj->debit);			
 			
+			print '<tr class="oddeven">';
 			print '<td>' . $obj->rowid . '</td>';
 			if(empty($obj->lettering)){
 				print '<td><a href="'.dol_buildpath('/accountancy/bookkeeping/card.php', 1).'?piece_num=' . $obj->piece_num . '">';
@@ -266,8 +249,7 @@ llxHeader ( '', 'Compta - Grand Livre' );
 				print '</a>&nbsp;' . $obj->doc_type . '</td>' . "\n";
 			}
 			else
-				print '<td>'.$obj->doc_type . '</td>' . "\n";
-			
+				print '<td>'.$obj->doc_type . '</td>' . "\n";			
 			
 			
 			print '<td>' . dol_print_date ( $db->jdate ( $obj->doc_date ), 'day' ) . '</td>';
@@ -290,38 +272,33 @@ llxHeader ( '', 'Compta - Grand Livre' );
 				
 			print "</tr>\n";
 			
-			$i ++;
-			
-
-				
-
+			$i ++;	
 		}
 		
-			print "<tr $bc[$var]>";
-			
-			print '<td colspan="4">Mouvement totaux</td>' . "\n";
-			print '<td></td>';
-			print '<td></td>';
-			print '<td></td>';
-			print '<td><strong>' . $debit . '</strong></td>';
-			print '<td><strong>' . $credit . '</strong></td>';
-			print '<td></td>';
-			print '<td></td>';
-			print '<td></td>';
-			print '<td>&nbsp;</td>';
-			print "</tr>\n";
-			
-			print "<tr $bc[$var]>";
-			print '<td colspan="5">Solde Comptable</td>' . "\n";
-			print '<td></td>';
-			print '<td></td>';
-			print '<td></td>';
-			print '<td><strong>' . ($credit-$debit) . '</strong></td>';
-			print '<td></td>';
-			print '<td></td>';
-			print '<td></td>';
-			print '<td>&nbsp;</td>';
-			print "</tr>\n";
+		print '<tr class="oddeven">';			
+		print '<td colspan="4">Mouvement totaux</td>' . "\n";
+		print '<td></td>';
+		print '<td></td>';
+		print '<td></td>';
+		print '<td><strong>' . $debit . '</strong></td>';
+		print '<td><strong>' . $credit . '</strong></td>';
+		print '<td></td>';
+		print '<td></td>';
+		print '<td></td>';
+		print '<td>&nbsp;</td>';
+		print "</tr>\n";
+		
+		print '<tr class="oddeven">';
+		print '<td colspan="5">Solde Comptable</td>' . "\n";
+		print '<td></td>';
+		print '<td></td>';
+		print '<td></td>';
+		print '<td><strong>' . ($credit-$debit) . '</strong></td>';
+		print '<td></td>';
+		print '<td></td>';
+		print '<td></td>';
+		print '<td>&nbsp;</td>';
+		print "</tr>\n";
 			
 		print "</table>";
 		
