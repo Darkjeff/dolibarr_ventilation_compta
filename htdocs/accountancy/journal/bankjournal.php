@@ -48,6 +48,8 @@ require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.facture.class.php';
 require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.class.php';
 require_once DOL_DOCUMENT_ROOT . '/accountancy/class/bookkeeping.class.php';
 require_once DOL_DOCUMENT_ROOT . '/societe/class/client.class.php';
+require_once DOL_DOCUMENT_ROOT . '/expensereport/class/expensereport.class.php';
+require_once DOL_DOCUMENT_ROOT . '/expensereport/class/paymentexpensereport.class.php';
 
 // Langs
 $langs->load("companies");
@@ -57,6 +59,8 @@ $langs->load("banks");
 $langs->load('bills');
 $langs->load('donations');
 $langs->load("accountancy");
+$langs->load("trips");
+$langs->load("hrm");
 
 $id_bank_account = GETPOST('id_account', 'int');
 
@@ -67,7 +71,7 @@ $date_endmonth = GETPOST('date_endmonth');
 $date_endday = GETPOST('date_endday');
 $date_endyear = GETPOST('date_endyear');
 $in_bookkeeping = GETPOST('in_bookkeeping');
-$action = GETPOST('action');
+$action = GETPOST('action','aZ09');
 
 $now = dol_now();
 
@@ -104,11 +108,14 @@ $idpays = $p[0];
 
 $sql  = "SELECT b.rowid , b.dateo as do, b.datev as dv, b.amount, b.label, b.rappro, b.num_releve, b.num_chq, b.fk_type,";
 $sql .= " ba.courant, ba.ref as baref, ba.account_number,";
-$sql .= " soc.code_compta, soc.code_compta_fournisseur, soc.rowid as socid, soc.nom as name, bu1.type as typeop";
+$sql .= " soc.code_compta, soc.code_compta_fournisseur, soc.rowid as socid, soc.nom as name, bu1.type as typeop,";
+$sql .= " u.accountancy_code, u.rowid as userid, u.lastname as name, u.firstname as firstname, bu2.type as typeop";
 $sql .= " FROM " . MAIN_DB_PREFIX . "bank as b";
 $sql .= " JOIN " . MAIN_DB_PREFIX . "bank_account as ba on b.fk_account=ba.rowid";
 $sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "bank_url as bu1 ON bu1.fk_bank = b.rowid AND bu1.type='company'";
+$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "bank_url as bu2 ON bu2.fk_bank = b.rowid AND bu2.type='user'";
 $sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "societe as soc on bu1.url_id=soc.rowid";
+$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "user as u on bu2.url_id=u.rowid";
 $sql .= " WHERE ba.rowid=" . $id_bank_account;
 $sql .= ' AND ba.entity IN ('.getEntity('bank_account', 0).')';        // We don't share object for accountancy
 if ($date_start && $date_end)
@@ -126,6 +133,7 @@ $chargestatic = new ChargeSociales($db);
 $paymentdonstatic = new PaymentDonation($db);
 $paymentvatstatic = new TVA($db);
 $paymentsalstatic = new PaymentSalary($db);
+$paymentexpensereportstatic = new PaymentExpenseReport($db);
 
 // Get code of finance journal
 $bank_code_journal = new Account($db);
@@ -175,6 +183,15 @@ if ($result) {
 				'name' => $obj->name,
 		        'code_compta' => $compta_soc,
 		);
+		
+		$compta_user = (! empty($obj->accountancy_code) ? $obj->accountancy_code : $account_employee);
+
+		$tabuser[$obj->rowid] = array (
+				'id' => $obj->userid,
+				'lastname' => $obj->lastname,
+				'firstname' => $obj->firstname,
+		        'accountancy_code' => $compta_user,
+		);
 
 		// Variable bookkeeping
 		$tabpay[$obj->rowid]["date"] = $obj->do;
@@ -194,7 +211,7 @@ if ($result) {
 		    // Now loop on each link of record in bank.
 			foreach ( $links as $key => $val ) {
 			    
-			    if (in_array($links[$key]['type'], array('sc', 'payment_sc', 'payment', 'payment_supplier', 'payment_vat')))     // So we excluded 'company' here
+			    if (in_array($links[$key]['type'], array('sc', 'payment_sc', 'payment', 'payment_supplier', 'payment_vat', 'payment_expensereport')))     // So we excluded 'company' here
 			    {
 			        // We save tabtype for a future use, to remember what kind of payment it is 
 			        $tabtype[$obj->rowid] = $links[$key]['type'];
@@ -218,7 +235,7 @@ if ($result) {
 					$userstatic->id = $links[$key]['url_id'];
 					$userstatic->name = $links[$key]['label'];
 					$tabpay[$obj->rowid]["soclib"] = $userstatic->getNomUrl(1, '', 30);
-					// $tabtp[$obj->rowid][$compta_user] += $obj->amount;
+					$tabtp[$obj->rowid][$compta_user] += $obj->amount;
 				} else if ($links[$key]['type'] == 'sc') {
 					$chargestatic->id = $links[$key]['url_id'];
 					$chargestatic->ref = $links[$key]['url_id'];
@@ -263,7 +280,12 @@ if ($result) {
 					$paymentsalstatic->ref = $links[$key]['url_id'];
 					$paymentsalstatic->label = $links[$key]['label'];
 					$tabpay[$obj->rowid]["lib"] .= ' ' . $paymentsalstatic->getNomUrl(2);
-					$tabtp[$obj->rowid][$account_employee] += $obj->amount;
+					// $tabtp[$obj->rowid][$account_employee] += $obj->amount;
+				} else if ($links[$key]['type'] == 'payment_expensereport') {
+					$paymentexpensereportstatic->id = $links[$key]['url_id'];
+					$paymentexpensereportstatic->fk_expensereport = $links[$key]['url_id'];
+					$tabpay[$obj->rowid]["lib"] .= ' ' . $paymentexpensereportstatic->getNomUrl(2);
+					$tabpay[$obj->rowid]["fk_expensereport"] = $paymentexpensereportstatic->id;
 				} else if ($links[$key]['type'] == 'banktransfert') {
 					$tabpay[$obj->rowid]["lib"] .= ' ' . $langs->trans("BankTransfer");
 					$tabtp[$obj->rowid][$account_transfer] += $obj->amount;
@@ -370,6 +392,19 @@ if (! $error && $action == 'writebookkeeping') {
     				if ($resultmid) {
     					$objmid = $db->fetch_object($resultmid);
     					$bookkeeping->doc_ref = $objmid->ref_supplier . ' (' . $objmid->ref . ')'; // Ref on invoice
+						}
+    			} else if ($tabtype[$key] == 'payment_expensereport') {
+        			    $bookkeeping->code_tiers = $tabuser[$key]['accountancy_code'];
+    
+        				$sqlmid = 'SELECT e.ref';
+        				$sqlmid .= " FROM " . MAIN_DB_PREFIX . "expensereport as e";
+        				$sqlmid .= " INNER JOIN " . MAIN_DB_PREFIX . "payment_expensereport as payer ON payer.fk_expensereport=e.rowid";
+        				$sqlmid .= " WHERE payer.fk_expensereport=" . $val["fk_expensereport"];
+        				dol_syslog("accountancy/journal/bankjournal.php:: sqlmid=" . $sqlmid, LOG_DEBUG);
+        				$resultmid = $db->query($sqlmid);
+        				if ($resultmid) {
+        					$objmid = $db->fetch_object($resultmid);
+        					$bookkeeping->doc_ref = $objmid->ref; // Ref of expensereport	
     				}
     			}
     			
