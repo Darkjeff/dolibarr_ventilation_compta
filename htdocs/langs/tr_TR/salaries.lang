@@ -1,0 +1,14 @@
+# Dolibarr language file - Source file is en_US - salaries
+SALARIES_ACCOUNTING_ACCOUNT_PAYMENT=Accounting account by default for salaries payments
+SALARIES_ACCOUNTING_ACCOUNT_CHARGE=Accounting account by default for personnel expenses
+Salary=Ücret
+Salaries=Ücretler
+NewSalaryPayment=Yeni ücret ödemesi
+SalaryPayment=Ücret ödemesi
+SalariesPayments=Ücret ödemeleri
+ShowSalaryPayment=Ücret ödemesi göster
+THM=Ortalama saat ücreti
+TJM=Ortalama günlük ücret
+CurrentSalary=Güncel maaş
+THMDescription=Bu değer, eğer proje modülü kullanılıyorsa kullanıcılar tarafından girilen bir projede tüketilen sürenin maliyetinin hesaplanması için kullanılır
+TJMDescription=Bu değer yalnızca bilgi amaçlı olup hiçbir hesaplamada kulanılmaz

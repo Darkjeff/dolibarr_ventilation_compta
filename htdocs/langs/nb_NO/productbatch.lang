@@ -1,0 +1,24 @@
+# ProductBATCH language file - en_US - ProductBATCH
+ManageLotSerial=Bruk lot/serienummer
+ProductStatusOnBatch=Ja (lot/serienummer påkrevd)
+ProductStatusNotOnBatch=Nei (lot/serienummer ikke i bruk)
+ProductStatusOnBatchShort=Ja
+ProductStatusNotOnBatchShort=Nei
+Batch=Lot/serienummer
+atleast1batchfield=Siste forbruksdato, siste salgsdato eller lot/serienummer
+batch_number=Lot/serienummer
+BatchNumberShort=Lot/serienummer
+EatByDate=Siste forbruksdag
+SellByDate=Siste salgsdato
+DetailBatchNumber=Lot/serienummer-detaljer
+DetailBatchFormat=Lot/Serienummer: %s - Siste forbruksdato: %s - Siste salgsdato: %s (Ant: %d)
+printBatch=Lot/Serienummer: %s
+printEatby=Siste forbruksdato: %s
+printSellby=Siste salgsdato: %s
+printQty=Ant: %d
+AddDispatchBatchLine=Legg til en linje for holdbarhetsdato
+WhenProductBatchModuleOnOptionAreForced=Når modulen Lot/Serie er aktivert, er automatisk øk/reduser lagermodus tvunget til fraktvalidering og manuell ekspedering av mottak og kan ikke redigeres. Andre alternativer kan defineres som du vil.
+ProductDoesNotUseBatchSerial=Denne varen har ikke lot/serienummer
+ProductLotSetup=Oppsett av model Lot/serienmmer
+ShowCurrentStockOfLot=Vis gjeldende beholdning for vare/lot
+ShowLogOfMovementIfLot=Vis logg over bevegelser for vare/lot

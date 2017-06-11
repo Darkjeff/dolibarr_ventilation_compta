@@ -1,0 +1,18 @@
+# Dolibarr language file - Source file is en_US - marque pages
+AddThisPageToBookmarks=Lisää tämä sivu kirjanmerkkeihin
+Bookmark=Lempparit
+Bookmarks=Kirjanmerkit
+NewBookmark=Uusi kirjanmerkki
+ShowBookmark=Näytä kirjanmerkki
+OpenANewWindow=Avaa uusi ikkuna
+ReplaceWindow=Korvaa nykyisen ikkunan
+BookmarkTargetNewWindowShort=Uusi ikkuna
+BookmarkTargetReplaceWindowShort=Nykyinen ikkuna
+BookmarkTitle=Kirjanmerkin nimi
+UrlOrLink=URL
+BehaviourOnClick=Käyttäytyminen klikkaa URL
+CreateBookmark=Luo kirjanmerkki
+SetHereATitleForLink=Aseta tässä otsikon kirjanmerkki
+UseAnExternalHttpLinkOrRelativeDolibarrLink=Käytä ulkoista http URL tai suhteellisen Dolibarr URL
+ChooseIfANewWindowMustBeOpenedOnClickOnBookmark=Choose if linked page must open in new window or not
+BookmarksManagement=Kirjanmerkkien hallinta

@@ -1,0 +1,18 @@
+# Dolibarr language file - Source file is en_US - marque pages
+AddThisPageToBookmarks=Dodaj ovu stranicu u zabilješke
+Bookmark=Zabilješka
+Bookmarks=Zabilješke
+NewBookmark=Nova zabilješka
+ShowBookmark=Prikaži zabilješku
+OpenANewWindow=Otvori novi prozor
+ReplaceWindow=Zamjeni trenutno prozor
+BookmarkTargetNewWindowShort=Novi prozor
+BookmarkTargetReplaceWindowShort=Trenutno prozor
+BookmarkTitle=Naziv zabilješke
+UrlOrLink=URL
+BehaviourOnClick=Ponašanje kad se klikne na URL
+CreateBookmark=Kreiraj zabilješku
+SetHereATitleForLink=Postavi naslov za zabilješku
+UseAnExternalHttpLinkOrRelativeDolibarrLink=Koristi eksterni http URL ili relativni Dolibarr URL
+ChooseIfANewWindowMustBeOpenedOnClickOnBookmark=Odaberite ako se povezana stranica mora/ne mora otvoriti u novom prozoru 
+BookmarksManagement=Upravljanje zabilješkama

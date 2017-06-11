@@ -1,0 +1,18 @@
+# Dolibarr language file - Source file is en_US - marque pages
+AddThisPageToBookmarks=Pridėti šį puslapį į žymeklių sąrašą
+Bookmark=Žymėti
+Bookmarks=Žymekliai
+NewBookmark=Naujas žymeklis
+ShowBookmark=Rodyti žymeklį
+OpenANewWindow=Atidaryti naują langą
+ReplaceWindow=Pakeisti dabartinį langą
+BookmarkTargetNewWindowShort=Naujas langas
+BookmarkTargetReplaceWindowShort=Dabartinis langas
+BookmarkTitle=Žymeklio pavadinimas
+UrlOrLink=URL
+BehaviourOnClick=Elgsena, kai paspaudžiamas URL
+CreateBookmark=Sukurti žymeklį
+SetHereATitleForLink=Nustatykite žymeklio pavadinimą
+UseAnExternalHttpLinkOrRelativeDolibarrLink=Naudoti išorinį http URL arba susijusį Dolibarr URL
+ChooseIfANewWindowMustBeOpenedOnClickOnBookmark=Choose if linked page must open in new window or not
+BookmarksManagement=Žymeklių valdymas

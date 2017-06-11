@@ -1,0 +1,50 @@
+# Dolibarr language file - Source file is en_US - loan
+Loan=เงินกู้
+Loans=เงินให้กู้ยืม
+NewLoan=สินเชื่อใหม่
+ShowLoan=แสดงสินเชื่อ
+PaymentLoan=การชำระเงินสินเชื่อ
+LoanPayment=การชำระเงินสินเชื่อ
+ShowLoanPayment=แสดงการชำระเงินสินเชื่อ
+LoanCapital=เมืองหลวง
+Insurance=ประกันภัย
+Interest=ความสนใจ
+Nbterms=จำนวนของข้อตกลง
+LoanAccountancyCapitalCode=Accounting account capital
+LoanAccountancyInsuranceCode=Accounting account insurance
+LoanAccountancyInterestCode=Accounting account interest
+ConfirmDeleteLoan=ยืนยันการลบเงินให้กู้ยืมนี้
+LoanDeleted=สินเชื่อที่ถูกลบประสบความสำเร็จ
+ConfirmPayLoan=ยืนยันการจำแนกจ่ายเงินให้กู้ยืมนี้
+LoanPaid=สินเชื่อการชำระเงิน
+# Calc
+LoanCalc=เครื่องคิดเลขสินเชื่อธนาคาร
+PurchaseFinanceInfo=ข้อมูลการสั่งซื้อและการเงิน
+SalePriceOfAsset=ราคาขายของสินทรัพย์
+PercentageDown=ลงร้อยละ
+LengthOfMortgage=Duration of loan
+AnnualInterestRate=อัตราดอกเบี้ยประจำปี
+ExplainCalculations=อธิบายการคำนวณ
+ShowMeCalculationsAndAmortization=แสดงการคำนวณและค่าตัดจำหน่าย
+MortgagePaymentInformation=สินเชื่อที่อยู่อาศัยข้อมูลการชำระเงิน
+DownPayment=การชำระเงินลง
+DownPaymentDesc=<b>การชำระเงินลง</b> = ราคาของบ้านคูณด้วยอัตราร้อยละแบ่งลดลง 100 (ต่อ 5% ลดลงกลายเป็น 5/100 หรือ 0.05)
+InterestRateDesc=<b>อัตราดอกเบี้ย</b> = ร้อยละที่น่าสนใจประจำปีหารด้วย 100
+MonthlyFactorDesc=<b>ปัจจัยรายเดือน</b> = ผลมาจากสูตรต่อไปนี้
+MonthlyInterestRateDesc=<b>อัตราดอกเบี้ยรายเดือน</b> = อัตราดอกเบี้ยประจำปีหารด้วย 12 (12 เดือนต่อปี)
+MonthTermDesc=<b>ระยะเดือนของเงินกู้ในเดือน</b> = จำนวนปีที่คุณได้ถ่ายออกเงินกู้ครั้งที่ 12
+MonthlyPaymentDesc=การชำระเงินรายเดือนจะคิดออกโดยใช้สูตรต่อไปนี้
+AmortizationPaymentDesc=<a href="#amortization">ค่าตัดจำหน่าย</a> แบ่งลงเท่าใดของการชำระเงินรายเดือนของคุณไปสู่ความสนใจของธนาคารและวิธีการมากที่จะเข้าสู่การจ่ายเงินออกหลักของเงินกู้ของคุณ
+AmountFinanced=จํานวนเงินทุน
+AmortizationMonthlyPaymentOverYears=<b>ค่าตัดจำหน่ายสำหรับการชำระเงินรายเดือน:% s%</b> s มากกว่าปีที่ผ่านมา
+Totalsforyear=ผลรวมสำหรับปี
+MonthlyPayment=การชำระเงินรายเดือน
+LoanCalcDesc=This <b>mortgage calculator</b> can be used to figure out monthly payments of a loaning, based on the amount borrowed, the term of the loan desired and the interest rate.<br> This calculator includes also PMI (Private Mortgage Insurance) for loans where less than 20%% is put as a down payment. Also taken into consideration are the town property taxes, and their effect on the total monthly mortgage payment.<br>
+GoToInterest=% s จะไปสู่​​ความสนใจ
+GoToPrincipal=% s จะไปต่อที่สำคัญ
+YouWillSpend=You will spend %s in year %s
+# Admin
+ConfigLoan=การกำหนดค่าของเงินให้กู้ยืมโมดูล
+LOAN_ACCOUNTING_ACCOUNT_CAPITAL=Accounting account capital by default
+LOAN_ACCOUNTING_ACCOUNT_INTEREST=Accounting account interest by default
+LOAN_ACCOUNTING_ACCOUNT_INSURANCE=Accounting account insurance by default

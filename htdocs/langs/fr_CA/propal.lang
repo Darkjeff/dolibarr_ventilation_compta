@@ -1,0 +1,26 @@
+# Dolibarr language file - Source file is en_US - propal
+ProposalsDraft=Propositions brouillons
+DeleteProp=Supprimer la proposition commerciale
+ValidateProp=Valider la proposition commerciale
+AllPropals=Toutes les propositions
+SearchAProposal=Rechercher une proposition
+NoProposal=Pas de propositions
+PropalStatusNotSigned=Non signée (close)
+RefProposal=Référence de la proposition commerciale
+SendPropalByMail=Envoyer proposition commerciale par courriel
+DateEndPropal=Date de validité se terminant
+SetAcceptedRefused=Accepté/refusé
+ErrorPropalNotFound=Pas de proposition %s trouvées
+AddToDraftProposals=Ajouter un brouillon de proposition
+NoDraftProposals=Pas de brouillons de propositions
+CopyPropalFrom=Créer proposition commerciale en copiant proposition existante
+DefaultProposalDurationValidity=Durée de validité par défaut de la proposition commerciale (en jours)
+UseCustomerContactAsPropalRecipientIfExist=\n
+ClonePropal=Dupliquer proposition commerciale
+ProposalsAndProposalsLines=Proposition commerciale et des lignes
+ProposalLine=ligne de proposition
+AvailabilityPeriod=Délai de disponibilité
+SetAvailability=Indiquer le délai de disponibilité
+AvailabilityTypeAV_NOW=Immédiatement
+TypeContact_propal_external_BILLING=Contact client facturation
+ProposalsStatisticsSuppliers=Statistiques des propositions par fournisseurs

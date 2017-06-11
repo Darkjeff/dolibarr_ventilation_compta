@@ -1,0 +1,25 @@
+# Dolibarr language file - Source file is en_US - ldap
+DomainPassword=Hasło do domeny
+YouMustChangePassNextLogon=Hasło dla <b>użytkownika %s na %s</b> domeny muszą być zmienione.
+UserMustChangePassNextLogon=Użytkownik musi zmienić hasło w domenie %s
+LDAPInformationsForThisContact=Informacje zawarte w bazie danych LDAP dla tego kontaktu
+LDAPInformationsForThisUser=Informacje zawarte w bazie danych LDAP dla tego użytkownika
+LDAPInformationsForThisGroup=Informacje zawarte w bazie danych LDAP dla tej grupy
+LDAPInformationsForThisMember=Informacje zawarte w bazie danych LDAP dla tego członka
+LDAPAttributes=LDAP atrybuty
+LDAPCard=LDAP karty
+LDAPRecordNotFound=Zapis nie został odnaleziony w bazie danych LDAP
+LDAPUsers=Użytkowników w bazie danych LDAP
+LDAPFieldStatus=Stan
+LDAPFieldFirstSubscriptionDate=Pierwsze subskrypcji daty
+LDAPFieldFirstSubscriptionAmount=Pierwsza subskrypcja kwoty
+LDAPFieldLastSubscriptionDate=Latest subscription date
+LDAPFieldLastSubscriptionAmount=Latest subscription amount
+LDAPFieldSkype=Skype id
+LDAPFieldSkypeExample=Example : skypeName
+UserSynchronized=Użytkownik zsynchronizowany
+GroupSynchronized=Grupa zsynchronizowana
+MemberSynchronized=Państwa zsynchronizowane
+ContactSynchronized=Kontakt zsynchronizowany
+ForceSynchronize=Synchronizacja użytkownika (Dolibarr -> LDAP)
+ErrorFailedToReadLDAP=Nie można odczytać bazy danych LDAP. Sprawdź LDAP moduł konfiguracji bazy danych i dostępności.

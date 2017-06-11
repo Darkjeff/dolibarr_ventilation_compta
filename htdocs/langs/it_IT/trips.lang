@@ -1,0 +1,89 @@
+# Dolibarr language file - Source file is en_US - trips
+ExpenseReport=Nota spese
+ExpenseReports=Note spese
+ShowExpenseReport=Show expense report
+Trips=Note spese
+TripsAndExpenses=Note spese
+TripsAndExpensesStatistics=Statistiche note spese
+TripCard=Scheda nota spese
+AddTrip=Crea nota spese
+ListOfTrips=Lista delle note spese
+ListOfFees=Elenco delle tariffe
+TypeFees=Types of fees
+ShowTrip=Show expense report
+NewTrip=Nuova nota spese
+CompanyVisited=Società/Fondazione visitata
+FeesKilometersOrAmout=Tariffa kilometrica o importo
+DeleteTrip=Elimina nota spese
+ConfirmDeleteTrip=Are you sure you want to delete this expense report?
+ListTripsAndExpenses=Lista delle note spese
+ListToApprove=In attesa di approvazione
+ExpensesArea=Area note spese
+ClassifyRefunded=Classifica come "Rimborsata"
+ExpenseReportWaitingForApproval=È stata inserita una nuova nota spese da approvare
+ExpenseReportWaitingForApprovalMessage=È stata inserita una nuova nota spese da approvare.\n- Utente: %s\n- Periodo: %s\nClicca qui per approvarla: %s
+TripId=ID nota spese
+AnyOtherInThisListCanValidate=Persona da informare per la convalida
+TripSociete=Informazioni azienda
+TripNDF=Informazioni nota spese
+PDFStandardExpenseReports=Template standard per la generazione dei PDF delle not spese
+ExpenseReportLine=Riga di nota spese
+TF_OTHER=Altro
+TF_TRIP=Trasporto
+TF_LUNCH=Pranzo
+TF_METRO=Metro
+TF_TRAIN=Treno
+TF_BUS=Bus
+TF_CAR=Auto
+TF_PEAGE=Pedaggio
+TF_ESSENCE=Carburante
+TF_HOTEL=Hotel
+TF_TAXI=Taxi
+
+ErrorDoubleDeclaration=Hai già inviata una nota spese per il periodo selezionato
+AucuneLigne=Non ci sono ancora note spese
+
+ModePaiement=Modalità di pagamento
+
+VALIDATOR=Utente responsabile per l'approvazione
+VALIDOR=Approvata da
+AUTHOR=Registrata da
+AUTHORPAIEMENT=Paid by
+REFUSEUR=Rifiutata da
+CANCEL_USER=Deleted by
+
+MOTIF_REFUS=Motivo
+MOTIF_CANCEL=Motivo
+
+DATE_REFUS=Rifiutata in data
+DATE_SAVE=Convalidata in data
+DATE_CANCEL=Eliminata in data
+DATE_PAIEMENT=Liquidata in data
+
+BROUILLONNER=Riapri
+ValidateAndSubmit=Convalida e proponi per l'approvazione
+ValidatedWaitingApproval=Validated (waiting for approval)
+
+NOT_AUTHOR=Non sei l'autore di questa nota spese. Operazione annullata.
+
+ConfirmRefuseTrip=Are you sure you want to deny this expense report?
+
+ValideTrip=Approva la nota spese
+ConfirmValideTrip=Are you sure you want to approve this expense report?
+
+PaidTrip=Liquida una nota spese
+ConfirmPaidTrip=Are you sure you want to change status of this expense report to "Paid"?
+
+ConfirmCancelTrip=Are you sure you want to cancel this expense report?
+
+BrouillonnerTrip=Move back expense report to status "Draft"
+ConfirmBrouillonnerTrip=Are you sure you want to move this expense report to status "Draft"?
+
+SaveTrip=Convalida la nota spese
+ConfirmSaveTrip=Are you sure you want to validate this expense report?
+
+NoTripsToExportCSV=Nessuna nota spese da esportare per il periodo
+ExpenseReportPayment=Expense report payment
+
+ExpenseReportsToApprove=Note spese da approvare
+ExpenseReportsToPay=Expense reports to pay

@@ -1,0 +1,79 @@
+# Dolibarr language file - Source file is en_US - cron
+# About page
+# Right
+Permission23101 = Voir les tâches planifiées
+Permission23102 = Créer/Modifier des tâches planifiées
+Permission23103 = Supprimer une tâche planifiée
+Permission23104 = Exécuter une tâche planifiée
+# Admin
+CronSetup= Page de configuration du module - Gestion des travaux programmés
+URLToLaunchCronJobs=Ou pour vérifier ou lancer les travaux planifiés qualifiés
+OrToLaunchASpecificJob=Ou pour vérifier et lancer un travail programmé spécifique
+KeyForCronAccess=Clé de sécurité pour l'URL de lancement des travaux programmés
+FileToLaunchCronJobs=Commande pour lancer les travaux programmés actifs
+CronExplainHowToRunUnix=Sur un environnement Unix vous pouvez utiliser l'entrée suivante en crontab pour exécuter la ligne de commande toutes les 5 minutes
+CronExplainHowToRunWin=Sur un environement Microsoft(tm) Windows vous pouvez utiliser le planificateur de tache pour lancer cette commande toute les 5 minutes.
+CronMethodDoesNotExists=La classe %s ne contient aucune méthode %s
+# Menu
+EnabledAndDisabled=Activés et désactivés
+# Page list
+CronLastOutput=Sortie du dernier lancement
+CronLastResult=Dernier code de retour
+CronCommand=Commande
+CronList=Travaux planifiés
+CronDelete=Effacer les travaux planifiés
+CronConfirmDelete=Êtes-vous sûr de vouloir supprimer ces travaux planifiées?
+CronExecute=Lancer la tache planifiée
+CronConfirmExecute=Etes-vous sûr que vous voulez exécuter ces travaux planifiées maintenant?
+CronInfo=Le module des travaux planifiés permet d'exécuter des opérations qui ont été programmées
+CronTask=Travail planifié
+CronNone=Aucun(e)
+CronDtStart=Pas avant
+CronDtEnd=Pas après
+CronDtNextLaunch=Prochaine exécution
+CronDtLastLaunch=Date de début dernière exécution
+CronDtLastResult=Date de fin dernière exécution
+CronFrequency=Fréquence
+CronClass=Classe
+CronMethod=Méthode
+CronModule=Module
+CronNoJobs=Aucun travail enregistré
+CronPriority=Priorité
+CronLabel=Libellé
+CronNbRun=Nb. exec.
+CronMaxRun=Nb max de lancement
+CronEach=Tous les
+JobFinished=Travail lancé et terminé
+#Page card
+CronAdd= Ajoutez des travaux
+CronEvery=Exécuter chaque tâche
+CronObject=Instance/objet à créer
+CronArgs=Paramètres
+CronSaveSucess=Mise à jour effectuée avec succès.
+CronNote=Commentaire
+CronFieldMandatory=Le champ %s est obligatoire
+CronErrEndDateStartDt=La date de fin ne peux être avant la date de début
+CronStatusActiveBtn=Activer
+CronStatusInactiveBtn=Désactiver
+CronTaskInactive=Cette tâche est désactivée
+CronId=Id
+CronClassFile=Classes (nom de fichier)
+CronModuleHelp=Nom du répertoire du module Dolibarr (fonctionne aussi avec les modules externes de Dolibarr). <BR> Par exemple pour appeler la méthode fetch de l'objet Product de Dolibarr /htdocs/<u>product</u>/class/product.class.php, la valeur de module est <i>product</i>
+CronClassFileHelp=Le nom du fichier à charger. <BR> Par exemple pour appeler la méthode fetch de l'objet Product de Dolibarr /htdocs/product/class/<u>product.class.php</u>, la valeur de du nom de fichier de classe est <i>product.class.php</i>
+CronObjectHelp=Le nom de l'objet à charger. <BR> Par exemple pour appeler la méthode fetch de l'objet Product de Dolibarr /htdocs/product/class/product.class.php, la valeur du nom de l'objet est <i>Product</i>
+CronMethodHelp=La méthode à lancer. <BR> Par exemple pour appeler la méthode fetch de l'objet Product de Dolibarr /htdocs/product/class/product.class.php, la valeur de la méthode est <i>fetch</i>
+CronArgsHelp=Les arguments de la méthode. <BR> Par exemple pour appeler la méthode fetch de l'objet Product de Dolibarr /htdocs/product/class/product.class.php, la valeur des arguments pourrait être <i>0, RefProduit</i>
+CronCommandHelp=La commande système a exécuter.
+CronCreateJob=Créer un nouveau travail planifié
+CronFrom=A partir du
+# Info
+# Common
+CronType=Type de travail planifié
+CronType_method=Méthode d'appel d'une classe Dolibarr
+CronType_command=Commande terminal
+CronCannotLoadClass=Impossible de charger la classe %s ou l'objet %s
+UseMenuModuleToolsToAddCronJobs=Aller à la page "Accueil - Outils administration - Travaux planifiées" pour voir la listes des travaux programmées et les modifier.
+JobDisabled=Travail désactivé
+MakeLocalDatabaseDumpShort=Sauvegarde locale de base
+MakeLocalDatabaseDump=Créer une sauvegarde locale de la base
+WarningCronDelayed=Attention, à des fins de performance, quelle que soit la prochaine date d'exécution des travaux actifs, vos travaux peuvent être retardée jusqu'à un maximum de %s heures avant d'être exécuter.

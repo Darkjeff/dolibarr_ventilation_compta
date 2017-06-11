@@ -1,0 +1,79 @@
+# Dolibarr language file - Source file is en_US - cron
+# About page
+# Right
+Permission23101 = อ่านงานที่กำหนดเวลาไว้
+Permission23102 = สร้าง / การปรับปรุงกำหนดเวลางาน
+Permission23103 = ลบงานที่กำหนด
+Permission23104 = การดำเนินงานที่กำหนด
+# Admin
+CronSetup= กำหนดเวลาการตั้งค่าการจัดการงาน
+URLToLaunchCronJobs=URL to check and launch qualified cron jobs
+OrToLaunchASpecificJob=หรือเพื่อตรวจสอบและการเปิดตัวงานที่เฉพาะเจาะจง
+KeyForCronAccess=กุญแจสำคัญในการรักษาความปลอดภัยสำหรับ URL ที่จะเปิดตัวงาน cron
+FileToLaunchCronJobs=บรรทัดคำสั่งที่จะเปิดตัวงาน cron
+CronExplainHowToRunUnix=ในสภาพแวดล้อมระบบปฏิบัติการยูนิกซ์ที่คุณควรใช้ crontab รายการต่อไปนี้เพื่อเรียกใช้บรรทัดคำสั่งแต่ละ 5 นาที
+CronExplainHowToRunWin=ไมโครซอฟท์ (TM) ของ Windows environement คุณสามารถใช้เครื่องมือการจัดตารางงานที่จะเรียกใช้บรรทัดคำสั่งแต่ละ 5 นาที
+CronMethodDoesNotExists=Class %s does not contains any method %s
+# Menu
+EnabledAndDisabled=Enabled and disabled
+# Page list
+CronLastOutput=Latest run output
+CronLastResult=Latest result code
+CronCommand=คำสั่ง
+CronList=งานที่กำหนดเวลาไว้
+CronDelete=ลบงานที่กำหนดไว้
+CronConfirmDelete=Are you sure you want to delete these scheduled jobs?
+CronExecute=Launch scheduled job
+CronConfirmExecute=Are you sure you want to execute these scheduled jobs now?
+CronInfo=โมดูลงานตามกำหนดการอนุญาตให้มีการดำเนินงานที่ได้รับการวางแผน
+CronTask=งาน
+CronNone=ไม่
+CronDtStart=Not before
+CronDtEnd=Not after
+CronDtNextLaunch=การดำเนินการต่อไป
+CronDtLastLaunch=Start date of latest execution
+CronDtLastResult=End date of latest execution
+CronFrequency=ความถี่
+CronClass=ชั้น
+CronMethod=วิธี
+CronModule=โมดูล
+CronNoJobs=ไม่มีงานที่ลงทะเบียน
+CronPriority=ลำดับความสำคัญ
+CronLabel=ฉลาก
+CronNbRun=nb ยิง
+CronMaxRun=Max nb. launch
+CronEach=ทุกๆ
+JobFinished=งานเปิดตัวและจบ
+#Page card
+CronAdd= เพิ่มงาน
+CronEvery=ดำเนินงานแต่ละงาน
+CronObject=อินสแตนซ์ / วัตถุที่จะสร้าง
+CronArgs=พารามิเตอร์
+CronSaveSucess=Save successfully
+CronNote=ความเห็น
+CronFieldMandatory=ทุ่ง% s มีผลบังคับใช้
+CronErrEndDateStartDt=วันที่สิ้นสุดไม่สามารถก่อนวันเริ่มต้น
+CronStatusActiveBtn=เปิดใช้งาน
+CronStatusInactiveBtn=ปิดการใช้งาน
+CronTaskInactive=งานนี้ถูกปิดใช้งาน
+CronId=Id
+CronClassFile=การเรียนการสอน (filename.class.php)
+CronModuleHelp=ชื่อของไดเรกทอรีโมดูล Dolibarr (ยังทำงานร่วมกับโมดูล Dolibarr ภายนอก) <BR> สำหรับ exemple สามารถดึงข้อมูลวิธีการ Dolibarr วัตถุสินค้า / htdocs / <u>ผลิตภัณฑ์</u> /class/product.class.php <i>ค่าของโมดูลเป็นผลิตภัณฑ์</i>
+CronClassFileHelp=ชื่อไฟล์ที่จะโหลด <BR> สำหรับ exemple สามารถดึงข้อมูลวิธีการ Dolibarr วัตถุสินค้า / htdocs / สินค้า / ระดับ / <u>product.class.php</u> ค่าของชื่อไฟล์ระดับคือ <i>product.class.php</i>
+CronObjectHelp=ชื่อวัตถุที่จะโหลด <BR> สำหรับ exemple สามารถดึงข้อมูลวิธีการ Dolibarr วัตถุสินค้า /htdocs/product/class/product.class.php <i>ค่าของชื่อไฟล์ระดับเป็นสินค้า</i>
+CronMethodHelp=วิธีวัตถุที่จะเปิดตัว <BR> สำหรับ exemple สามารถดึงข้อมูลวิธีการ Dolibarr วัตถุสินค้า /htdocs/product/class/product.class.php ค่าของวิธีการที่เป็น <i>fecth</i>
+CronArgsHelp=วิธีการขัดแย้ง <BR> สำหรับ exemple สามารถดึงข้อมูลวิธีการ Dolibarr วัตถุสินค้า /htdocs/product/class/product.class.php ค่าของพารามิเตอร์สามารถ <i>0, ProductRef</i>
+CronCommandHelp=บรรทัดคำสั่งระบบที่จะดำเนินการ
+CronCreateJob=สร้างงานใหม่กำหนด
+CronFrom=จาก
+# Info
+# Common
+CronType=หมวดงาน
+CronType_method=วิธีการเรียกร้องของชั้น Dolibarr
+CronType_command=คำสั่งเชลล์
+CronCannotLoadClass=ไม่สามารถโหลดระดับ s% หรือวัตถุ% s
+UseMenuModuleToolsToAddCronJobs=Go into menu "Home - Admin tools - Scheduled jobs" to see and edit scheduled jobs.
+JobDisabled=ปิดการใช้งาน
+MakeLocalDatabaseDumpShort=Local database backup
+MakeLocalDatabaseDump=Create a local database dump
+WarningCronDelayed=Attention, for performance purpose, whatever is next date of execution of active jobs, your jobs may be delayed to a maximum of %s hours before being run.

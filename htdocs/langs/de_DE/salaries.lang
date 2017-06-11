@@ -1,0 +1,14 @@
+# Dolibarr language file - Source file is en_US - salaries
+SALARIES_ACCOUNTING_ACCOUNT_PAYMENT=Standard Buchhaltungskonto für Löhne
+SALARIES_ACCOUNTING_ACCOUNT_CHARGE=Standard Buchhaltungskonto für persönliche Aufwendungen
+Salary=Lohn
+Salaries=Löhne
+NewSalaryPayment=Neue Lohnzahlung
+SalaryPayment=Lohnzahlung
+SalariesPayments=Lohnzahlungen
+ShowSalaryPayment=Zeige Lohnzahlung
+THM=Durchschnittlicher Stundensatz
+TJM=Durchschnittlicher Tagessatz
+CurrentSalary=aktueller  Lohn
+THMDescription=Dieser Wert kann verwendet werden, um die Kosten für die verbrauchte Zeit eines Anwender zu berechnen, wenn das Modul Projektverwaltung verwendet wird,
+TJMDescription=Dieser Wert ist aktuell nur zu Informationszwecken und wird nicht für eine Berechnung verwendet

@@ -1,0 +1,79 @@
+# Dolibarr language file - Source file is en_US - cron
+# About page
+# Right
+Permission23101 = Consulta les tasques programades
+Permission23102 = Crea/modifica la tasca programada
+Permission23103 = Elimina la tasca programada
+Permission23104 = Executa les tasques programades
+# Admin
+CronSetup= Pàgina de configuració del mòdul - Gestió de tasques planificades
+URLToLaunchCronJobs=URL per comprovar i posar en marxa les tasques automàtiques qualificades
+OrToLaunchASpecificJob=O per llançar una tasca específica
+KeyForCronAccess=Codi de seguretat per a la URL de llançament de tasques automàtiques
+FileToLaunchCronJobs=Ordre per llançar les tasques automàtiques
+CronExplainHowToRunUnix=A entorns Unix s'ha d'utilitzar la següent entrada crontab per executar la comanda cada 5 minuts
+CronExplainHowToRunWin=En entorns Microsoft (tm) Windows, pot utilitzar l'eina 'tareas programadas' per executar la comanda cada 5 minuts
+CronMethodDoesNotExists=La classe %s no conté cap mètode %s
+# Menu
+EnabledAndDisabled=Habilitat i deshabilitat
+# Page list
+CronLastOutput=Última sortida d'execució
+CronLastResult=Últim codi retornat
+CronCommand=Comando
+CronList=Tasques programades
+CronDelete=Elimina les tasques programades
+CronConfirmDelete=Vols eliminar aquests treballs programats?
+CronExecute=Llança la tasca programada
+CronConfirmExecute=Esteu segur que voleu executar aquestes tasques programades ara?
+CronInfo=Tasques programades li permet executar tasques que han sigut programades
+CronTask=Tasca
+CronNone=Ningún
+CronDtStart=No abans
+CronDtEnd=No després
+CronDtNextLaunch=Propera execució
+CronDtLastLaunch=Data d'inici de l'última execució
+CronDtLastResult=Data del final de l'última execució
+CronFrequency=Freqüència
+CronClass=Classe
+CronMethod=Mètod
+CronModule=Mòdul
+CronNoJobs=Sense treballs actualment
+CronPriority=Prioritat
+CronLabel=Etiqueta
+CronNbRun=Nº execucions
+CronMaxRun=Nº màx. d'exec.
+CronEach=Tota (s)
+JobFinished=Tasques llançades i finalitzades
+#Page card
+CronAdd= Afegir una tasca
+CronEvery=Executa cada tasca
+CronObject=Instància/Objecte a crear
+CronArgs=Argument
+CronSaveSucess=S'ha desat correctament
+CronNote=Nota
+CronFieldMandatory=El camp %s és obligatori
+CronErrEndDateStartDt=La data de fi no pot ser anterior a la d'inici
+CronStatusActiveBtn=Activar
+CronStatusInactiveBtn=Desactivar
+CronTaskInactive=Aquesta tasca es troba desactivada
+CronId=Id
+CronClassFile=Classe (arxiu)
+CronModuleHelp=Nombre del directorio del módulo Dolibarr (funciona automáticamente con los módulos externos Dolibarr). <BR> Por ejemplo para llamar al método fetch del objeto Product de Dolibarr /htdocs/<u>product</u>/class/product.class.php, el valor del módulo es <i>product</i>
+CronClassFileHelp=El archivo archivo que contiene el objeto. <BR> Por ejemplo para llamar el método fetch del objeto Product de Dolibarr /htdocs/product/class/<u>product.class.php</u>, el valor de la clase es <i>product.class.php</i>
+CronObjectHelp=El nombre del objeto a crear. <BR> Por ejemplo para llamar el método fetch del objeto Product de Dolibarr /htdocs/product/class/product.class.php, el valor del objeto es <i>Product</i>
+CronMethodHelp=El método a lanzar. <BR> Por ejemplo para llamar el método fetch del objeto Product de Dolibarr  /htdocs/product/class/product.class.php, el valor del método es <i>fecth</i>
+CronArgsHelp=Los argumentos del método. <BR> Por ejemplo para usar el método fetch del objeto Product deDolibarr /htdocs/product/class/product.class.php, el valor del parámetro podría ser <i>0, RefProduit</i>
+CronCommandHelp=El comando del sistema a executar
+CronCreateJob=Crear nova tasca programada
+CronFrom=De
+# Info
+# Common
+CronType=Tipus de tasca
+CronType_method=Mètode d'una classe d'un mòdul Dolibarr
+CronType_command=Comando Shell
+CronCannotLoadClass=impossible carregar la classe %s de l'objecte %s
+UseMenuModuleToolsToAddCronJobs=Ves a menú "Inici - Utilitats de sistema - Tasques programades" per veure i editar les tasques programades.
+JobDisabled=Tasca desactivada
+MakeLocalDatabaseDumpShort=Còpia de seguretat de la base de dades local
+MakeLocalDatabaseDump=Crea un bolcat de base de dades local
+WarningCronDelayed=Atenció, per motius de rendiment, qualsevol tasca activa prevista per la propera execució, es pot retardar fins a un màxim de %s hores abans de començar a executar-se.

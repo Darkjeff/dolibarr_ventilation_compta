@@ -1,0 +1,79 @@
+# Dolibarr language file - Source file is en_US - cron
+# About page
+# Right
+Permission23101 = Прочитане на Планирана задача
+Permission23102 = Създаване/обновяване на Планирана задача
+Permission23103 = Изтриване на Планирана задача
+Permission23104 = Изпълнение на Планирана задача
+# Admin
+CronSetup= Настройки за управление на Планирани задачи
+URLToLaunchCronJobs=URL to check and launch qualified cron jobs
+OrToLaunchASpecificJob=Или за проверка и зареждане на специфична задача
+KeyForCronAccess=Защитен ключ на URL за зареждане на cron задачи
+FileToLaunchCronJobs=Команден ред за изпъление на cron задача
+CronExplainHowToRunUnix=В Unix среда би трябвало да използвате следния crontab ред за изпълнение на командния ред на всеки 5 минути
+CronExplainHowToRunWin=В Microsoft(tm)-ска среда може да използвате инструментите за планирани задачи, за да се изпълни командния ред на всеки 5 минути
+CronMethodDoesNotExists=Class %s does not contains any method %s
+# Menu
+EnabledAndDisabled=Enabled and disabled
+# Page list
+CronLastOutput=Latest run output
+CronLastResult=Latest result code
+CronCommand=Команда
+CronList=Планирани задачи
+CronDelete=Изтриване на планирани задачи
+CronConfirmDelete=Are you sure you want to delete these scheduled jobs?
+CronExecute=Launch scheduled job
+CronConfirmExecute=Are you sure you want to execute these scheduled jobs now?
+CronInfo=Модул Планирана задача позволява да се изпълни задача, която е била планирана
+CronTask=Задача
+CronNone=Няма
+CronDtStart=Not before
+CronDtEnd=Not after
+CronDtNextLaunch=Следващо изпълнение
+CronDtLastLaunch=Start date of latest execution
+CronDtLastResult=End date of latest execution
+CronFrequency=Честота
+CronClass=Клас
+CronMethod=Метод
+CronModule=Модул
+CronNoJobs=Няма регистрирани задачи
+CronPriority=Приоритет
+CronLabel=Етикет
+CronNbRun=Nb. зареждане
+CronMaxRun=Max nb. launch
+CronEach=Всеки
+JobFinished=Задачи заредени и приключили
+#Page card
+CronAdd= Добавяне на задачи
+CronEvery=Изпълни задачата всеки
+CronObject=Въплъщение/Обект за създаване
+CronArgs=Параметри
+CronSaveSucess=Save successfully
+CronNote=Коментар
+CronFieldMandatory=Полета %s са задължителни
+CronErrEndDateStartDt=Крайната дата не може да бъде преди началната дата
+CronStatusActiveBtn=Активирайте
+CronStatusInactiveBtn=Деактивирай
+CronTaskInactive=Тази задача е неактивирана
+CronId=Id
+CronClassFile=Класове (filename.class.php)
+CronModuleHelp=Име на Dolibarr модулна директория (работи също така с външен Dolibarr модул).<BR> Например, за да издърпате метод на обект Dolibarr Product /htdocs/<u>product</u>/class/product.class.php, стойността на модула е <i>product</i>
+CronClassFileHelp=Име на файл да се зареди.<BR> Например, за да издърпате метод на обект Dolibarrr Product /htdocs/product/class/<u>product.class.php</u>, стойността на името на файла за класа е <i>product.class.php</i>
+CronObjectHelp=Името на обекът, който да се зареди.<BR> Например, за да издърпате метод на обект Dolibarr Product /htdocs/product/class/product.class.php, стойността на името на файла за класа е <i>Product</i>
+CronMethodHelp=Методът на обекта да се зареди.<BR> Например, за да издърпате метод на обект Dolibarr Product /htdocs/product/class/product.class.php, стойността на метода е <i>fecth</i>
+CronArgsHelp=Аргументите за метода.<BR> Например, за да издърпате метод на обект Dolibarr Product /htdocs/product/class/product.class.php, стойността на параметрите може да бъде <i>0, ProductRef</i>
+CronCommandHelp=Системният команден ред за стартиране.
+CronCreateJob=Създаване на нова Планирана задача
+CronFrom=От
+# Info
+# Common
+CronType=Тип задача
+CronType_method=Изпълни метод на Dolibarr клас
+CronType_command=Терминална команда
+CronCannotLoadClass=Неможе да се зареди класа %s или обекта %s
+UseMenuModuleToolsToAddCronJobs=Go into menu "Home - Admin tools - Scheduled jobs" to see and edit scheduled jobs.
+JobDisabled=Неактивирани задачи
+MakeLocalDatabaseDumpShort=Local database backup
+MakeLocalDatabaseDump=Create a local database dump
+WarningCronDelayed=Attention, for performance purpose, whatever is next date of execution of active jobs, your jobs may be delayed to a maximum of %s hours before being run.

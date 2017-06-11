@@ -1,0 +1,89 @@
+# Dolibarr language file - Source file is en_US - trips
+ExpenseReport=Išlaidų ataskaita
+ExpenseReports=Išlaidų ataskaitos
+ShowExpenseReport=Rodyti išlaidų ataskaitą
+Trips=Išlaidų ataskaitos
+TripsAndExpenses=Išlaidų ataskaitos
+TripsAndExpensesStatistics=Išlaidų ataskaitų statistika
+TripCard=Išlaidų ataskaitos kortelė
+AddTrip=Sukurti išlaidų ataskaitą
+ListOfTrips=Išlaidų ataskaitų sąrašas
+ListOfFees=Įmokų sąrašas
+TypeFees=Types of fees
+ShowTrip=Rodyti išlaidų ataskaitą
+NewTrip=Nauja išlaidų ataskaita
+CompanyVisited=Aplankyta įmonė/organizacija
+FeesKilometersOrAmout=Suma arba Kilometrai
+DeleteTrip=Ištrinti išlaidų ataskaitą
+ConfirmDeleteTrip=Are you sure you want to delete this expense report?
+ListTripsAndExpenses=Išlaidų ataskaitų sąrašas
+ListToApprove=Laukiama patvirtinimo
+ExpensesArea=Išlaidų ataskaitų sritis
+ClassifyRefunded=Klasifikuoti "Grąžinta"
+ExpenseReportWaitingForApproval=Nauja išlaidų ataskaita buvo pateikta patvirtinimui
+ExpenseReportWaitingForApprovalMessage=Nauja išlaidų ataskaita buvo pateikta ir laukia patvirtinimo.\n- Vartotojas: %s\n- Laikotarpis:%s \nSpauskite čia norėdami patvirtinti: %s
+TripId=Išlaidų ataskaitos ID
+AnyOtherInThisListCanValidate=Asmuo informuojamas patvirtinimui.
+TripSociete=Informacijos įmonė
+TripNDF=Informacijos išlaidų ataskaiata
+PDFStandardExpenseReports=Standartinis šablonas PDF dokumento išlaidų ataskaitoje generavimui
+ExpenseReportLine=Išlaidų ataskaitos eilutė
+TF_OTHER=Kitas
+TF_TRIP=Transportas
+TF_LUNCH=Pietūs
+TF_METRO=Metro
+TF_TRAIN=Traukinys
+TF_BUS=Autobusas
+TF_CAR=Automobilis
+TF_PEAGE=Mokamas
+TF_ESSENCE=Kuras
+TF_HOTEL=Viešbutis
+TF_TAXI=Taksi
+
+ErrorDoubleDeclaration=Jūs deklaravote kitą išlaidų ataskaitą panašiame laiko periode.
+AucuneLigne=Dar nėra deklaruotos išlaidų ataskaitos
+
+ModePaiement=Mokėjimo būdas
+
+VALIDATOR=Vartotojas atsakingas už patvirtinimą
+VALIDOR=Patvirtinta
+AUTHOR=Įrašyta
+AUTHORPAIEMENT=Apmokėtas kieno
+REFUSEUR=Atmesta
+CANCEL_USER=Ištrintas kieno
+
+MOTIF_REFUS=Priežastis
+MOTIF_CANCEL=Priežastis
+
+DATE_REFUS=Atmetimo data
+DATE_SAVE=Patvirtinimo data
+DATE_CANCEL=Nutraukimo data
+DATE_PAIEMENT=Mokėjimo data
+
+BROUILLONNER=Atidaryti iš naujo
+ValidateAndSubmit=Įvertinti ir pateikti tvirtinimui
+ValidatedWaitingApproval=Pripažintas (laukia patvirtinimo)
+
+NOT_AUTHOR=Jūs nesate šios išlaidų ataskaitos autorius. Operacija nutraukta.
+
+ConfirmRefuseTrip=Are you sure you want to deny this expense report?
+
+ValideTrip=Patvirtinti išlaidų ataskaitą
+ConfirmValideTrip=Are you sure you want to approve this expense report?
+
+PaidTrip=Apmokėti išlaidų ataskaitą
+ConfirmPaidTrip=Are you sure you want to change status of this expense report to "Paid"?
+
+ConfirmCancelTrip=Are you sure you want to cancel this expense report?
+
+BrouillonnerTrip=Grąžinti išlaidų ataskaitos būklę į "Projektas"
+ConfirmBrouillonnerTrip=Are you sure you want to move this expense report to status "Draft"?
+
+SaveTrip=Patvirtinti išlaidų ataskaitą
+ConfirmSaveTrip=Are you sure you want to validate this expense report?
+
+NoTripsToExportCSV=Už šį laikotarpį nėra išlaidų ataskaitų eksportui
+ExpenseReportPayment=Išlaidų apmokėjimų ataskaita
+
+ExpenseReportsToApprove=Išlaidų ataskaitos patvirtinimui
+ExpenseReportsToPay=Apmokėti išlaidų ataskaitą

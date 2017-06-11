@@ -1,0 +1,14 @@
+# Dolibarr language file - Source file is en_US - salaries
+SALARIES_ACCOUNTING_ACCOUNT_PAYMENT=Kod rachunkowości dla wypłat
+SALARIES_ACCOUNTING_ACCOUNT_CHARGE=Kod rachunkowości dla obciązeń finansowych
+Salary=Wypłata
+Salaries=Wypłaty
+NewSalaryPayment=Nowa wypłata
+SalaryPayment=Wypłata wynagrodzenia
+SalariesPayments=Wypłaty wynagordzeń
+ShowSalaryPayment=Pokaż wypłaty wynagrodzeń
+THM=Average hourly rate
+TJM=Average daily rate
+CurrentSalary=Aktualne wynagrodzenie
+THMDescription=Ta wartość może być użyta do obliczenia kosztów poniesionych przy projekcie do którego przystąpili użytkownicy jeżeli moduł projektów jest używany
+TJMDescription=Ta wartość jest aktualnie jedynie informacją i nie jest wykorzystywana do jakichkolwiek obliczeń

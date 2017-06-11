@@ -1,0 +1,14 @@
+# Dolibarr language file - Source file is en_US - salaries
+SALARIES_ACCOUNTING_ACCOUNT_PAYMENT=كود المحاسبة لدفع رواتب
+SALARIES_ACCOUNTING_ACCOUNT_CHARGE=كود المحاسبة للدفع المالي
+Salary=الراتب
+Salaries=الرواتب
+NewSalaryPayment=دفع الرواتب جديد
+SalaryPayment=دفع الرواتب
+SalariesPayments=مدفوعات الرواتب
+ShowSalaryPayment=مشاهدة دفع الرواتب
+THM=Average hourly rate
+TJM=Average daily rate
+CurrentSalary=الراتب الحالي
+THMDescription=يمكن استخدام هذه القيمة لحساب تكلفة الوقت المستهلك في المشروع المدخل من قبل المستخدمين إذا تم استخدام وحدة مشروع 
+TJMDescription=هذه القيمة هي حاليا فقط كمعلومات وليس لاستخدامها في أي حساب

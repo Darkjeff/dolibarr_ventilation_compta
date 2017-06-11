@@ -1,0 +1,25 @@
+# Dolibarr language file - Source file is en_US - ldap
+DomainPassword=Jelszó a domain-hez
+YouMustChangePassNextLogon=<b>%s</b> felhasználó jelszavát a <b>%s</b> domain-ben meg kell változtatni.
+UserMustChangePassNextLogon=%s domainben a felhasználónak meg kell változtatnia a jelszavát.
+LDAPInformationsForThisContact=Információ a kapcsolatról az LDAP adatbázisban
+LDAPInformationsForThisUser=Információ a felhasználóról az LDAP adatbázisban
+LDAPInformationsForThisGroup=Információ a csoportról az LDAP adatbázisban
+LDAPInformationsForThisMember=Információ a tagról az LDAP adatbázisban
+LDAPAttributes=LDAP attributumok
+LDAPCard=LDAP kártya
+LDAPRecordNotFound=Rekord nem található az LDAP adatbázisban
+LDAPUsers=Felhasználók az LDAP adatbázisban
+LDAPFieldStatus=Állapot
+LDAPFieldFirstSubscriptionDate=Első feliratkozási dátum
+LDAPFieldFirstSubscriptionAmount=Első feliratkozási mennyiség
+LDAPFieldLastSubscriptionDate=Latest subscription date
+LDAPFieldLastSubscriptionAmount=Latest subscription amount
+LDAPFieldSkype=Skype név
+LDAPFieldSkypeExample=Például: Skype név
+UserSynchronized=Felhasználó szinkronizálva
+GroupSynchronized=Csoport szinkronizálva
+MemberSynchronized=Tag szinkronizálva
+ContactSynchronized=Kapcsolat szinkronizálva
+ForceSynchronize=Eröltetett szinkronizáció Dolibarr -> LDAP
+ErrorFailedToReadLDAP=Nem sikerült olvasni az LDAP adatbázist. Ellenőrizze az LDAP modul beállítását és az adatbázis hozzáférhetőségét.

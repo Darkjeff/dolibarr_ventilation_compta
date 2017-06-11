@@ -1,0 +1,18 @@
+# Dolibarr language file - Source file is en_US - marque pages
+AddThisPageToBookmarks=Dodaj tę stronę do zakładek
+Bookmark=Zakładka
+Bookmarks=Zakładki
+NewBookmark=Nowa zakładka
+ShowBookmark=Pokaż zakładki
+OpenANewWindow=Otwórz nowe okno
+ReplaceWindow=Zamień bieżące okno
+BookmarkTargetNewWindowShort=Nowe okno
+BookmarkTargetReplaceWindowShort=Aktualne okno
+BookmarkTitle=Tytuł zakładki
+UrlOrLink=URL
+BehaviourOnClick=Zachowaj po kliknięciu na adres URL
+CreateBookmark=Stwórz zakładkę
+SetHereATitleForLink=Zdefiniuj nazwę zakładki
+UseAnExternalHttpLinkOrRelativeDolibarrLink=Użyj zewnętrznego adresu http lub względnego adresu URL Dolibarr
+ChooseIfANewWindowMustBeOpenedOnClickOnBookmark=Choose if linked page must open in new window or not
+BookmarksManagement=Zarządzanie zakładkami
