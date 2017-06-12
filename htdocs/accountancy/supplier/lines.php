@@ -1,9 +1,9 @@
 <?php
 /* Copyright (C) 2013-2016 Olivier Geffroy		<jeff@jeffinfo.com>
- * Copyright (C) 2013-2017 Alexandre Spangaro	<aspangaro.dolibarr@gmail.com>
+ * Copyright (C) 2013-2016 Alexandre Spangaro	<aspangaro.dolibarr@gmail.com>
  * Copyright (C) 2014-2015 Ari Elbaz (elarifr)	<github@accedinfo.com>  
  * Copyright (C) 2013-2016 Florian Henry		<florian.henry@open-concept.pro>
- * Copyright (C) 2014      Juanjo Menent		<jmenent@2byte.es>
+ * Copyright (C) 2014	   Juanjo Menent		<jmenent@2byte.es>
  *   
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +44,6 @@ $langs->load("productbatch");
 $account_parent = GETPOST('account_parent');
 $changeaccount = GETPOST('changeaccount');
 // Search Getpost
-$search_lineid = GETPOST('search_lineid', 'int');
 $search_ref = GETPOST('search_ref', 'alpha');
 $search_invoice = GETPOST('search_invoice', 'alpha');
 $search_label = GETPOST('search_label', 'alpha');
@@ -54,7 +53,7 @@ $search_account = GETPOST('search_account', 'alpha');
 $search_vat = GETPOST('search_vat', 'alpha');
 
 // Load variable for pagination
-$limit = GETPOST('limit','int')?GETPOST('limit', 'int'):(empty($conf->global->ACCOUNTING_LIMIT_LIST_VENTILATION)?$conf->liste_limit:$conf->global->ACCOUNTING_LIMIT_LIST_VENTILATION);
+$limit = GETPOST('limit') ? GETPOST('limit', 'int') : (empty($conf->global->ACCOUNTING_LIMIT_LIST_VENTILATION)?$conf->liste_limit:$conf->global->ACCOUNTING_LIMIT_LIST_VENTILATION);
 $sortfield = GETPOST('sortfield', 'alpha');
 $sortorder = GETPOST('sortorder', 'alpha');
 $page = GETPOST('page', 'int');
@@ -86,7 +85,7 @@ $formaccounting = new FormAccounting($db);
 // Purge search criteria
 if (GETPOST("button_removefilter_x") || GETPOST("button_removefilter.x") || GETPOST("button_removefilter")) // All tests are required to be compatible with all browsers
 {
-    $search_lineid = '';
+	$search_lineid = '';
 	$search_ref = '';
 	$search_invoice = '';
 	$search_label = '';
@@ -94,6 +93,8 @@ if (GETPOST("button_removefilter_x") || GETPOST("button_removefilter.x") || GETP
 	$search_amount = '';
 	$search_account = '';
 	$search_vat = '';
+	$search_country = '';
+	$search_tvaintra = '';
 }
 
 if (is_array($changeaccount) && count($changeaccount) > 0) {
@@ -149,45 +150,52 @@ print '<script type="text/javascript">
 /*
  * Supplier Invoice lines
  */
-$sql = "SELECT f.rowid as facid, f.ref as facnumber, f.ref_supplier, f.libelle as invoice_label, f.datef,";
-$sql.= " l.rowid, l.fk_product, l.description, l.total_ht , l.qty, l.tva_tx, aa.label, aa.account_number, ";
-$sql.= " p.rowid as product_id, p.ref as product_ref, p.label as product_label, p.fk_product_type as type";
-$sql.= " FROM " . MAIN_DB_PREFIX . "facture_fourn as f";
-$sql.= " , " . MAIN_DB_PREFIX . "accounting_account as aa";
-$sql.= " , " . MAIN_DB_PREFIX . "facture_fourn_det as l";
-$sql.= " LEFT JOIN " . MAIN_DB_PREFIX . "product as p ON p.rowid = l.fk_product";
-$sql.= " WHERE f.rowid = l.fk_facture_fourn and f.fk_statut >= 1 AND l.fk_code_ventilation <> 0 ";
-$sql.= " AND aa.rowid = l.fk_code_ventilation";
+$sql = "SELECT f.ref as facnumber, f.rowid as facid, l.fk_product, l.description, l.total_ht , l.qty, l.rowid, l.tva_tx, aa.label, aa.account_number, ";
+$sql .= " p.rowid as product_id, p.ref as product_ref, p.label as product_label, p.fk_product_type as type, co.label as country, s.tva_intra";
+$sql .= " FROM " . MAIN_DB_PREFIX . "facture_fourn_det as l";
+$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "product as p ON p.rowid = l.fk_product";
+$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "accounting_account as aa ON aa.rowid = l.fk_code_ventilation";
+$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "facture_fourn as f ON f.rowid = l.fk_facture_fourn";
+$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "societe as s ON s.rowid = f.fk_soc";
+$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "c_country as co ON co.rowid = s.fk_pays ";
+$sql .= " WHERE l.fk_code_ventilation > 0 ";
+$sql .= " AND f.fk_statut > 0";
 if ($search_lineid) {
     $sql .= natural_search("l.rowid", $search_lineid, 1);
 }
 if (strlen(trim($search_invoice))) {
-	$sql .= natural_search("f.ref", $search_invoice);
+	$sql .= " AND f.ref like '%" . $search_invoice . "%'";
 }
 if (strlen(trim($search_ref))) {
-	$sql .= natural_search("p.ref", $search_ref);
+	$sql .= " AND p.ref like '%" . $search_ref . "%'";
 }
 if (strlen(trim($search_label))) {
-	$sql .= natural_search("p.label", $search_label);
+	$sql .= " AND p.label like '%" . $search_label . "%'";
 }
 if (strlen(trim($search_desc))) {
-	$sql .= natural_search("l.description", $search_desc);
+	$sql .= " AND l.description like '%" . $search_desc . "%'";
 }
 if (strlen(trim($search_amount))) {
-	$sql .= natural_search("l.total_ht", $search_amount, 1);
+	$sql .= " AND l.total_ht like '%" . $search_amount . "%'";
 }
 if (strlen(trim($search_account))) {
-	$sql .= natural_search("aa.account_number", $search_account, 1);
+	$sql .= " AND aa.account_number like '%" . $search_account . "%'";
 }
 if (strlen(trim($search_vat))) {
-	$sql .= natural_search("l.tva_tx", $search_vat, 1);
+	$sql .= " AND (l.tva_tx like '" . $search_vat . "%')";
 }
-$sql .= " AND f.entity IN (" . getEntity('facture_fourn', 0) . ")";  // We don't share object for accountancy
+if (strlen(trim($search_country))) {
+	$sql .= " AND (co.label like'" . $search_country . "%')";
+}
+if (strlen(trim($search_tvaintra))) {
+	$sql .= " AND (s.tva_intra like'" . $search_tvaintra . "%')";
+}
+$sql .= " AND f.entity IN (" . getEntity("facture_fourn", 0) . ")";  // We don't share object for accountancy
 
 $sql .= $db->order($sortfield, $sortorder);
 
 // Count total nb of records
-$nbtotalofrecords = '';
+$nbtotalofrecords = -1;
 if (empty($conf->global->MAIN_DISABLE_FULL_SCANLIST))
 {
     $result = $db->query($sql);
@@ -230,8 +238,7 @@ if ($result) {
 	print '<input type="hidden" name="formfilteraction" id="formfilteraction" value="list">';
 	print '<input type="hidden" name="sortfield" value="'.$sortfield.'">';
 	print '<input type="hidden" name="sortorder" value="'.$sortorder.'">';
-	print '<input type="hidden" name="page" value="'.$page.'">';
-	
+		
 	print_barre_liste($langs->trans("InvoiceLinesDone"), $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, '', $num_lines, $nbtotalofrecords, 'title_accountancy', 0, '', '', $limit);
 	
 	print $langs->trans("DescVentilDoneSupplier") . '<br>';
@@ -256,6 +263,8 @@ if ($result) {
 	print '<td class="liste_titre" align="right"><input type="text" class="right flat maxwidth50" name="search_amount" value="' . dol_escape_htmltag($search_amount) . '"></td>';
 	print '<td class="liste_titre" align="center"><input type="text" class="right flat maxwidth50" name="search_vat" placeholder="%" size="1" value="' . dol_escape_htmltag($search_vat) . '"></td>';
 	print '<td class="liste_titre"><input type="text" class="flat maxwidth50" name="search_account" value="' . dol_escape_htmltag($search_account) . '"></td>';
+	print '<td class="liste_titre"><input type="text" class="flat maxwidth50" name="search_account" value="' . dol_escape_htmltag($search_account) . '"></td>';
+	print '<td class="liste_titre"><input type="text" class="flat maxwidth50" name="search_account" value="' . dol_escape_htmltag($search_account) . '"></td>';
     print '<td class="liste_titre" align="center">';
     $searchpicto=$form->showFilterButtons();
     print $searchpicto;
@@ -273,6 +282,8 @@ if ($result) {
 	print_liste_field_titre($langs->trans("Amount"), $_SERVER["PHP_SELF"], "l.total_ht", "", $param, 'align="right"', $sortfield, $sortorder);
 	print_liste_field_titre($langs->trans("VATRate"), $_SERVER["PHP_SELF"], "l.tva_tx", "", $param, 'align="center"', $sortfield, $sortorder);
 	print_liste_field_titre($langs->trans("Account"), $_SERVER["PHP_SELF"], "aa.account_number", "", $param, '', $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("Account"), $_SERVER["PHP_SELF"], "aa.account_number", "", $param, '', $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("Account"), $_SERVER["PHP_SELF"], "aa.account_number", "", $param, '', $sortfield, $sortorder);
     $checkpicto=$form->showCheckAddButtons();
 	print_liste_field_titre($checkpicto, '', '', '', '', 'align="center"');
 	print "</tr>\n";
@@ -280,9 +291,10 @@ if ($result) {
 	$facturefournisseur_static = new FactureFournisseur($db);
 	$product_static = new Product($db);
 	
-	while ($i < min($num_lines, $limit)) {
+	$var = True;
+	while ( $i < min($num_lines, $limit) ) {
 		$objp = $db->fetch_object($result);
-
+		
 		$codecompta = length_accountg($objp->account_number) . ' - ' . $objp->label;
 		
 		$facturefournisseur_static->ref = $objp->facnumber;
@@ -325,8 +337,9 @@ if ($result) {
 		print $codecompta . ' <a href="./card.php?id=' . $objp->rowid . '">';
 		print img_edit();
 		print '</a></td>';
-		
-		print '<td class="center"><input type="checkbox" class="checkforaction" name="changeaccount[]" value="' . $objp->rowid . '"/></td>';
+		print '<td align="right">' . $objp->country .'</td>';
+		print '<td align="center">' . $objp->tva_intra . '</td>';
+		print '<td align="right"><input type="checkbox" class="checkforaction" name="changeaccount[]" value="' . $objp->rowid . '"/></td>';
 		
 		print "</tr>";
 		$i ++;
