@@ -235,7 +235,6 @@ if ($action == 'writebookkeeping') {
 						{
 							$error++;
 							$errorforline++;
-							//setEventMessages('Transaction for ('.$bookkeeping->doc_type.', '.$bookkeeping->doc_ref.', '.$bookkeeping->fk_docdet.') were already recorded', null, 'warnings');
 						}
 						else
 						{
@@ -282,7 +281,6 @@ if ($action == 'writebookkeeping') {
 							{
 								$error++;
 								$errorforline++;
-								//setEventMessages('Transaction for ('.$bookkeeping->doc_type.', '.$bookkeeping->doc_ref.', '.$bookkeeping->fk_docdet.') were already recorded', null, 'warnings');
 							}
 							else
 							{
@@ -327,7 +325,6 @@ if ($action == 'writebookkeeping') {
 						{
 							$error++;
 							$errorforline++;
-							//setEventMessages('Transaction for ('.$bookkeeping->doc_type.', '.$bookkeeping->doc_ref.', '.$bookkeeping->fk_docdet.') were already recorded', null, 'warnings');
 						}
 						else
 						{
@@ -350,10 +347,10 @@ if ($action == 'writebookkeeping') {
 		}
 	}
 
-	if (empty($error) && count($tabpay)) {
+	if (empty($error) && count($tabttc)) {
 		setEventMessages($langs->trans("GeneralLedgerIsWritten"), null, 'mesgs');
 	}
-	elseif (count($tabpay) == $error)
+	elseif (count($tabttc) == $error)
 	{
 		setEventMessages($langs->trans("NoNewRecordSaved"), null, 'warnings');
 	}
@@ -371,6 +368,7 @@ if ($action == 'writebookkeeping') {
 $form = new Form($db);
 
 $companystatic = new Fournisseur($db);
+$invoicestatic = new FactureFournisseur($db);
 
 // Export
 if ($action == 'export_csv') {
@@ -410,7 +408,7 @@ if ($action == 'export_csv') {
 					print '"' . utf8_decode ( dol_trunc($companystatic->name, 16) ) . ' - ' . $val["refsuppliersologest"] . ' - ' . dol_trunc($accountingaccount->label, 32) . '"' . $sep;
 					print '"' . ($mt >= 0 ? price($mt) : '') . '"' . $sep;
 					print '"' . ($mt < 0 ? price(- $mt) : '') . '"'. $sep;
-					print '"' . $journal . '"' ;
+					print '"' . $journal_label . '"' ;
 					print "\n";
 				}
 			}
@@ -428,7 +426,7 @@ if ($action == 'export_csv') {
 					print '"' . utf8_decode ( dol_trunc($companystatic->name, 16) ) . ' - ' . $val["refsuppliersologest"] . ' - ' . $langs->trans("VAT") . '"' . $sep;
 					print '"' . ($mt >= 0 ? price($mt) : '') . '"' . $sep;
 					print '"' . ($mt < 0 ? price(- $mt) : '') . '"'. $sep;
-					print '"' . $journal . '"' ;
+					print '"' . $journal_label . '"' ;
 					print "\n";
 				}
 			}
@@ -446,10 +444,10 @@ if ($action == 'export_csv') {
 				print '"' . utf8_decode ( dol_trunc($companystatic->name, 16) ) . ' - ' . $val["refsuppliersologest"] . ' - ' . $langs->trans("Code_tiers") . '"' . $sep;
 				print '"' . ($mt < 0 ? price(- $mt) : '') . '"' . $sep;
 				print '"' . ($mt >= 0 ? price($mt) : '') . '"'. $sep;
-				print '"' . $journal . '"' ;
+				print '"' . $journal_label . '"' ;
 				print "\n";
 			}
-			print "\n";
+			
 		}
 	}
 
