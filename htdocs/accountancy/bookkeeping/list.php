@@ -135,6 +135,7 @@ $arrayfields=array(
     't.numero_compte'=>array('label'=>$langs->trans("AccountAccountingShort"), 'checked'=>1),
     't.code_tiers'=>array('label'=>$langs->trans("Code_tiers"), 'checked'=>1),
     't.label_compte'=>array('label'=>$langs->trans("Labelcompte"), 'checked'=>1),
+    't.label_operation'=>array('label'=>$langs->trans("Labeloperation"), 'checked'=>1),
     't.debit'=>array('label'=>$langs->trans("Debit"), 'checked'=>1),
     't.credit'=>array('label'=>$langs->trans("Credit"), 'checked'=>1),
     't.montant'=>array('label'=>$langs->trans("Amount"), 'checked'=>0),
@@ -393,8 +394,8 @@ if ($action == 'delbookkeepingyear') {
 	if (empty($delyear)) {
 		$delyear = dol_print_date(dol_now(), '%Y');
 	}
-	$year_array = $formventilation->selectyear_accountancy_bookkepping($delyear, 'delyear', 0, 'array');
-	$journal_array = $formventilation->selectjournal_accountancy_bookkepping($deljournal, 'deljournal', 0, 'array');
+	$year_array = $formaccounting->selectyear_accountancy_bookkepping($delyear, 'delyear', 0, 'array');
+	$journal_array = $formaccounting->selectjournal_accountancy_bookkepping($deljournal, 'deljournal', 0, 'array');
 
 	$form_question['delyear'] = array (
 			'name' => 'delyear',
@@ -453,6 +454,7 @@ $varpage=empty($contextpage)?$_SERVER["PHP_SELF"]:$contextpage;
 	if (! empty($arrayfields['t.numero_compte']['checked']))		print_liste_field_titre($arrayfields['t.numero_compte']['label'],$_SERVER["PHP_SELF"],'t.numero_compte','',$param,'',$sortfield,$sortorder);
 	if (! empty($arrayfields['t.code_tiers']['checked']))			print_liste_field_titre($arrayfields['t.code_tiers']['label'],$_SERVER["PHP_SELF"],'t.code_tiers','',$param,'',$sortfield,$sortorder);
 	if (! empty($arrayfields['t.label_compte']['checked']))			print_liste_field_titre($arrayfields['t.label_compte']['label'],$_SERVER["PHP_SELF"],'t.label_compte','',$param,'',$sortfield,$sortorder);
+	if (! empty($arrayfields['t.label_operation']['checked']))			print_liste_field_titre($arrayfields['t.label_operation']['label'],$_SERVER["PHP_SELF"],'t.label_operation','',$param,'',$sortfield,$sortorder);
 	if (! empty($arrayfields['t.debit']['checked']))				print_liste_field_titre($arrayfields['t.debit']['label'],$_SERVER["PHP_SELF"],'t.debit','',$param,'',$sortfield,$sortorder);
 	if (! empty($arrayfields['t.credit']['checked']))				print_liste_field_titre($arrayfields['t.credit']['label'],$_SERVER["PHP_SELF"],'t.credit','',$param,'',$sortfield,$sortorder);
 	if (! empty($arrayfields['t.montant']['checked']))				print_liste_field_titre($arrayfields['t.montant']['label'],$_SERVER["PHP_SELF"],'t.montant','',$param,'',$sortfield,$sortorder);
@@ -497,6 +499,7 @@ print $formaccounting->select_auxaccount($search_accountancy_aux_code_end, 'sear
 print '</td>';
 }
 if (! empty($arrayfields['t.label_compte']['checked']))		print '<td class="liste_titre center"><input type="text" name="search_mvt_label" size="15" value="' .  $search_mvt_label . '"></td>';
+if (! empty($arrayfields['t.label_operation']['checked']))		print '<td class="liste_titre">&nbsp;</td>';
 if (! empty($arrayfields['t.debit']['checked']))			print '<td class="liste_titre">&nbsp;</td>';
 if (! empty($arrayfields['t.credit']['checked']))			print '<td class="liste_titre">&nbsp;</td>';
 if (! empty($arrayfields['t.montant']['checked']))			print '<td class="liste_titre">&nbsp;</td>';
@@ -546,6 +549,9 @@ if (! empty($arrayfields['t.code_tiers']['checked'])) {
 	}
 if (! empty($arrayfields['t.label_compte']['checked'])) {	
 	print '<td>' . $line->label_compte . '</td>';
+	}
+if (! empty($arrayfields['t.label_operation']['checked'])) {	
+	print '<td>' . $line->label_operation . '</td>';
 	}
 if (! empty($arrayfields['t.debit']['checked'])) {	
 	print '<td align="right">' . price($line->debit) . '</td>';
