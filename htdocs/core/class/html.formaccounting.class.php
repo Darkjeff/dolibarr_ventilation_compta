@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /* Copyright (C) 2013-2016 Florian Henry        <florian.henry@open-concept.pro>
  * Copyright (C) 2013-2014 Olivier Geffroy      <jeff@jeffinfo.com>
  * Copyright (C) 2015      Ari Elbaz (elarifr)  <github@accedinfo.com>
@@ -426,5 +426,38 @@ class FormAccounting extends Form
 			return $out_array;
 		}
 	}
+	
+		function selectjournal_accountancy_bookkepping($selected = '', $htmlname = 'journalid', $useempty = 0, $output_format = 'html')
+	{
+	    global $conf,$langs;
+
+		$out_array = array();
+
+		$sql = "SELECT DISTINCT code_journal";
+		$sql .= " FROM ".MAIN_DB_PREFIX."accounting_bookkeeping";
+	    $sql .= " WHERE entity IN (" . getEntity("accountancy", 1) . ")";
+		$sql .= " ORDER BY code_journal";
+		dol_syslog(get_class($this)."::".__METHOD__, LOG_DEBUG);
+		$resql = $this->db->query($sql);
+
+		if (!$resql) {
+			$this->error = "Error ".$this->db->lasterror();
+			dol_syslog(get_class($this)."::".__METHOD__.$this->error, LOG_ERR);
+			return -1;
+		}
+		while ($obj = $this->db->fetch_object($resql)) {
+			$out_array[$obj->code_journal] = $obj->code_journal?$obj->code_journal:$langs->trans("NotDefined");  // TODO Not defined is accepted ? We should avoid this, shouldn't we ?
+		}
+		$this->db->free($resql);
+
+		if ($output_format == 'html') {
+			return Form::selectarray($htmlname, $out_array, $selected, $useempty, 0, 0, 'placeholder="aa"');
+		} else {
+			return $out_array;
+		}
+	}
+	
+	
+	
 }
 
