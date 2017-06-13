@@ -220,6 +220,7 @@ if ($action == 'writebookkeeping') {
 					$bookkeeping->code_tiers = $tabcompany[$key]['code_compta_fournisseur'];
 					$bookkeeping->thirdparty_label = $tabcompany[$key]['name'];
 					$bookkeeping->label_operation = dol_trunc($companystatic->name, 16) . ' - ' . $invoicestatic->refsupplier . ' - ' . $langs->trans("Code_tiers");
+					$bookkeeping->label_compte = $langs->trans("Code_tiers");
 					$bookkeeping->numero_compte = $conf->global->ACCOUNTING_ACCOUNT_SUPPLIER;
 					$bookkeeping->montant = $mt;
 					$bookkeeping->sens = ($mt >= 0) ? 'C' : 'D';
@@ -266,6 +267,7 @@ if ($action == 'writebookkeeping') {
 						$bookkeeping->fk_docdet = 0;    // Useless, can be several lines that are source of this record to add
 						$bookkeeping->code_tiers = '';
 						$bookkeeping->label_operation = dol_trunc($companystatic->name, 16) . ' - ' . $invoicestatic->refsupplier . ' - ' . $accountingaccount->label;
+						$bookkeeping->label_compte = $accountingaccount->label;
 						$bookkeeping->numero_compte = $k;
 						$bookkeeping->montant = $mt;
 						$bookkeeping->sens = ($mt < 0) ? 'C' : 'D';
@@ -310,6 +312,7 @@ if ($action == 'writebookkeeping') {
 					$bookkeeping->fk_docdet = 0;    // Useless, can be several lines that are source of this record to add
 					$bookkeeping->code_tiers = '';
 					$bookkeeping->label_operation = dol_trunc($companystatic->name, 16) . ' - ' . $invoicestatic->refsupplier . ' - ' . $langs->trans("VAT"). ' '.$def_tva[$key];
+					$bookkeeping->label_compte = $langs->trans("VAT"). ' '.$def_tva[$key];
 					$bookkeeping->numero_compte = $k;
 					$bookkeeping->montant = $mt;
 					$bookkeeping->sens = ($mt < 0) ? 'C' : 'D';
