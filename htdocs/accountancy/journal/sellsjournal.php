@@ -237,6 +237,7 @@ if ($action == 'writebookkeeping') {
 					$bookkeeping->thirdparty_label = $tabcompany[$key]['name'];
 					$bookkeeping->numero_compte = $conf->global->ACCOUNTING_ACCOUNT_CUSTOMER;
 					$bookkeeping->label_operation = dol_trunc($companystatic->name, 16) . ' - ' . $invoicestatic->ref . ' - ' . $langs->trans("Code_tiers");
+					$bookkeeping->label_compte = $langs->trans("Code_tiers");
 					$bookkeeping->montant = $mt;
 					$bookkeeping->sens = ($mt >= 0) ? 'D' : 'C';
 					$bookkeeping->debit = ($mt >= 0) ? $mt : 0;
@@ -281,6 +282,7 @@ if ($action == 'writebookkeeping') {
 						$bookkeeping->code_tiers = '';
 						$bookkeeping->numero_compte = $k;
 						$bookkeeping->label_operation = dol_trunc($companystatic->name, 16) . ' - ' . $invoicestatic->ref . ' - ' . $accountingaccount->label;
+						$bookkeeping->label_compte = $accountingaccount->label;
 						$bookkeeping->montant = $mt;
 						$bookkeeping->sens = ($mt < 0) ? 'D' : 'C';
 						$bookkeeping->debit = ($mt < 0) ? $mt : 0;
@@ -324,6 +326,7 @@ if ($action == 'writebookkeeping') {
 					$bookkeeping->code_tiers = '';
 					$bookkeeping->numero_compte = $k;
 					$bookkeeping->label_operation = dol_trunc($companystatic->name, 16) . ' - ' . $invoicestatic->ref . ' - ' . $langs->trans("VAT").' '.$def_tva[$key];
+					$bookkeeping->label_compte = $langs->trans("VAT").' '.$def_tva[$key];
 					$bookkeeping->montant = $mt;
 					$bookkeeping->sens = ($mt < 0) ? 'D' : 'C';
 					$bookkeeping->debit = ($mt < 0) ? $mt : 0;
