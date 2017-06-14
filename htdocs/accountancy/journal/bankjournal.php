@@ -615,8 +615,10 @@ if ($action == 'export_csv') {
 				print '"' . $date . '"' . $sep;
 				print '"' . $val["type_payment"] . '"' . $sep;
 				print '"' . length_accountg(html_entity_decode($k)) . '"' . $sep;
+				print '"' . length_accountg(html_entity_decode($k)) . '"' . $sep;
+				print "  " . $sep;
 				if ($companystatic->name == '') {
-					print '"' . $langs->trans('Bank') . " - " . utf8_decode($val["ref"]) . '"' . $sep;
+					print '"' . $langs->trans('Bank') . " - " . utf8_decode($reflabel) . '"' . $sep;
 				} else {
 					print '"' . $langs->trans("Bank") . ' - ' . utf8_decode($companystatic->name) . '"' . $sep;
 				}
@@ -633,8 +635,20 @@ if ($action == 'export_csv') {
 						print '"' . $date . '"' . $sep;
 						print '"' . $val["type_payment"] . '"' . $sep;
 						print '"' . length_accounta(html_entity_decode($k)) . '"' . $sep;
+						
+						if ($tabtype[$key] == 'payment_supplier') {
+						print '"' . $conf->global->ACCOUNTING_ACCOUNT_SUPPLIER . '"' . $sep;
+						} else if($tabtype[$key] == 'payment') {
+						print '"' . $conf->global->ACCOUNTING_ACCOUNT_CUSTOMER . '"' . $sep;
+						} else {
+						print '"' . length_accounta(html_entity_decode($k)) . '"' . $sep;
+						}
+						
+						
+						
+						print '"' . length_accounta(html_entity_decode($k)) . '"' . $sep;
 						if ($companystatic->name == '') {
-							print '"' . $langs->trans('ThirdParty') . " - " . utf8_decode($val["ref"]) . '"' . $sep;
+							print '"' . $langs->trans('ThirdParty') . " - " . utf8_decode($reflabel) . '"' . $sep;
 						} else {
 							print '"' . $langs->trans('ThirdParty') . " - " . utf8_decode($companystatic->name) . '"' . $sep;
 						}
@@ -649,8 +663,10 @@ if ($action == 'export_csv') {
 					print '"' . $date . '"' . $sep;
 					print '"' . $val["ref"] . '"' . $sep;
 					print '"' . length_accountg($conf->global->ACCOUNTING_ACCOUNT_SUSPENSE) . '"' . $sep;
+					print '"' . length_accountg($conf->global->ACCOUNTING_ACCOUNT_SUSPENSE) . '"' . $sep;
+					print "  " . $sep;
 					if ($companystatic->name == '') {
-						print '"' . $langs->trans("Bank") . ' - ' . utf8_decode($val["ref"]) . '"' . $sep;
+						print '"' . $langs->trans("Bank") . ' - ' . utf8_decode($reflabel) . '"' . $sep;
 					} else {
 						print '"' . $langs->trans("Bank") . ' - ' . utf8_decode($companystatic->name) . '"' . $sep;
 					}
