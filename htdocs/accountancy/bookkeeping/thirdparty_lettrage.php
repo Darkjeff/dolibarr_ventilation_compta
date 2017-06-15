@@ -26,23 +26,13 @@
  * \brief   Onglet de gestion de parametrages des ventilations
  */
 
-// Dolibarr environment
-$res = @include ("../main.inc.php");
-if (! $res && file_exists ( "../main.inc.php" )) $res = @include ("../main.inc.php");
-if (! $res && file_exists ( "../../main.inc.php" )) $res = @include ("../../main.inc.php");
-if (! $res && file_exists ( "../../../main.inc.php" )) $res = @include ("../../../main.inc.php");
+require '../../main.inc.php';
 
-dol_include_once ( "/accountancy/class/html.formventilation.class.php");
-dol_include_once ( "/accountancy/class/bookkeeping.class.php");
-dol_include_once ( "/accountancy/class/lettering.class.php");
-dol_include_once ( "/societe/class/societe.class.php");
-dol_include_once ( "/core/lib/company.lib.php");
-// require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
-if (! $res) die ( "Include of main fails" );
-
-
-
-
+require_once DOL_DOCUMENT_ROOT . '/core/class/html.formaccounting.class.php';
+require_once DOL_DOCUMENT_ROOT . '/accountancy/class/bookkeeping.class.php';
+require_once DOL_DOCUMENT_ROOT . '/accountancy/class/lettering.class.php';
+require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';
+require_once DOL_DOCUMENT_ROOT . '/core/lib/company.lib.php';
 
 $page = GETPOST ( "page" );
 $sortorder = GETPOST ( "sortorder" );
@@ -67,7 +57,7 @@ if ($sortfield == "") $sortfield = "bk.rowid";
 
 $offset = $conf->liste_limit * $page;
 
-$formventilation = new FormVentilation ( $db );
+$formaccounting = new FormAccounting($db);
 
 /*
  * Action
