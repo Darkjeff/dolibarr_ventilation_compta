@@ -154,7 +154,7 @@ llxHeader ( '', 'Compta - Grand Livre' );
     
 
 	
-	$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal , bk.piece_num, bk.lettering ";
+	$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal , bk.piece_num, bk.lettering_code ";
 	$sql .= " FROM " . MAIN_DB_PREFIX . "accounting_bookkeeping as bk";
 	$sql .= " WHERE (bk.code_tiers =  '" . $object->code_compta . "' AND bk.numero_compte = '" .$conf->global->ACCOUNTING_ACCOUNT_CUSTOMER. "' )" ;
 
@@ -165,7 +165,7 @@ llxHeader ( '', 'Compta - Grand Livre' );
 	}
 
 	
-	$sql .= " ORDER BY bk.lettering ASC, bk.doc_date ASC" ;//. $db->plimit ( $conf->liste_limit + 1, $offset );
+	$sql .= " ORDER BY bk.lettering_code ASC, bk.doc_date ASC" ;//. $db->plimit ( $conf->liste_limit + 1, $offset );
 	
 // 	echo $sql; 
 // 	dol_syslog ( "bookkeping:liste:create sql=" . $sql, LOG_DEBUG );
@@ -190,8 +190,8 @@ llxHeader ( '', 'Compta - Grand Livre' );
 		print_liste_field_titre ( $langs->trans ( "Labelcompte" ), "liste.php", "bk_label_compte" );
 		print_liste_field_titre ( $langs->trans ( "Debit" ), "liste.php", "bk.debit" );
 		print_liste_field_titre ( $langs->trans ( "Credit" ), "liste.php", "bk.credit" );
-		print_liste_field_titre ( $langs->trans ( "Amount" ), "liste.php", "bk.montant" );
-		print_liste_field_titre ( $langs->trans ( "Sens" ), "liste.php", "bk.sens" );
+//		print_liste_field_titre ( $langs->trans ( "Amount" ), "liste.php", "bk.montant" );
+//		print_liste_field_titre ( $langs->trans ( "Sens" ), "liste.php", "bk.sens" );
 		print_liste_field_titre ( $langs->trans ( "Codejournal" ), "liste.php", "bk.code_journal" );
 		print '<td></td>'; 
 		print '<td></td>'; 
@@ -208,8 +208,8 @@ llxHeader ( '', 'Compta - Grand Livre' );
 		print '<td>&nbsp;</td>';
 		print '<td>&nbsp;</td>';
 		print '<td>&nbsp;</td>';
-		print '<td>&nbsp;</td>';
-		print '<td>&nbsp;</td>';
+//		print '<td>&nbsp;</td>';
+//		print '<td>&nbsp;</td>';
 		print '<td align="right">';
 		print '<input type="image" class="liste_titre" name="button_search" src="' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/search.png" value="' . dol_escape_htmltag ( $langs->trans ( "Search" ) ) . '" title="' . dol_escape_htmltag ( $langs->trans ( "Search" ) ) . '">';
 		print '</td>';
@@ -228,10 +228,10 @@ llxHeader ( '', 'Compta - Grand Livre' );
 		while ( $i < $num ) {
 			$obj = $db->fetch_object ( $resql );
 			
-			if($tmp !=$obj->lettering || empty($tmp) )
-				$tmp =$obj->lettering;
+			if($tmp !=$obj->lettering_code || empty($tmp) )
+				$tmp =$obj->lettering_code;
 				
-			if($tmp !=$obj->lettering || empty($obj->lettering)) 
+			if($tmp !=$obj->lettering_code || empty($obj->lettering_code)) 
 				$var = ! $var;
 				
 				
@@ -242,7 +242,7 @@ llxHeader ( '', 'Compta - Grand Livre' );
 			print "<tr $bc[$var]>";
 			
 			print '<td>' . $obj->rowid . '</td>';
-			if(empty($obj->lettering)){
+			if(empty($obj->lettering_code)){
 				print '<td><a href="'.dol_buildpath('/accountancy/bookkeeping/card.php', 1).'?piece_num=' . $obj->piece_num . '">';
 				print img_edit ();
 				print '</a>&nbsp;' . $obj->doc_type . '</td>' . "\n";
@@ -259,16 +259,16 @@ llxHeader ( '', 'Compta - Grand Livre' );
 			print '<td>' . $obj->label_compte . '</td>';
 			print '<td>' . $obj->debit . '</td>';
 			print '<td>' . $obj->credit . '</td>';
-			print '<td>' . $obj->montant . '</td>';
-			print '<td>' . $obj->sens . '</td>';
+//			print '<td>' . $obj->montant . '</td>';
+//			print '<td>' . $obj->sens . '</td>';
 			print '<td>' . $obj->code_journal . '</td>';
 			print '<td>' . round($solde, 2) . '</td>';
 			
-			if(empty($obj->lettering)){
+			if(empty($obj->lettering_code)){
 				print '<td><input type="checkbox" name="ids[]" value="' . $obj->rowid . '" /></td>';
 			}
 			else
-				print '<td>' . $obj->lettering . '</td>';
+				print '<td>' . $obj->lettering_code . '</td>';
 				
 			print "</tr>\n";
 			
@@ -283,8 +283,8 @@ llxHeader ( '', 'Compta - Grand Livre' );
 			
 			print '<td colspan="4">Mouvement totaux</td>' . "\n";
 			print '<td></td>';
-			print '<td></td>';
-			print '<td></td>';
+	//		print '<td></td>';
+	//		print '<td></td>';
 			print '<td><strong>' . $debit . '</strong></td>';
 			print '<td><strong>' . $credit . '</strong></td>';
 			print '<td></td>';
@@ -295,8 +295,8 @@ llxHeader ( '', 'Compta - Grand Livre' );
 			
 			print "<tr $bc[$var]>";
 			print '<td colspan="5">Solde Comptable</td>' . "\n";
-			print '<td></td>';
-			print '<td></td>';
+	//		print '<td></td>';
+	//		print '<td></td>';
 			print '<td></td>';
 			print '<td><strong>' . ($credit-$debit) . '</strong></td>';
 			print '<td></td>';

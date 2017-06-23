@@ -27,10 +27,6 @@ error_reporting(0);
 dol_include_once ( "/accountancy/class/bookkeeping.class.php");
 dol_include_once ( "/societe/class/societe.class.php");
 
-/**
- * \class BookKeeping
- * \brief Classe permettant la gestion des comptes generaux de compta
- */
 class lettering
 	extends BookKeeping {
 
@@ -52,9 +48,8 @@ class lettering
 
 
 			
-		$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.lettrage_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal , bk.piece_num, bk.lettering, lettrage_ref ";
+		$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.lettering_code, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal , bk.piece_num, bk.date_lettering ";
 		$sql .= " FROM " . MAIN_DB_PREFIX . "accounting_bookkeeping as bk";
-	// 	$sql .= " WHERE (bk.numero_compte = '" . $object->code_compta . "' OR  bk.numero_compte = '" . $object->code_compta_fournisseur . "') AND lettering ='' ";
 			$sql .= " WHERE code_journal = 'BQ' AND  ( ";
 		if(!empty($object->code_compta)  )
 			$sql .= "  bk.code_tiers = '" . $object->code_compta . "'  ";
@@ -63,12 +58,9 @@ class lettering
 		if(!empty($object->code_compta_fournisseur)  )
 		$sql .= "   bk.code_tiers = '" . $object->code_compta_fournisseur . "' ";
 		
-		$sql .= " ) AND ( lettering ='' OR lettering IS NULL ) AND bk.lettrage_ref  !='' ";
+		$sql .= " ) AND ( bk.date_lettering ='' OR bk.date_lettering IS NULL ) AND bk.lettering_code  !='' ";
 		
-		$sql .= " GROUP BY bk.lettrage_ref  ";
-// 		OR lettering =''
-//  AND lettering ='' AND bk.lettrage_ref  !=''
-// 				echo $sql; 
+		$sql .= " GROUP BY bk.lettering_code  ";
 		
 		
 		$resql = $db->query ( $sql );
@@ -82,7 +74,7 @@ class lettering
 
 					$sql = "SELECT  bk.rowid  ";
 					$sql .= " FROM " . MAIN_DB_PREFIX . "accounting_bookkeeping as bk";
-					$sql .= " WHERE  bk.lettrage_ref = '".$obj->lettrage_ref."' ";
+					$sql .= " WHERE  bk.lettering_code = '".$obj->lettering_code."' ";
 										$sql .= " AND ( ";
 						if(!empty($object->code_compta)  )
 							$sql .= "  bk.code_tiers = '" . $object->code_compta . "'  ";
@@ -122,7 +114,7 @@ class lettering
 		/**
 			Prise en charge des lettering complexe avec prelevment , virement 
 		*/
-		$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal , bk.piece_num, bk.lettering, bu.url_id , bu.type ";
+		$sql = "SELECT bk.rowid, bk.doc_date, bk.doc_type, bk.doc_ref, bk.code_tiers, bk.numero_compte , bk.label_compte, bk.debit , bk.credit, bk.montant , bk.sens , bk.code_journal , bk.piece_num, bk.date_lettering, bu.url_id , bu.type ";
 		$sql .= " FROM " . MAIN_DB_PREFIX . "accounting_bookkeeping as bk";
 		$sql .= " LEFT JOIN  " . MAIN_DB_PREFIX . "bank_url as bu ON(bk.fk_doc = bu.fk_bank AND bu.type IN ('payment', 'payment_supplier') ) ";
 		$sql .= " WHERE code_journal = 'BQ' AND  ( ";
@@ -133,8 +125,8 @@ class lettering
 		if(!empty($object->code_compta_fournisseur)  )
 		$sql .= "   bk.code_tiers = '" . $object->code_compta_fournisseur . "' ";
 		
-		$sql .= " ) AND lettering ='' ";
-		$sql .= " GROUP BY bk.lettrage_ref  ";
+		$sql .= " ) AND date_lettering ='' ";
+		$sql .= " GROUP BY bk.lettering_code  ";
 		
 // 		echo $sql; 
 // 		
@@ -236,14 +228,14 @@ class lettering
 	public function updatelettrage($ids, $notrigger=false){
 		$error = 0; 
 		
-		$sql = "SELECT lettering FROM " . MAIN_DB_PREFIX . "accounting_bookkeeping WHERE ";
-		$sql .= " lettering != '' GROUP BY lettering ORDER BY lettering DESC limit 1;  ";
+		$sql = "SELECT lettering_code FROM " . MAIN_DB_PREFIX . "accounting_bookkeeping WHERE ";
+		$sql .= " lettering_code != '' GROUP BY lettering_code ORDER BY lettering_code DESC limit 1;  ";
 // 		echo $sql; 
 		$result = $this->db->query ( $sql );
 		if ($result) {
 			$obj = $this->db->fetch_object ( $result );
-			$lettre = (empty($obj->lettering)? 'AAAA' : $obj->lettering ); 
-			if(!empty($obj->lettering))
+			$lettre = (empty($obj->lettering_code)? 'AAA' : $obj->lettering_code ); 
+			if(!empty($obj->lettering_code))
 				$lettre++; 
 		}
 		else{
@@ -272,9 +264,13 @@ class lettering
 
 		
 		// Update request
+		
+		$now = dol_now();
+		
 		$sql = "UPDATE ".MAIN_DB_PREFIX."accounting_bookkeeping SET";
-		$sql.= " lettering='".$lettre."'";
-		$sql.= " WHERE rowid IN (".implode(',', $ids).") ";
+		$sql.= " lettering_code='".$lettre."'";
+		$sql.= " , date_lettering = " .$now ;  // todo correct date it's false 
+		$sql.= "  WHERE rowid IN (".implode(',', $ids).") ";
 // 		echo $sql ; 
 // 		
 // 		var_dump(__line__, $error); 
