@@ -8,7 +8,7 @@
  * Copyright (C) 2011       Remy Younes             <ryounes@gmail.com>
  * Copyright (C) 2012-2015  Marcos García           <marcosgdf@gmail.com>
  * Copyright (C) 2012       Christophe Battarel     <christophe.battarel@ltairis.fr>
- * Copyright (C) 2011-2016  Alexandre Spangaro      <aspangaro.dolibarr@gmail.com>
+ * Copyright (C) 2011-2016  Alexandre Spangaro      <aspangaro@zendsi.com>
  * Copyright (C) 2015       Ferran Marcet           <fmarcet@2byte.es>
  * Copyright (C) 2016       Raphaël Doursenaud      <rdoursenaud@gpcsolutions.fr>
  *
@@ -56,7 +56,7 @@ $id=GETPOST('id','int');
 $rowid=GETPOST('rowid','alpha');
 
 // Security access
-if (! empty($user->rights->accountancy->chartofaccount))
+if (! $user->rights->accounting->chartofaccount)
 {
 	accessforbidden();
 }

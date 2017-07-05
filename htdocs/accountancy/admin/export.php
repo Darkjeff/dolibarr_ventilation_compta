@@ -1,6 +1,6 @@
 <?php
 /* Copyright (C) 2013-2014 Olivier Geffroy		<jeff@jeffinfo.com>
- * Copyright (C) 2013-2015 Alexandre Spangaro	<aspangaro.dolibarr@gmail.com>
+ * Copyright (C) 2013-2015 Alexandre Spangaro	<aspangaro@zendsi.com>
  * Copyright (C) 2014	   Florian Henry		<florian.henry@open-concept.pro>
  * Copyright (C) 2014      Marcos García        <marcosgdf@gmail.com>
  * Copyright (C) 2014	   Juanjo Menent		<jmenent@2byte.es>
@@ -38,7 +38,7 @@ $langs->load("admin");
 $langs->load("accountancy");
 
 // Security check
-if (empty($user->admin) || ! empty($user->rights->accountancy->chartofaccount))
+if (empty($user->admin) || ! $user->rights->accounting->chartofaccount)
 {
     accessforbidden();
 }

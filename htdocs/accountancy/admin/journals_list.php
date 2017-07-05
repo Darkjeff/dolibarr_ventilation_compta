@@ -40,7 +40,7 @@ $id=GETPOST('id','int');
 $rowid=GETPOST('rowid','alpha');
 
 // Security access
-if (! empty($user->rights->accountancy->chartofaccount))
+if (! $user->rights->accounting->chartofaccount)
 {
 	accessforbidden();
 }

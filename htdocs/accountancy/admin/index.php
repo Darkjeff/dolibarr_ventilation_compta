@@ -265,7 +265,7 @@ if (! empty($user->admin))
 }
 
 
-// Param a user $user->rights->accountancy->chartofaccount can access
+// Param a user $user->rights->accounting->chartofaccount can access
 foreach ($list as $key) 
 {
     print '<tr class="oddeven value">';
