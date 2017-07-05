@@ -183,6 +183,7 @@ if ($result) {
 		$tabttc[$obj->rowid][$compta_soc] += $obj->total_ttc * $situation_ratio;
 		$tabht[$obj->rowid][$compta_prod] += $obj->total_ht * $situation_ratio;
 		$tabtva[$obj->rowid][$compta_tva] += $obj->total_tva * $situation_ratio;
+		
 		$tabcompany[$obj->rowid] = array (
 			'id' => $obj->socid,
 			'name' => $obj->name,
@@ -234,7 +235,7 @@ if ($action == 'writebookkeeping') {
 					$bookkeeping->fk_doc = $key;
 					$bookkeeping->fk_docdet = 0;	// Useless, can be several lines that are source of this record to add
 					$bookkeeping->code_tiers = $tabcompany[$key]['code_compta'];
-					$bookkeeping->thirdparty_label = $tabcompany[$key]['name'];
+					$bookkeeping->thirdparty_label = str_replace("'"," ",$companystatic->name) ;
 					$bookkeeping->numero_compte = $conf->global->ACCOUNTING_ACCOUNT_CUSTOMER;
 					$bookkeeping->label_operation = dol_trunc($companystatic->name, 16) . ' - ' . $invoicestatic->ref . ' - ' . $langs->trans("Code_tiers");
 					$bookkeeping->label_compte = $langs->trans("Code_tiers");

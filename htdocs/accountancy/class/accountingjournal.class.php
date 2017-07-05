@@ -33,10 +33,12 @@ class AccountingJournal extends CommonObject
 
 	var $rowid;
 
-	var $code;
-	var $label;
-	var $nature;		// 0:various operations, 1:sale, 2:purchase, 3:bank, 9: has-new
-	var $active;
+	public $code;
+	public $label;
+	public $nature;		// 0:various operations, 1:sale, 2:purchase, 3:bank, 9: has-new
+	public $active;
+
+	public $lines;
 
 	/**
 	 * Constructor
@@ -46,7 +48,7 @@ class AccountingJournal extends CommonObject
 	function __construct($db) {
 		$this->db = $db;
 	}
-	
+
 	/**
 	 * Load an object from database
 	 *
@@ -96,7 +98,75 @@ class AccountingJournal extends CommonObject
 		}
 		return -1;
 	}
-	
+
+	/**
+	 * Load object in memory from the database
+	 *
+	 * @param string $sortorder Sort Order
+	 * @param string $sortfield Sort field
+	 * @param int $limit offset limit
+	 * @param int $offset offset limit
+	 * @param array $filter filter array
+	 * @param string $filtermode filter mode (AND or OR)
+	 *
+	 * @return int <0 if KO, >0 if OK
+	 */
+	function fetchAll($sortorder = '', $sortfield = '', $limit = 0, $offset = 0, array $filter = array(), $filtermode = 'AND') {
+		$sql = "SELECT rowid, code, label, nature, active";
+		$sql .= ' FROM ' . MAIN_DB_PREFIX . $this->table_element . ' as t';
+		// Manage filter
+		$sqlwhere = array();
+		if (count($filter) > 0) {
+			foreach ( $filter as $key => $value ) {
+				if ($key == 't.code' || $key == 't.label' || $key == 't.nature') {
+					$sqlwhere[] = $key . '\'' . $this->db->escape($value) . '\'';
+				} elseif ($key == 't.rowid' || $key == 't.active') {
+					$sqlwhere[] = $key . '=' . $value;
+				}
+			}
+		}
+		$sql .= ' WHERE 1 = 1';
+		$sql .= " AND entity IN (" . getEntity('accountancy') . ")";
+		if (count($sqlwhere) > 0) {
+			$sql .= ' AND ' . implode(' ' . $filtermode . ' ', $sqlwhere);
+		}
+
+		if (! empty($sortfield)) {
+			$sql .= $this->db->order($sortfield, $sortorder);
+		}
+		if (! empty($limit)) {
+			$sql .= ' ' . $this->db->plimit($limit + 1, $offset);
+		}
+		$this->lines = array();
+
+		dol_syslog(get_class($this) . "::fetch sql=" . $sql, LOG_DEBUG);
+		$resql = $this->db->query($sql);
+		if ($resql) {
+			$num = $this->db->num_rows($resql);
+
+			while ( $obj = $this->db->fetch_object($resql) ) {
+				$line = new self($this->db);
+
+				$line->id = $obj->rowid;
+				$line->code = $obj->code;
+				$line->label = $obj->label;
+				$line->nature = $obj->nature;
+				$line->active = $obj->active;
+
+				$this->lines[] = $line;
+			}
+
+			$this->db->free($resql);
+
+			return $num;
+		} else {
+			$this->errors[] = 'Error ' . $this->db->lasterror();
+			dol_syslog(__METHOD__ . ' ' . join(',', $this->errors), LOG_ERR);
+
+			return - 1;
+		}
+	}
+
 	/**
 	 * Return clicable name (with picto eventually)
 	 *
@@ -147,7 +217,7 @@ class AccountingJournal extends CommonObject
 		{
 			$linkstart = '';
 			$linkclose = '';
-			$linkend = '';			
+			$linkend = '';
 		}
 
 		$label_link = $this->code;
@@ -158,7 +228,7 @@ class AccountingJournal extends CommonObject
 		if ($withpicto != 2) $result.=$linkstart . $label_link . $linkend;
 		return $result;
 	}
-	
+
 	/**
 	 *  Retourne le libelle du statut d'un user (actif, inactif)
 	 *
@@ -169,7 +239,7 @@ class AccountingJournal extends CommonObject
 	{
 	    return $this->LibType($this->nature,$mode);
 	}
-	
+
 	/**
 	 *  Return type of an accounting journal
 	 *
@@ -182,7 +252,7 @@ class AccountingJournal extends CommonObject
 	    global $langs;
 
 		$langs->load("accountancy");
-	
+
 	    if ($mode == 0)
 	    {
 	        $prefix='';

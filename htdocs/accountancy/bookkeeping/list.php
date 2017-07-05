@@ -108,11 +108,10 @@ $formaccounting = new FormAccounting($db);
 $formother = new FormOther($db);
 $form = new Form($db);
 
-if ($action != 'export_csv' && ! isset($_POST['begin']) && ! isset($_GET['begin']) && ! isset($_POST['formfilteraction'])) {
+if ($action != 'export_csv' && ! isset($_POST['begin']) && ! isset($_GET['begin']) && ! isset($_POST['formfilteraction']) && empty($page)) {
     $search_date_start = dol_mktime(0, 0, 0, 1, 1, dol_print_date(dol_now(), '%Y'));
     $search_date_end = dol_mktime(0, 0, 0, 12, 31, dol_print_date(dol_now(), '%Y'));
 }
-
 // Get object canvas (By default, this is not defined, so standard usage of dolibarr)
 $canvas=GETPOST("canvas");
 $objcanvas=null;
@@ -148,7 +147,7 @@ $arrayfields=array(
 // Extra fields
 if (is_array($extrafields->attribute_label) && count($extrafields->attribute_label))
 {
-   foreach($extrafields->attribute_label as $key => $val) 
+   foreach($extrafields->attribute_label as $key => $val)
    {
        $arrayfields["ef.".$key]=array('label'=>$extrafields->attribute_label[$key], 'checked'=>$extrafields->attribute_list[$key], 'position'=>$extrafields->attribute_pos[$key]);
    }
@@ -280,7 +279,7 @@ if ($action == 'delbookkeepingyearconfirm') {
 		$deljournal=0;
 	}
 
-	if (! empty($delyear) || ! empty($deljournal)) 
+	if (! empty($delyear) || ! empty($deljournal))
 	{
 		$result = $object->deleteByYearAndJournal($delyear,$deljournal);
 		if ($result < 0) {
@@ -466,22 +465,22 @@ $varpage=empty($contextpage)?$_SERVER["PHP_SELF"]:$contextpage;
 	print "</tr>\n";
 
 	// Filters
-	
+
 print '<tr class="liste_titre">';
 if (! empty($arrayfields['t.piece_num']['checked']))			print '<td class="liste_titre center"><input type="text" name="search_mvt_num" size="6" value="' . $search_mvt_num . '"></td>';
 if (! empty($arrayfields['t.doc_date']['checked']))		{
-print '<td>';	
+print '<td>';
 print $langs->trans('From') . ': ';
 print $form->select_date($search_date_start, 'date_start', 0, 0, 1);
 print '<br>';
 print $langs->trans('to') . ': ';
 print $form->select_date($search_date_end, 'date_end', 0, 0, 1);
 print '</td>';
-} 
+}
 if (! empty($arrayfields['t.doc_type']['checked']))			print '<td class="liste_titre">&nbsp;</td>';
 if (! empty($arrayfields['t.doc_ref']['checked']))			print '<td class="liste_titre center"><input type="text" name="search_doc_ref" size="8" value="' . $search_doc_ref . '"></td>';
 if (! empty($arrayfields['t.numero_compte']['checked']))	{
-print '<td>';	
+print '<td>';
 print $langs->trans('From');
 print $formaccounting->select_account($search_accountancy_code_start, 'search_accountancy_code_start', 1, array (), 1, 1, '');
 print '<br>';
@@ -536,39 +535,39 @@ if (! empty($arrayfields['t.doc_date']['checked'])) {
 	print '<td align="center">' . dol_print_date($line->doc_date, 'day') . '</td>';
 	}
 if (! empty($arrayfields['t.doc_type']['checked'])) {
-	print '<td>' . $line->doc_type . '</td>';	
+	print '<td>' . $line->doc_type . '</td>';
 	}
-if (! empty($arrayfields['t.doc_ref']['checked'])) {	
+if (! empty($arrayfields['t.doc_ref']['checked'])) {
 	print '<td>' . $line->doc_ref . '</td>';
 	}
-if (! empty($arrayfields['t.numero_compte']['checked'])) {	
+if (! empty($arrayfields['t.numero_compte']['checked'])) {
 	print '<td>' . length_accountg($line->numero_compte) . '</td>';
 	}
-if (! empty($arrayfields['t.code_tiers']['checked'])) {	
+if (! empty($arrayfields['t.code_tiers']['checked'])) {
 	print '<td>' . length_accounta($line->code_tiers) . '</td>';
 	}
-if (! empty($arrayfields['t.label_compte']['checked'])) {	
+if (! empty($arrayfields['t.label_compte']['checked'])) {
 	print '<td>' . $line->label_compte . '</td>';
 	}
-if (! empty($arrayfields['t.label_operation']['checked'])) {	
+if (! empty($arrayfields['t.label_operation']['checked'])) {
 	print '<td>' . $line->label_operation . '</td>';
 	}
-if (! empty($arrayfields['t.debit']['checked'])) {	
+if (! empty($arrayfields['t.debit']['checked'])) {
 	print '<td align="right">' . price($line->debit) . '</td>';
 	}
-if (! empty($arrayfields['t.credit']['checked'])) {	
+if (! empty($arrayfields['t.credit']['checked'])) {
 	print '<td align="right">' . price($line->credit) . '</td>';
 	}
-if (! empty($arrayfields['t.montant']['checked'])) {	
+if (! empty($arrayfields['t.montant']['checked'])) {
 	print '<td align="right">' . price($line->montant) . '</td>';
-	}	
-if (! empty($arrayfields['t.sens']['checked'])) {		
+	}
+if (! empty($arrayfields['t.sens']['checked'])) {
 	print '<td align="center">' . $line->sens . '</td>';
 	}
 if (! empty($arrayfields['t.code_journal']['checked'])) {
 	print '<td align="center">' . $line->code_journal . '</td>';
 	}
-if (! empty($arrayfields['t.validated']['checked'])) 
+if (! empty($arrayfields['t.validated']['checked']))
 {
 			print '<td>';
 			if (empty($line->validated)) {

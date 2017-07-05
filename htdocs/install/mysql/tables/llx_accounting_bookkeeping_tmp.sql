@@ -17,7 +17,7 @@
 --
 -- ============================================================================
 
-CREATE TABLE llx_accounting_bookkeeping 
+CREATE TABLE llx_accounting_bookkeeping_tmp
 (
   rowid                 integer NOT NULL AUTO_INCREMENT PRIMARY KEY,
   entity                integer DEFAULT 1 NOT NULL,	-- 					| multi company id

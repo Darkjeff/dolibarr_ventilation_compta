@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /* Copyright (C) 2006-2011  Laurent Destailleur     <eldy@users.sourceforge.net>
  * Copyright (C) 2006       Rodolphe Quiedeville    <rodolphe@quiedeville.org>
  * Copyright (C) 2007       Patrick Raguin          <patrick.raguin@gmail.com>
@@ -162,6 +162,23 @@ function societe_prepare_head(Societe $object)
         $head[$h][2] = 'rib';
         $h++;
     }
+    
+    // Accountancy lettering
+    
+    if (($object->client==1 || $object->client==2 || $object->client==3) && ($conf->accounting->enabled))
+    {
+	$head[$h][0] = DOL_URL_ROOT.'/accountancy/bookkeeping/thirdparty_lettrage.php?socid='.$object->id;
+    $head[$h][1] = $langs->trans("AccountingLetteringCustomer");
+	$head[$h][2] = 'TabAccountingCustomer';
+    $h++;
+	}
+	if (! empty($conf->fournisseur->enabled) && $object->fournisseur && ! empty($conf->accounting->enabled))
+	{
+	$head[$h][0] = DOL_URL_ROOT.'/accountancy/bookkeeping/thirdparty_lettrage_supplier.php?socid='.$object->id;
+    $head[$h][1] = $langs->trans("AccountingLetteringSupplier");
+	$head[$h][2] = 'TabAccountingSupplier';
+    $h++;
+	}
         
 	// Show more tabs from modules
     // Entries must be declared in modules descriptor with line
