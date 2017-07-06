@@ -191,11 +191,25 @@ GeneralLedgerSomeRecordWasNotRecorded=Certaines des opérations n'ont pu être e
 NoNewRecordSaved=Aucun nouvel enregistrement sauvegardé
 ListOfProductsWithoutAccountingAccount=Liste des produits non liés à un compte comptable
 ChangeBinding=Changer les liens
+Ledger=Grand-livre
 
 ## Admin
 ApplyMassCategories=Application en masse des catégories
 AddAccountFromBookKeepingWithNoCategories=Ajouter les comptes sans groupes
 CategoryDeleted=Le groupe de comptes comptables a été supprimé
+AccountingJournals=Journaux comptables
+AccountingJournal=Journal comptable
+NewAccountingJournal=Nouveau journal comptable
+ShowAccoutingJournal=Afficher le journal
+Code=Code
+Nature=Nature
+AccountingJournalType1=Opérations Diverses
+AccountingJournalType2=Ventes
+AccountingJournalType3=Achats
+AccountingJournalType4=Banque
+AccountingJournalType5=Note de frais
+AccountingJournalType9=A-nouveaux
+ErrorAccountingJournalIsAlreadyUse=Le journal est déjà utilisé
 
 ## Export
 Exports=Exports

@@ -63,7 +63,7 @@ $month_start     = GETPOST('month_start');
 $year_start      = GETPOST('year_start');
 $month_end       = GETPOST('month_end');
 $year_end        = GETPOST('year_end');
-$search_employe  = GETPOST('search_employe');
+$search_employee = GETPOST('search_employee');
 $search_valideur = GETPOST('search_valideur');
 $search_statut   = GETPOST('select_statut');
 $type            = GETPOST('type','int'); 
@@ -91,7 +91,7 @@ if (GETPOST("button_removefilter_x") || GETPOST("button_removefilter.x") || GETP
 	$year_start="";
 	$month_end="";
 	$year_end="";
-	$search_employe="";
+	$search_employee="";
 	$search_valideur="";
 	$search_statut="";
 	$type='';
@@ -172,9 +172,9 @@ if($year_create > 0) {
     }
 }
 
-// EMPLOYE
-if(!empty($search_employe) && $search_employe != -1) {
-    $filter.= " AND cp.fk_user = '".$db->escape($search_employe)."'\n";
+// EMPLOYEE
+if(!empty($search_employee) && $search_employee != -1) {
+    $filter.= " AND cp.fk_user = '".$db->escape($search_employee)."'\n";
 }
 
 // VALIDEUR
@@ -202,7 +202,7 @@ $user_id = $user->id;
 if ($id > 0)
 {
 	// Charge utilisateur edite
-	$fuser->fetch($id);
+	$fuser->fetch($id, '', '', 1);
 	$fuser->getrights();
 	$user_id = $fuser->id;
 }
@@ -282,6 +282,7 @@ print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
 print '<input type="hidden" name="action" value="list">';
 print '<input type="hidden" name="sortfield" value="'.$sortfield.'">';
 print '<input type="hidden" name="sortorder" value="'.$sortorder.'">';
+if ($id > 0) print '<input type="hidden" name="id" value="'.$id.'">';
 
 if ($sall)
 {
@@ -321,14 +322,14 @@ print '</td>';
 if ($user->rights->holiday->write_all)
 {
     print '<td class="liste_titre maxwidthonsmartphone" align="left">';
-    print $form->select_dolusers($search_employe,"search_employe",1,"",0,'','',0,32,0,'',0,'','maxwidth200');
+    print $form->select_dolusers($search_employee,"search_employee",1,"",0,'','',0,32,0,'',0,'','maxwidth200');
     print '</td>';
 }
 else
 {
     //print '<td class="liste_titre">&nbsp;</td>';
     print '<td class="liste_titre maxwidthonsmartphone" align="left">';
-    print $form->select_dolusers($user->id,"search_employe",1,"",1,'','',0,32,0,'',0,'','maxwidth200');
+    print $form->select_dolusers($user->id,"search_employee",1,"",1,'','',0,32,0,'',0,'','maxwidth200');
     print '</td>';
 }
 
