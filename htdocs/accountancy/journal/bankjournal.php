@@ -174,7 +174,7 @@ if ($result) {
 		if ($obj->label == '(SupplierInvoicePayment)' or $labelst == 'facture fourni')
 		//if ($obj->label == '(SupplierInvoicePayment)' )
 			$compta_soc = (! empty($obj->code_compta_fournisseur) ? $obj->code_compta_fournisseur : $account_supplier);
-		if ($obj->label == '(CustomerInvoicePayment)' or $labelst == 'facture client')
+		if ($obj->label == '(CustomerInvoicePayment)'  or $obj->label == '(CustomerInvoicePaymentBack)' or $labelst == 'facture client')
 		//if ($obj->label == '(CustomerInvoicePayment)' )
 			$compta_soc = (! empty($obj->code_compta) ? $obj->code_compta : $account_customer);
 		
