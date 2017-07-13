@@ -179,7 +179,7 @@ if ($result) {
 		$compta_bank = $obj->account_number;
 		if ($obj->label == '(SupplierInvoicePayment)')
 			$compta_soc = (! empty($obj->code_compta_fournisseur) ? $obj->code_compta_fournisseur : $account_supplier);
-		if ($obj->label == '(CustomerInvoicePayment)')
+		if ($obj->label == '(CustomerInvoicePayment)' or $obj->label == '(CustomerInvoicePaymentBack)')
 			$compta_soc = (! empty($obj->code_compta) ? $obj->code_compta : $account_customer);
 
 		$tabcompany[$obj->rowid] = array (
