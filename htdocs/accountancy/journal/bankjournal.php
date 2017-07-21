@@ -51,6 +51,7 @@ require_once DOL_DOCUMENT_ROOT . '/societe/class/client.class.php';
 require_once DOL_DOCUMENT_ROOT . '/expensereport/class/expensereport.class.php';
 require_once DOL_DOCUMENT_ROOT . '/expensereport/class/paymentexpensereport.class.php';
 require_once DOL_DOCUMENT_ROOT . '/compta/bank/class/paymentvarious.class.php';
+require_once DOL_DOCUMENT_ROOT . '/compta/bank/class/account.class.php';
 
 $langs->load("companies");
 $langs->load("other");
@@ -74,10 +75,8 @@ $date_endday = GETPOST('date_endday');
 $date_endyear = GETPOST('date_endyear');
 $in_bookkeeping = GETPOST('in_bookkeeping');
 
-$action = GETPOST('action','alpha');
-
 $now = dol_now();
-
+$action = GETPOST('action','alpha');
 
 // Security check
 if ($user->societe_id > 0 && empty($id_journal))
@@ -119,13 +118,13 @@ $sql .= " JOIN " . MAIN_DB_PREFIX . "bank_account as ba on b.fk_account=ba.rowid
 $sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "bank_url as bu1 ON bu1.fk_bank = b.rowid AND bu1.type='company'";
 $sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "bank_url as bu2 ON bu2.fk_bank = b.rowid AND bu2.type='user'";
 $sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "societe as soc on bu1.url_id=soc.rowid";
-$sql .= "  LEFT JOIN " . MAIN_DB_PREFIX . "user as u on bu2.url_id=u.rowid";
+$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "user as u on bu2.url_id=u.rowid";
 $sql .= " WHERE ba.fk_accountancy_journal=" . $id_journal;
-$sql .= ' AND ba.entity IN ('.getEntity('bank_account', 0).')';		// We don't share object for accountancy
+$sql .= ' AND b.amount != 0 AND ba.entity IN ('.getEntity('bank_account', 0).')';		// We don't share object for accountancy
 if ($date_start && $date_end)
 	$sql .= " AND b.dateo >= '" . $db->idate($date_start) . "' AND b.dateo <= '" . $db->idate($date_end) . "'";
-if ($in_bookkeeping == 'yes')    
-	$sql .= " AND (b.rowid NOT IN (SELECT fk_doc FROM " . MAIN_DB_PREFIX . "accounting_bookkeeping as ab  WHERE ab.doc_type='bank') )";	
+if ($in_bookkeeping == 'yes')
+	$sql .= " AND (b.rowid NOT IN (SELECT fk_doc FROM " . MAIN_DB_PREFIX . "accounting_bookkeeping as ab  WHERE ab.doc_type='bank') )";
 $sql .= " ORDER BY b.datev";
 
 $object = new Account($db);
@@ -133,6 +132,7 @@ $paymentstatic = new Paiement($db);
 $paymentsupplierstatic = new PaiementFourn($db);
 $societestatic = new Societe($db);
 $userstatic = new User($db);
+$bankaccountstatic = new Account($db);
 $chargestatic = new ChargeSociales($db);
 $paymentdonstatic = new PaymentDonation($db);
 $paymentvatstatic = new TVA($db);
@@ -151,6 +151,7 @@ $result = $db->query($sql);
 if ($result) {
 
 	$num = $db->num_rows($result);
+
 	// Variables
 	$account_supplier = (! empty($conf->global->ACCOUNTING_ACCOUNT_SUPPLIER) ? $conf->global->ACCOUNTING_ACCOUNT_SUPPLIER : $langs->trans("CodeNotDef"));
 	$account_customer = (! empty($conf->global->ACCOUNTING_ACCOUNT_CUSTOMER) ? $conf->global->ACCOUNTING_ACCOUNT_CUSTOMER : $langs->trans("CodeNotDef"));
@@ -177,6 +178,8 @@ if ($result) {
 
 		// Set accountancy code (for bank and thirdparty)
 		$compta_bank = $obj->account_number;
+
+		$compta_soc = 'NotDefined';
 		if ($obj->label == '(SupplierInvoicePayment)')
 			$compta_soc = (! empty($obj->code_compta_fournisseur) ? $obj->code_compta_fournisseur : $account_supplier);
 		if ($obj->label == '(CustomerInvoicePayment)' or $obj->label == '(CustomerInvoicePaymentBack)')
@@ -193,6 +196,8 @@ if ($result) {
 		$tabuser[$obj->rowid] = array (
 				'id' => $obj->userid,
 				'name' => dolGetFirstLastname($obj->firstname, $obj->lastname),
+				'lastname' => $obj->lastname,
+				'firstname' => $obj->firstname,
 				'accountancy_code' => $compta_user,
 		);
 
@@ -201,6 +206,7 @@ if ($result) {
 		$tabpay[$obj->rowid]["type_payment"] = $obj->fk_type;
 		$tabpay[$obj->rowid]["ref"] = $obj->label;
 		$tabpay[$obj->rowid]["fk_bank"] = $obj->rowid;
+		$tabpay[$obj->rowid]["fk_bank_account"] = $obj->fk_account;
 		if (preg_match('/^\((.*)\)$/i', $obj->label, $reg)) {
 			$tabpay[$obj->rowid]["lib"] = $langs->trans($reg[1]);
 		} else {
@@ -209,14 +215,25 @@ if ($result) {
 		$links = $object->get_url($obj->rowid);
 
 		// get_url may return -1 which is not traversable
-		if (is_array($links)) {
+		if (is_array($links) && count($links) > 0) {
 			// Now loop on each link of record in bank.
 			foreach ( $links as $key => $val ) {
 
 				if (in_array($links[$key]['type'], array('sc', 'payment_sc', 'payment', 'payment_supplier', 'payment_vat', 'payment_expensereport', 'banktransfert', 'payment_donation', 'payment_salary', 'payment_various')))	 // So we excluded 'company' here
 				{
+					// So we excluded 'company' and 'user' here. We want only payment lines
+
 					// We save tabtype for a future use, to remember what kind of payment it is
+					$tabpay[$obj->rowid]['type'] = $links[$key]['type'];
 					$tabtype[$obj->rowid] = $links[$key]['type'];
+				}
+				elseif (in_array($links[$key]['type'], array('company', 'user')))
+				{
+					if ($tabpay[$obj->rowid]['type'] == 'unknown')
+					{
+						// We can guess here it is a bank record for a thirdparty company or a user.
+						// But we won't be able to record somewhere else than into a waiting account, because there is no other journal to record the contreparty.
+					}
 				}
 
 				if ($links[$key]['type'] == 'payment') {
@@ -302,6 +319,8 @@ if ($result) {
 				} else if ($links[$key]['type'] == 'banktransfert') {
 					$tabpay[$obj->rowid]["lib"] .= ' ' . $langs->trans("BankTransfer");
 					$tabtp[$obj->rowid][$account_transfer] += $obj->amount;
+					$bankaccountstatic->fetch($tabpay[$obj->rowid]['fk_bank_account']);
+					$tabpay[$obj->rowid]["soclib"] = $bankaccountstatic->getNomUrl(2);
 				} 
 			}
 		}
@@ -361,6 +380,7 @@ if (! $error && $action == 'writebookkeeping') {
 						if ($resultmid) {
 							$objmid = $db->fetch_object($resultmid);
 							$bookkeeping->doc_ref = $objmid->facnumber;	// Ref of invoice
+							$bookkeeping->code_tiers = '';
 						}
 					} else if ($tabtype[$key] == 'payment_supplier') {
 						$sqlmid = 'SELECT facf.ref_supplier, facf.ref';
@@ -373,6 +393,7 @@ if (! $error && $action == 'writebookkeeping') {
 						if ($resultmid) {
 							$objmid = $db->fetch_object($resultmid);
 							$bookkeeping->doc_ref = $objmid->ref_supplier . ' (' . $objmid->ref . ')'; // Ref on invoice
+							$bookkeeping->code_tiers = '';
 						}
 					} else if ($tabtype[$key] == 'payment_expensereport') {
 						$sqlmid = 'SELECT e.ref';
@@ -384,6 +405,7 @@ if (! $error && $action == 'writebookkeeping') {
 						if ($resultmid) {
 							$objmid = $db->fetch_object($resultmid);
 							$bookkeeping->doc_ref = $objmid->ref; // Ref of expensereport
+							$bookkeeping->code_tiers = '';
 						}
 					} else if ($tabtype[$key] == 'payment_vat') {
 						$bookkeeping->code_tiers = '';
@@ -449,10 +471,10 @@ if (! $error && $action == 'writebookkeeping') {
 						dol_syslog("accountancy/journal/bankjournal.php:: sqlmid=" . $sqlmid, LOG_DEBUG);
 						$resultmid = $db->query($sqlmid);
 						if ($resultmid) {
-    					$objmid = $db->fetch_object($resultmid);
-    					$bookkeeping->label_compte = $objmid->labelc;
-    					$bookkeeping->doc_ref = $objmid->libelle ;
-    				}											
+						$objmid = $db->fetch_object($resultmid);
+						$bookkeeping->label_compte = $objmid->labelc;
+						$bookkeeping->doc_ref = $objmid->libelle ;
+					}
 						$bookkeeping->code_tiers = '';
 						$bookkeeping->numero_compte = $k;
 					} else if ($tabtype[$key] == 'payment') {	// If payment is payment of customer invoice, we get ref of invoice
