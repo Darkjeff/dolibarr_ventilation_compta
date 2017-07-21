@@ -432,11 +432,11 @@ class AccountancyExport
 
 			$date = dol_print_date($line->doc_date, '%d%m%Y');
 
-			print $line->id . $this->separator;
-			print '"'.dol_trunc($line->piece_num,15,'right','UTF-8',1).'"'.$this->separator;
+			print $line->piece_num . $this->separator;
+			print $line->label_operation . $this->separator;
 			print $date . $this->separator;
-			print '"'.dol_trunc($line->piece_num,15,'right','UTF-8',1).'"'.$this->separator;
-			
+			print $line->label_operation . $this->separator;
+
 			if (empty($line->code_tiers)) {
 				print length_accountg($line->numero_compte) . $this->separator;
 			} else {
@@ -449,6 +449,7 @@ class AccountancyExport
 			}
 			
 			print length_accounta($line->code_tiers) . $this->separator;
+			print $line->doc_ref . $this->separator;
 			print price($line->debit) . $this->separator;
 			print price($line->credit) . $this->separator;
 			print price($line->montant).$this->separator;
