@@ -418,7 +418,7 @@ class AccountancyExport
 
 
 	/**
-	 * Export format : Agiris
+	 * Export format : Agiris Isacompta
 	 *
 	 * @param array $objectLines data
 	 *
@@ -440,21 +440,15 @@ class AccountancyExport
 			if (empty($line->code_tiers)) {
 				print length_accountg($line->numero_compte) . $this->separator;
 			} else {
-				if (substr($line->numero_compte, 0, 1) == 'C' || substr($line->numero_compte, 0, 1) == '9') {
-					print '411' . substr(str_replace(" ", "", $line->code_tiers), 0, 5) . $this->separator;
-				}
-				if (substr($line->numero_compte, 0, 1) == 'F' || substr($line->numero_compte, 0, 1) == '0') {
-					print '401' . substr(str_replace(" ", "", $line->code_tiers), 0, 5) . $this->separator;
-				}
+				print length_accounta($line->code_tiers) . $this->separator;
 			}
-			
-			print length_accounta($line->code_tiers) . $this->separator;
+
 			print $line->doc_ref . $this->separator;
 			print price($line->debit) . $this->separator;
 			print price($line->credit) . $this->separator;
 			print price($line->montant).$this->separator;
 			print $line->sens.$this->separator;
-			print $line->code_journal . $this->separator;
+			print $line->code_journal;
 			print $this->end_line;
 		}
 	}
