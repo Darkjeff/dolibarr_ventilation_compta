@@ -1,0 +1,9 @@
+# Dolibarr language file - fr_FR - Lawconformity
+CHARSET=UTF-8
+
+Module432423Name=Conformité légale NF525
+Module432423Desc= Protection des modifications ou suppressions après validation de factures
+
+lawconformity = Conformité légale NF525
+ModifWin = Modifications enregistrées
+ModificationOK = Modification autorisée
